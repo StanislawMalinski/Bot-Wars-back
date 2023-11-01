@@ -15,8 +15,6 @@ namespace BotWars.Controllers
     public class GameController : Controller
     {
 
-      
-
         private readonly IGameServis _gameService;
 
         public GameController(IGameServis gameService)
@@ -33,10 +31,9 @@ namespace BotWars.Controllers
             if (result.Success)
             {
                 
+                var file = File(result.Data.Data, "application/octet-stream", result.Data.Filename);
 
-                var fiel = File(result.Data.Data, "application/octet-stream", result.Data.Filename);
-
-                return fiel;
+                return file;
             }
             else
                 //return StatusCode(500, $"Internal server error {result.Message}");
@@ -58,7 +55,7 @@ namespace BotWars.Controllers
                 return StatusCode(500, result);
 
         }
-        [HttpPut("addGame")]
+        [HttpPost("addGame")]
         public async Task<ActionResult<ServiceResponse<Game>>> Put(IFormFile file, String description)
         {
            
