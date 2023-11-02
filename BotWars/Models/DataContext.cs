@@ -1,4 +1,5 @@
 ﻿using BotWars.Gry;
+using BotWars.RockPaperScissorsData;
 using BotWars.Services;
 using Microsoft.EntityFrameworkCore;
 
@@ -12,6 +13,7 @@ namespace BotWars.Models
         }
 
         public DbSet<Game> Games { get; set; }
+        public DbSet<RockPaperScissors> RockPaperScissors { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -33,6 +35,28 @@ namespace BotWars.Models
                  .IsRequired()
                  .HasColumnType("BLOB");
 
+            modelBuilder.Entity<RockPaperScissors>()
+                .ToTable("RockPaperScissors", "Games");
+
+            modelBuilder.Entity<RockPaperScissors>()
+                .HasKey(x => x.Id);
+
+            modelBuilder.Entity<RockPaperScissors>()
+                .Property(p => p.PlayerOneName)
+                .IsRequired();
+
+            modelBuilder.Entity<RockPaperScissors>()
+                .Property(p => p.PlayerTwoName)
+                .IsRequired();
+
+            modelBuilder.Entity<RockPaperScissors>()
+                .Property(p => p.SymbolPlayerOne);
+
+            modelBuilder.Entity<RockPaperScissors>()
+                .Property(p => p.SymbolPlayerTwo);
+
+            modelBuilder.Entity<RockPaperScissors>()
+                .Property(p => p.Winner);
             // data seed 
 
 
