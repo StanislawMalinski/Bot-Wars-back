@@ -38,6 +38,7 @@ namespace BotWars.Services
             isRunning = true;
             _process = new Process();
             _process.StartInfo.FileName = _path;
+            _process.Exited += new EventHandler(HandleExit);
             _process.Start();
             _input = _process.StandardInput;
             _process.OutputDataReceived += HandleOutput;
@@ -57,6 +58,11 @@ namespace BotWars.Services
         {
             string data = e.Data;
             _gameManager.HandleOutput(_id, data);
+        }
+
+        private void HandleExit(object sender, EventArgs e)
+        {
+            _gameManager.HandleExit(_id);
         }
     }
 }

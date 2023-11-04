@@ -4,9 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BotWars.GameManagerTest
+namespace BotWars.Models
 {
-    internal class GameManagerTest
+    public enum GameStatus
     {
+        Ready,
+        Running,
+        Ended,
+        GameError
     }
 }
