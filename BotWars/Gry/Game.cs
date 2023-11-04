@@ -1,6 +1,8 @@
-﻿namespace BotWars.Gry
+﻿using BotWars.Models;
+
+namespace BotWars.Gry
 {
-    public class Game
+    public class Game : IFileData
     {
         public long Id { get; set; }
         public String? Description { get; set; }
