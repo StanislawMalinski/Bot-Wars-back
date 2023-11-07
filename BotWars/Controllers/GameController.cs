@@ -22,7 +22,7 @@ namespace BotWars.Controllers
             _gameService = gameService;
         }
         
-
+        /*
         [HttpGet("getGameFile")]
         public async Task<IActionResult> Gets(int id)
         {
@@ -40,7 +40,7 @@ namespace BotWars.Controllers
                 return null;
             
             
-        }
+        }*/
 
 
         [HttpGet("getGamessList")]
@@ -55,6 +55,8 @@ namespace BotWars.Controllers
                 return StatusCode(500, result);
 
         }
+
+        /*
         [HttpPost("addGame")]
         public async Task<ActionResult<ServiceResponse<Game>>> Put(IFormFile file, String description)
         {
@@ -67,7 +69,7 @@ namespace BotWars.Controllers
             var respond = await _gameService.CreateGameAsync(game);
 
             return Ok(respond);
-        }
+        }*/
 
 
        

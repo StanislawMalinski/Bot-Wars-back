@@ -1,7 +1,7 @@
 ﻿using BotWars.RockPaperScissorsData;
 using Microsoft.AspNetCore.Mvc;
 
-namespace BotWars.Services
+namespace BotWars.Services.IServices
 {
     public interface IRockPaperScissorsSerivce
     {
