@@ -15,5 +15,6 @@ namespace BotWars.Services.Constants
         public const string PLAYER_TWO_MOVED = "Player two has already made their move!";
         public const string DELETED_MESSAGE = "A game of rock paper scissors has been deleted";
         public const string NO_GAMES_FOUND = "There are no rock paper scissors games in database";
+        public const string RPS_LIST_SUCCESS = "A list of rock paper scissors games has been succesfully returned";
     }
 }

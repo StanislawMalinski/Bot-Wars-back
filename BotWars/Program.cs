@@ -1,6 +1,8 @@
+using BotWars.GameTypeData;
 using BotWars.Models;
 using BotWars.RockPaperScissorsData;
 using BotWars.Services;
+using BotWars.Services.GameTypeService;
 using Microsoft.EntityFrameworkCore;
 using MySql.Data.MySqlClient;
 
@@ -15,6 +17,9 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<IGameServis, GameServis>();
 builder.Services.AddScoped<IRockPaperScissorsMapper, RockPaperScissorsMapper>();
 builder.Services.AddScoped<IRockPaperScissorsSerivce, RockPaperScissorsService>();
+builder.Services.AddScoped<IGameTypeService, GameTypeService>();
+builder.Services.AddScoped<IGameTypeMapper, GameTypeMapper>();
+
 builder.Services.AddDbContext<DataContext>(options =>
 {
     options.UseMySQL(builder.Configuration.GetConnectionString("DefaultConnection"));

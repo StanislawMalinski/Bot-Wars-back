@@ -74,7 +74,8 @@ namespace BotWars.Services
                 return new ServiceResponse<List<RockPaperScissorsDto>>()
                 {
                     Data = rpssDto,
-                    Success = true
+                    Success = true,
+                    Message = RockPaperScissorsConstants.RPS_LIST_SUCCESS
                 };
 
             }
