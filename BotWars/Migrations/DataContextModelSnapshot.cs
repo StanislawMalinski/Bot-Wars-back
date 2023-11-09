@@ -20,9 +20,9 @@ namespace BotWars.Migrations
 
             modelBuilder.Entity("BotWars.GameTypeData.GameType", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("bigint");
 
                     b.Property<bool>("IsAvialable")
                         .HasColumnType("tinyint(1)");
