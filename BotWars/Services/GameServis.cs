@@ -1,5 +1,6 @@
 ﻿using BotWars.Gry;
 using BotWars.Models;
+using BotWars.Services.IServices;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.VisualBasic;
 
@@ -39,7 +40,7 @@ namespace BotWars.Services
             try
             {
                 Game book = _dataContext.Games.Find(id);
-                if (book == null) return new ServiceResponse<Game>() { Data = book, Success = false, Message = $"Book of id {id} dont exits" };
+                if (book == null) return new ServiceResponse<Game>() { Data = book, Success = false, Message = $"Game of id {id} dont exits" };
                 _dataContext.Games.Remove(book);
                 await _dataContext.SaveChangesAsync();
                 var response = new ServiceResponse<Game>()
@@ -67,7 +68,7 @@ namespace BotWars.Services
             try
             {
                 Game game = _dataContext.Games.Find(id);
-                if(game == null) return new ServiceResponse<Game>() { Data = game, Success = false,Message=$"Book of id {id} dont exits" };
+                if(game == null) return new ServiceResponse<Game>() { Data = game, Success = false,Message=$"Game of id {id} dont exits" };
 
                 return new ServiceResponse<Game>() { Data = game, Success = true };
             }

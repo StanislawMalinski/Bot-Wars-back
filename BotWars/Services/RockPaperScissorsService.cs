@@ -2,6 +2,7 @@
 using BotWars.Models;
 using BotWars.RockPaperScissorsData;
 using BotWars.Services.Constants;
+using BotWars.Services.IServices;
 using Microsoft.EntityFrameworkCore;
 
 namespace BotWars.Services
