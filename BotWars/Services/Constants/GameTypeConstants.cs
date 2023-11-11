@@ -7,5 +7,6 @@
         public const string NO_GAMETYPES_FOUND = "There are no game types in database";
         public const string GAMETYPE_DELETED = "Game type has been successfully deleted";
         public const string GAMETYPE_LIST_SUCCESS = "A list of game types has been succesfully returned";
+        public const string GAMETYPE_MODIFIED_SUCCESS = "Game typ modified successfully";
     }
 }

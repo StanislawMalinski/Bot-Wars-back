@@ -1,6 +1,5 @@
 ﻿using BotWars.GameTypeData;
 using BotWars.Models;
-using BotWars.RockPaperScissorsData;
 using BotWars.Services.Constants;
 using Microsoft.EntityFrameworkCore;
 
@@ -18,13 +17,13 @@ namespace BotWars.Services.GameTypeService
             _dataContext = dataContext;
         }
 
-        public async Task<ServiceResponse<GameTypeDto>> CreateGameType(GameType gameType)
+        public async Task<ServiceResponse<GameTypeDto>> CreateGameType(GameTypeDto gameTypeDto)
         {
             try
             {
+                GameType gameType = _mapper.ToGameType(gameTypeDto);
                 await _dataContext.GameTypes.AddAsync(gameType);
                 await _dataContext.SaveChangesAsync();
-                var gameTypeDto = _mapper.toDto(gameType);
                 return new ServiceResponse<GameTypeDto>() { Data = gameTypeDto, Success = true, Message = GameTypeConstants.GAMETYPE_CREATED_SUCCESS };
             }
             catch (Exception)
@@ -42,13 +41,10 @@ namespace BotWars.Services.GameTypeService
         {
             try
             {
-                Console.WriteLine("Wchodzi 0");
                 var gameType =  _dataContext.GameTypes.Find(id);
-                Console.WriteLine("Wchodzi 1");
                 if (gameType == null) return new ServiceResponse<GameTypeDto>() { Data = null, Success = false, Message = $"Game Type with id {id} does not exist" };
                 _dataContext.GameTypes.Remove(gameType);
-                Console.WriteLine("Wchodzi 2");
-                var gameTypeDto = _mapper.toDto(gameType);
+                var gameTypeDto = _mapper.ToDto(gameType);
                 await _dataContext.SaveChangesAsync();
                 var response = new ServiceResponse<GameTypeDto>()
                 {
@@ -81,7 +77,7 @@ namespace BotWars.Services.GameTypeService
                     Success = false,
                     Message = GameTypeConstants.NO_GAMETYPES_FOUND
                 };
-                List<GameTypeDto> gameTypeDtos = gameTypes.Select(x => _mapper.toDto(x)).ToList();
+                List<GameTypeDto> gameTypeDtos = gameTypes.Select(x => _mapper.ToDto(x)).ToList();
                 return new ServiceResponse<List<GameTypeDto>>()
                 {
                     Data = gameTypeDtos,
@@ -97,6 +93,34 @@ namespace BotWars.Services.GameTypeService
                     Data = null,
                     Success = false,
                     Message = RockPaperScissorsConstants.DATABASE_FAILURE
+                };
+            }
+        }
+
+        public async Task<ServiceResponse<GameTypeDto>> ModifyGameType(long id, GameTypeDto gameTypeDto)
+        {
+            try 
+            {
+                var gameType = _mapper.ToGameType(gameTypeDto);
+                gameType.Id = id;
+                var oldValue = _dataContext.GameTypes.Update(gameType);
+                if (oldValue == null) return new ServiceResponse<GameTypeDto>() { Data = null, Success = false, Message = $"Game Type with id {id} does not exist" };
+                await _dataContext.SaveChangesAsync();
+                var response = new ServiceResponse<GameTypeDto>()
+                {
+                    Data = gameTypeDto,
+                    Message = GameTypeConstants.GAMETYPE_MODIFIED_SUCCESS,
+                    Success = true
+                };
+                return response;
+            }
+            catch (Exception)
+            {
+                return new ServiceResponse<GameTypeDto>()
+                {
+                    Data = null,
+                    Message = RockPaperScissorsConstants.DATABASE_FAILURE,
+                    Success = false
                 };
             }
         }

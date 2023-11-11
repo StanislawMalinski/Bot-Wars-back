@@ -2,6 +2,7 @@
 {
     public interface IGameTypeMapper
     {
-        public GameTypeDto toDto(GameType gameType);
+        public GameTypeDto ToDto(GameType gameType);
+        public GameType ToGameType(GameTypeDto gameTypeDto);
     }
 }
