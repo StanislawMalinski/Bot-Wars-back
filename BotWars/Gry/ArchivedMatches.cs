@@ -9,5 +9,7 @@
         public Tournament? Tournament { get; set; }
         public DateTime Played { get; set; }
         public String? Match;
+
+        public List<ArchivedMatchPlayers>? ArchivedMatchPlayers { get; set; }
     }
 }

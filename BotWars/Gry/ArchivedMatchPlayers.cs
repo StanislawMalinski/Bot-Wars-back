@@ -8,6 +8,9 @@
         public Player? Player { get; set; }
         public long TournamentId { get; set; }
         public Tournament? Tournament { get; set; }
-        //public List<ArchivedMatches> Matchld { get; set; }
+        public long MatchId { get; set; }
+        public ArchivedMatches? archivedMatches { get; set; }
+
+
     }
 }

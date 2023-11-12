@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BotWars.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20231107183858_dbroz")]
-    partial class dbroz
+    [Migration("20231112152419_init")]
+    partial class init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -28,6 +28,9 @@ namespace BotWars.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("bigint");
 
+                    b.Property<long>("MatchId")
+                        .HasColumnType("bigint");
+
                     b.Property<long>("PlayerId")
                         .HasColumnType("bigint");
 
@@ -35,6 +38,10 @@ namespace BotWars.Migrations
                         .HasColumnType("bigint");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("MatchId");
+
+                    b.HasIndex("PlayerId");
 
                     b.HasIndex("TournamentId")
                         .IsUnique();
@@ -65,8 +72,7 @@ namespace BotWars.Migrations
 
                     b.HasIndex("GameId");
 
-                    b.HasIndex("TournamentsId")
-                        .IsUnique();
+                    b.HasIndex("TournamentsId");
 
                     b.ToTable("ArchivedMatches");
                 });
@@ -89,12 +95,17 @@ namespace BotWars.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("GameId");
+
+                    b.HasIndex("PlayerId");
+
                     b.ToTable("Bots");
                 });
 
             modelBuilder.Entity("BotWars.Gry.Game", b =>
                 {
                     b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("bigint");
 
                     b.Property<string>("GameFile")
@@ -126,25 +137,20 @@ namespace BotWars.Migrations
             modelBuilder.Entity("BotWars.Gry.Player", b =>
                 {
                     b.Property<long>("Id")
-                        .HasColumnType("bigint");
-
-                    b.Property<long?>("ArchivedMatchPlayersPlayerId")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("bigint");
 
                     b.Property<string>("email")
-                        .HasColumnType("varchar(255)");
+                        .IsRequired()
+                        .HasMaxLength(30)
+                        .HasColumnType("VARCHAR");
 
                     b.Property<string>("login")
                         .IsRequired()
-                        .HasColumnType("longtext");
+                        .HasMaxLength(20)
+                        .HasColumnType("VARCHAR");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("ArchivedMatchPlayersPlayerId")
-                        .IsUnique();
-
-                    b.HasIndex("email")
-                        .IsUnique();
 
                     b.ToTable("Players");
                 });
@@ -159,14 +165,27 @@ namespace BotWars.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("VARCHAR");
+
                     b.Property<long>("GameId")
                         .HasColumnType("bigint");
 
-                    b.Property<int>("PlayersLimi")
+                    b.Property<string>("Image")
+                        .HasColumnType("longtext");
+
+                    b.Property<int>("PlayersLimit")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("PostedDate")
                         .HasColumnType("datetime(6)");
+
+                    b.Property<string>("TournamentTitles")
+                        .IsRequired()
+                        .HasMaxLength(30)
+                        .HasColumnType("VARCHAR");
 
                     b.Property<DateTime>("TournamentsDate")
                         .HasColumnType("datetime(6)");
@@ -181,43 +200,52 @@ namespace BotWars.Migrations
                     b.ToTable("Tournaments");
                 });
 
-            modelBuilder.Entity("BotWars.RockPaperScissorsData.RockPaperScissors", b =>
+            modelBuilder.Entity("BotWars.Gry.TournamentReference", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("bigint");
 
-                    b.Property<string>("PlayerOneName")
-                        .IsRequired()
-                        .HasColumnType("longtext");
+                    b.Property<long>("bodId")
+                        .HasColumnType("bigint");
 
-                    b.Property<string>("PlayerTwoName")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.Property<int>("SymbolPlayerOne")
-                        .HasColumnType("int");
-
-                    b.Property<int>("SymbolPlayerTwo")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Winner")
-                        .HasColumnType("longtext");
+                    b.Property<long>("tournamentId")
+                        .HasColumnType("bigint");
 
                     b.HasKey("Id");
 
-                    b.ToTable("RockPaperScissors");
+                    b.HasIndex("bodId");
+
+                    b.HasIndex("tournamentId");
+
+                    b.ToTable("TournamentReference");
                 });
 
             modelBuilder.Entity("BotWars.Gry.ArchivedMatchPlayers", b =>
                 {
+                    b.HasOne("BotWars.Gry.ArchivedMatches", "archivedMatches")
+                        .WithMany("ArchivedMatchPlayers")
+                        .HasForeignKey("MatchId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("BotWars.Gry.Player", "Player")
+                        .WithMany("ArchivedMatchPlayers")
+                        .HasForeignKey("PlayerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("BotWars.Gry.Tournament", "Tournament")
                         .WithOne("ArchivedMatchPlayers")
                         .HasForeignKey("BotWars.Gry.ArchivedMatchPlayers", "TournamentId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.Navigation("Player");
+
                     b.Navigation("Tournament");
+
+                    b.Navigation("archivedMatches");
                 });
 
             modelBuilder.Entity("BotWars.Gry.ArchivedMatches", b =>
@@ -229,8 +257,8 @@ namespace BotWars.Migrations
                         .IsRequired();
 
                     b.HasOne("BotWars.Gry.Tournament", "Tournament")
-                        .WithOne("ArchivedMatches")
-                        .HasForeignKey("BotWars.Gry.ArchivedMatches", "TournamentsId")
+                        .WithMany("ArchivedMatches")
+                        .HasForeignKey("TournamentsId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -239,35 +267,23 @@ namespace BotWars.Migrations
                     b.Navigation("Tournament");
                 });
 
-            modelBuilder.Entity("BotWars.Gry.Game", b =>
+            modelBuilder.Entity("BotWars.Gry.Bot", b =>
                 {
-                    b.HasOne("BotWars.Gry.Bot", "Bot")
-                        .WithOne("Games")
-                        .HasForeignKey("BotWars.Gry.Game", "Id")
-                        .HasPrincipalKey("BotWars.Gry.Bot", "GameId")
+                    b.HasOne("BotWars.Gry.Game", "Games")
+                        .WithMany("Bot")
+                        .HasForeignKey("GameId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Bot");
-                });
-
-            modelBuilder.Entity("BotWars.Gry.Player", b =>
-                {
-                    b.HasOne("BotWars.Gry.ArchivedMatchPlayers", "ArchivedMatchPlayers")
-                        .WithOne("Player")
-                        .HasForeignKey("BotWars.Gry.Player", "ArchivedMatchPlayersPlayerId")
-                        .HasPrincipalKey("BotWars.Gry.ArchivedMatchPlayers", "PlayerId");
-
-                    b.HasOne("BotWars.Gry.Bot", "Bot")
-                        .WithOne("Players")
-                        .HasForeignKey("BotWars.Gry.Player", "Id")
-                        .HasPrincipalKey("BotWars.Gry.Bot", "PlayerId")
+                    b.HasOne("BotWars.Gry.Player", "Players")
+                        .WithMany("Bot")
+                        .HasForeignKey("PlayerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("ArchivedMatchPlayers");
+                    b.Navigation("Games");
 
-                    b.Navigation("Bot");
+                    b.Navigation("Players");
                 });
 
             modelBuilder.Entity("BotWars.Gry.Tournament", b =>
@@ -281,23 +297,49 @@ namespace BotWars.Migrations
                     b.Navigation("Game");
                 });
 
-            modelBuilder.Entity("BotWars.Gry.ArchivedMatchPlayers", b =>
+            modelBuilder.Entity("BotWars.Gry.TournamentReference", b =>
                 {
-                    b.Navigation("Player");
+                    b.HasOne("BotWars.Gry.Bot", "Bot")
+                        .WithMany("TournamentReference")
+                        .HasForeignKey("bodId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("BotWars.Gry.Tournament", "Tournament")
+                        .WithMany("TournamentReference")
+                        .HasForeignKey("tournamentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Bot");
+
+                    b.Navigation("Tournament");
+                });
+
+            modelBuilder.Entity("BotWars.Gry.ArchivedMatches", b =>
+                {
+                    b.Navigation("ArchivedMatchPlayers");
                 });
 
             modelBuilder.Entity("BotWars.Gry.Bot", b =>
                 {
-                    b.Navigation("Games");
-
-                    b.Navigation("Players");
+                    b.Navigation("TournamentReference");
                 });
 
             modelBuilder.Entity("BotWars.Gry.Game", b =>
                 {
                     b.Navigation("ArchivedMatches");
 
+                    b.Navigation("Bot");
+
                     b.Navigation("Tournaments");
+                });
+
+            modelBuilder.Entity("BotWars.Gry.Player", b =>
+                {
+                    b.Navigation("ArchivedMatchPlayers");
+
+                    b.Navigation("Bot");
                 });
 
             modelBuilder.Entity("BotWars.Gry.Tournament", b =>
@@ -305,6 +347,8 @@ namespace BotWars.Migrations
                     b.Navigation("ArchivedMatchPlayers");
 
                     b.Navigation("ArchivedMatches");
+
+                    b.Navigation("TournamentReference");
                 });
 #pragma warning restore 612, 618
         }

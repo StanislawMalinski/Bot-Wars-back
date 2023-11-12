@@ -1,15 +1,21 @@
 ﻿using BotWars.Gry;
 using BotWars.Models;
+using BotWars.Services.IServices;
 using Microsoft.EntityFrameworkCore;
 
 namespace BotWars.Services
 {
-    public class TournamentService
+    public class TournamentService : ITournamentService
     {
         private readonly DataContext _dataContext;
         public TournamentService(DataContext dataContext)
         {
             _dataContext = dataContext;
+        }
+
+        public Task<ServiceResponse<Tournament>> AddTournament(Tournament tournament)
+        {
+            throw new NotImplementedException();
         }
 
         public async Task<ServiceResponse<Tournament>> CreateTournamentAsync(Tournament Tournament)
@@ -29,6 +35,11 @@ namespace BotWars.Services
                     Message = "Cannot create Tournament"
                 };
             }
+        }
+
+        public Task<ServiceResponse<Tournament>> DeleteTournament(long id)
+        {
+            throw new NotImplementedException();
         }
 
         public async Task<ServiceResponse<Tournament>> DeleteTournamentAsync(long id)
@@ -59,6 +70,26 @@ namespace BotWars.Services
                     Success = false
                 };
             }
+        }
+
+        public Task<ServiceResponse<List<Game>>> GetGamesAsync()
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<ServiceResponse<List<Tournament>>> GetListOfTournaments()
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<ServiceResponse<List<Tournament>>> GetListOfTournamentsFiltered()
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<ServiceResponse<Tournament>> GetTournament(long id)
+        {
+            throw new NotImplementedException();
         }
 
         public async Task<ServiceResponse<Tournament>> GetTournamentAsync(long id)
@@ -106,6 +137,21 @@ namespace BotWars.Services
                 };
             }
 
+        }
+
+        public Task<ServiceResponse<Tournament>> RegisterSelfForTournament(long tournamentId, long playerId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<ServiceResponse<Tournament>> UnregisterSelfForTournament(long tournamentId, long playerId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<ServiceResponse<Tournament>> UpdateTournament(long id, Tournament tournament)
+        {
+            throw new NotImplementedException();
         }
 
         public async Task<ServiceResponse<Tournament>> UpdateTournamentAsync(Tournament Tournament)

@@ -1,5 +1,4 @@
 ﻿using BotWars.Gry;
-using BotWars.RockPaperScissorsData;
 using BotWars.Services;
 using Microsoft.EntityFrameworkCore;
 
@@ -18,7 +17,6 @@ namespace BotWars.Models
         public DbSet<Tournament> Tournaments { get; set; }
         public DbSet<ArchivedMatches> ArchivedMatches { get; set; }
         public DbSet<ArchivedMatchPlayers> ArchivedMatchPlayers { get; set; }
-        public DbSet<RockPaperScissors> RockPaperScissors { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -56,32 +54,33 @@ namespace BotWars.Models
                 .HasKey(x => x.Id);
 
             modelBuilder.Entity<Player>()
-                .HasIndex(x => x.email).IsUnique();
+                .Property(p => p.email)
+                .HasColumnType("VARCHAR").HasMaxLength(30)
+                .IsRequired();
 
             modelBuilder.Entity<Player>()
                 .Property(p => p.login)
+                .HasColumnType("VARCHAR").HasMaxLength(20)
                 .IsRequired();
             //Bot
             modelBuilder.Entity<Bot>()
                 .HasKey(x => x.Id);
 
             modelBuilder.Entity<Player>()
-                .HasOne(x => x.Bot)
+                .HasMany(x => x.Bot)
                 .WithOne(b => b.Players)
-                .HasPrincipalKey<Bot>(b => b.PlayerId);
+                .HasForeignKey(b => b.PlayerId)
+                .IsRequired();
 
-            modelBuilder.Entity<Bot>()
-               .Property(p => p.PlayerId)
-               .IsRequired();
+          
 
             modelBuilder.Entity<Game>()
-                .HasOne(x => x.Bot)
+                .HasMany(x => x.Bot)
                 .WithOne(b => b.Games)
-                .HasPrincipalKey<Bot>(b => b.GameId);
+                .HasForeignKey(b => b.GameId)
+                .IsRequired();
 
-            modelBuilder.Entity<Bot>()
-               .Property(p => p.GameId)
-               .IsRequired();
+           
 
             modelBuilder.Entity<Bot>()
                .Property(p => p.BotFile)
@@ -90,6 +89,15 @@ namespace BotWars.Models
             //Tournament
             modelBuilder.Entity<Tournament>()
                .HasKey(x => x.Id);
+
+            modelBuilder.Entity<Tournament>()
+                .Property(p => p.TournamentTitles)
+                .HasColumnType("VARCHAR").HasMaxLength(30)
+                .IsRequired();
+            modelBuilder.Entity<Tournament>()
+                .Property(p => p.Description)
+                .HasColumnType("VARCHAR").HasMaxLength(200)
+                .IsRequired();
 
             modelBuilder.Entity<Tournament>()
                 .HasOne(x => x.Game)
@@ -101,7 +109,7 @@ namespace BotWars.Models
                .IsRequired();
 
             modelBuilder.Entity<Tournament>()
-               .Property(p => p.PlayersLimi)
+               .Property(p => p.PlayersLimit)
                .IsRequired();
 
             modelBuilder.Entity<Tournament>()
@@ -126,20 +134,17 @@ namespace BotWars.Models
             modelBuilder.Entity<ArchivedMatches>()
                 .HasOne(a => a.Game)
                 .WithMany(b => b.ArchivedMatches)
-                .HasForeignKey(a => a.GameId);
+                .HasForeignKey(a => a.GameId)
+                .IsRequired();
 
             modelBuilder.Entity<ArchivedMatches>()
-               .Property(p => p.GameId)
-               .IsRequired();
+                .HasOne(a => a.Tournament)
+                .WithMany(b => b.ArchivedMatches)
+                .HasForeignKey(a => a.TournamentsId)
+                .IsRequired();
+                
 
-            modelBuilder.Entity<Tournament>()
-                .HasOne(a => a.ArchivedMatches)
-                .WithOne(b => b.Tournament)
-                .HasForeignKey<ArchivedMatches>(b => b.TournamentsId);
-
-            modelBuilder.Entity<ArchivedMatches>()
-               .Property(p => p.TournamentsId)
-               .IsRequired();
+         
 
             modelBuilder.Entity<ArchivedMatches>()
                .Property(p => p.Played)
@@ -155,18 +160,20 @@ namespace BotWars.Models
                .HasKey(x =>x.Id);
 
 
-            modelBuilder.Entity<Player>()
-                 .HasOne(a => a.ArchivedMatchPlayers)
-                 .WithOne(b => b.Player)
-                 .HasPrincipalKey<ArchivedMatchPlayers>(b => b.PlayerId);
+            modelBuilder.Entity<ArchivedMatchPlayers>()
+                .HasOne(a => a.Player)
+                .WithMany(b => b.ArchivedMatchPlayers)
+                .HasForeignKey(a => a.PlayerId)
+                .IsRequired();
+                 
+
 
             modelBuilder.Entity<ArchivedMatchPlayers>()
-               .Property(p => p.PlayerId)
-               .IsRequired();
-
-            //modelBuilder.Entity<ArchivedMatchPlayers>()
-              //.Property(p => p.Matchld)
-              //.IsRequired();
+                .HasOne(a => a.archivedMatches)
+                .WithMany(b => b.ArchivedMatchPlayers)
+                .HasForeignKey(a => a.MatchId)
+                .IsRequired();
+            
 
             modelBuilder.Entity<ArchivedMatchPlayers>()
                .Property(p => p.TournamentId)
@@ -176,28 +183,30 @@ namespace BotWars.Models
                 .HasOne(a => a.ArchivedMatchPlayers)
                 .WithOne(b => b.Tournament)
                 .HasForeignKey<ArchivedMatchPlayers>(b => b.TournamentId);
-            // rock paper sciros do wyrzucnei a w tym foramcjie najpweniej;
-           
 
-            modelBuilder.Entity<RockPaperScissors>()
+            //TournamentReference
+            modelBuilder.Entity<TournamentReference>()
                 .HasKey(x => x.Id);
 
-            modelBuilder.Entity<RockPaperScissors>()
-                .Property(p => p.PlayerOneName)
+            modelBuilder.Entity<TournamentReference>()
+                .Property(p => p.bodId)
                 .IsRequired();
 
-            modelBuilder.Entity<RockPaperScissors>()
-                .Property(p => p.PlayerTwoName)
+            
+
+            modelBuilder.Entity<Tournament>()
+                .HasMany(a => a.TournamentReference)
+                .WithOne(b => b.Tournament)
+                .HasForeignKey(b => b.tournamentId)
                 .IsRequired();
 
-            modelBuilder.Entity<RockPaperScissors>()
-                .Property(p => p.SymbolPlayerOne);
-
-            modelBuilder.Entity<RockPaperScissors>()
-                .Property(p => p.SymbolPlayerTwo);
-
-            modelBuilder.Entity<RockPaperScissors>()
-                .Property(p => p.Winner);
+            modelBuilder.Entity<Bot>()
+                .HasMany(a => a.TournamentReference)
+                .WithOne(b => b.Bot)
+                .HasForeignKey(b => b.bodId)
+                .IsRequired();
+                
+            
             // data seed 
 
 

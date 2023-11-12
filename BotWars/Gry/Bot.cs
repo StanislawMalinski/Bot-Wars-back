@@ -8,5 +8,7 @@
         public long GameId { get; set; }   
         public Game? Games { get; set; }
         public String? BotFile { get; set; }
+
+        public List<TournamentReference>? TournamentReference { get; set; }
     }
 }
