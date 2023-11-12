@@ -2,7 +2,7 @@
 
 namespace BotWars.Gry
 {
-    public class Game : IFileData
+    public class Game //: IFileData
     {
         public long Id { get; set; }
         public int NumbersOfPlayer { get; set; }

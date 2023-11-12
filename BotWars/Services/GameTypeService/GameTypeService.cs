@@ -1,6 +1,6 @@
 ﻿using BotWars.GameTypeData;
 using BotWars.Models;
-using BotWars.RockPaperScissorsData;
+//
 using BotWars.Services.Constants;
 using Microsoft.EntityFrameworkCore;
 
@@ -20,6 +20,7 @@ namespace BotWars.Services.GameTypeService
 
         public async Task<ServiceResponse<GameTypeDto>> CreateGameType(GameType gameType)
         {
+            /*
             try
             {
                 await _dataContext.GameTypes.AddAsync(gameType);
@@ -35,11 +36,13 @@ namespace BotWars.Services.GameTypeService
                     Success = false,
                     Message = GameTypeConstants.GAMETYPE_CREATED_FAILURE
                 };
-            }
+            }*/
+            throw new NotImplementedException("niezgodne z nową koncepcją chyba");
         }
 
         public async Task<ServiceResponse<GameTypeDto>> DeleteGame(long id)
         {
+            /*
             try
             {
                 Console.WriteLine("Wchodzi 0");
@@ -67,11 +70,13 @@ namespace BotWars.Services.GameTypeService
                     Message = RockPaperScissorsConstants.DATABASE_FAILURE,
                     Success = false
                 };
-            }
+            }*/
+            throw new NotImplementedException("niezgodne z nową koncepcją chyba");
         }
 
         public async Task<ServiceResponse<List<GameTypeDto>>> GetGameTypes()
         {
+            /*
             try
             {
                 List<GameType> gameTypes = await _dataContext.GameTypes.ToListAsync();
@@ -98,7 +103,8 @@ namespace BotWars.Services.GameTypeService
                     Success = false,
                     Message = RockPaperScissorsConstants.DATABASE_FAILURE
                 };
-            }
+            }*/
+            throw new NotImplementedException("niezgodne z nową koncepcją chyba");
         }
 
         public int ValidateUser(string login, string key)
