@@ -4,7 +4,6 @@ namespace BotWars.Services.IServices
 {
     public interface ITournamentService
     {
-        public Task<ServiceResponse<List<Game>>> GetGamesAsync();
 
         public Task<ServiceResponse<List<Tournament>>> GetListOfTournaments();
 
