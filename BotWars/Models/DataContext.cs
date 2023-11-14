@@ -1,5 +1,6 @@
 ﻿using BotWars.Gry;
 using BotWars.Services;
+using BotWars.TournamentData;
 using Microsoft.EntityFrameworkCore;
 
 namespace BotWars.Models

@@ -1,4 +1,6 @@
-﻿namespace BotWars.Gry
+﻿using BotWars.Gry;
+
+namespace BotWars.TournamentData
 {
     public class TournamentReference
     {
