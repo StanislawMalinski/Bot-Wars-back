@@ -1,4 +1,6 @@
-﻿namespace BotWars.Gry
+﻿using BotWars.Gry;
+
+namespace BotWars.TournamentData
 {
     public class Tournament
     {
@@ -11,8 +13,8 @@
         public DateTime TournamentsDate { get; set; }
         public DateTime PostedDate { get; set; }
         public bool WasPlayedOut { get; set; }
-        public String? Contrains { get; set; }
-        public String? Image {  get; set; }
+        public string? Contrains { get; set; }
+        public string? Image { get; set; }
 
         public ArchivedMatchPlayers? ArchivedMatchPlayers { get; set; }
         public List<ArchivedMatches>? ArchivedMatches { get; set; }

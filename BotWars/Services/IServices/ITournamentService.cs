@@ -1,24 +1,24 @@
-﻿using BotWars.Gry;
+﻿using BotWars.TournamentData;
 
 namespace BotWars.Services.IServices
 {
     public interface ITournamentService
     {
 
-        public Task<ServiceResponse<List<Tournament>>> GetListOfTournaments();
+        public Task<ServiceResponse<List<TournamentDTO>>> GetListOfTournaments();
 
-        public Task<ServiceResponse<List<Tournament>>> GetListOfTournamentsFiltered();
+        public Task<ServiceResponse<List<TournamentDTO>>> GetListOfTournamentsFiltered();
 
-        public Task<ServiceResponse<Tournament>> GetTournament(long id);
+        public Task<ServiceResponse<TournamentDTO>> GetTournament(long id);
 
-        public Task<ServiceResponse<Tournament>> UpdateTournament(long id,Tournament tournament);
+        public Task<ServiceResponse<TournamentDTO>> UpdateTournament(long id,TournamentDTO tournament);
 
-        public Task<ServiceResponse<Tournament>> DeleteTournament(long id);
+        public Task<ServiceResponse<TournamentDTO>> DeleteTournament(long id);
 
-        public Task<ServiceResponse<Tournament>> AddTournament(Tournament tournament);
+        public Task<ServiceResponse<TournamentDTO>> AddTournament(TournamentDTO tournament);
 
-        public Task<ServiceResponse<Tournament>> UnregisterSelfForTournament(long tournamentId,long playerId);
+        public Task<ServiceResponse<TournamentDTO>> UnregisterSelfForTournament(long tournamentId,long playerId);
 
-        public Task<ServiceResponse<Tournament>> RegisterSelfForTournament(long tournamentId, long playerId);
+        public Task<ServiceResponse<TournamentDTO>> RegisterSelfForTournament(long tournamentId, long playerId);
     }
 }

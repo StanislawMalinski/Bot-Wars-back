@@ -2,6 +2,7 @@ using BotWars.Models;
 using BotWars.Repository;
 using BotWars.Services;
 using BotWars.Services.IServices;
+using BotWars.TournamentData;
 using Microsoft.EntityFrameworkCore;
 using MySql.Data.MySqlClient;
 
@@ -16,6 +17,7 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<IGameServis, GameServis>();
 builder.Services.AddScoped<TournamentRepository, TournamentRepository>();
 builder.Services.AddScoped<ITournamentService, TournamentService>();
+builder.Services.AddScoped<ITournamentMapper, TournamentMapper>();
 builder.Services.AddDbContext<DataContext>(options =>
 {
     options.UseMySQL(builder.Configuration.GetConnectionString("DefaultConnection"));
