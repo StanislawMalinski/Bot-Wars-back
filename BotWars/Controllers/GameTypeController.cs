@@ -17,9 +17,8 @@ namespace BotWars.Controllers
         }
 
         [HttpPost("addGameType")]
-        public async Task<ActionResult<ServiceResponse<GameTypeDto>>> CreateGameType(String name, bool isAvialable)
+        public async Task<ActionResult<ServiceResponse<GameTypeDto>>> CreateGameType([FromBody] GameTypeDto gameType)
         {
-            GameType gameType = new GameType{ Name = name, IsAvialable = isAvialable };
             var response = await _gameTypeService.CreateGameType(gameType);
             if (response.Success)
             {
@@ -41,7 +40,7 @@ namespace BotWars.Controllers
         }
 
         [HttpDelete("deleteGameType")]
-        public async Task<IActionResult> DeleteGame(long id)
+        public async Task<IActionResult> DeleteGame([FromQuery] long id)
         {
             var response = await _gameTypeService.DeleteGame(id);
             if (response.Success)
@@ -49,6 +48,17 @@ namespace BotWars.Controllers
                 return Ok(response);
             }
             return NotFound(response);
+        }
+
+        [HttpPut("modifyGameType")]
+        public async Task<ActionResult<ServiceResponse<GameTypeDto>>> ModifyGameType([FromQuery] long id, [FromBody] GameTypeDto gameTypeDto)
+        {
+            var response = await _gameTypeService.ModifyGameType(id, gameTypeDto);
+            if (response.Success)
+            {
+                return Ok(response);
+            }
+            return BadRequest(response);
         }
     }
 }
