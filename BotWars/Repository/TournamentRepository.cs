@@ -1,16 +1,20 @@
-﻿using BotWars.Models;
+﻿using AutoMapper;
+using BotWars.Models;
 using BotWars.Services;
 using BotWars.TournamentData;
 using Microsoft.EntityFrameworkCore;
 
 namespace BotWars.Repository
 {
-    public class TournamentRepository
+    public class TournamentRepository // this code was refactored by upgrading to AutoMapper
     {
         private readonly DataContext _dataContext;
         private readonly ITournamentMapper _mapper;
-        public TournamentRepository(DataContext dataContext, ITournamentMapper mapper)
+        private readonly IMapper _mapper1;
+
+        public TournamentRepository(DataContext dataContext, ITournamentMapper mapper, IMapper mapper1)
         {
+            //_mapper1 = mapper1; //Automapper
             _dataContext = dataContext;
             _mapper = mapper;
         }
@@ -20,12 +24,14 @@ namespace BotWars.Repository
             try
             {
                 Tournament tournament = _mapper.DtoToTournament(dto);
+                //_mapper1.Map<Tournament>(dto); //does the same but with 1 external line of code 
                 tournament.PostedDate = DateTime.Now;
                 await _dataContext.Tournaments.AddAsync(tournament);
                 await _dataContext.SaveChangesAsync();
                 return new ServiceResponse<TournamentDTO>() 
                 { 
                     Data = _mapper.TournamentToDTO(tournament),
+                    //Data = _mapper1.Map<TournamentDTO>(tournament),
                     Success = true 
                 };
             }
@@ -56,6 +62,7 @@ namespace BotWars.Repository
                 var response = new ServiceResponse<TournamentDTO>()
                 {
                     Data = _mapper.TournamentToDTO(tournament),
+                    //Data = _mapper1.Map<TournamentDTO>(tournament),
                     Message = "Tournament was delated",
                     Success = true
                 };
@@ -87,6 +94,7 @@ namespace BotWars.Repository
                 return new ServiceResponse<TournamentDTO>() 
                 { 
                     Data = _mapper.TournamentToDTO(tournament),
+                    //Data = _mapper1.Map<TournamentDTO>(tournament),
                     Success = true 
                 };
             }
@@ -106,9 +114,10 @@ namespace BotWars.Repository
             try
             {
                 Tournament tournament = _mapper.DtoToTournament(dto);
+                //Data = _mapper1.Map<TournamentDTO>(tournament),
                 var TournamentToEdit = new Tournament() { Id = tournament.Id };
                 _dataContext.Tournaments.Attach(TournamentToEdit);
-
+                
                 TournamentToEdit.TournamentTitles = tournament.TournamentTitles;
                 TournamentToEdit.Description = tournament.Description;
                 TournamentToEdit.GameId = tournament.GameId;
@@ -122,6 +131,7 @@ namespace BotWars.Repository
                 return new ServiceResponse<TournamentDTO> 
                 { 
                     Data = _mapper.TournamentToDTO(TournamentToEdit),
+                    //Data = _mapper1.Map<TournamentDTO>(TournamentToEdit),
                     Success = true 
                 };
             }
@@ -144,6 +154,7 @@ namespace BotWars.Repository
             try
             {
                 var dtos = tournaments.Select(x => _mapper.TournamentToDTO(x)).ToList();
+                //var dtos = tournaments.Select(x => _mapper1.Map<TournamentDTO>(x)).ToList();
                 var response = new ServiceResponse<List<TournamentDTO>>()
                 {
                     Data = dtos,

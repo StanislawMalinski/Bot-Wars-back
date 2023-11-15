@@ -1,6 +1,4 @@
-﻿using BotWars.Models;
-
-namespace BotWars.Gry
+﻿namespace BotWars.Models
 {
     public class BotFile : IFileData
     {

@@ -1,10 +1,10 @@
-﻿using BotWars.Gry;
+﻿using BotWars.Games;
 using BotWars.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace BotWars.Services
 {
-    public class ArchivedMatchesPlayersService
+    public class ArchivedMatchesPlayersService : IArchivedMatchesPlayersService
     {
         private readonly DataContext _dataContext;
         public ArchivedMatchesPlayersService(DataContext dataContext)
@@ -81,7 +81,7 @@ namespace BotWars.Services
             }
         }
 
-        public async Task<ServiceResponse<List<ArchivedMatchPlayers>>> GetArchivedMatchPlayerssAsync()
+        public async Task<ServiceResponse<List<ArchivedMatchPlayers>>> GetArchivedMatchPlayersAsync()
         {
 
             var ArchivedMatchPlayerss = await _dataContext.ArchivedMatchPlayers.ToListAsync();

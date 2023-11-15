@@ -1,4 +1,4 @@
-﻿using BotWars.Gry;
+﻿using BotWars.Games;
 using BotWars.Services;
 using BotWars.TournamentData;
 using Microsoft.EntityFrameworkCore;
@@ -48,7 +48,7 @@ namespace BotWars.Models
                 .IsRequired();
 
             modelBuilder.Entity<Game>()
-                .Property(p => p.IsAvaiableForPlay)
+                .Property(p => p.IsAvailableForPlay)
                 .IsRequired();
             //Player
             modelBuilder.Entity<Player>()

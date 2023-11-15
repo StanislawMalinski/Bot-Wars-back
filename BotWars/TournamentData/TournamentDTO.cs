@@ -1,6 +1,4 @@
-﻿using BotWars.Gry;
-
-namespace BotWars.TournamentData
+﻿namespace BotWars.TournamentData
 {
     public class TournamentDTO
     {

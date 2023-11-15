@@ -1,4 +1,4 @@
-﻿namespace BotWars.Gry
+﻿namespace BotWars.Games
 {
     public class Player
     {

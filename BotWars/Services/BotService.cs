@@ -1,10 +1,10 @@
-﻿using BotWars.Gry;
+﻿using BotWars.Games;
 using BotWars.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace BotWars.Services
 {
-    public class BotService
+    public class BotService : IBotService
     {
         private readonly DataContext _dataContext;
         public BotService(DataContext dataContext)

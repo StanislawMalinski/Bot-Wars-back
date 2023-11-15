@@ -1,4 +1,4 @@
-﻿using BotWars.Gry;
+﻿using BotWars.Games;
 
 namespace BotWars.TournamentData
 {

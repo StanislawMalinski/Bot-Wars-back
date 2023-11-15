@@ -1,6 +1,6 @@
 ﻿using BotWars.TournamentData;
 
-namespace BotWars.Gry
+namespace BotWars.Games
 {
     public class ArchivedMatches
     {

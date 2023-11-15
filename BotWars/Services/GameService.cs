@@ -1,4 +1,4 @@
-﻿using BotWars.Gry;
+﻿using BotWars.Games;
 using BotWars.Models;
 using BotWars.Services.IServices;
 using Microsoft.EntityFrameworkCore;
@@ -6,11 +6,15 @@ using Microsoft.VisualBasic;
 
 namespace BotWars.Services
 {
-    public class GameServis : IGameServis
+    public class GameService : IGameService
     {
 
         private readonly DataContext _dataContext;
-        public GameServis(DataContext dataContext) { 
+        private readonly ILogger<GameService> _logger;
+
+        public GameService(DataContext dataContext, ILogger<GameService> logger)
+        {
+            _logger = logger;
             _dataContext = dataContext;
         }
 
@@ -20,16 +24,22 @@ namespace BotWars.Services
             {
                 await _dataContext.Games.AddAsync(game);
                 await _dataContext.SaveChangesAsync();
+                
                 return new ServiceResponse<Game>() { Data = game, Success = true };
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                return new ServiceResponse<Game>()
+                var result =  new ServiceResponse<Game>()
                 {
                     Data = game,
                     Success = false,
                     Message = "Cannot create game"
                 };
+
+                _logger.LogError(e, result.Message);
+
+
+                return result;
             }
         }
 
@@ -85,10 +95,11 @@ namespace BotWars.Services
 
         public async Task<ServiceResponse<List<Game>>> GetGamesAsync()
         {
-
-            var games = await _dataContext.Games.ToListAsync();
             try
             {
+                var games = await _dataContext.Games.ToListAsync();
+
+                _logger.LogInformation("zapisało sie dobrze");
                 var response = new ServiceResponse<List<Game>>()
                 {
                     Data = games,
@@ -98,14 +109,19 @@ namespace BotWars.Services
 
                 return response;
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                return new ServiceResponse<List<Game>>()
+                var result =  new ServiceResponse<List<Game>>()
                 {
                     Data = null,
-                    Message = "Problem with database",
-                    Success = false
+                    Success = false,
+                    Message = "Cannot retrieve any game"
                 };
+
+                _logger.LogError(e, result.Message);
+
+
+                return result;
             }
 
         }

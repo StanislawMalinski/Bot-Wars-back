@@ -1,7 +1,6 @@
-﻿using BotWars.Models;
-using BotWars.TournamentData;
+﻿using BotWars.TournamentData;
 
-namespace BotWars.Gry
+namespace BotWars.Games
 {
     public class Game //: IFileData
     {
@@ -11,7 +10,7 @@ namespace BotWars.Gry
         public String? GameFile { get; set; }
         public String? GameInstructions { get; set; }
         public String? InterfaceDefinition { get; set; }
-        public bool IsAvaiableForPlay { get; set; }
+        public bool IsAvailableForPlay { get; set; }
 
 
         public List<Bot>? Bot { get; set; }

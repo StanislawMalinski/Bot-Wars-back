@@ -1,8 +1,8 @@
-﻿using BotWars.Gry;
+﻿using BotWars.Games;
 
 namespace BotWars.Services.IServices
 {
-    public interface IGameServis
+    public interface IGameService
     {
         public Task<ServiceResponse<List<Game>>> GetGamesAsync();
 

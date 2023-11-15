@@ -1,4 +1,4 @@
-﻿using BotWars.Gry;
+﻿using BotWars.Games;
 
 namespace BotWars.TournamentData
 {
@@ -20,4 +20,6 @@ namespace BotWars.TournamentData
         public List<ArchivedMatches>? ArchivedMatches { get; set; }
         public List<TournamentReference>? TournamentReference { get; set; }
     }
+    
+    
 }
