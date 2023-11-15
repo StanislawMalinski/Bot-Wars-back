@@ -1,5 +1,6 @@
 ﻿using BotWars.Gry;
 using BotWars.Models;
+using BotWars.Services.IServices;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.VisualBasic;
 
@@ -13,21 +14,21 @@ namespace BotWars.Services
             _dataContext = dataContext;
         }
 
-        public async Task<ServiceResponse<Game>> CreateGameAsync(Game product)
+        public async Task<ServiceResponse<Game>> CreateGameAsync(Game game)
         {
             try
             {
-                await _dataContext.Games.AddAsync(product);
+                await _dataContext.Games.AddAsync(game);
                 await _dataContext.SaveChangesAsync();
-                return new ServiceResponse<Game>() { Data = product, Success = true };
+                return new ServiceResponse<Game>() { Data = game, Success = true };
             }
             catch (Exception)
             {
                 return new ServiceResponse<Game>()
                 {
-                    Data = product,
+                    Data = game,
                     Success = false,
-                    Message = "Cannot create book"
+                    Message = "Cannot create game"
                 };
             }
         }
@@ -39,13 +40,13 @@ namespace BotWars.Services
             try
             {
                 Game book = _dataContext.Games.Find(id);
-                if (book == null) return new ServiceResponse<Game>() { Data = book, Success = false, Message = $"Book of id {id} dont exits" };
+                if (book == null) return new ServiceResponse<Game>() { Data = book, Success = false, Message = $"Game of id {id} dont exits" };
                 _dataContext.Games.Remove(book);
                 await _dataContext.SaveChangesAsync();
                 var response = new ServiceResponse<Game>()
                 {
                     Data = book,
-                    Message = "Book was delated",
+                    Message = "Game was delated",
                     Success = true
                 };
 
@@ -66,10 +67,10 @@ namespace BotWars.Services
         {
             try
             {
-                Game book = _dataContext.Games.Find(id);
-                if(book == null) return new ServiceResponse<Game>() { Data = book, Success = false,Message=$"Book of id {id} dont exits" };
+                Game game = _dataContext.Games.Find(id);
+                if(game == null) return new ServiceResponse<Game>() { Data = game, Success = false,Message=$"Game of id {id} dont exits" };
 
-                return new ServiceResponse<Game>() { Data = book, Success = true };
+                return new ServiceResponse<Game>() { Data = game, Success = true };
             }
             catch (Exception)
             {
@@ -85,12 +86,12 @@ namespace BotWars.Services
         public async Task<ServiceResponse<List<Game>>> GetGamesAsync()
         {
 
-            var books = await _dataContext.Games.ToListAsync();
+            var games = await _dataContext.Games.ToListAsync();
             try
             {
                 var response = new ServiceResponse<List<Game>>()
                 {
-                    Data = books,
+                    Data = games,
                     Message = "Ok",
                     Success = true
                 };
@@ -102,24 +103,22 @@ namespace BotWars.Services
                 return new ServiceResponse<List<Game>>()
                 {
                     Data = null,
-                    Message = "Problem with dataseeder library",
+                    Message = "Problem with database",
                     Success = false
                 };
             }
 
         }
 
-        public async Task<ServiceResponse<Game>> UpdateGameAsync(Game product)
+        public async Task<ServiceResponse<Game>> UpdateGameAsync(Game game)
         {
             try
             {
-                var productToEdit = new Game() { Id = product.Id };
+                var productToEdit = new Game() { Id = game.Id };
                 _dataContext.Games.Attach(productToEdit);
-/*
-                productToEdit.Title = product.Title;
-                productToEdit.Description = product.Description;
-                productToEdit.Author = product.Author;
-                productToEdit.NumberOfBooks = product.NumberOfBooks;*/
+
+                //productToEdit.Description = product.Description;
+               
 
                 await _dataContext.SaveChangesAsync();
                 return new ServiceResponse<Game> { Data = productToEdit, Success = true };
@@ -128,9 +127,9 @@ namespace BotWars.Services
             {
                 return new ServiceResponse<Game>
                 {
-                    Data = product,
+                    Data = game,
                     Success = false,
-                    Message = "An error occured while updating product"
+                    Message = "An error occured while updating game"
                 };
             }
         }

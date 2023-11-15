@@ -1,10 +1,10 @@
 ﻿using BotWars.Gry;
 
-namespace BotWars.Services
+namespace BotWars.Services.IServices
 {
     public interface IGameServis
     {
-        public  Task<ServiceResponse<List<Game>>> GetGamesAsync();
+        public Task<ServiceResponse<List<Game>>> GetGamesAsync();
 
         public Task<ServiceResponse<Game>> GetGameAsync(long id);
 

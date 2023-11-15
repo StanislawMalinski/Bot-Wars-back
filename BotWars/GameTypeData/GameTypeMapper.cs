@@ -1,4 +1,4 @@
-﻿using BotWars.RockPaperScissorsData;
+﻿//using BotWars.RockPaperScissorsData;
 
 namespace BotWars.GameTypeData
 {
