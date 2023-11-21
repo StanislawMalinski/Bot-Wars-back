@@ -1,34 +1,36 @@
-using BotWars.Models;
-using BotWars.Repository;
-using BotWars.Services;
-using BotWars.Services.IServices;
-using BotWars.TournamentData;
+using Communication.Services;
 using Microsoft.EntityFrameworkCore;
-using MySql.Data.MySqlClient;
+using NLog.Web;
+using Shared.DataAccess.Context;
+using Shared.DataAccess.Repositories;
+using Shared.DataAccess.RepositoryInterfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+//Logger
+builder.Logging.ClearProviders();
+builder.Logging.SetMinimumLevel(LogLevel.Trace);
+builder.Host.UseNLog();
+builder.Services.AddLogging();
 
+// Add services to the container.
 builder.Services.AddControllers();
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddScoped<IGameServis, GameServis>();
+builder.Services.AddScoped<IGameService, GameService>();
 builder.Services.AddScoped<TournamentRepository, TournamentRepository>();
 builder.Services.AddScoped<ITournamentService, TournamentService>();
-builder.Services.AddScoped<ITournamentMapper, TournamentMapper>();
 builder.Services.AddDbContext<DataContext>(options =>
 {
     options.UseMySQL(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
 var app = builder.Build();
 
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+
+app.UseSwagger();
+app.UseSwaggerUI();
+
 app.UseHttpsRedirection();
 
 app.UseAuthorization();

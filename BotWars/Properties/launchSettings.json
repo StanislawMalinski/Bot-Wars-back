@@ -22,7 +22,7 @@
     "IIS Express": {
       "commandName": "IISExpress",
       "launchBrowser": true,
-      "launchUrl": "weatherforecast",
+      "launchUrl": "BotWarsApi",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
