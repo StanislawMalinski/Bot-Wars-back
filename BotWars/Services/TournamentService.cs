@@ -1,14 +1,12 @@
-﻿using AutoMapper;
-using BotWars.Models;
-using BotWars.Repository;
+﻿using BotWars.Repository;
 using BotWars.Services.IServices;
 using BotWars.TournamentData;
-using Microsoft.EntityFrameworkCore;
 
 namespace BotWars.Services
 {
     public class TournamentService : ITournamentService
     {
+        
         private readonly TournamentRepository _tournamentRepository;
 
         public TournamentService(TournamentRepository tournamentRepository)
@@ -34,10 +32,9 @@ namespace BotWars.Services
         public async Task<ServiceResponse<List<TournamentDTO>>> GetListOfTournamentsFiltered()
         {
             var tourlist = await _tournamentRepository.GetTournamentsAsync();
-            if(tourlist.Success)
+            if (tourlist.Success)
             {
                 //filter;
-
             }
 
             return tourlist;
@@ -50,12 +47,12 @@ namespace BotWars.Services
 
         public async Task<ServiceResponse<TournamentDTO>> RegisterSelfForTournament(long tournamentId, long playerId)
         {
-            return await _tournamentRepository.RegisterSelfForTournament(tournamentId, playerId);  
+            return await _tournamentRepository.RegisterSelfForTournament(tournamentId, playerId);
         }
 
         public async Task<ServiceResponse<TournamentDTO>> UnregisterSelfForTournament(long tournamentId, long playerId)
         {
-            return await _tournamentRepository.UnregisterSelfForTournament(tournamentId,playerId);
+            return await _tournamentRepository.UnregisterSelfForTournament(tournamentId, playerId);
         }
 
         public async Task<ServiceResponse<TournamentDTO>> UpdateTournament(long id, TournamentDTO tournament)

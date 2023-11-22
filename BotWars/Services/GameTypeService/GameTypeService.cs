@@ -105,7 +105,7 @@ namespace BotWars.Services.GameTypeService
 
         public async Task<ServiceResponse<GameTypeDto>> ModifyGameType(long id, GameTypeDto gameTypeDto)
         {
-            try 
+            /*try 
             {
                 var gameType = _mapper.ToGameType(gameTypeDto);
                 gameType.Id = id;
@@ -128,10 +128,11 @@ namespace BotWars.Services.GameTypeService
                     Message = RockPaperScissorsConstants.DATABASE_FAILURE,
                     Success = false
                 };
-            }
+            }*/
+            throw new NotImplementedException("niezgodne z nową koncepcją chyba");
         }
 
-        public int ValidateUser(string login, string key)
+        public PlayerPermitEnum ValidateUser(string login, string key)
         {
             //TODO Zaimplementować walidację kiedy będzie użytkownik
             throw new NotImplementedException();

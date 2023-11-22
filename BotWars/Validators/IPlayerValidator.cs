@@ -2,6 +2,6 @@
 {
     public interface IPlayerValidator
     {
-        int ValidateUser(String login, String key);
+        public PlayerPermitEnum ValidateUser(string login, string key);
     }
 }
