@@ -1,10 +1,9 @@
 ﻿using BotWars.Services;
-using BotWars.TournamentData;
 using Communication.APIs.DTOs;
-using Communication.APIs.Mappers;
 using Microsoft.EntityFrameworkCore;
 using Shared.DataAccess.Context;
 using Shared.DataAccess.DataBaseEntities;
+using Shared.DataAccess.Mappers;
 
 namespace Shared.DataAccess.Repositories
 {

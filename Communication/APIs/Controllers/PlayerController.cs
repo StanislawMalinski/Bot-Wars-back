@@ -1,5 +1,7 @@
 ﻿using BotWars.Services;
 using Microsoft.AspNetCore.Mvc;
+using Shared.DataAccess.DataBaseEntities;
+using Shared.DataAccess.RepositoryInterfaces;
 
 namespace Communication.APIs.Controllers
 {

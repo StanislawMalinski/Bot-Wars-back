@@ -16,7 +16,13 @@
     </ItemGroup>
 
     <ItemGroup>
+      <Folder Include="APIs\DTOs\" />
+      <Folder Include="APIs\Mappers\" />
       <Folder Include="Services\idontknowwheretoaddthis\" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\Shared\Shared.csproj" />
     </ItemGroup>
 
 </Project>

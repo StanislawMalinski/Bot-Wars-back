@@ -1,4 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using BotWars.Services;
+using Microsoft.AspNetCore.Mvc;
+using Shared.DataAccess.DataBaseEntities;
+using Shared.DataAccess.RepositoryInterfaces;
 
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -10,9 +13,9 @@ namespace Communication.APIs.Controllers
     public class GameController : Controller
     {
 
-        private readonly IGameServis _gameService;
+        private readonly IGameService _gameService;
 
-        public GameController(IGameServis gameService)
+        public GameController(IGameService gameService)
         {
             _gameService = gameService;
         }

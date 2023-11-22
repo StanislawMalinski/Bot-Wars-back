@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "6yVAGlXi3RWptZapjDAdTwj+M9SqGJlegro1+OMlKYDDg6MzpLNsDrmZZrmOpXrapof0NkSeC06EC/rTOB6+5A==",
+  "dgSpecHash": "CkLxGA+g5PXz7KI5wEMdQQ0a/aJ95IndecXCPm5cHQGwJGLobgjbo2gVL6FepxxqT0H2So/Oq3yI1bFEPCVqFA==",
   "success": true,
-  "projectFilePath": "C:\\Users\\testo\\Desktop\\target\\BotWars\\UnitTests\\UnitTests.csproj",
+  "projectFilePath": "C:\\Users\\testo\\Documents\\GitHub\\Bot-Wars-back\\UnitTests\\UnitTests.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\testo\\.nuget\\packages\\coverlet.collector\\6.0.0\\coverlet.collector.6.0.0.nupkg.sha512",
     "C:\\Users\\testo\\.nuget\\packages\\microsoft.codecoverage\\17.6.0\\microsoft.codecoverage.17.6.0.nupkg.sha512",

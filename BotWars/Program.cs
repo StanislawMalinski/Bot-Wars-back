@@ -1,9 +1,9 @@
-using Communication.Services;
 using Microsoft.EntityFrameworkCore;
 using NLog.Web;
 using Shared.DataAccess.Context;
 using Shared.DataAccess.Repositories;
 using Shared.DataAccess.RepositoryInterfaces;
+using Shared.DataAccess.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 

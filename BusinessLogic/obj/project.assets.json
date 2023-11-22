@@ -13,11 +13,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\testo\\Desktop\\target\\BotWars\\BusinessLogic\\BusinessLogic.csproj",
+      "projectUniqueName": "C:\\Users\\testo\\Documents\\GitHub\\Bot-Wars-back\\BusinessLogic\\BusinessLogic.csproj",
       "projectName": "BusinessLogic",
-      "projectPath": "C:\\Users\\testo\\Desktop\\target\\BotWars\\BusinessLogic\\BusinessLogic.csproj",
+      "projectPath": "C:\\Users\\testo\\Documents\\GitHub\\Bot-Wars-back\\BusinessLogic\\BusinessLogic.csproj",
       "packagesPath": "C:\\Users\\testo\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\testo\\Desktop\\target\\BotWars\\BusinessLogic\\obj\\",
+      "outputPath": "C:\\Users\\testo\\Documents\\GitHub\\Bot-Wars-back\\BusinessLogic\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\testo\\AppData\\Roaming\\NuGet\\NuGet.Config",
