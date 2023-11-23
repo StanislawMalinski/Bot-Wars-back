@@ -4,9 +4,11 @@
     <option name="keyValueStorage">
       <map>
         <entry key="Common:buildConfiguration" value="Debug" />
+        <entry key="Common:de9c2f50-e257-4c15-8df1-6581a85a6568:dbContext" value="Shared.DataAccess.Context.DataContext" />
         <entry key="Common:ec87e711-4e38-4113-95f1-a6b3cfdc5ae9:dbContext" value="Shared.DataAccess.Context.DataContext" />
         <entry key="Common:noBuild" value="false" />
-        <entry key="Common:outputFolder" value="Migrations" />
+        <entry key="Common:outputFolder" value="DataAccess\Migrations" />
+        <entry key="Common:targetFramework" value="net8.0" />
       </map>
     </option>
   </component>
