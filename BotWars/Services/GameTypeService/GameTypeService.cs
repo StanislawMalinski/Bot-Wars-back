@@ -105,33 +105,34 @@ namespace BotWars.Services.GameTypeService
 
         public async Task<ServiceResponse<GameTypeDto>> ModifyGameType(long id, GameTypeDto gameTypeDto)
         {
-            try 
-            {
-                var gameType = _mapper.ToGameType(gameTypeDto);
-                gameType.Id = id;
-                var oldValue = _dataContext.GameTypes.Update(gameType);
-                if (oldValue == null) return new ServiceResponse<GameTypeDto>() { Data = null, Success = false, Message = $"Game Type with id {id} does not exist" };
-                await _dataContext.SaveChangesAsync();
-                var response = new ServiceResponse<GameTypeDto>()
-                {
-                    Data = gameTypeDto,
-                    Message = GameTypeConstants.GAMETYPE_MODIFIED_SUCCESS,
-                    Success = true
-                };
-                return response;
-            }
-            catch (Exception)
-            {
-                return new ServiceResponse<GameTypeDto>()
-                {
-                    Data = null,
-                    Message = RockPaperScissorsConstants.DATABASE_FAILURE,
-                    Success = false
-                };
-            }
-        }
+			//try 
+			//{
+			//    var gameType = _mapper.ToGameType(gameTypeDto);
+			//    gameType.Id = id;
+			//    var oldValue = _dataContext.GameTypes.Update(gameType);
+			//    if (oldValue == null) return new ServiceResponse<GameTypeDto>() { Data = null, Success = false, Message = $"Game Type with id {id} does not exist" };
+			//    await _dataContext.SaveChangesAsync();
+			//    var response = new ServiceResponse<GameTypeDto>()
+			//    {
+			//        Data = gameTypeDto,
+			//        Message = GameTypeConstants.GAMETYPE_MODIFIED_SUCCESS,
+			//        Success = true
+			//    };
+			//    return response;
+			//}
+			//catch (Exception)
+			//{
+			//    return new ServiceResponse<GameTypeDto>()
+			//    {
+			//        Data = null,
+			//        Message = RockPaperScissorsConstants.DATABASE_FAILURE,
+			//        Success = false
+			//    };
+			//}
+			throw new NotImplementedException("niezgodne z nową koncepcją chyba");
+		}
 
-        public int ValidateUser(string login, string key)
+		public int ValidateUser(string login, string key)
         {
             //TODO Zaimplementować walidację kiedy będzie użytkownik
             throw new NotImplementedException();

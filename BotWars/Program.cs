@@ -24,6 +24,15 @@ builder.Services.AddDbContext<DataContext>(options =>
 });
 var app = builder.Build();
 
+if (true) //app.Environment.IsDevelopment()
+{
+    using (var scope = app.Services.CreateScope())
+    {
+        var dataContext = scope.ServiceProvider.GetRequiredService<DataContext>();
+        dataContext.Database.Migrate();
+    }
+}
+
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();

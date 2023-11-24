@@ -1,0 +1,27 @@
+﻿services:
+    api:
+      build: .  
+      image: bot_wars
+      container_name: bot_wars_app
+      ports:
+        - "5000:80"
+      depends_on:
+        sql:
+            condition: service_healthy
+    sql:
+      image: mysql:latest
+      container_name: bot_wars_mysql
+      ports:
+        - "3306:3306"
+      environment:
+        - MYSQL_ROOT_PASSWORD=wysocki
+        - MYSQL_DATABASE=Games
+      healthcheck:
+        test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
+        timeout: 10s
+        retries: 10
+      volumes:
+      - db:/var/lib/mysql
+
+volumes:
+  db:
