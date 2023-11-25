@@ -21,10 +21,12 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<IGameService, GameService>();
 builder.Services.AddScoped<TournamentRepository, TournamentRepository>();
 builder.Services.AddScoped<ITournamentService, TournamentService>();
-builder.Services.AddDbContext<DataContext>(options =>
-{
-    options.UseMySQL(builder.Configuration.GetConnectionString("DefaultConnection"));
-});
+
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+ArgumentNullException.ThrowIfNull(connectionString, nameof(connectionString));
+builder.Services.AddDbContext<TournamentDbContext>(options => options.UseMySQL(connectionString));
+builder.Services.AddDbContext<PlayerDbContext>(options => options.UseMySQL(connectionString));
+
 var app = builder.Build();
 
 

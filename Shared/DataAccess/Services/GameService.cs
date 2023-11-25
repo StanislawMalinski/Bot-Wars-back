@@ -17,6 +17,8 @@ namespace Shared.DataAccess.Services
 
         public async Task<ServiceResponse<Game>> CreateGameAsync(Game game)
         {
+            throw new NotImplementedException();
+            /*
             try
             {
                 await _dataContext.Games.AddAsync(game);
@@ -31,13 +33,14 @@ namespace Shared.DataAccess.Services
                     Success = false,
                     Message = "Cannot create game"
                 };
-            }
+            }*/
         }
 
         public async Task<ServiceResponse<Game>> DeleteGameAsync(long id)
         {
 
-
+            throw new NotImplementedException();
+            /*
             try
             {
                 Game book = _dataContext.Games.Find(id);
@@ -61,11 +64,13 @@ namespace Shared.DataAccess.Services
                     Message = "Problem with database",
                     Success = false
                 };
-            }
+            }*/
         }
 
         public async Task<ServiceResponse<Game>> GetGameAsync(long id)
         {
+            throw new NotImplementedException();
+            /*
             try
             {
                 Game game = _dataContext.Games.Find(id);
@@ -81,12 +86,13 @@ namespace Shared.DataAccess.Services
                     Success = false,
                     Message = "Problem with database"
                 };
-            }
+            }*/
         }
 
         public async Task<ServiceResponse<List<Game>>> GetGamesAsync()
         {
-
+            throw new NotImplementedException();
+            /*
             var games = await _dataContext.Games.ToListAsync();
             try
             {
@@ -107,12 +113,14 @@ namespace Shared.DataAccess.Services
                     Message = "Problem with database",
                     Success = false
                 };
-            }
+            }*/
 
         }
 
         public async Task<ServiceResponse<Game>> UpdateGameAsync(Game game)
         {
+            throw new NotImplementedException();
+            /*
             try
             {
                 var productToEdit = new Game() { Id = game.Id };
@@ -132,7 +140,7 @@ namespace Shared.DataAccess.Services
                     Success = false,
                     Message = "An error occured while updating game"
                 };
-            }
+            }*/
         }
     }
 }

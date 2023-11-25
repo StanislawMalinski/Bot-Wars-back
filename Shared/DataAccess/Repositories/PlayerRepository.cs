@@ -7,9 +7,9 @@ namespace Shared.DataAccess.Repositories
 {
     public class PlayerRepository
     {
-        private readonly DataContext _context;
+        private readonly PlayerDbContext _context;
 
-        public PlayerRepository(DataContext context) { 
+        public PlayerRepository(PlayerDbContext context) { 
             _context = context;
         }
 
