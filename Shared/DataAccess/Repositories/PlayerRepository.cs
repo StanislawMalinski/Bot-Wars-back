@@ -7,9 +7,9 @@ namespace Shared.DataAccess.Repositories
 {
     public class PlayerRepository
     {
-        private readonly PlayerDbContext _context;
+        private readonly DataContext _context;
 
-        public PlayerRepository(PlayerDbContext context) { 
+        public PlayerRepository(DataContext context) { 
             _context = context;
         }
 
@@ -17,6 +17,7 @@ namespace Shared.DataAccess.Repositories
         {
             try
             {
+                
                 await _context.Players.AddAsync(player);
                 await _context.SaveChangesAsync();
                 return new ServiceResponse<Player>() { Data = player, Success = true };

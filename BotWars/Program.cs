@@ -24,8 +24,7 @@ builder.Services.AddScoped<ITournamentService, TournamentService>();
 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 ArgumentNullException.ThrowIfNull(connectionString, nameof(connectionString));
-builder.Services.AddDbContext<TournamentDbContext>(options => options.UseMySQL(connectionString));
-builder.Services.AddDbContext<PlayerDbContext>(options => options.UseMySQL(connectionString));
+builder.Services.AddDbContext<DataContext>(options => options.UseMySQL(connectionString));
 
 var app = builder.Build();
 

@@ -9,9 +9,9 @@ namespace Shared.DataAccess.Repositories
 {
     public class TournamentRepository
     {
-        private readonly TournamentDbContext _dataContext;
+        private readonly DataContext _dataContext;
         private readonly ITournamentMapper _mapper;
-        public TournamentRepository(TournamentDbContext dataContext, ITournamentMapper mapper)
+        public TournamentRepository(DataContext dataContext, ITournamentMapper mapper)
         {
             _dataContext = dataContext;
             _mapper = mapper;
