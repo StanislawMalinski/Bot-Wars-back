@@ -1,46 +1,69 @@
-﻿using Shared.DataAccess.DataBaseEntities;
+﻿using Communication.APIs.DTOs;
+using Shared.DataAccess.DataBaseEntities;
+using Shared.DataAccess.Mappers;
 using Shared.DataAccess.RepositoryInterfaces;
 
 namespace Communication.Services;
 
 public class GameTypeServiceProvider
 {
-    private IGameService _gameService;
-    public GameTypeServiceProvider(IGameService gameService)
+    private readonly IGameRepository _gameRepository;
+    private GameTypeMapper _mapper;
+    public GameTypeServiceProvider(IGameRepository gameRepository)
     {
-        _gameService = gameService;
+        _gameRepository = gameRepository;
+        _mapper = new GameTypeMapper();
     }
 
-    public async void deleteGameType(Game game)
+    public async void deleteGameType(long id)
     {
-        _gameService.DeleteGameAsync(game.Id);
+        _gameRepository.DeleteGame(id);
     }
 
-    public async void updateGameType(Game game)
+    public async void updateGameType(long id, GameDto game)
     {
-        _gameService.UpdateGameAsync(game);
+
+        _gameRepository.ModifyGameType(id, _mapper.ToGameType(game));
     }
 
-    public async void addGameType(Game game)
+    public async void addGameType(GameDto game)
     {
-        
+        _gameRepository.CreateGameType(_mapper.ToGameType(game));
     }
 
-    public async void getGameType(long id)
+    public async Task<GameDto> getGameType(long id)
     {
-        var result = await _gameService.GetGameAsync(id);
-        
+        var result = await _gameRepository.GetGameType(id);
+        if (result.Success)
+        {
+            return _mapper.ToDto(result.Data);
+        }
+
+        return null;
     }
 
-    public async void getListOfTypesOfGames()
+    public async Task<List<GameDto>> getListOfTypesOfGames()
     {
-        var result = await _gameService.GetGamesAsync();
+        var result = await _gameRepository.GetGameTypes();
+        if (result.Success)
+        {
+            return result.Data.Select(x => _mapper.ToDto(x)).ToList();
+            
+        }
+
+        return null;
     }
 
-    public async void getListOfTypesOfAvailableGames()
+    public async Task<List<GameDto>> getListOfTypesOfAvailableGames()
     {
-        var result = await _gameService.GetGamesAsync();
-        
+        var result = await _gameRepository.GetGameTypes();
+        if (result.Success)
+        {
+            return result.Data.Where(x => x.IsAvaiableForPlay == true)
+                .Select(x => _mapper.ToDto(x)).ToList();
+            
+        }
 
+        return null;
     }
 }
