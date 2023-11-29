@@ -10691,11 +10691,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\testo\\Desktop\\develop\\Bot-Wars-back-Develop\\Bot-Wars-back-Develop\\BotWars\\BotWars.csproj",
+      "projectUniqueName": "C:\\Users\\testo\\Documents\\GitHub\\Bot-Wars-back\\BotWars\\BotWars.csproj",
       "projectName": "BotWars",
-      "projectPath": "C:\\Users\\testo\\Desktop\\develop\\Bot-Wars-back-Develop\\Bot-Wars-back-Develop\\BotWars\\BotWars.csproj",
+      "projectPath": "C:\\Users\\testo\\Documents\\GitHub\\Bot-Wars-back\\BotWars\\BotWars.csproj",
       "packagesPath": "C:\\Users\\testo\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\testo\\Desktop\\develop\\Bot-Wars-back-Develop\\Bot-Wars-back-Develop\\BotWars\\obj\\",
+      "outputPath": "C:\\Users\\testo\\Documents\\GitHub\\Bot-Wars-back\\BotWars\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\testo\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -10712,11 +10712,11 @@
         "net8.0": {
           "targetAlias": "net8.0",
           "projectReferences": {
-            "C:\\Users\\testo\\Desktop\\develop\\Bot-Wars-back-Develop\\Bot-Wars-back-Develop\\Communication\\Communication.csproj": {
-              "projectPath": "C:\\Users\\testo\\Desktop\\develop\\Bot-Wars-back-Develop\\Bot-Wars-back-Develop\\Communication\\Communication.csproj"
+            "C:\\Users\\testo\\Documents\\GitHub\\Bot-Wars-back\\Communication\\Communication.csproj": {
+              "projectPath": "C:\\Users\\testo\\Documents\\GitHub\\Bot-Wars-back\\Communication\\Communication.csproj"
             },
-            "C:\\Users\\testo\\Desktop\\develop\\Bot-Wars-back-Develop\\Bot-Wars-back-Develop\\Shared\\Shared.csproj": {
-              "projectPath": "C:\\Users\\testo\\Desktop\\develop\\Bot-Wars-back-Develop\\Bot-Wars-back-Develop\\Shared\\Shared.csproj"
+            "C:\\Users\\testo\\Documents\\GitHub\\Bot-Wars-back\\Shared\\Shared.csproj": {
+              "projectPath": "C:\\Users\\testo\\Documents\\GitHub\\Bot-Wars-back\\Shared\\Shared.csproj"
             }
           }
         }

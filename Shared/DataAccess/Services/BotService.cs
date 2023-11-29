@@ -2,10 +2,11 @@
 using Microsoft.EntityFrameworkCore;
 using Shared.DataAccess.Context;
 using Shared.DataAccess.DataBaseEntities;
+using Shared.DataAccess.RepositoryInterfaces;
 
 namespace Shared.DataAccess.Services
 {
-    public class BotService
+    public class BotService : IBotService
     {
         private readonly DataContext _dataContext;
         public BotService(DataContext dataContext)

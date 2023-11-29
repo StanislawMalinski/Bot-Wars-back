@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "Plz+XIlJc8k7NZm6405gBNhYzy/yh6XXBwFOq7iqN/iiGw/7WZxs+IPRNPh5vAeAtbXw8LPeHR79z4QX50Lvog==",
+  "dgSpecHash": "o7wUqGsBcq7HBBMGzUMhXJh/7MpwKUgN+Sf0VKkW7i/RDWT+fGuJh2V2XjgK0i3KwvwCO2ciwd0hCut/eXmPng==",
   "success": true,
-  "projectFilePath": "C:\\Users\\testo\\Desktop\\develop\\Bot-Wars-back-Develop\\Bot-Wars-back-Develop\\BotWars\\BotWars.csproj",
+  "projectFilePath": "C:\\Users\\testo\\Documents\\GitHub\\Bot-Wars-back\\BotWars\\BotWars.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\testo\\.nuget\\packages\\azure.core\\1.25.0\\azure.core.1.25.0.nupkg.sha512",
     "C:\\Users\\testo\\.nuget\\packages\\azure.identity\\1.7.0\\azure.identity.1.7.0.nupkg.sha512",
