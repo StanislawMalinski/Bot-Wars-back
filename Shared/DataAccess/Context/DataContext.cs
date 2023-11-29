@@ -27,6 +27,16 @@ namespace Shared.DataAccess.Context
             ConfigureArchivedMatches(modelBuilder.Entity<ArchivedMatches>());
             ConfigureArchivedMatchPlayers(modelBuilder.Entity<ArchivedMatchPlayers>());
             ConfigureTournamentReference(modelBuilder.Entity<TournamentReference>());
+            modelBuilder.ApplyConfigurationsFromAssembly(typeof(PlayerConfigurations).Assembly);
+            modelBuilder.ApplyConfigurationsFromAssembly(typeof(TournamentConfigurations).Assembly);
+            modelBuilder.ApplyConfigurationsFromAssembly(typeof(ArchivedMatchesConfigurations).Assembly);
+            modelBuilder.ApplyConfigurationsFromAssembly(typeof(ArchivedMatchPlayersConfigurations).Assembly);
+            modelBuilder.ApplyConfigurationsFromAssembly(typeof(BotConfigurations).Assembly);
+            modelBuilder.ApplyConfigurationsFromAssembly(typeof(GameConfigurations).Assembly);
+            modelBuilder.ApplyConfigurationsFromAssembly(typeof(GameTypeConfigurations).Assembly);
+            modelBuilder.ApplyConfigurationsFromAssembly(typeof(TournamentReferenceConfigurations).Assembly);
+            modelBuilder.ApplyConfigurationsFromAssembly(typeof(PointHistoryConfigurations).Assembly);
+            
         }
 
         private void ConfigureGame(EntityTypeBuilder<Game> entity)

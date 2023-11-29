@@ -16,6 +16,8 @@ namespace Shared.DataAccess.Services
 
         public async Task<ServiceResponse<ArchivedMatches>> CreateArchivedMatchesAsync(ArchivedMatches ArchivedMatches)
         {
+            throw new NotImplementedException();
+            /*
             try
             {
                 await _dataContext.ArchivedMatches.AddAsync(ArchivedMatches);
@@ -30,13 +32,14 @@ namespace Shared.DataAccess.Services
                     Success = false,
                     Message = "Cannot create ArchivedMatches"
                 };
-            }
+            }*/
         }
 
         public async Task<ServiceResponse<ArchivedMatches>> DeleteArchivedMatchesAsync(long id)
         {
 
-
+            throw new NotImplementedException();
+            /*
             try
             {
                 ArchivedMatches book = _dataContext.ArchivedMatches.Find(id);
@@ -60,11 +63,13 @@ namespace Shared.DataAccess.Services
                     Message = "Problem with database",
                     Success = false
                 };
-            }
+            }*/
         }
 
         public async Task<ServiceResponse<ArchivedMatches>> GetArchivedMatchesAsync(long id)
         {
+            throw new NotImplementedException();
+            /*
             try
             {
                 ArchivedMatches ArchivedMatches = _dataContext.ArchivedMatches.Find(id);
@@ -80,12 +85,13 @@ namespace Shared.DataAccess.Services
                     Success = false,
                     Message = "Problem with database"
                 };
-            }
+            }*/
         }
 
         public async Task<ServiceResponse<List<ArchivedMatches>>> GetArchivedMatchessAsync()
         {
-
+            throw new NotImplementedException();
+            /*
             var ArchivedMatchess = await _dataContext.ArchivedMatches.ToListAsync();
             try
             {
@@ -106,12 +112,14 @@ namespace Shared.DataAccess.Services
                     Message = "Problem with database",
                     Success = false
                 };
-            }
+            }*/
 
         }
 
         public async Task<ServiceResponse<ArchivedMatches>> UpdateArchivedMatchesAsync(ArchivedMatches ArchivedMatches)
         {
+            throw new NotImplementedException();
+            /*
             try
             {
                 var productToEdit = new ArchivedMatches() { Id = ArchivedMatches.Id };
@@ -131,7 +139,7 @@ namespace Shared.DataAccess.Services
                     Success = false,
                     Message = "An error occured while updating ArchivedMatches"
                 };
-            }
+            }*/
         }
     }
 }
