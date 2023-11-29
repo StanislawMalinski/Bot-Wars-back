@@ -12,7 +12,7 @@ using Shared.DataAccess.Context;
 namespace Shared.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20231123055614_Initial")]
+    [Migration("20231129010009_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -223,6 +223,9 @@ namespace Shared.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
 
+                    b.Property<long?>("BotId")
+                        .HasColumnType("bigint");
+
                     b.Property<long>("bodId")
                         .HasColumnType("bigint");
 
@@ -231,7 +234,7 @@ namespace Shared.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("bodId");
+                    b.HasIndex("BotId");
 
                     b.HasIndex("tournamentId");
 
@@ -270,13 +273,13 @@ namespace Shared.Migrations
                     b.HasOne("Shared.DataAccess.DataBaseEntities.Game", "Game")
                         .WithMany("ArchivedMatches")
                         .HasForeignKey("GameId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("Shared.DataAccess.DataBaseEntities.Tournament", "Tournament")
                         .WithMany("ArchivedMatches")
                         .HasForeignKey("TournamentsId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("Game");
@@ -318,9 +321,7 @@ namespace Shared.Migrations
                 {
                     b.HasOne("Shared.DataAccess.DataBaseEntities.Bot", "Bot")
                         .WithMany("TournamentReference")
-                        .HasForeignKey("bodId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("BotId");
 
                     b.HasOne("Shared.DataAccess.DataBaseEntities.Tournament", "Tournament")
                         .WithMany("TournamentReference")

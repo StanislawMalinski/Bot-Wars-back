@@ -7,8 +7,8 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <Folder Include="DataAccess\Migrations\" />
       <Folder Include="Exceptions\" />
+      <Folder Include="Migrations\" />
       <Folder Include="Models\" />
       <Folder Include="Resources\ArchivedGames\" />
       <Folder Include="Resources\Bots\" />

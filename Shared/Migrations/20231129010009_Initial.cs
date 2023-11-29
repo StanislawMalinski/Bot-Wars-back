@@ -115,14 +115,12 @@ namespace Shared.Migrations
                         name: "FK_ArchivedMatches_Games_GameId",
                         column: x => x.GameId,
                         principalTable: "Games",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_ArchivedMatches_Tournaments_TournamentsId",
                         column: x => x.TournamentsId,
                         principalTable: "Tournaments",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -132,17 +130,17 @@ namespace Shared.Migrations
                     Id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     tournamentId = table.Column<long>(type: "bigint", nullable: false),
-                    bodId = table.Column<long>(type: "bigint", nullable: false)
+                    bodId = table.Column<long>(type: "bigint", nullable: false),
+                    BotId = table.Column<long>(type: "bigint", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_TournamentReference", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_TournamentReference_Bots_bodId",
-                        column: x => x.bodId,
+                        name: "FK_TournamentReference_Bots_BotId",
+                        column: x => x.BotId,
                         principalTable: "Bots",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_TournamentReference_Tournaments_tournamentId",
                         column: x => x.tournamentId,
@@ -185,6 +183,16 @@ namespace Shared.Migrations
                 });
 
             migrationBuilder.CreateIndex(
+                name: "IX_ArchivedMatches_GameId",
+                table: "ArchivedMatches",
+                column: "GameId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ArchivedMatches_TournamentsId",
+                table: "ArchivedMatches",
+                column: "TournamentsId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_ArchivedMatchPlayers_MatchId",
                 table: "ArchivedMatchPlayers",
                 column: "MatchId");
@@ -201,16 +209,6 @@ namespace Shared.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_ArchivedMatches_GameId",
-                table: "ArchivedMatches",
-                column: "GameId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_ArchivedMatches_TournamentsId",
-                table: "ArchivedMatches",
-                column: "TournamentsId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Bots_GameId",
                 table: "Bots",
                 column: "GameId");
@@ -221,9 +219,9 @@ namespace Shared.Migrations
                 column: "PlayerId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_TournamentReference_bodId",
+                name: "IX_TournamentReference_BotId",
                 table: "TournamentReference",
-                column: "bodId");
+                column: "BotId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_TournamentReference_tournamentId",

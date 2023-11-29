@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Shared.DataAccess.DataBaseEntities;
 
 namespace Shared.DataAccess.Context
@@ -19,196 +20,74 @@ namespace Shared.DataAccess.Context
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            // fluent api 
-            
+            ConfigureGame(modelBuilder.Entity<Game>());
+            ConfigurePlayer(modelBuilder.Entity<Player>());
+            ConfigureBot(modelBuilder.Entity<Bot>());
+            ConfigureTournament(modelBuilder.Entity<Tournament>());
+            ConfigureArchivedMatches(modelBuilder.Entity<ArchivedMatches>());
+            ConfigureArchivedMatchPlayers(modelBuilder.Entity<ArchivedMatchPlayers>());
+            ConfigureTournamentReference(modelBuilder.Entity<TournamentReference>());
+        }
 
-            modelBuilder.Entity<Game>()
-                .HasKey(x => x.Id);
+        private void ConfigureGame(EntityTypeBuilder<Game> entity)
+        {
+            entity.HasKey(x => x.Id);
+            entity.Property(p => p.NumbersOfPlayer).IsRequired();
+            entity.Property(p => p.LastModification).IsRequired();
+            entity.Property(p => p.GameFile).IsRequired();
+            entity.Property(p => p.GameInstructions).IsRequired();
+            entity.Property(p => p.InterfaceDefinition).IsRequired();
+            entity.Property(p => p.IsAvaiableForPlay).IsRequired();
+        }
 
-            modelBuilder.Entity<Game>()
-                .Property(p => p.NumbersOfPlayer)
-                .IsRequired();
+        private void ConfigurePlayer(EntityTypeBuilder<Player> entity)
+        {
+            entity.HasKey(x => x.Id);
+            entity.Property(p => p.email).HasColumnType("VARCHAR").HasMaxLength(30).IsRequired();
+            entity.Property(p => p.login).HasColumnType("VARCHAR").HasMaxLength(20).IsRequired();
+        }
 
-            modelBuilder.Entity<Game>()
-                .Property(p => p.LastModification)
-                .IsRequired();
+        private void ConfigureBot(EntityTypeBuilder<Bot> entity)
+        {
+            entity.HasKey(x => x.Id);
+            entity.Property(p => p.BotFile).IsRequired();
+        }
 
-            modelBuilder.Entity<Game>()
-                .Property(p => p.GameFile)
-                .IsRequired();
+        private void ConfigureTournament(EntityTypeBuilder<Tournament> entity)
+        {
+            entity.HasKey(x => x.Id);
+            entity.Property(p => p.TournamentTitles).HasColumnType("VARCHAR").HasMaxLength(30).IsRequired();
+            entity.Property(p => p.Description).HasColumnType("VARCHAR").HasMaxLength(200).IsRequired();
+            entity.HasOne(x => x.Game).WithMany(b => b.Tournaments).HasForeignKey(x => x.GameId);
+            entity.Property(p => p.GameId).IsRequired();
+            entity.Property(p => p.PlayersLimit).IsRequired();
+            entity.Property(p => p.PostedDate).IsRequired();
+            entity.Property(p => p.TournamentsDate).IsRequired();
+            entity.Property(p => p.WasPlayedOut).IsRequired();
+            entity.Property(p => p.Contrains).IsRequired();
+        }
 
-            modelBuilder.Entity<Game>()
-                .Property(p => p.GameInstructions)
-                .IsRequired();
+        private void ConfigureArchivedMatches(EntityTypeBuilder<ArchivedMatches> entity)
+        {
+            entity.HasKey(x => x.Id);
+            entity.HasOne(a => a.Game).WithMany(b => b.ArchivedMatches).HasForeignKey(a => a.GameId).IsRequired().OnDelete(DeleteBehavior.NoAction);
+            entity.HasOne(a => a.Tournament).WithMany(b => b.ArchivedMatches).HasForeignKey(a => a.TournamentsId).IsRequired().OnDelete(DeleteBehavior.NoAction);
+            entity.Property(p => p.Played).IsRequired();
+            entity.Property(p => p.Match).IsRequired();
+        }
 
-            modelBuilder.Entity<Game>()
-                .Property(p => p.InterfaceDefinition)
-                .IsRequired();
+        private void ConfigureArchivedMatchPlayers(EntityTypeBuilder<ArchivedMatchPlayers> entity)
+        {
+            entity.HasKey(x => x.Id);
+            entity.HasOne(a => a.Player).WithMany(b => b.ArchivedMatchPlayers).HasForeignKey(a => a.PlayerId).IsRequired();
+            entity.HasOne(a => a.archivedMatches).WithMany(b => b.ArchivedMatchPlayers).HasForeignKey(a => a.MatchId).IsRequired();
+            entity.Property(p => p.TournamentId).IsRequired();
+        }
 
-            modelBuilder.Entity<Game>()
-                .Property(p => p.IsAvaiableForPlay)
-                .IsRequired();
-            //Player
-            modelBuilder.Entity<Player>()
-                .HasKey(x => x.Id);
-
-            modelBuilder.Entity<Player>()
-                .Property(p => p.email)
-                .HasColumnType("VARCHAR").HasMaxLength(30)
-                .IsRequired();
-
-            modelBuilder.Entity<Player>()
-                .Property(p => p.login)
-                .HasColumnType("VARCHAR").HasMaxLength(20)
-                .IsRequired();
-            //Bot
-            modelBuilder.Entity<Bot>()
-                .HasKey(x => x.Id);
-
-            modelBuilder.Entity<Player>()
-                .HasMany(x => x.Bot)
-                .WithOne(b => b.Players)
-                .HasForeignKey(b => b.PlayerId)
-                .IsRequired();
-
-          
-
-            modelBuilder.Entity<Game>()
-                .HasMany(x => x.Bot)
-                .WithOne(b => b.Games)
-                .HasForeignKey(b => b.GameId)
-                .IsRequired();
-
-           
-
-            modelBuilder.Entity<Bot>()
-               .Property(p => p.BotFile)
-               .IsRequired();
-
-            //Tournament
-            modelBuilder.Entity<Tournament>()
-               .HasKey(x => x.Id);
-
-            modelBuilder.Entity<Tournament>()
-                .Property(p => p.TournamentTitles)
-                .HasColumnType("VARCHAR").HasMaxLength(30)
-                .IsRequired();
-            modelBuilder.Entity<Tournament>()
-                .Property(p => p.Description)
-                .HasColumnType("VARCHAR").HasMaxLength(200)
-                .IsRequired();
-
-            modelBuilder.Entity<Tournament>()
-                .HasOne(x => x.Game)
-                .WithMany(b => b.Tournaments)
-                .HasForeignKey(x => x.GameId);
-
-            modelBuilder.Entity<Tournament>()
-               .Property(p => p.GameId)
-               .IsRequired();
-
-            modelBuilder.Entity<Tournament>()
-               .Property(p => p.PlayersLimit)
-               .IsRequired();
-
-            modelBuilder.Entity<Tournament>()
-               .Property(p => p.PostedDate)
-               .IsRequired();
-
-            modelBuilder.Entity<Tournament>()
-               .Property(p => p.TournamentsDate)
-               .IsRequired();
-
-            modelBuilder.Entity<Tournament>()
-               .Property(p => p.WasPlayedOut)
-               .IsRequired();
-
-            modelBuilder.Entity<Tournament>()
-               .Property(p => p.Contrains)
-               .IsRequired();
-            //ArchivedMatches
-            modelBuilder.Entity<ArchivedMatches>()
-               .HasKey(x => x.Id);
-
-            modelBuilder.Entity<ArchivedMatches>()
-                .HasOne(a => a.Game)
-                .WithMany(b => b.ArchivedMatches)
-                .HasForeignKey(a => a.GameId)
-                .IsRequired();
-
-            modelBuilder.Entity<ArchivedMatches>()
-                .HasOne(a => a.Tournament)
-                .WithMany(b => b.ArchivedMatches)
-                .HasForeignKey(a => a.TournamentsId)
-                .IsRequired();
-                
-
-         
-
-            modelBuilder.Entity<ArchivedMatches>()
-               .Property(p => p.Played)
-               .IsRequired();
-
-            modelBuilder.Entity<ArchivedMatches>()
-               .Property(p => p.Match)
-               .IsRequired();
-
-            //ArchivedMatchPlayer
-
-            modelBuilder.Entity<ArchivedMatchPlayers>()
-               .HasKey(x =>x.Id);
-
-
-            modelBuilder.Entity<ArchivedMatchPlayers>()
-                .HasOne(a => a.Player)
-                .WithMany(b => b.ArchivedMatchPlayers)
-                .HasForeignKey(a => a.PlayerId)
-                .IsRequired();
-                 
-
-
-            modelBuilder.Entity<ArchivedMatchPlayers>()
-                .HasOne(a => a.archivedMatches)
-                .WithMany(b => b.ArchivedMatchPlayers)
-                .HasForeignKey(a => a.MatchId)
-                .IsRequired();
-            
-
-            modelBuilder.Entity<ArchivedMatchPlayers>()
-               .Property(p => p.TournamentId)
-               .IsRequired();
-
-            modelBuilder.Entity<Tournament>()
-                .HasOne(a => a.ArchivedMatchPlayers)
-                .WithOne(b => b.Tournament)
-                .HasForeignKey<ArchivedMatchPlayers>(b => b.TournamentId);
-
-            //TournamentReference
-            modelBuilder.Entity<TournamentReference>()
-                .HasKey(x => x.Id);
-
-            modelBuilder.Entity<TournamentReference>()
-                .Property(p => p.bodId)
-                .IsRequired();
-
-            
-
-            modelBuilder.Entity<Tournament>()
-                .HasMany(a => a.TournamentReference)
-                .WithOne(b => b.Tournament)
-                .HasForeignKey(b => b.tournamentId)
-                .IsRequired();
-
-            modelBuilder.Entity<Bot>()
-                .HasMany(a => a.TournamentReference)
-                .WithOne(b => b.Bot)
-                .HasForeignKey(b => b.bodId)
-                .IsRequired();
-                
-            
-            // data seed 
-
-
+        private void ConfigureTournamentReference(EntityTypeBuilder<TournamentReference> entity)
+        {
+            entity.HasKey(x => x.Id);
+            entity.Property(p => p.bodId).IsRequired();
         }
     }
 }

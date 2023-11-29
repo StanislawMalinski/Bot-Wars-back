@@ -9,6 +9,7 @@
         <entry key="Common:noBuild" value="false" />
         <entry key="Common:outputFolder" value="DataAccess\Migrations" />
         <entry key="Common:targetFramework" value="net8.0" />
+        <entry key="Common:useDefaultConnection" value="true" />
       </map>
     </option>
   </component>
