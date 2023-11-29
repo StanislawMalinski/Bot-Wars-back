@@ -24,7 +24,6 @@ builder.Services.AddScoped<IGameService, GameService>();
 builder.Services.AddScoped<TournamentRepository, TournamentRepository>();
 builder.Services.AddScoped<PlayerRepository, PlayerRepository>();
 builder.Services.AddScoped<ITournamentMapper, TournamentMapper>();
-builder.Services.AddScoped<ITournamentService, TournamentService>();
 builder.Services.AddScoped<IGameTypeMapper, GameTypeMapper>();
 builder.Services.AddDbContext<DataContext>(options =>
 {

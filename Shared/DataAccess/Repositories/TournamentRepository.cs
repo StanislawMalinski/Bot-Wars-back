@@ -1,13 +1,13 @@
-﻿using BotWars.Services;
-using Communication.APIs.DTOs;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Shared.DataAccess.Context;
+using Shared.DataAccess.DAO;
 using Shared.DataAccess.DataBaseEntities;
 using Shared.DataAccess.Mappers;
+using Shared.DataAccess.Services.Results;
 
 namespace Shared.DataAccess.Repositories
 {
-    public class TournamentRepository
+	public class TournamentRepository
     {
         private readonly DataContext _dataContext;
         private readonly ITournamentMapper _mapper;

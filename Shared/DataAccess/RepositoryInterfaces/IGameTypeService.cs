@@ -1,9 +1,9 @@
-﻿using BotWars.Services;
-using Communication.APIs.DTOs;
+﻿using Shared.DataAccess.DAO;
+using Shared.DataAccess.Services.Results;
 
 namespace Shared.DataAccess.RepositoryInterfaces
 {
-    public interface IGameTypeService
+	public interface IGameTypeService
     {
         public Task<ServiceResponse<GameDto>> CreateGameType(GameDto game);
         public Task<ServiceResponse<List<GameDto>>> GetGameTypes();

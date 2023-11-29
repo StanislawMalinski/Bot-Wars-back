@@ -1,6 +1,6 @@
-﻿using BotWars.Services;
-using Communication.APIs.DTOs;
+﻿using Shared.DataAccess.DAO;
 using Shared.DataAccess.Repositories;
+using Shared.DataAccess.Services.Results;
 
 namespace Communication.Services.Tournament
 {

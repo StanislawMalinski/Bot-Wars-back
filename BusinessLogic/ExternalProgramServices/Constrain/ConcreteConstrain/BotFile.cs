@@ -1,13 +1,11 @@
-﻿using BotWars.Models;
-
-namespace BotWars.Gry
+﻿namespace BusinessLogic.ExternalProgramServices.Constrain.ConcreteConstrain
 {
-    public class BotFile : IFileData
-    {
-        public long Id { get; set; }
-        public String? Description { get; set; }
-        public String? Filename { get; set; }
-        public byte[]? Data { get; set; }
+	public class BotFile : IFileData
+	{
+		public long Id { get; set; }
+		public string? Description { get; set; }
+		public string? Filename { get; set; }
+		public byte[]? Data { get; set; }
 
-    }
+	}
 }

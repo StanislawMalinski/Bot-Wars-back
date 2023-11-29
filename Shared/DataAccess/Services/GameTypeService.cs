@@ -1,12 +1,12 @@
-using BotWars.Services;
-using Communication.APIs.DTOs;
 using Shared.DataAccess.Context;
+using Shared.DataAccess.DAO;
 using Shared.DataAccess.Mappers;
 using Shared.DataAccess.RepositoryInterfaces;
+using Shared.DataAccess.Services.Results;
 
 namespace Shared.DataAccess.Services
 {
-    public class GameTypeService : IGameTypeService
+	public class GameTypeService : IGameTypeService
     {
 
         private readonly IGameTypeMapper _mapper;

@@ -1,9 +1,9 @@
-﻿using Communication.APIs.DTOs;
+﻿using Shared.DataAccess.DAO;
 using Shared.DataAccess.DataBaseEntities;
 
 namespace Shared.DataAccess.Mappers
 {
-    public class TournamentMapper : ITournamentMapper
+	public class TournamentMapper : ITournamentMapper
     {
         public Tournament DtoToTournament(TournamentDto dto)
         {

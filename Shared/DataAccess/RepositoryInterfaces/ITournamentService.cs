@@ -1,9 +1,9 @@
-﻿using BotWars.Services;
-using Communication.APIs.DTOs;
+﻿using Shared.DataAccess.DAO;
+using Shared.DataAccess.Services.Results;
 
 namespace Shared.DataAccess.RepositoryInterfaces
 {
-    public interface ITournamentService
+	public interface ITournamentService
     {
         public Task<ServiceResponse<List<TournamentDto>>> GetListOfTournaments();
 

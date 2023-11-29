@@ -1,13 +1,12 @@
-﻿using BotWars.Services;
-using BotWars.Services.GameTypeService;
-using BotWars.TournamentData;
-using Communication.APIs.DTOs;
-using Communication.Services;
+﻿using Communication.Services;
+using Communication.Services.Validation;
+using Shared.DataAccess.DAO;
 using Shared.DataAccess.RepositoryInterfaces;
+using Shared.DataAccess.Services.Results;
 
 namespace Communication.Services.Tournament
 {
-	public class TournamentService : Service<ITournamentService>, ITournamentService
+	public class TournamentService : Service<ITournamentService>
 	{
 		private ITournamentService? _playerTypeService;
 		private string login = "login"; // should be obtained in method call

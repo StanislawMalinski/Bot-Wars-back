@@ -1,10 +1,9 @@
-﻿using BotWars.Models;
-using BotWars.Services;
-using BotWars.Services.Constants;
+﻿using BusinessLogic.ExternalProgramServices.Constrain;
+using BusinessLogic.ExternalProgramServices.Constrain.ConcreteConstrain.Game;
 
 namespace BusinessLogic.ExternalProgramServices
 {
-    public class GameManager : IGameManager
+	public class GameManager : IGameManager
     {
         private GameResult _gameResult;
         private readonly int GameID = 0;

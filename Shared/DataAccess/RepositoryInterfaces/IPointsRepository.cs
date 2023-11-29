@@ -1,5 +1,5 @@
-﻿using BotWars.Services;
-using Shared.DataAccess.DataBaseEntities;
+﻿using Shared.DataAccess.DataBaseEntities;
+using Shared.DataAccess.Services.Results;
 
 namespace Shared.DataAccess.RepositoryInterfaces;
 

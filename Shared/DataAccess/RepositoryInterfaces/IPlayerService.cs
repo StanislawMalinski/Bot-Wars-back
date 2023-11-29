@@ -1,9 +1,9 @@
-﻿using BotWars.Services;
-using Shared.DataAccess.DataBaseEntities;
+﻿using Shared.DataAccess.DataBaseEntities;
+using Shared.DataAccess.Services.Results;
 
 namespace Shared.DataAccess.RepositoryInterfaces
 {
-    public interface IPlayerService
+	public interface IPlayerService
     {
         public Task<ServiceResponse<Player>> CreatePlayerAsync(Player player);
         public Task<ServiceResponse<Player>> DeletePlayerAsync(long id);
