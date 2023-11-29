@@ -5,10 +5,10 @@ namespace Shared.DataAccess.RepositoryInterfaces
 {
     public interface IGameTypeService
     {
-        public Task<ServiceResponse<GameTypeDto>> CreateGameType(GameTypeDto gameType);
-        public Task<ServiceResponse<List<GameTypeDto>>> GetGameTypes();
-        public Task<ServiceResponse<GameTypeDto>> DeleteGame(long id);
-        public Task<ServiceResponse<GameTypeDto>> ModifyGameType(long id, GameTypeDto gameTypeDto);
+        public Task<ServiceResponse<GameDto>> CreateGameType(GameDto game);
+        public Task<ServiceResponse<List<GameDto>>> GetGameTypes();
+        public Task<ServiceResponse<GameDto>> DeleteGame(long id);
+        public Task<ServiceResponse<GameDto>> ModifyGameType(long id, GameDto gameDto);
 
     }
 }

@@ -16,6 +16,8 @@ namespace Shared.DataAccess.Services
 
         public async Task<ServiceResponse<Bot>> CreateBotAsync(Bot Bot)
         {
+            throw new NotImplementedException();
+            /*
             try
             {
                 await _dataContext.Bots.AddAsync(Bot);
@@ -30,13 +32,14 @@ namespace Shared.DataAccess.Services
                     Success = false,
                     Message = "Cannot create Bot"
                 };
-            }
+            }*/
         }
 
         public async Task<ServiceResponse<Bot>> DeleteBotAsync(long id)
         {
 
-
+            throw new NotImplementedException();
+            /*
             try
             {
                 Bot book = _dataContext.Bots.Find(id);
@@ -60,11 +63,13 @@ namespace Shared.DataAccess.Services
                     Message = "Problem with database",
                     Success = false
                 };
-            }
+            }*/
         }
 
         public async Task<ServiceResponse<Bot>> GetBotAsync(long id)
         {
+            throw new NotImplementedException();
+            /*
             try
             {
                 Bot Bot = _dataContext.Bots.Find(id);
@@ -80,12 +85,14 @@ namespace Shared.DataAccess.Services
                     Success = false,
                     Message = "Problem with database"
                 };
-            }
+            }*/
         }
 
         public async Task<ServiceResponse<List<Bot>>> GetBotsAsync()
         {
-
+            
+            throw new NotImplementedException();
+            /*
             var Bots = await _dataContext.Bots.ToListAsync();
             try
             {
@@ -106,12 +113,14 @@ namespace Shared.DataAccess.Services
                     Message = "Problem with database",
                     Success = false
                 };
-            }
+            }*/
 
         }
 
         public async Task<ServiceResponse<Bot>> UpdateBotAsync(Bot Bot)
         {
+            throw new NotImplementedException();
+            /*
             try
             {
                 var productToEdit = new Bot() { Id = Bot.Id };
@@ -131,7 +140,7 @@ namespace Shared.DataAccess.Services
                     Success = false,
                     Message = "An error occured while updating Bot"
                 };
-            }
+            }*/
         }
     }
 }

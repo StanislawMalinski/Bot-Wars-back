@@ -17,6 +17,7 @@ namespace Shared.DataAccess.Repositories
         {
             try
             {
+                
                 await _context.Players.AddAsync(player);
                 await _context.SaveChangesAsync();
                 return new ServiceResponse<Player>() { Data = player, Success = true };

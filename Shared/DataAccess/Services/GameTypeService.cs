@@ -18,7 +18,7 @@ namespace Shared.DataAccess.Services
             _dataContext = dataContext;
         }
 
-        public async Task<ServiceResponse<GameTypeDto>> CreateGameType(GameTypeDto gameTypeDto)
+        public async Task<ServiceResponse<GameDto>> CreateGameType(GameDto gameDto)
         {
             /*
             try
@@ -40,7 +40,7 @@ namespace Shared.DataAccess.Services
             throw new NotImplementedException("niezgodne z nową koncepcją chyba");
         }
 
-        public async Task<ServiceResponse<GameTypeDto>> DeleteGame(long id)
+        public async Task<ServiceResponse<GameDto>> DeleteGame(long id)
         {
             /*
             try
@@ -71,7 +71,7 @@ namespace Shared.DataAccess.Services
             throw new NotImplementedException("niezgodne z nową koncepcją chyba");
         }
 
-        public async Task<ServiceResponse<List<GameTypeDto>>> GetGameTypes()
+        public async Task<ServiceResponse<List<GameDto>>> GetGameTypes()
         {
             /*
             try
@@ -104,7 +104,7 @@ namespace Shared.DataAccess.Services
             throw new NotImplementedException("niezgodne z nową koncepcją chyba");
         }
 
-        public async Task<ServiceResponse<GameTypeDto>> ModifyGameType(long id, GameTypeDto gameTypeDto)
+        public async Task<ServiceResponse<GameDto>> ModifyGameType(long id, GameDto gameDto)
         {
             /*try 
             {

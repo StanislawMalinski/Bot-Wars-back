@@ -5,14 +5,18 @@ namespace Shared.DataAccess.Mappers
 {
     public class GameTypeMapper : IGameTypeMapper
     {
-        public GameTypeDto ToDto(GameType gameType)
+        public GameDto ToDto(Game gameType)
         {
-            return new GameTypeDto { name = gameType.Name, isAvialable = gameType.IsAvialable };
+            //return new GameDto { name = gameType.Name, isAvialable = gameType.IsAvialable };
+            return null;
+
         }
 
-        public GameType ToGameType(GameTypeDto gameTypeDto)
+        public Game ToGameType(GameDto gameDto)
         {
-            return new GameType { Name = gameTypeDto.name, IsAvialable = gameTypeDto.isAvialable };
+           // return new GameType { Name = gameDto.name, IsAvialable = gameDto.isAvialable };
+           return null;
+
         }
 
     }
