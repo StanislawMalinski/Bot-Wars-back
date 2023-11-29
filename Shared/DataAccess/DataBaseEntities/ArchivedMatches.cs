@@ -10,7 +10,7 @@ namespace Shared.DataAccess.DataBaseEntities
         public long TournamentsId { get; set; }
         public Tournament? Tournament { get; set; }
         public DateTime Played { get; set; }
-        public String? Match;
+        public string Match;
 
         public List<ArchivedMatchPlayers>? ArchivedMatchPlayers { get; set; }
     }

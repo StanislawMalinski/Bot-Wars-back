@@ -7,5 +7,6 @@
         public Tournament? Tournament { get; set; }
         public long botId { get; set; }
         public Bot? Bot { get; set; }
+        public DateTime LastModification { get; set; }
     }
 }

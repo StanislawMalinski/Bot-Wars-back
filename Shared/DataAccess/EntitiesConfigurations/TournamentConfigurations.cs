@@ -12,13 +12,13 @@ public class TournamentConfigurations : IEntityTypeConfiguration<Tournament>
         
         builder.HasKey(entity => entity.Id);
 
-        builder.Property(entity => entity.TournamentTitles)
+        builder.Property(entity => entity.TournamentTitle)
             .IsRequired()
-            .HasMaxLength(30);
+            .HasMaxLength(50);
 
         builder.Property(entity => entity.Description)
             .IsRequired()
-            .HasMaxLength(200);
+            .HasMaxLength(1000);
 
         builder.HasOne(x => x.Game)
             .WithMany(x => x.Tournaments)
@@ -34,7 +34,7 @@ public class TournamentConfigurations : IEntityTypeConfiguration<Tournament>
         builder.Property(entity => entity.WasPlayedOut)
             .IsRequired();
 
-        builder.Property(entity => entity.Contrains)
+        builder.Property(entity => entity.Constrains)
             .IsRequired();
     }
 }

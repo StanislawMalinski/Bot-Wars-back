@@ -11,14 +11,19 @@ public class PlayerConfigurations : IEntityTypeConfiguration<Player>
         
         builder.HasKey(entity => entity.Id);
 
-        builder.Property(entity => entity.email)
+        builder.Property(entity => entity.Email)
             .IsRequired()
-            .HasMaxLength(200);
+            .HasMaxLength(30);
 
-        builder.Property(entity => entity.login)
+        builder.Property(entity => entity.Login)
             .IsRequired()
-            .HasMaxLength(200);
+            .HasMaxLength(20);
 
-     
+        builder.Property(entity => entity.Points)
+            .IsRequired();
+        
+        builder.Property(entity => entity.HashedPassword)
+            .IsRequired();
+
     }
 }
