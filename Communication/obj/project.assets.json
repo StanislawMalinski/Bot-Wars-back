@@ -10215,11 +10215,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\testo\\Documents\\GitHub\\Bot-Wars-back\\Communication\\Communication.csproj",
+      "projectUniqueName": "C:\\Users\\testo\\Desktop\\develop\\Bot-Wars-back-Develop\\Bot-Wars-back-Develop\\Communication\\Communication.csproj",
       "projectName": "Communication",
-      "projectPath": "C:\\Users\\testo\\Documents\\GitHub\\Bot-Wars-back\\Communication\\Communication.csproj",
+      "projectPath": "C:\\Users\\testo\\Desktop\\develop\\Bot-Wars-back-Develop\\Bot-Wars-back-Develop\\Communication\\Communication.csproj",
       "packagesPath": "C:\\Users\\testo\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\testo\\Documents\\GitHub\\Bot-Wars-back\\Communication\\obj\\",
+      "outputPath": "C:\\Users\\testo\\Desktop\\develop\\Bot-Wars-back-Develop\\Bot-Wars-back-Develop\\Communication\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\testo\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -10236,8 +10236,8 @@
         "net8.0": {
           "targetAlias": "net8.0",
           "projectReferences": {
-            "C:\\Users\\testo\\Documents\\GitHub\\Bot-Wars-back\\Shared\\Shared.csproj": {
-              "projectPath": "C:\\Users\\testo\\Documents\\GitHub\\Bot-Wars-back\\Shared\\Shared.csproj"
+            "C:\\Users\\testo\\Desktop\\develop\\Bot-Wars-back-Develop\\Bot-Wars-back-Develop\\Shared\\Shared.csproj": {
+              "projectPath": "C:\\Users\\testo\\Desktop\\develop\\Bot-Wars-back-Develop\\Bot-Wars-back-Develop\\Shared\\Shared.csproj"
             }
           }
         }

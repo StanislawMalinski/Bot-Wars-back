@@ -22,6 +22,7 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<IGameService, GameService>();
 builder.Services.AddScoped<TournamentRepository, TournamentRepository>();
 builder.Services.AddScoped<ITournamentService, TournamentService>();
+builder.Services.AddScoped<IGameService, GameService>();
 builder.Services.AddScoped<ITournamentMapper, TournamentMapper>();
 builder.Services.AddDbContext<DataContext>(options =>
 {

@@ -991,11 +991,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\testo\\Documents\\GitHub\\Bot-Wars-back\\UnitTests\\UnitTests.csproj",
+      "projectUniqueName": "C:\\Users\\testo\\Desktop\\develop\\Bot-Wars-back-Develop\\Bot-Wars-back-Develop\\UnitTests\\UnitTests.csproj",
       "projectName": "UnitTests",
-      "projectPath": "C:\\Users\\testo\\Documents\\GitHub\\Bot-Wars-back\\UnitTests\\UnitTests.csproj",
+      "projectPath": "C:\\Users\\testo\\Desktop\\develop\\Bot-Wars-back-Develop\\Bot-Wars-back-Develop\\UnitTests\\UnitTests.csproj",
       "packagesPath": "C:\\Users\\testo\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\testo\\Documents\\GitHub\\Bot-Wars-back\\UnitTests\\obj\\",
+      "outputPath": "C:\\Users\\testo\\Desktop\\develop\\Bot-Wars-back-Develop\\Bot-Wars-back-Develop\\UnitTests\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\testo\\AppData\\Roaming\\NuGet\\NuGet.Config",

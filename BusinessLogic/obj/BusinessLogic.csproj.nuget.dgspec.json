@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\testo\\Documents\\GitHub\\Bot-Wars-back\\BusinessLogic\\BusinessLogic.csproj": {}
+    "C:\\Users\\testo\\Desktop\\develop\\Bot-Wars-back-Develop\\Bot-Wars-back-Develop\\BusinessLogic\\BusinessLogic.csproj": {}
   },
   "projects": {
-    "C:\\Users\\testo\\Documents\\GitHub\\Bot-Wars-back\\BusinessLogic\\BusinessLogic.csproj": {
+    "C:\\Users\\testo\\Desktop\\develop\\Bot-Wars-back-Develop\\Bot-Wars-back-Develop\\BusinessLogic\\BusinessLogic.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\testo\\Documents\\GitHub\\Bot-Wars-back\\BusinessLogic\\BusinessLogic.csproj",
+        "projectUniqueName": "C:\\Users\\testo\\Desktop\\develop\\Bot-Wars-back-Develop\\Bot-Wars-back-Develop\\BusinessLogic\\BusinessLogic.csproj",
         "projectName": "BusinessLogic",
-        "projectPath": "C:\\Users\\testo\\Documents\\GitHub\\Bot-Wars-back\\BusinessLogic\\BusinessLogic.csproj",
+        "projectPath": "C:\\Users\\testo\\Desktop\\develop\\Bot-Wars-back-Develop\\Bot-Wars-back-Develop\\BusinessLogic\\BusinessLogic.csproj",
         "packagesPath": "C:\\Users\\testo\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\testo\\Documents\\GitHub\\Bot-Wars-back\\BusinessLogic\\obj\\",
+        "outputPath": "C:\\Users\\testo\\Desktop\\develop\\Bot-Wars-back-Develop\\Bot-Wars-back-Develop\\BusinessLogic\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\testo\\AppData\\Roaming\\NuGet\\NuGet.Config",

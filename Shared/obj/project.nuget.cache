@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "hPugadpoM42d0mCFW9+Lm0rJLK8jzVYYGZ8uhZk4Zk6RoPaQ6pOQEC2bKWIlJqL4yQj1Q+kl/OofZLcJnBsFCQ==",
+  "dgSpecHash": "iObjIyy50FoLZ0xkCgzksZUbcHixKk6RjhhQBM/5vvCEZ7d1Hw1XZelH1vhdDav2m5aidgJCzsLJDOQ7Lvtx3g==",
   "success": true,
-  "projectFilePath": "C:\\Users\\testo\\Documents\\GitHub\\Bot-Wars-back\\Shared\\Shared.csproj",
+  "projectFilePath": "C:\\Users\\testo\\Desktop\\develop\\Bot-Wars-back-Develop\\Bot-Wars-back-Develop\\Shared\\Shared.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\testo\\.nuget\\packages\\azure.core\\1.25.0\\azure.core.1.25.0.nupkg.sha512",
     "C:\\Users\\testo\\.nuget\\packages\\azure.identity\\1.7.0\\azure.identity.1.7.0.nupkg.sha512",
