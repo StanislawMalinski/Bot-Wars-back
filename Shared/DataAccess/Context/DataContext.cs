@@ -14,6 +14,7 @@ namespace Shared.DataAccess.Context
         public DbSet<Game> Games { get; set; } = null!;
         public DbSet<GameType> GameTypes { get; set; } = null!;
         public DbSet<TournamentReference> TournamentReferences { get; set; } = null!;
+        public DbSet<PointHistory> PointHistories { get; set; } = null!;
         
         public DataContext(DbContextOptions<DataContext> options) : base(options)
         {
@@ -29,6 +30,7 @@ namespace Shared.DataAccess.Context
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(GameConfigurations).Assembly);
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(GameTypeConfigurations).Assembly);
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(TournamentReferenceConfigurations).Assembly);
+            modelBuilder.ApplyConfigurationsFromAssembly(typeof(PointHistoryConfigurations).Assembly);
         }
     }
 }
