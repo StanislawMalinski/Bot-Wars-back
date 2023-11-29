@@ -1,10 +1,11 @@
 ﻿using BotWars.Services;
 using Shared.DataAccess.DataBaseEntities;
 using Shared.DataAccess.Repositories;
+using Shared.DataAccess.RepositoryInterfaces;
 
 namespace Shared.DataAccess.Services
 {
-    public class PlayerService
+    public class PlayerService : IPlayerService
     {
         private readonly PlayerRepository _playerRepository;
         public PlayerService(PlayerRepository playerRepository)

@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using NLog.Web;
 using Shared.DataAccess.Context;
+using Shared.DataAccess.Mappers;
 using Shared.DataAccess.Repositories;
 using Shared.DataAccess.RepositoryInterfaces;
 using Shared.DataAccess.Services;
@@ -19,11 +20,19 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<IGameService, GameService>();
-builder.Services.AddScoped<TournamentRepository, TournamentRepository>();
 builder.Services.AddScoped<ITournamentService, TournamentService>();
+builder.Services.AddScoped<IGameService, GameService>();
+builder.Services.AddScoped<IGameTypeService, GameTypeService>();
+builder.Services.AddScoped<IPlayerService, PlayerService>();
+builder.Services.AddScoped<IArchivedMatchesPlayersService, ArchivedMatchesPlayersService>();
+builder.Services.AddScoped<IBotService, BotService>();
+builder.Services.AddScoped<TournamentRepository, TournamentRepository>();
+builder.Services.AddScoped<PlayerRepository, PlayerRepository>();
+builder.Services.AddScoped<ITournamentMapper, TournamentMapper>();
+builder.Services.AddScoped<IGameTypeMapper, GameTypeMapper>();
 builder.Services.AddDbContext<DataContext>(options =>
 {
-    options.UseMySQL(builder.Configuration.GetConnectionString("DefaultConnection"));
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
 var app = builder.Build();
 
