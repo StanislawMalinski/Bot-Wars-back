@@ -7,9 +7,9 @@ namespace Shared.DataAccess.DataBaseEntities
         public long Id { get; set; }
         public int NumbersOfPlayer { get; set; }
         public DateTime LastModification { get; set; }
-        public String? GameFile { get; set; }
-        public String? GameInstructions { get; set; }
-        public String? InterfaceDefinition { get; set; }
+        public string? GameFile { get; set; }
+        public string? GameInstructions { get; set; }
+        public string? InterfaceDefinition { get; set; }
         public bool IsAvaiableForPlay { get; set; }
 
 

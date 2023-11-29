@@ -111,13 +111,13 @@ namespace Shared.DataAccess.Repositories
                 var TournamentToEdit = new Tournament() { Id = tournament.Id };
                 _dataContext.Tournaments.Attach(TournamentToEdit);
 
-                TournamentToEdit.TournamentTitles = tournament.TournamentTitles;
+                TournamentToEdit.TournamentTitle = tournament.TournamentTitle;
                 TournamentToEdit.Description = tournament.Description;
                 TournamentToEdit.GameId = tournament.GameId;
                 TournamentToEdit.PlayersLimit = tournament.PlayersLimit;
                 TournamentToEdit.TournamentsDate = tournament.TournamentsDate;
                 TournamentToEdit.WasPlayedOut = tournament.WasPlayedOut;
-                TournamentToEdit.Contrains = tournament.Contrains;
+                TournamentToEdit.Constrains = tournament.Constrains;
                 TournamentToEdit.Image = tournament.Image;
 
                 await _dataContext.SaveChangesAsync();

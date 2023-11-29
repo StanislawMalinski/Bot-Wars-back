@@ -10,14 +10,14 @@ namespace Shared.DataAccess.Mappers
             return new Tournament()
             {
                 Id = dto.Id,
-                TournamentTitles = dto.TournamentsTitle,
+                TournamentTitle = dto.TournamentsTitle,
                 Description = dto.Description,
                 GameId = dto.GameId,
                 PlayersLimit = dto.PlayersLimit,
                 PostedDate = dto.PostedDate,
                 TournamentsDate = dto.TournamentsDate,
                 WasPlayedOut = dto.WasPlayedOut,
-                Contrains = dto.Contrains,
+                Constrains = dto.Contrains,
                 Image = dto.Image
             };
         }
@@ -27,14 +27,14 @@ namespace Shared.DataAccess.Mappers
             return new TournamentDto()
             {
                 Id = tournament.Id,
-                TournamentsTitle = tournament.TournamentTitles,
+                TournamentsTitle = tournament.TournamentTitle,
                 Description = tournament.Description,
                 GameId = tournament.GameId,
                 PlayersLimit = tournament.PlayersLimit,
                 PostedDate = tournament.PostedDate,
                 TournamentsDate = tournament.TournamentsDate,
                 WasPlayedOut = tournament.WasPlayedOut,
-                Contrains = tournament.Contrains,
+                Contrains = tournament.Constrains,
                 Image = tournament.Image
             };
         }

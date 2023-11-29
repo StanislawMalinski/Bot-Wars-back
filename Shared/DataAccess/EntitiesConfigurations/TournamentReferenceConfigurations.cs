@@ -25,6 +25,9 @@ public class TournamentReferenceConfigurations : IEntityTypeConfiguration<Tourna
         
         builder.Property(entity => entity.tournamentId)
             .IsRequired();
+        
+        builder.Property(entity => entity.LastModification)
+            .IsRequired();
 
         
     }
