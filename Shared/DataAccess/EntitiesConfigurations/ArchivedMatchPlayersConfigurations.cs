@@ -14,17 +14,18 @@ public class ArchivedMatchPlayersConfigurations : IEntityTypeConfiguration<Archi
         builder.HasOne(x => x.Player)
             .WithMany(x => x.ArchivedMatchPlayers)
             .HasForeignKey(x => x.PlayerId);
-        
-        
+
+
 
         builder.HasOne(x => x.archivedMatches)
             .WithMany(x => x.ArchivedMatchPlayers)
             .HasForeignKey(x => x.MatchId);
 
-
+        /*
         builder.HasOne(x => x.Tournament)
             .WithOne(x => x.ArchivedMatchPlayers)
-            .HasForeignKey<ArchivedMatchPlayers>(x => x.TournamentId);
+            .HasForeignKey<ArchivedMatchPlayers>(x => x.TournamentId)
+            .OnDelete(DeleteBehavior.Cascade);*/
 
 
     }

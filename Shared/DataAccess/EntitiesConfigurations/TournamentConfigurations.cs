@@ -22,7 +22,8 @@ public class TournamentConfigurations : IEntityTypeConfiguration<Tournament>
 
         builder.HasOne(x => x.Game)
             .WithMany(x => x.Tournaments)
-            .HasForeignKey(x => x.GameId);
+            .HasForeignKey(x => x.GameId)
+            .OnDelete(DeleteBehavior.ClientSetNull);
 
         builder.Property(entity => entity.PlayersLimit)
             .IsRequired();

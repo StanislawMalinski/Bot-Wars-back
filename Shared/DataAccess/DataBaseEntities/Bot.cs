@@ -11,6 +11,6 @@ namespace Shared.DataAccess.DataBaseEntities
         public Game? Games { get; set; }
         public String? BotFile { get; set; }
 
-        public List<TournamentReference>? TournamentReference { get; set; }
+       public List<TournamentReference>? TournamentReference { get; set; }
     }
 }

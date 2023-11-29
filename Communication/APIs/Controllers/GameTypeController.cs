@@ -17,9 +17,9 @@ namespace Communication.APIs.Controllers
         }
 
         [HttpPost("addGameType")]
-        public async Task<ActionResult<ServiceResponse<GameTypeDto>>> CreateGameType([FromBody] GameTypeDto gameType)
+        public async Task<ActionResult<ServiceResponse<GameDto>>> CreateGameType([FromBody] GameDto game)
         {
-            var response = await _gameTypeService.CreateGameType(gameType);
+            var response = await _gameTypeService.CreateGameType(game);
             if (response.Success)
             {
                 return Ok(response);
@@ -28,7 +28,7 @@ namespace Communication.APIs.Controllers
         }
 
         [HttpGet("getGameTypes")]
-        public async Task<ActionResult<ServiceResponse<GameTypeDto>>> GetGameTypes()
+        public async Task<ActionResult<ServiceResponse<GameDto>>> GetGameTypes()
         {
             var response = await _gameTypeService.GetGameTypes();
             if (response.Success)
@@ -51,9 +51,9 @@ namespace Communication.APIs.Controllers
         }
 
         [HttpPut("modifyGameType")]
-        public async Task<ActionResult<ServiceResponse<GameTypeDto>>> ModifyGameType([FromQuery] long id, [FromBody] GameTypeDto gameTypeDto)
+        public async Task<ActionResult<ServiceResponse<GameDto>>> ModifyGameType([FromQuery] long id, [FromBody] GameDto gameDto)
         {
-            var response = await _gameTypeService.ModifyGameType(id, gameTypeDto);
+            var response = await _gameTypeService.ModifyGameType(id, gameDto);
             if (response.Success)
             {
                 return Ok(response);

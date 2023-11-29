@@ -8,9 +8,10 @@ public class TournamentReferenceConfigurations : IEntityTypeConfiguration<Tourna
 {
     public void Configure(EntityTypeBuilder<TournamentReference> builder)
     {
+        
         builder.HasKey(entity => entity.Id);
 
-        builder.Property(entity => entity.bodId)
+        builder.Property(entity => entity.botId)
             .IsRequired();
 
         builder.HasOne(x => x.Tournament)
@@ -20,7 +21,7 @@ public class TournamentReferenceConfigurations : IEntityTypeConfiguration<Tourna
 
         builder.HasOne(x => x.Bot)
             .WithMany(x => x.TournamentReference)
-            .HasForeignKey(x => x.bodId);
+            .HasForeignKey(x => x.botId);
         
         builder.Property(entity => entity.tournamentId)
             .IsRequired();

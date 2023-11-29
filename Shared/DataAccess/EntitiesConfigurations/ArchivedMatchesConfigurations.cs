@@ -17,7 +17,8 @@ public class ArchivedMatchesConfigurations : IEntityTypeConfiguration<ArchivedMa
 
         builder.HasOne(x => x.Tournament)
             .WithMany(x => x.ArchivedMatches)
-            .HasForeignKey(x => x.TournamentsId);
+            .HasForeignKey(x => x.TournamentsId)
+            .OnDelete(DeleteBehavior.ClientSetNull);
         
         builder.Property(entity => entity.Played)
             .IsRequired();

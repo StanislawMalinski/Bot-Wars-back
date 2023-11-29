@@ -9,5 +9,6 @@
         
         public List<Bot>? Bot { get; set; }
         public List<ArchivedMatchPlayers>? ArchivedMatchPlayers { get; set; }
+        public List<PointHistory>? PlayerPointsList { get; set; }
     }
 }
