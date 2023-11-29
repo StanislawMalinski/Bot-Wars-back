@@ -5,7 +5,6 @@ namespace Shared.DataAccess.RepositoryInterfaces
 {
     public interface ITournamentService
     {
-
         public Task<ServiceResponse<List<TournamentDto>>> GetListOfTournaments();
 
         public Task<ServiceResponse<List<TournamentDto>>> GetListOfTournamentsFiltered();
