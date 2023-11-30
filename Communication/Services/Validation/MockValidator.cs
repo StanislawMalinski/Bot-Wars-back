@@ -5,7 +5,7 @@
 	{
 		public PlayerPermitEnum ValidateUser(string login, string key)
 		{
-			return PlayerPermitEnum.IDENTIFIED_PLAYER;
+			return PlayerPermitEnum.ADMIN;
 		}
 	}
 }
