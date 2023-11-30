@@ -1,9 +1,9 @@
-﻿using BotWars.Services;
-using Shared.DataAccess.DataBaseEntities;
+﻿using Shared.DataAccess.DataBaseEntities;
+using Shared.DataAccess.Services.Results;
 
 namespace Shared.DataAccess.RepositoryInterfaces
 {
-    public interface IGameService
+	public interface IGameService
     {
         public Task<ServiceResponse<List<Game>>> GetGamesAsync();
 

@@ -1,6 +1,4 @@
-﻿using BotWars.TournamentData;
-
-namespace Shared.DataAccess.DataBaseEntities
+﻿namespace Shared.DataAccess.DataBaseEntities
 {
     public class Tournament
     {

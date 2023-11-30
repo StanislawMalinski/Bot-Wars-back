@@ -1,12 +1,12 @@
-﻿using BotWars.Services;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Shared.DataAccess.Context;
 using Shared.DataAccess.DataBaseEntities;
 using Shared.DataAccess.RepositoryInterfaces;
+using Shared.DataAccess.Services.Results;
 
 namespace Shared.DataAccess.Services
 {
-    public class ArchivedMatchesPlayersService : IArchivedMatchesPlayersService
+	public class ArchivedMatchesPlayersService : IArchivedMatchesPlayersService
     {
         private readonly DataContext _dataContext;
         public ArchivedMatchesPlayersService(DataContext dataContext)

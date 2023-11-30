@@ -1,11 +1,11 @@
-﻿using BotWars.Services;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Shared.DataAccess.DataBaseEntities;
 using Shared.DataAccess.RepositoryInterfaces;
+using Shared.DataAccess.Services.Results;
 
 namespace Communication.APIs.Controllers
 {
-    [Route("api/[controller]")]
+	[Route("api/[controller]")]
     public class PlayerController : Controller
     {
         private readonly IPlayerService _playerService;

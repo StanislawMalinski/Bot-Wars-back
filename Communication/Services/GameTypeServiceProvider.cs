@@ -1,5 +1,4 @@
-﻿using Communication.APIs.DTOs;
-using Shared.DataAccess.DataBaseEntities;
+﻿using Shared.DataAccess.DAO;
 using Shared.DataAccess.Mappers;
 using Shared.DataAccess.RepositoryInterfaces;
 

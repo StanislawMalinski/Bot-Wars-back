@@ -1,9 +1,9 @@
-﻿using Communication.APIs.DTOs;
+﻿using Shared.DataAccess.DAO;
 using Shared.DataAccess.DataBaseEntities;
 
 namespace Shared.DataAccess.Mappers
 {
-    public class GameTypeMapper : IGameTypeMapper
+	public class GameTypeMapper : IGameTypeMapper
     {
         public GameTypeMapper()
         {

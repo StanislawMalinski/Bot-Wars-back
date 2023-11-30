@@ -1,8 +1,8 @@
-using BotWars.Gry;
+using BusinessLogic.ExternalProgramServices.Constrain.ConcreteConstrain.Game;
 
 namespace BusinessLogic.ExternalProgramServices.Constrain
 {
-    public class GameRepository
+	public class GameRepository
     {
         public int GetAllAvailableGames() {
             return 0;

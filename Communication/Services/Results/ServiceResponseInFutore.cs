@@ -1,8 +1,8 @@
-﻿using BotWars.Services;
+﻿using Shared.DataAccess.Services.Results;
 
 namespace Communication.Services.Results
 {
-    public class HandlerResult<TSuccessResult, TErrorResult>
+	public class HandlerResult<TSuccessResult, TErrorResult>
         where TSuccessResult : ISuccessResult
         where TErrorResult : IErrorResult
     {

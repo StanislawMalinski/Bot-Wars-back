@@ -1,12 +1,12 @@
-﻿using BotWars.Services;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Shared.DataAccess.Context;
 using Shared.DataAccess.DataBaseEntities;
 using Shared.DataAccess.RepositoryInterfaces;
+using Shared.DataAccess.Services.Results;
 
 namespace Shared.DataAccess.Services
 {
-    public class BotService : IBotService
+	public class BotService : IBotService
     {
         private readonly DataContext _dataContext;
         public BotService(DataContext dataContext)

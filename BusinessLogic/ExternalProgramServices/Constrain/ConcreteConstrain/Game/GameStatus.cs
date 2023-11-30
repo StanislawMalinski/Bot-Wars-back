@@ -4,13 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BotWars.Models
+namespace BusinessLogic.ExternalProgramServices.Constrain.ConcreteConstrain.Game
 {
-    public enum GameStatus
-    {
-        Ready,
-        Running,
-        Ended,
-        GameError
-    }
+	public enum GameStatus
+	{
+		Ready,
+		Running,
+		Ended,
+		GameError
+	}
 }

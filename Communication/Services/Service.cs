@@ -1,4 +1,4 @@
-﻿using BotWars.Services.GameTypeService;
+﻿using Communication.Services.Validation;
 
 namespace Communication.Services;
 

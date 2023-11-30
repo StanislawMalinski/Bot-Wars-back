@@ -1,16 +1,18 @@
-﻿using BotWars.Services;
-using Communication.APIs.DTOs;
+﻿using Communication.Services.Tournament;
 using Microsoft.AspNetCore.Mvc;
+using Shared.DataAccess.DAO;
+using Shared.DataAccess.DataBaseEntities;
 using Shared.DataAccess.RepositoryInterfaces;
+using Shared.DataAccess.Services.Results;
 
 namespace Communication.APIs.Controllers
 {
-    [Route("api/[controller]")]
+	[Route("api/[controller]")]
     public class TournamentController : Controller
     {
-        private readonly ITournamentService _tournamentService;
+        private readonly TournamentService _tournamentService;
 
-        public TournamentController(ITournamentService tournamentService)
+        public TournamentController(TournamentService tournamentService)
         {
             _tournamentService = tournamentService;
         }

@@ -1,11 +1,11 @@
-﻿namespace BotWars.TournamentData
+﻿namespace Shared.DataAccess.Enumerations
 {
-    public enum TournamentStatus
-    {
-        SCHEDULED,
-        CANCELLED,
-        PLAYED,
-        DONE,
-        SUSPENDED
-    }
+	public enum TournamentStatus
+	{
+		SCHEDULED,
+		CANCELLED,
+		PLAYED,
+		DONE,
+		SUSPENDED
+	}
 }
