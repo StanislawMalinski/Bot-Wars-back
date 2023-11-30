@@ -7,33 +7,41 @@ namespace Shared.DataAccess.Repositories;
 
 public class PointHistoryRepository : IPointHistoryRepository
 {
-    private DataContext _dataContext;
+    private readonly DataContext _dataContext;
+
     public PointHistoryRepository(DataContext dataContext)
     {
         _dataContext = dataContext;
     }
 
-    public Task<ServiceResponse<List<PointHistory>>> GetPointHistoryAsync()
+    public async Task<ServiceResponse<List<PointHistory>>> GetHistoryForPlayer(long playerId)
     {
-        throw new NotImplementedException();
+        try
+        {
+            var result = await from entity in _dataContext.PointHistories
+                where entity.PlayerId == playerId
+                select entity;
+
+            List<PointHistory> pointHistories = result.ToList();
+            return new ServiceResponse<List<PointHistory>>()
+            {
+                Data = pointHistories,
+                Message = "It works!",
+                Success = true
+            };
+        }
+        catch (Exception)
+        {
+            return new ServiceResponse<List<PointHistory>>()
+            {
+                Data = null,
+                Message = "Database Failure",
+                Success = false
+            };
+        }
     }
 
-    public Task<ServiceResponse<PointHistory>> GetPointHistoryAsync(long id)
-    {
-        throw new NotImplementedException();
-    }
-
-    public Task<ServiceResponse<PointHistory>> UpdatePointHistoryAsync(PointHistory product)
-    {
-        throw new NotImplementedException();
-    }
-
-    public Task<ServiceResponse<PointHistory>> DeletePointHistoryAsync(long id)
-    {
-        throw new NotImplementedException();
-    }
-
-    public Task<ServiceResponse<PointHistory>> CreatePointHistoryAsync(PointHistory product)
+    public Task<ServiceResponse<PointHistory>> LogNewPointsHistoryPoint()
     {
         throw new NotImplementedException();
     }
