@@ -1,4 +1,5 @@
 using Communication.Services.Tournament;
+using Communication.Services.Validation;
 using Microsoft.EntityFrameworkCore;
 using NLog.Web;
 using Shared.DataAccess.Context;
@@ -21,10 +22,21 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<IGameService, GameService>();
-builder.Services.AddScoped<TournamentRepository, TournamentRepository>();
 builder.Services.AddScoped<PlayerRepository, PlayerRepository>();
-builder.Services.AddScoped<ITournamentMapper, TournamentMapper>();
 builder.Services.AddScoped<IGameTypeMapper, GameTypeMapper>();
+builder.Services.AddScoped<IPlayerValidator, MockValidator>();
+
+// Tournament related services
+builder.Services.AddScoped<TournamentAdminService, TournamentAdminService>();
+builder.Services.AddScoped<TournamentIdentifiedPlayerService, TournamentIdentifiedPlayerService>();
+builder.Services.AddScoped<TournamentUnidentifiedPlayerService, TournamentUnidentifiedPlayerService>();
+builder.Services.AddScoped<TournamentBannedPlayerService, TournamentBannedPlayerService>();
+builder.Services.AddScoped<TournamentBadValidation, TournamentBadValidation>();
+builder.Services.AddScoped<TournamentService, TournamentService>();
+builder.Services.AddScoped<TournamentRepository, TournamentRepository>();
+builder.Services.AddScoped<ITournamentMapper, TournamentMapper>();
+builder.Services.AddScoped<TournamentServiceProvider, TournamentServiceProvider>();
+
 builder.Services.AddDbContext<DataContext>(options =>
 {
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));

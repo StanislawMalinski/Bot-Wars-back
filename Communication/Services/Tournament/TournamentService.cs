@@ -1,5 +1,4 @@
-﻿using Communication.Services;
-using Communication.Services.Validation;
+﻿using Communication.Services.Validation;
 using Shared.DataAccess.DAO;
 using Shared.DataAccess.RepositoryInterfaces;
 using Shared.DataAccess.Services.Results;
@@ -12,11 +11,11 @@ namespace Communication.Services.Tournament
 		private string login = "login"; // should be obtained in method call
 		private string key = "key";
 
-		public TournamentService(ITournamentService adminInterface,
-			ITournamentService identifiedPlayerInterface,
-			ITournamentService bannedPlayerInterface,
-			ITournamentService unidentifiedUserInterface,
-			ITournamentService badValidationInterface,
+		public TournamentService(TournamentAdminService adminInterface,
+			TournamentIdentifiedPlayerService identifiedPlayerInterface,
+			TournamentBannedPlayerService bannedPlayerInterface,
+			TournamentUnidentifiedPlayerService unidentifiedUserInterface,
+			TournamentBadValidation badValidationInterface,
 			IPlayerValidator validator)
 		: base(adminInterface, identifiedPlayerInterface, bannedPlayerInterface, unidentifiedUserInterface, badValidationInterface, validator)
 		{

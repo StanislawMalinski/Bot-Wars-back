@@ -4,6 +4,7 @@ using Shared.DataAccess.Services.Results;
 
 namespace Communication.Services.Tournament
 {
+	// created to test state pattern implementation in TournamentService
 	public class TournamentServiceProvider
 	{
 		private readonly TournamentRepository _tournamentRepository;
