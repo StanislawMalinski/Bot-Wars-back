@@ -8,18 +8,20 @@ namespace Communication.APIs.Controllers;
 public class PointsController : Controller
 {
 
+    [HttpGet("for-player")]
     public async Task<ActionResult<ServiceResponse<long>>> GetPointsForPlayer([FromQuery]long playerId)
     {
-        throw new NotImplementedException();
-    }
+		throw new NotImplementedException();
+	}
 
+    [HttpGet("leaderboards")]
     public async Task<ActionResult<ServiceResponse<List<long>>>> GetLeaderBoards()
     {
         throw new NotImplementedException();
     }
 
-    public async Task<ActionResult<ServiceResponse<List<PointHistory>>>> GetHistoryOfPointsForPlayer(
-        [FromQuery] long playerId)
+	[HttpGet("player-history")]
+	public async Task<ActionResult<ServiceResponse<List<PointHistory>>>> GetHistoryOfPointsForPlayer([FromQuery] long playerId)
     {
         throw new NotImplementedException();
     }
