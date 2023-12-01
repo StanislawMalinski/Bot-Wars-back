@@ -23,8 +23,12 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<IGameService, GameService>();
 builder.Services.AddScoped<PlayerRepository, PlayerRepository>();
-builder.Services.AddScoped<IGameTypeMapper, GameTypeMapper>();
 builder.Services.AddScoped<IPlayerValidator, MockValidator>();
+
+// GameType related services
+builder.Services.AddScoped<GameTypeService, GameTypeService>();
+builder.Services.AddScoped<IGameTypeMapper, GameTypeMapper>();
+
 
 // Tournament related services
 builder.Services.AddScoped<TournamentAdminService, TournamentAdminService>();
