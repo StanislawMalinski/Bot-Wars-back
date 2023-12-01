@@ -1,3 +1,4 @@
+using Communication.Services.GameType;
 using Communication.Services.Tournament;
 using Communication.Services.Validation;
 using Microsoft.EntityFrameworkCore;
@@ -6,7 +7,6 @@ using Shared.DataAccess.Context;
 using Shared.DataAccess.Mappers;
 using Shared.DataAccess.Repositories;
 using Shared.DataAccess.RepositoryInterfaces;
-using Shared.DataAccess.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -21,10 +21,19 @@ builder.Services.AddControllers();
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddScoped<IGameService, GameService>();
 builder.Services.AddScoped<PlayerRepository, PlayerRepository>();
-builder.Services.AddScoped<IGameTypeMapper, GameTypeMapper>();
 builder.Services.AddScoped<IPlayerValidator, MockValidator>();
+
+// GameType related services
+builder.Services.AddScoped<IGameRepository, GameRepository>();
+builder.Services.AddScoped<GameTypeAdminService, GameTypeAdminService>();
+builder.Services.AddScoped<GameTypeIdentifiedPlayerService, GameTypeIdentifiedPlayerService>();
+builder.Services.AddScoped<GameTypeUnidentifiedPlayerService, GameTypeUnidentifiedPlayerService>();
+builder.Services.AddScoped<GameTypeBannedPlayerService, GameTypeBannedPlayerService>();
+builder.Services.AddScoped<GameTypeBadValidation, GameTypeBadValidation>();
+builder.Services.AddScoped<GameTypeService, GameTypeService>();
+builder.Services.AddScoped<IGameTypeMapper, GameTypeMapper>();
+builder.Services.AddScoped<GameTypeServiceProvider, GameTypeServiceProvider>();
 
 // Tournament related services
 builder.Services.AddScoped<TournamentAdminService, TournamentAdminService>();

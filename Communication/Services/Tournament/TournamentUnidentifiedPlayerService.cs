@@ -6,7 +6,6 @@ namespace Communication.Services.Tournament
 {
 	public class TournamentUnidentifiedPlayerService : ITournamentService
 	{
-		// probably TournamentServiceProvider should to be injected as dependency
 		protected readonly TournamentServiceProvider _tournamentServiceProvider;
 
 		public TournamentUnidentifiedPlayerService(TournamentServiceProvider tournamentServiceProvider)

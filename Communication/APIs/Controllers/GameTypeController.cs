@@ -1,6 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Communication.Services.GameType;
+using Microsoft.AspNetCore.Mvc;
 using Shared.DataAccess.DAO;
-using Shared.DataAccess.RepositoryInterfaces;
 using Shared.DataAccess.Services.Results;
 
 namespace Communication.APIs.Controllers
@@ -10,9 +10,9 @@ namespace Communication.APIs.Controllers
     public class GameTypeController : Controller
     {
 
-        private readonly IGameTypeService _gameTypeService;
+        private readonly GameTypeService _gameTypeService;
 
-        public GameTypeController(IGameTypeService gameTypeService) {
+        public GameTypeController(GameTypeService gameTypeService) {
             _gameTypeService = gameTypeService;
         }
 
