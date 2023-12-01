@@ -1,6 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Shared.DataAccess.Context;
+using Shared.DataAccess.DAO;
 using Shared.DataAccess.DataBaseEntities;
+using Shared.DataAccess.Mappers;
 using Shared.DataAccess.RepositoryInterfaces;
 using Shared.DataAccess.Services.Results;
 
@@ -9,20 +11,23 @@ namespace Shared.DataAccess.Repositories;
 public class GameRepository : IGameRepository
 {
     private readonly DataContext _dataContext;
+    private readonly IGameTypeMapper _mapper;
 
-    public GameRepository(DataContext dataContext)
+    public GameRepository(DataContext dataContext, IGameTypeMapper gameTypeMapper)
     {
+        _mapper = gameTypeMapper;
         _dataContext = dataContext;
     }
 
-    public async Task<ServiceResponse<Game>> CreateGameType(Game game)
+    public async Task<ServiceResponse<GameDto>> CreateGameType(GameDto game)
     {
         try
         {
-            var resGame = await _dataContext.Games.AddAsync(game);
-            return new ServiceResponse<Game>()
+            var resGame = await _dataContext.Games.AddAsync(_mapper.ToGameType(game));
+			await _dataContext.SaveChangesAsync();
+			return new ServiceResponse<GameDto>()
             {
-                Data = resGame.Entity,
+                Data = _mapper.ToDto(resGame.Entity),
                 Message = "Game added",
                 Success = true
             };
@@ -30,7 +35,7 @@ public class GameRepository : IGameRepository
         }
         catch (Exception e)
         {
-            return new ServiceResponse<Game>()
+            return new ServiceResponse<GameDto>()
             {
                 Data = null,
                 Message = "Problem with database",
@@ -39,22 +44,22 @@ public class GameRepository : IGameRepository
         }
     }
 
-    public async Task<ServiceResponse<List<Game>>> GetGameTypes()
+    public async Task<ServiceResponse<List<GameDto>>> GetGameTypes()
     {
         try
         {
             var resGame = await _dataContext.Games.ToListAsync();
-            return new ServiceResponse<List<Game>>()
+            return new ServiceResponse<List<GameDto>>()
             {
-                Data = resGame,
-                Message = "games",
+				Data = resGame.Select(x => _mapper.ToDto(x)).ToList(),
+				Message = "games",
                 Success = true
             };
             
         }
         catch (Exception e)
         {
-            return new ServiceResponse<List<Game>>()
+            return new ServiceResponse<List<GameDto>>()
             {
                 Data = null,
                 Message = "Problem with database",
@@ -63,7 +68,7 @@ public class GameRepository : IGameRepository
         }
     }
 
-    public async Task<ServiceResponse<Game>> DeleteGame(long id)
+    public async Task<ServiceResponse<GameDto>> DeleteGame(long id)
     {
         try
         {
@@ -71,9 +76,9 @@ public class GameRepository : IGameRepository
             var resGame = await _dataContext.Games.FindAsync(id);
             _dataContext.Remove(resGame);
             await _dataContext.SaveChangesAsync();
-            return new ServiceResponse<Game>()
+            return new ServiceResponse<GameDto>()
             {
-                Data = resGame,
+                Data = _mapper.ToDto(resGame),
                 Message = "Game deleted",
                 Success = true
             };
@@ -81,7 +86,7 @@ public class GameRepository : IGameRepository
         }
         catch (Exception e)
         {
-            return new ServiceResponse<Game>()
+            return new ServiceResponse<GameDto>()
             {
                 Data = null,
                 Message = "Problem with database",
@@ -90,14 +95,14 @@ public class GameRepository : IGameRepository
         }
     }
 
-    public async Task<ServiceResponse<Game>> GetGameType(long id)
+    public async Task<ServiceResponse<GameDto>> GetGameType(long id)
     {
         try
         {
             var resGame = await _dataContext.Games.FindAsync(id);
-            return new ServiceResponse<Game>()
+            return new ServiceResponse<GameDto>()
             {
-                Data = resGame,
+                Data = _mapper.ToDto(resGame),
                 Message = "Game found",
                 Success = true
             };
@@ -105,7 +110,7 @@ public class GameRepository : IGameRepository
         }
         catch (Exception e)
         {
-            return new ServiceResponse<Game>()
+            return new ServiceResponse<GameDto>()
             {
                 Data = null,
                 Message = "Problem with database",
@@ -114,17 +119,17 @@ public class GameRepository : IGameRepository
         }
     }
 
-    public async Task<ServiceResponse<Game>> ModifyGameType(long id, Game game)
+    public async Task<ServiceResponse<GameDto>> ModifyGameType(long id, GameDto gameDto)
     {
         try
         {
-          
+            var game = _mapper.ToGameType(gameDto);
             game.Id = id;
             _dataContext.Update(game);
             await _dataContext.SaveChangesAsync();
-            return new ServiceResponse<Game>()
+            return new ServiceResponse<GameDto>()
             {
-                Data = game,
+                Data = gameDto,
                 Message = "Game changed",
                 Success = true
             };
@@ -132,7 +137,7 @@ public class GameRepository : IGameRepository
         }
         catch (Exception e)
         {
-            return new ServiceResponse<Game>()
+            return new ServiceResponse<GameDto>()
             {
                 Data = null,
                 Message = "Problem with database",

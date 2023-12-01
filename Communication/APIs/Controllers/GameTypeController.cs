@@ -1,7 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Communication.Services.GameType;
+using Microsoft.AspNetCore.Mvc;
 using Shared.DataAccess.DAO;
-using Shared.DataAccess.RepositoryInterfaces;
-using Shared.DataAccess.Services;
 using Shared.DataAccess.Services.Results;
 
 namespace Communication.APIs.Controllers
