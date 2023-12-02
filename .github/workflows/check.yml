@@ -1,0 +1,26 @@
+name: Health Check
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+jobs:
+  build:
+    name: Build & Health Check
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: '8.0.x' 
+
+    - name: Build
+      run: |
+        dotnet build
+
+    - name: Running Tests
+      run: |
+        dotnet test UnitTests/UnitTests.csproj
