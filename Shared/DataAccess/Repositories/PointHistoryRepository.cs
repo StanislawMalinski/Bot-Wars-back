@@ -19,7 +19,7 @@ public class PointHistoryRepository : IPointHistoryRepository
         try
         {
 			// to run in Visual Studi remove 'await' xd
-			var result = await from entity in _dataContext.PointHistories
+			var result = from entity in _dataContext.PointHistories
                 where entity.PlayerId == playerId
                 select entity;
 
