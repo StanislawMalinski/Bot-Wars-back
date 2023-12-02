@@ -6,8 +6,8 @@ on:
     branches: [ main ]
 jobs:
   build:
-    runs-on: ubuntu-latest
     name: Build & Helth Check
+    runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
     - name: setup-dotnet
