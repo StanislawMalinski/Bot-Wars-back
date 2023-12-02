@@ -1,7 +1,11 @@
-# Bot-Wars-back
-1. Pobierz .Net 8 (runtime i SDK) oraz sql server management studio w swojej ulubionej wersji
-2. stwórz baze danych o nazwie Games w sql server management studio
-3. Ustaw połącznie do bazy danych w appsetings.json - "DefaultConnection" (zmieniasz 'Server' tylko)
-4. Wykonuejsz komendę w konsoli visual studio Update-Database do postawienia bazy ( jak nie zadziała to usuń wszystkie migracje z folderu migracji i wpisz komendę Add-Migration a potem Update-Database)
-5. Uruchominie powinno odpalic w przeglądarce swagger'a - (takie coś do testowania)
-6. Baza zapisuje dowolne pliki do 64kB;
+### Uruchamianie projektu: budowanie lokalnie
+Stawianie bazy danych: <br>
+Pobierz ostatni obraz mssql servera oraz uruchom bazę danych na dockerze.
+1.  `docker pull mcr.microsoft.com/mssql/server:2022-latest` <br>
+2.  `docker run -e "ACCEPT_EULA=Y" -e "MSSQL_SA_PASSWORD=Sqlhaslo123$" -e "MSSQL_PID=Evaluation" -p 1433:1433  --name dbwysocki --hostname wysocki -d mcr.microsoft.com/mssql/server:latest` <br>
+W głównym katalogu repozytorium, przeprowadzamy migracje, za pierwszym razem może przydać się polecenie instalujące ef:
+`dotnet tool install --global dotnet-ef` <br>
+3.  `dotnet ef database update --project Shared --startup-project BotWars`
+Na sam koniec uruchomiamy projekt przy pomocy: <br>
+(W idealnym świecie...)
+4.  `dotnet run --project BotWars/BotWars.csproj`
