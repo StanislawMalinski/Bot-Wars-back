@@ -7,5 +7,5 @@ W głównym katalogu repozytorium, przeprowadzamy migracje, za pierwszym razem m
 `dotnet tool install --global dotnet-ef` <br>
 3.  `dotnet ef database update --project Shared --startup-project BotWars`
 Na sam koniec uruchomiamy projekt przy pomocy: <br>
-(W idealnym świecie...)
 4.  `dotnet run --project BotWars/BotWars.csproj`
+Swagger powinien być uruchomiony pod adresem https://localhost:7001/swagger/index.html
