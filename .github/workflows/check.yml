@@ -23,4 +23,8 @@ jobs:
 
     - name: Apply database migrations
       run: |
-        dotnet ef database update --project Shared --startup-project BotWars
+        dotnet ef database update --project Shared/Shared.csproj --startup-project BotWars/BotWars.csproj
+
+    - name: Running Tests
+      run: |
+        dotnet test UnitTests/UnitTests.csproj
