@@ -3,7 +3,10 @@ using Shared.DataAccess.Context;
 using Shared.DataAccess.DAO;
 using Shared.DataAccess.DataBaseEntities;
 using Shared.DataAccess.Mappers;
-using Shared.DataAccess.Services.Results;
+using Shared.Results;
+using Shared.Results.ErrorResults;
+using Shared.Results.IResults;
+using Shared.Results.SuccessResults;
 
 namespace Shared.DataAccess.Repositories
 {
@@ -16,164 +19,93 @@ namespace Shared.DataAccess.Repositories
             _dataContext = dataContext;
             _mapper = mapper;
         }
-
-        public async Task<ServiceResponse<TournamentDto>> CreateTournamentAsync(TournamentDto dto)
+        
+        public async Task<HandlerResult<Success, IErrorResult>> CreateTournamentAsync(TournamentDto dto)
         {
-            try
-            {
-                Tournament tournament = _mapper.DtoToTournament(dto);
-                tournament.PostedDate = DateTime.Now;
-                await _dataContext.Tournaments.AddAsync(tournament);
-                await _dataContext.SaveChangesAsync();
-                return new ServiceResponse<TournamentDto>() 
-                { 
-                    Data = _mapper.TournamentToDTO(tournament),
-                    Success = true 
-                };
-            }
-            catch (Exception)
-            {
-                return new ServiceResponse<TournamentDto>()
-                {
-                    Data = dto,
-                    Success = false,
-                    Message = "Cannot create Tournament"
-                };
-            }
+            
+            Tournament tournament = _mapper.DtoToTournament(dto);
+            tournament.PostedDate = DateTime.Now;
+            await _dataContext.Tournaments.AddAsync(tournament);
+            await _dataContext.SaveChangesAsync();
+            return new Success();
         }
 
-        public async Task<ServiceResponse<TournamentDto>> DeleteTournamentAsync(long id)
+        public async Task<HandlerResult<Success, IErrorResult>> DeleteTournamentAsync(long id)
         {
-            try
-            {
-                Tournament tournament = _dataContext.Tournaments.Find(id);
-                if (tournament == null) return new ServiceResponse<TournamentDto>() 
-                { 
-                    Data = null,
-                    Success = false,
-                    Message = $"Tournament of id {id} dont exits" 
-                };
-                 _dataContext.Tournaments.Remove(tournament);
-                await _dataContext.SaveChangesAsync();
-                var response = new ServiceResponse<TournamentDto>()
-                {
-                    Data = _mapper.TournamentToDTO(tournament),
-                    Message = "Tournament was delated",
-                    Success = true
-                };
-
-                return response;
-            }
-            catch (Exception)
-            {
-                return new ServiceResponse<TournamentDto>()
-                {
-                    Data = null,
-                    Message = "Problem with database",
-                    Success = false
-                };
-            }
+            
+            Tournament tournament = await _dataContext.Tournaments.FindAsync(id);
+            if (tournament == null) return new EntityNotFoundErrorResult()
+            { 
+                Title = "result null",
+                Message = $"Tournament of id {id} dont exits" 
+            };
+             _dataContext.Tournaments.Remove(tournament);
+            await _dataContext.SaveChangesAsync();
+            return new Success();
         }
 
-        public async Task<ServiceResponse<TournamentDto>> GetTournamentAsync(long id)
+        public async Task<HandlerResult<SuccessData<TournamentDto>, IErrorResult>> GetTournamentAsync(long id)
         {
-            try
-            {
-                Tournament tournament = _dataContext.Tournaments.Find(id);
-                if (tournament == null) return new ServiceResponse<TournamentDto>() 
-                { 
-                    Data = null, 
-                    Success = false, 
-                    Message = $"Tournament of id {id} dont exits" 
-                };
-                return new ServiceResponse<TournamentDto>() 
-                { 
-                    Data = _mapper.TournamentToDTO(tournament),
-                    Success = true 
-                };
-            }
-            catch (Exception)
-            {
-                return new ServiceResponse<TournamentDto>()
-                {
-                    Data = null,
-                    Success = false,
-                    Message = "Problem with database"
-                };
-            }
+            
+            Tournament tournament = await _dataContext.Tournaments.FindAsync(id);
+            if (tournament == null) return new EntityNotFoundErrorResult() 
+            { 
+                Title = "return null",
+                Message = $"Tournament of id {id} dont exits" 
+            };
+            return new SuccessData<TournamentDto>()
+            { 
+                Data = _mapper.TournamentToDTO(tournament)
+            };
+            
         }
 
-        public async Task<ServiceResponse<TournamentDto>> UpdateTournamentAsync(TournamentDto dto)
+        public async Task<HandlerResult<Success, IErrorResult>> UpdateTournamentAsync(TournamentDto dto)
         {
-            try
-            {
-                Tournament tournament = _mapper.DtoToTournament(dto);
-                var TournamentToEdit = new Tournament() { Id = tournament.Id };
-                _dataContext.Tournaments.Attach(TournamentToEdit);
+            Tournament tournamenttest = await _dataContext.Tournaments.FindAsync(dto.Id);
+            if (tournamenttest == null) return new EntityNotFoundErrorResult() 
+            { 
+                Title = "return null",
+                Message = $"Tournament of id {dto.Id} dont exits" 
+            };
+            Tournament tournament = _mapper.DtoToTournament(dto);
+            var TournamentToEdit = new Tournament() { Id = tournament.Id };
+            _dataContext.Tournaments.Attach(TournamentToEdit);
 
-                TournamentToEdit.TournamentTitle = tournament.TournamentTitle;
-                TournamentToEdit.Description = tournament.Description;
-                TournamentToEdit.GameId = tournament.GameId;
-                TournamentToEdit.PlayersLimit = tournament.PlayersLimit;
-                TournamentToEdit.TournamentsDate = tournament.TournamentsDate;
-                TournamentToEdit.WasPlayedOut = tournament.WasPlayedOut;
-                TournamentToEdit.Constrains = tournament.Constrains;
-                TournamentToEdit.Image = tournament.Image;
+            TournamentToEdit.TournamentTitle = tournament.TournamentTitle;
+            TournamentToEdit.Description = tournament.Description;
+            TournamentToEdit.GameId = tournament.GameId;
+            TournamentToEdit.PlayersLimit = tournament.PlayersLimit;
+            TournamentToEdit.TournamentsDate = tournament.TournamentsDate;
+            TournamentToEdit.WasPlayedOut = tournament.WasPlayedOut;
+            TournamentToEdit.Constrains = tournament.Constrains;
+            TournamentToEdit.Image = tournament.Image;
 
-                await _dataContext.SaveChangesAsync();
-                return new ServiceResponse<TournamentDto> 
-                { 
-                    Data = _mapper.TournamentToDTO(TournamentToEdit),
-                    Success = true 
-                };
-            }
-            catch (Exception)
-            {
-                return new ServiceResponse<TournamentDto>
-                {
-                    Data = dto,
-                    Success = false,
-                    Message = "An error occured while updating Tournament"
-                };
-            }
+            await _dataContext.SaveChangesAsync();
+            return new Success();
+
         }
 
 
-        public async Task<ServiceResponse<List<TournamentDto>>> GetTournamentsAsync()
+        public async Task<HandlerResult<SuccessData<List<TournamentDto>>, IErrorResult>> GetTournamentsAsync()
         {
-
-            var tournaments = await _dataContext.Tournaments.ToListAsync();
-            try
-            {
-                var dtos = tournaments.Select(x => _mapper.TournamentToDTO(x)).ToList();
-                var response = new ServiceResponse<List<TournamentDto>>()
+            
+                var dtos = _dataContext.Tournaments.Select(x => _mapper.TournamentToDTO(x)).ToList();
+                return new SuccessData<List<TournamentDto>>()
                 {
-                    Data = dtos,
-                    Message = "Ok",
-                    Success = true
+                    Data = dtos
                 };
 
-                return response;
-            }
-            catch (Exception)
-            {
-                return new ServiceResponse<List<TournamentDto>>()
-                {
-                    Data = null,
-                    Message = "Problem with database",
-                    Success = false
-                };
-            }
         }
 
-        public Task<ServiceResponse<TournamentDto>> RegisterSelfForTournament(long tournamentId, long playerId)
+        public async Task<HandlerResult<Success, IErrorResult>> RegisterSelfForTournament(long tournamentId, long playerId)
         {
-            throw new NotImplementedException();
+            return new NotImplementedError();
         }
 
-        public Task<ServiceResponse<TournamentDto>> UnregisterSelfForTournament(long tournamentId, long playerId)
+        public async Task<HandlerResult<Success, IErrorResult>> UnregisterSelfForTournament(long tournamentId, long playerId)
         {
-            throw new NotImplementedException();
+            return new NotImplementedError();
         }
 
     }

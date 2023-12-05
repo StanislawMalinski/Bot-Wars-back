@@ -1,10 +1,13 @@
 ﻿using Shared.DataAccess.DAO;
 using Shared.DataAccess.RepositoryInterfaces;
-using Shared.DataAccess.Services.Results;
+using Shared.Results;
+using Shared.Results.ErrorResults;
+using Shared.Results.IResults;
+using Shared.Results.SuccessResults;
 
 namespace Communication.Services.GameType
 {
-	public class GameTypeUnidentifiedPlayerService : IGameTypeService
+	public class GameTypeUnidentifiedPlayerService : IGameService
 	{
 		protected readonly GameTypeServiceProvider _gameTypeServiceProvider;
 
@@ -13,24 +16,27 @@ namespace Communication.Services.GameType
 			_gameTypeServiceProvider = gameTypeServiceProvider;
 		}
 
-		public virtual async Task<ServiceResponse<GameDto>> CreateGameType(GameDto game)
+		public virtual async Task<HandlerResult<Success,IErrorResult>> CreateGameType(GameDto game)
 		{
-			return ServiceResponse<GameDto>.AccessDeniedResponse();
+			return new AccessDeniedError();
 		}
 
-		public virtual async Task<ServiceResponse<GameDto>> DeleteGame(long id)
-		{
-			return ServiceResponse<GameDto>.AccessDeniedResponse();
-		}
-
-		public virtual async Task<ServiceResponse<List<GameDto>>> GetGameTypes()
+		public virtual async Task<HandlerResult<SuccessData<List<GameDto>>, IErrorResult>> GetGameTypes()
 		{
 			return await _gameTypeServiceProvider.getListOfTypesOfGames();
 		}
 
-		public virtual async Task<ServiceResponse<GameDto>> ModifyGameType(long id, GameDto gameDto)
+		public virtual async Task<HandlerResult<Success, IErrorResult>> ModifyGameType(long id, GameDto gameDto)
 		{
-			return ServiceResponse<GameDto>.AccessDeniedResponse();
+			return new AccessDeniedError();
 		}
+
+		public virtual async Task<HandlerResult<Success,IErrorResult>> DeleteGame(long id)
+		{
+			return new AccessDeniedError();
+		}
+
+		
+
 	}
 }

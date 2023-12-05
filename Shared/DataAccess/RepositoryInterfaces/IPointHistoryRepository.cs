@@ -1,11 +1,13 @@
 ﻿using Shared.DataAccess.DataBaseEntities;
-using Shared.DataAccess.Services.Results;
+using Shared.Results;
+using Shared.Results.IResults;
+using Shared.Results.SuccessResults;
 
 namespace Shared.DataAccess.RepositoryInterfaces;
 
 public interface IPointHistoryRepository
 {
-    public Task<ServiceResponse<List<PointHistory>>> GetHistoryForPlayer(long playerId);
-    public Task<ServiceResponse<PointHistory>> LogNewPointsHistoryPoint();
+    public Task<HandlerResult<SuccessData<List<PointHistory>>,IErrorResult>> GetHistoryForPlayer(long playerId);
+    public Task<HandlerResult<Success,IErrorResult>> LogNewPointsHistoryPoint();
 
 }

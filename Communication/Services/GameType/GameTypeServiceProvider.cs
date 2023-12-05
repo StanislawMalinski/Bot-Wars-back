@@ -1,6 +1,8 @@
 ﻿using Shared.DataAccess.DAO;
 using Shared.DataAccess.RepositoryInterfaces;
-using Shared.DataAccess.Services.Results;
+using Shared.Results;
+using Shared.Results.IResults;
+using Shared.Results.SuccessResults;
 
 namespace Communication.Services.GameType;
 
@@ -12,32 +14,32 @@ public class GameTypeServiceProvider
         _gameRepository = gameRepository;
     }
 
-    public async Task<ServiceResponse<GameDto>> deleteGameType(long id)
+    public async Task<HandlerResult<Success,IErrorResult>> deleteGameType(long id)
     {
         return await _gameRepository.DeleteGame(id);
     }
 
-    public async Task<ServiceResponse<GameDto>> updateGameType(long id, GameDto game)
+    public async Task<HandlerResult<Success,IErrorResult>> updateGameType(long id, GameDto game)
     {
         return await _gameRepository.ModifyGameType(id, game);
     }
 
-    public async Task<ServiceResponse<GameDto>> addGameType(GameDto game)
+    public async Task<HandlerResult<Success,IErrorResult>> addGameType(GameDto game)
     {
         return await _gameRepository.CreateGameType(game);
     }
 
-    public async Task<ServiceResponse<GameDto>> getGameType(long id)
+    public async Task<HandlerResult<SuccessData<GameDto>,IErrorResult>> getGameType(long id)
     {
         return await _gameRepository.GetGameType(id);
     }
 
-    public async Task<ServiceResponse<List<GameDto>>> getListOfTypesOfGames()
+    public async Task<HandlerResult<SuccessData<List<GameDto>>,IErrorResult>> getListOfTypesOfGames()
     {
         return await _gameRepository.GetGameTypes();
     }
 
-    public async Task<ServiceResponse<List<GameDto>>> getListOfTypesOfAvailableGames()
+    public async Task<HandlerResult<SuccessData<List<GameDto>>,IErrorResult>> getListOfTypesOfAvailableGames()
     {
         return await _gameRepository.GetGameTypes();
     }

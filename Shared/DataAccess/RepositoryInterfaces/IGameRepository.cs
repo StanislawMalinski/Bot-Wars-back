@@ -1,13 +1,15 @@
 ﻿using Shared.DataAccess.DAO;
-using Shared.DataAccess.Services.Results;
+using Shared.Results;
+using Shared.Results.IResults;
+using Shared.Results.SuccessResults;
 
 namespace Shared.DataAccess.RepositoryInterfaces;
 
 public interface IGameRepository
 {
-    public Task<ServiceResponse<GameDto>> CreateGameType(GameDto game);
-    public Task<ServiceResponse<List<GameDto>>> GetGameTypes();
-    public Task<ServiceResponse<GameDto>> DeleteGame(long id);
-    public Task<ServiceResponse<GameDto>> GetGameType(long id);
-    public Task<ServiceResponse<GameDto>> ModifyGameType(long id, GameDto game);
+    public Task<HandlerResult<Success,IErrorResult>> CreateGameType(GameDto game);
+    public Task<HandlerResult<SuccessData< List<GameDto>>,IErrorResult>> GetGameTypes();
+    public Task<HandlerResult<Success,IErrorResult>> DeleteGame(long id);
+    public Task<HandlerResult<SuccessData<GameDto>,IErrorResult>> GetGameType(long id);
+    public Task<HandlerResult<Success,IErrorResult>> ModifyGameType(long id, GameDto gameDto);
 }

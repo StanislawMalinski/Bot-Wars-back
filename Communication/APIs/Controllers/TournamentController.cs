@@ -1,9 +1,9 @@
-﻿using Communication.Services.Tournament;
+﻿using Communication.APIs.Controllers.Helper;
+using Communication.Services.Tournament;
 using Microsoft.AspNetCore.Mvc;
 using Shared.DataAccess.DAO;
 using Shared.DataAccess.DataBaseEntities;
 using Shared.DataAccess.RepositoryInterfaces;
-using Shared.DataAccess.Services.Results;
 
 namespace Communication.APIs.Controllers
 {
@@ -18,91 +18,56 @@ namespace Communication.APIs.Controllers
         }
 
         [HttpPost("add")]
-        public async Task<ActionResult<ServiceResponse<TournamentDto>>> AddTournament([FromBody] TournamentDto dto) 
+        public async Task<IActionResult> AddTournament([FromBody] TournamentDto dto) 
         {
-            var response = await _tournamentService.AddTournament(dto);
-            if (response.Success)
-            {
-                return Ok(response);
-            }
-            return BadRequest(response);
+            return  (await _tournamentService.AddTournament(dto)).Match(Ok,this.ErrorResult);
+            
         }
 
         [HttpDelete("delete")]
-        public async Task<ActionResult<ServiceResponse<TournamentDto>>> DeleteTournament([FromQuery] long id)
+        public async Task<IActionResult> DeleteTournament([FromQuery] long id)
         {
-            var response = await _tournamentService.DeleteTournament(id);
-            if (response.Success)
-            {
-                return Ok(response);
-            }
-            return BadRequest(response);
+            return (await _tournamentService.DeleteTournament(id)).Match(Ok,this.ErrorResult);
+            
         }
 
         [HttpGet("list")]
-        public async Task<ActionResult<ServiceResponse<List<TournamentDto>>>> GetListOfTournaments()
+        public async Task<IActionResult> GetListOfTournaments()
         {
-            var response = await _tournamentService.GetListOfTournaments();
-            if (response.Success)
-            {
-                return Ok(response);
-            }
-            return BadRequest(response);
+            return (await _tournamentService.GetListOfTournaments()).Match(Ok,this.ErrorResult);
         }
 
         [HttpGet("list/filtered")]
-        public async Task<ActionResult<ServiceResponse<List<TournamentDto>>>> GetListOfTournamentsFiltered()
+        public async Task<IActionResult> GetListOfTournamentsFiltered()
         {
-            var response = await _tournamentService.GetListOfTournamentsFiltered();
-            if (response.Success)
-            {
-                return Ok(response);
-            }
-            return BadRequest(response);
+            return (await _tournamentService.GetListOfTournamentsFiltered()).Match(Ok,this.ErrorResult);
+            
         }
 
         [HttpDelete("get")]
-        public async Task<ActionResult<ServiceResponse<TournamentDto>>> GetTournament([FromQuery] long id)
+        public async Task<IActionResult> GetTournament([FromQuery] long id)
         {
-            var response = await _tournamentService.GetTournament(id);
-            if (response.Success)
-            {
-                return Ok(response);
-            }
-            return BadRequest(response);
+            return (await _tournamentService.GetTournament(id)).Match(Ok,this.ErrorResult);
+            
         }
 
         [HttpPut("register")]
-        public async Task<ActionResult<ServiceResponse<TournamentDto>>> RegisterSelfForTournament([FromQuery] long tournamentId, [FromQuery] long playerId)
+        public async Task<IActionResult> RegisterSelfForTournament([FromQuery] long tournamentId, [FromQuery] long playerId)
         {
-            var response = await _tournamentService.RegisterSelfForTournament(tournamentId, playerId);
-            if (response.Success)
-            {
-                return Ok(response);
-            }
-            return BadRequest(response);
+            return (await _tournamentService.RegisterSelfForTournament(tournamentId, playerId)).Match(Ok,this.ErrorResult);
         }
 
         [HttpPut("unregister")]
-        public async Task<ActionResult<ServiceResponse<TournamentDto>>> UnregisterSelfForTournament([FromQuery] long tournamentId, [FromQuery] long playerId)
+        public async Task<IActionResult> UnregisterSelfForTournament([FromQuery] long tournamentId, [FromQuery] long playerId)
         {
-            var response = await _tournamentService.UnregisterSelfForTournament(tournamentId, playerId);
-            if (response.Success)
-            {
-                return Ok(response);
-            }
-            return BadRequest(response);
+            return (await _tournamentService.UnregisterSelfForTournament(tournamentId, playerId)).Match(Ok,this.ErrorResult);
         }
 
         [HttpPut("update")]
-        public async Task<ActionResult<ServiceResponse<TournamentDto>>> UpdateTournament([FromQuery] long id, [FromBody] TournamentDto tournament)
+        public async Task<IActionResult> UpdateTournament([FromQuery] long id, [FromBody] TournamentDto tournament)
         {
-            var response = await _tournamentService.UpdateTournament(id, tournament);
-            if (response.Success)
-            {
-                return Ok(response);
-            }
-            return BadRequest(response);
+            return (await _tournamentService.UpdateTournament(id, tournament)).Match(Ok,this.ErrorResult);
+            
         }
     }
 }

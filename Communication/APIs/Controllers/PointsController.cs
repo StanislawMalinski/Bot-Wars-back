@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Shared.DataAccess.DataBaseEntities;
-using Shared.DataAccess.Services.Results;
 
 namespace Communication.APIs.Controllers;
 
@@ -9,19 +8,19 @@ public class PointsController : Controller
 {
 
     [HttpGet("for-player")]
-    public async Task<ActionResult<ServiceResponse<long>>> GetPointsForPlayer([FromQuery]long playerId)
+    public async Task<IActionResult> GetPointsForPlayer([FromQuery]long playerId)
     {
 		throw new NotImplementedException();
 	}
 
     [HttpGet("leaderboards")]
-    public async Task<ActionResult<ServiceResponse<List<long>>>> GetLeaderBoards()
+    public async Task<IActionResult> GetLeaderBoards()
     {
         throw new NotImplementedException();
     }
 
 	[HttpGet("player-history")]
-	public async Task<ActionResult<ServiceResponse<List<PointHistory>>>> GetHistoryOfPointsForPlayer([FromQuery] long playerId)
+	public async Task<IActionResult> GetHistoryOfPointsForPlayer([FromQuery] long playerId)
     {
         throw new NotImplementedException();
     }
