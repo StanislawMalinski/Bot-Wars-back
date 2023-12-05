@@ -1,24 +1,26 @@
 ﻿using Shared.DataAccess.DAO;
-using Shared.DataAccess.Services.Results;
+using Shared.Results;
+using Shared.Results.IResults;
+using Shared.Results.SuccessResults;
 
 namespace Shared.DataAccess.RepositoryInterfaces
 {
 	public interface ITournamentService
     {
-        public Task<ServiceResponse<List<TournamentDto>>> GetListOfTournaments();
+        public Task<HandlerResult<SuccessData<List<TournamentDto>>,IErrorResult>> GetListOfTournaments();
 
-        public Task<ServiceResponse<List<TournamentDto>>> GetListOfTournamentsFiltered();
+        public Task<HandlerResult<SuccessData<List<TournamentDto>>,IErrorResult>> GetListOfTournamentsFiltered();
 
-        public Task<ServiceResponse<TournamentDto>> GetTournament(long id);
+        public Task<HandlerResult<SuccessData<TournamentDto>,IErrorResult>> GetTournament(long id);
 
-        public Task<ServiceResponse<TournamentDto>> UpdateTournament(long id, TournamentDto tournament);
+        public Task<HandlerResult<Success,IErrorResult>> UpdateTournament(long id, TournamentDto tournament);
 
-        public Task<ServiceResponse<TournamentDto>> DeleteTournament(long id);
+        public Task<HandlerResult<Success,IErrorResult>> DeleteTournament(long id);
 
-        public Task<ServiceResponse<TournamentDto>> AddTournament(TournamentDto tournament);
+        public Task<HandlerResult<Success,IErrorResult>> AddTournament(TournamentDto tournament);
 
-        public Task<ServiceResponse<TournamentDto>> UnregisterSelfForTournament(long tournamentId, long playerId);
+        public Task<HandlerResult<Success,IErrorResult>> UnregisterSelfForTournament(long tournamentId, long playerId);
 
-        public Task<ServiceResponse<TournamentDto>> RegisterSelfForTournament(long tournamentId, long playerId);
+        public Task<HandlerResult<Success,IErrorResult>> RegisterSelfForTournament(long tournamentId, long playerId);
     }
 }

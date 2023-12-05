@@ -1,7 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Communication.APIs.Controllers.Helper;
+using Microsoft.AspNetCore.Mvc;
 using Shared.DataAccess.DataBaseEntities;
 using Shared.DataAccess.RepositoryInterfaces;
-using Shared.DataAccess.Services.Results;
 
 namespace Communication.APIs.Controllers
 {
@@ -16,58 +16,36 @@ namespace Communication.APIs.Controllers
         }
 
         [HttpPost("add")]
-        public async Task<ActionResult<ServiceResponse<Player>>> AddTournament([FromBody] Player dto)
+        public async Task<IActionResult> AddTournament([FromBody] Player dto)
         {
-            var response = await _playerService.CreatePlayerAsync(dto);
-            if (response.Success)
-            {
-                return Ok(response);
-            }
-            return BadRequest(response);
+            return (await _playerService.CreatePlayerAsync(dto)).Match(Ok,this.ErrorResult);;
+           
         }
 
         [HttpDelete("delete")]
-        public async Task<ActionResult<ServiceResponse<Player>>> DeleteTournament([FromQuery] long id)
+        public async Task<IActionResult> DeleteTournament([FromQuery] long id)
         {
-            var response = await _playerService.DeletePlayerAsync(id);
-            if (response.Success)
-            {
-                return Ok(response);
-            }
-            return BadRequest(response);
+            return (await _playerService.DeletePlayerAsync(id)).Match(Ok,this.ErrorResult);;
         }
 
         [HttpGet("getPlayers")]
-        public async Task<ActionResult<ServiceResponse<List<Player>>>> GetPlayers()
+        public async Task<IActionResult> GetPlayers()
         {
-            var response = await _playerService.GetPlayersAsync();
-            if (response.Success)
-            {
-                return Ok(response);
-            }
-            return BadRequest(response);
+            return (await _playerService.GetPlayersAsync()).Match(Ok,this.ErrorResult);;
         }
 
         [HttpDelete("get")]
-        public async Task<ActionResult<ServiceResponse<Player>>> GetTournament([FromQuery] long id)
+        public async Task<IActionResult> GetTournament([FromQuery] long id)
         {
-            var response = await _playerService.GetPlayerAsync(id);
-            if (response.Success)
-            {
-                return Ok(response);
-            }
-            return BadRequest(response);
+            return (await _playerService.GetPlayerAsync(id)).Match(Ok,this.ErrorResult);;
+           
         }
 
         [HttpPut("update")]
-        public async Task<ActionResult<ServiceResponse<Player>>> UpdateTournament([FromBody] Player player)
+        public async Task<IActionResult> UpdateTournament([FromBody] Player player)
         {
-            var response = await _playerService.UpdatePlayerAsync(player);
-            if (response.Success)
-            {
-                return Ok(response);
-            }
-            return BadRequest(response);
+            return (await _playerService.UpdatePlayerAsync(player)).Match(Ok,this.ErrorResult);;
+            
         }
     }
 }

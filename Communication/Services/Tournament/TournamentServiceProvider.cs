@@ -1,6 +1,8 @@
 ﻿using Shared.DataAccess.DAO;
 using Shared.DataAccess.Repositories;
-using Shared.DataAccess.Services.Results;
+using Shared.Results;
+using Shared.Results.IResults;
+using Shared.Results.SuccessResults;
 
 namespace Communication.Services.Tournament
 {
@@ -14,47 +16,44 @@ namespace Communication.Services.Tournament
 			_tournamentRepository = tournamentRepository;
 		}
 
-		public async Task<ServiceResponse<TournamentDto>> AddTournament(TournamentDto tournament)
+		public async Task<HandlerResult<Success, IErrorResult>> AddTournament(TournamentDto tournament)
 		{
 			return await _tournamentRepository.CreateTournamentAsync(tournament);
 		}
 
-		public async Task<ServiceResponse<TournamentDto>> DeleteTournament(long id)
+		public async Task<HandlerResult<Success, IErrorResult>> DeleteTournament(long id)
 		{
 			return await _tournamentRepository.DeleteTournamentAsync(id);
 		}
 
-		public async Task<ServiceResponse<List<TournamentDto>>> GetListOfTournaments()
+		public async Task<HandlerResult<SuccessData<List<TournamentDto>>, IErrorResult>> GetListOfTournaments()
 		{
 			return await _tournamentRepository.GetTournamentsAsync();
 		}
 
-		public async Task<ServiceResponse<List<TournamentDto>>> GetListOfTournamentsFiltered()
+		public async Task<HandlerResult<SuccessData<List<TournamentDto>>, IErrorResult>> GetListOfTournamentsFiltered()
 		{
 			var tourlist = await _tournamentRepository.GetTournamentsAsync();
-			if (tourlist.Success)
-			{
-				//filter;
-			}
+			
 			return tourlist;
 		}
 
-		public async Task<ServiceResponse<TournamentDto>> GetTournament(long id)
+		public async Task<HandlerResult<SuccessData<TournamentDto>, IErrorResult>> GetTournament(long id)
 		{
 			return await _tournamentRepository.GetTournamentAsync(id);
 		}
 
-		public async Task<ServiceResponse<TournamentDto>> RegisterSelfForTournament(long tournamentId, long playerId)
+		public async Task<HandlerResult<Success, IErrorResult>> RegisterSelfForTournament(long tournamentId, long playerId)
 		{
 			return await _tournamentRepository.RegisterSelfForTournament(tournamentId, playerId);
 		}
 
-		public async Task<ServiceResponse<TournamentDto>> UnregisterSelfForTournament(long tournamentId, long playerId)
+		public async Task<HandlerResult<Success, IErrorResult>> UnregisterSelfForTournament(long tournamentId, long playerId)
 		{
 			return await _tournamentRepository.UnregisterSelfForTournament(tournamentId, playerId);
 		}
 
-		public async Task<ServiceResponse<TournamentDto>> UpdateTournament(long id, TournamentDto tournament)
+		public async Task<HandlerResult<Success, IErrorResult>> UpdateTournament(long id, TournamentDto tournament)
 		{
 			tournament.Id = id;
 			return await _tournamentRepository.UpdateTournamentAsync(tournament);

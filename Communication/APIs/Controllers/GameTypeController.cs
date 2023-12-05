@@ -1,7 +1,7 @@
-﻿using Communication.Services.GameType;
+﻿using Communication.APIs.Controllers.Helper;
+using Communication.Services.GameType;
 using Microsoft.AspNetCore.Mvc;
 using Shared.DataAccess.DAO;
-using Shared.DataAccess.Services.Results;
 
 namespace Communication.APIs.Controllers
 {
@@ -17,48 +17,31 @@ namespace Communication.APIs.Controllers
         }
 
         [HttpPost("addGameType")]
-        public async Task<ActionResult<ServiceResponse<GameDto>>> CreateGameType([FromBody] GameDto game)
+        public async Task<IActionResult> CreateGameType([FromBody] GameDto game)
         {
-            var response = await _gameTypeService.CreateGameType(game);
-            if (response.Success)
-            {
-                return Ok(response);
-            }
-            return BadRequest(response);
+            return (await _gameTypeService.CreateGameType(game)).Match(Ok,this.ErrorResult);
+            
         }
 
         [HttpGet("getGameTypes")]
-        public async Task<ActionResult<ServiceResponse<GameDto>>> GetGameTypes()
+        public async Task<IActionResult> GetGameTypes()
         {
-            var response = await _gameTypeService.GetGameTypes();
-            if (response.Success)
-            {
-                return Ok(response);
-            }
-            return NotFound(response);
+            return (await _gameTypeService.GetGameTypes()).Match(Ok,this.ErrorResult);;
             
         }
 
         [HttpDelete("deleteGameType")]
         public async Task<IActionResult> DeleteGame([FromQuery] long id)
         {
-            var response = await _gameTypeService.DeleteGame(id);
-            if (response.Success)
-            {
-                return Ok(response);
-            }
-            return NotFound(response);
+            return (await _gameTypeService.DeleteGame(id)).Match(Ok,this.ErrorResult);;
+            
         }
 
         [HttpPut("modifyGameType")]
-        public async Task<ActionResult<ServiceResponse<GameDto>>> ModifyGameType([FromQuery] long id, [FromBody] GameDto gameDto)
+        public async Task<IActionResult> ModifyGameType([FromQuery] long id, [FromBody] GameDto gameDto)
         {
-            var response = await _gameTypeService.ModifyGameType(id, gameDto);
-            if (response.Success)
-            {
-                return Ok(response);
-            }
-            return BadRequest(response);
+            return (await _gameTypeService.ModifyGameType(id, gameDto)).Match(Ok,this.ErrorResult);;
+            
         }
     }
 }

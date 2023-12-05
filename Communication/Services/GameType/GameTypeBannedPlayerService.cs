@@ -2,7 +2,7 @@
 
 namespace Communication.Services.GameType
 {
-	public class GameTypeBannedPlayerService : GameTypeUnidentifiedPlayerService, IGameTypeService
+	public class GameTypeBannedPlayerService : GameTypeUnidentifiedPlayerService, IGameService
 	{
 		public GameTypeBannedPlayerService(GameTypeServiceProvider gameTypeServiceProvider) : base(gameTypeServiceProvider)
 		{

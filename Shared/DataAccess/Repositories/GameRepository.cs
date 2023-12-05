@@ -4,7 +4,10 @@ using Shared.DataAccess.DAO;
 using Shared.DataAccess.DataBaseEntities;
 using Shared.DataAccess.Mappers;
 using Shared.DataAccess.RepositoryInterfaces;
-using Shared.DataAccess.Services.Results;
+using Shared.Results;
+using Shared.Results.ErrorResults;
+using Shared.Results.IResults;
+using Shared.Results.SuccessResults;
 
 namespace Shared.DataAccess.Repositories;
 
@@ -19,132 +22,81 @@ public class GameRepository : IGameRepository
         _dataContext = dataContext;
     }
 
-    public async Task<ServiceResponse<GameDto>> CreateGameType(GameDto game)
+
+    public async Task<HandlerResult<Success, IErrorResult>> CreateGameType(GameDto game)
     {
-        try
-        {
-            var resGame = await _dataContext.Games.AddAsync(_mapper.ToGameType(game));
-			await _dataContext.SaveChangesAsync();
-			return new ServiceResponse<GameDto>()
-            {
-                Data = _mapper.ToDto(resGame.Entity),
-                Message = "Game added",
-                Success = true
-            };
-            
-        }
-        catch (Exception e)
-        {
-            return new ServiceResponse<GameDto>()
-            {
-                Data = null,
-                Message = "Problem with database",
-                Success = false
-            };
-        }
+        
+        var resGame = await _dataContext.Games.AddAsync(_mapper.ToGameType(game));
+        await _dataContext.SaveChangesAsync();
+        return new Success();
+
     }
 
-    public async Task<ServiceResponse<List<GameDto>>> GetGameTypes()
+    public async Task<HandlerResult<SuccessData<List<GameDto>>, IErrorResult>> GetGameTypes()
     {
-        try
+        var resGame = _dataContext.Games.Select(x => _mapper.ToDto(x)).ToList();
+        
+        return new SuccessData<List<GameDto>>()
         {
-            var resGame = await _dataContext.Games.ToListAsync();
-            return new ServiceResponse<List<GameDto>>()
-            {
-				Data = resGame.Select(x => _mapper.ToDto(x)).ToList(),
-				Message = "games",
-                Success = true
-            };
-            
-        }
-        catch (Exception e)
-        {
-            return new ServiceResponse<List<GameDto>>()
-            {
-                Data = null,
-                Message = "Problem with database",
-                Success = false
-            };
-        }
+            Data = resGame
+        };
+
     }
 
-    public async Task<ServiceResponse<GameDto>> DeleteGame(long id)
+    public async Task<HandlerResult<Success, IErrorResult>> DeleteGame(long id)
     {
-        try
+        
+        var resGame = await _dataContext.Games.FindAsync(id);
+        if (resGame == null)
         {
-            
-            var resGame = await _dataContext.Games.FindAsync(id);
-            _dataContext.Remove(resGame);
-            await _dataContext.SaveChangesAsync();
-            return new ServiceResponse<GameDto>()
+            return new EntityNotFoundErrorResult()
             {
-                Data = _mapper.ToDto(resGame),
-                Message = "Game deleted",
-                Success = true
-            };
-            
-        }
-        catch (Exception e)
-        {
-            return new ServiceResponse<GameDto>()
-            {
-                Data = null,
-                Message = "Problem with database",
-                Success = false
+                Title = "Return null",
+                Message = "Nie ma elemętu w bazie danych"
             };
         }
+        _dataContext.Remove(resGame);
+        await _dataContext.SaveChangesAsync();
+        return new Success();
+
+
     }
 
-    public async Task<ServiceResponse<GameDto>> GetGameType(long id)
+    public async Task<HandlerResult<SuccessData<GameDto>, IErrorResult>> GetGameType(long id)
     {
-        try
+        
+        var resGame = await _dataContext.Games.FindAsync(id);
+        if (resGame == null)
         {
-            var resGame = await _dataContext.Games.FindAsync(id);
-            return new ServiceResponse<GameDto>()
+            return new EntityNotFoundErrorResult()
             {
-                Data = _mapper.ToDto(resGame),
-                Message = "Game found",
-                Success = true
-            };
-            
-        }
-        catch (Exception e)
-        {
-            return new ServiceResponse<GameDto>()
-            {
-                Data = null,
-                Message = "Problem with database",
-                Success = false
+                Title = "return null",
+                Message = "Nie znaleziono elementu o tym id"
             };
         }
+
+        return new SuccessData<GameDto>()
+        {
+            Data = _mapper.ToDto(resGame)
+        };
+
     }
 
-    public async Task<ServiceResponse<GameDto>> ModifyGameType(long id, GameDto gameDto)
+    public async Task<HandlerResult<Success, IErrorResult>> ModifyGameType(long id, GameDto gameDto)
     {
-        try
+        var resGame = await _dataContext.Games.FindAsync(id);
+        if (resGame == null)
         {
-            var game = _mapper.ToGameType(gameDto);
-            game.Id = id;
-            _dataContext.Update(game);
-            await _dataContext.SaveChangesAsync();
-            return new ServiceResponse<GameDto>()
+            return new EntityNotFoundErrorResult()
             {
-                Data = gameDto,
-                Message = "Game changed",
-                Success = true
-            };
-            
-        }
-        catch (Exception e)
-        {
-            return new ServiceResponse<GameDto>()
-            {
-                Data = null,
-                Message = "Problem with database",
-                Success = false
+                Title = "Return null",
+                Message = "Nie ma elemętu w bazie danych"
             };
         }
+        var game = _mapper.ToGameType(gameDto);
+        game.Id = id;
+        _dataContext.Update(game);
+        await _dataContext.SaveChangesAsync();
+        return new Success();
     }
-
-    
 }

@@ -2,7 +2,10 @@
 using Shared.DataAccess.Context;
 using Shared.DataAccess.DataBaseEntities;
 using Shared.DataAccess.RepositoryInterfaces;
-using Shared.DataAccess.Services.Results;
+using Shared.Results;
+using Shared.Results.ErrorResults;
+using Shared.Results.IResults;
+using Shared.Results.SuccessResults;
 
 namespace Shared.DataAccess.Repositories;
 
@@ -13,162 +16,97 @@ public class PointRepository : IPointsRepository
     {
         _dataContext = dataContext;
     }
-
-    public async Task<ServiceResponse<bool>> setPointsForPlayer(long PlayerId, long Points)
+    
+    public async Task<HandlerResult<Success, IErrorResult>> setPointsForPlayer(long PlayerId, long Points)
     {
-       
-        try
+        var player = await _dataContext.Players.FindAsync(PlayerId);
+        if (player.Points > Points)
         {
-            var player = await _dataContext.Players.FindAsync(PlayerId);
-            if (player.Points > Points)
-            {
-                return await subtracPoints(PlayerId, player.Points - Points);
-            }
-            else
-            {
-                return await addPoints(PlayerId, Points - player.Points);
-            }
+            return await subtracPoints(PlayerId, player.Points - Points);
         }
-        catch (Exception e)
+        else
         {
-            return new ServiceResponse<bool>()
+            return await addPoints(PlayerId, Points - player.Points);
+        }
+    }
+
+    public async Task<HandlerResult<Success, IErrorResult>> addPoints(long PlayerId, long Points)
+    {
+        var player = await _dataContext.Players.FindAsync(PlayerId);
+        if (player == null)
+        {
+            return new EntityNotFoundErrorResult()
             {
-                Data = false,
-                Message = "Problem with database",
-                Success = false
+                Title = "return null",
+                Message = "Nie ma gracza z tym id"
+            };
+        }
+        player.Points += Points;
+        _dataContext.Players.Update((player));
+        PointHistory pointHistory = new PointHistory()
+        {
+            PlayerId = player.Id,
+            Gain = Points,
+            Loss = 0,
+            LogDate = DateTime.Now
+        };
+        await _dataContext.PointHistories.AddAsync(pointHistory);
+        await _dataContext.SaveChangesAsync();
+        return new Success();
+    }
+
+    public async Task<HandlerResult<Success, IErrorResult>> subtracPoints(long PlayerId, long Points)
+    {
+        var player = await _dataContext.Players.FindAsync(PlayerId);
+        if (player == null)
+        {
+            return new EntityNotFoundErrorResult()
+            {
+                Title = "return null",
+                Message = "Nie ma gracza z tym id"
+            };
+        }
+        player.Points -= Points;
+        _dataContext.Players.Update((player));
+        PointHistory pointHistory = new PointHistory()
+        {
+            PlayerId = player.Id,
+            Gain = 0,
+            Loss = Points,
+            LogDate = DateTime.Now
+        };
+        await _dataContext.PointHistories.AddAsync(pointHistory);
+        await _dataContext.SaveChangesAsync();
+        return new Success();
+    }
+
+    public async Task<HandlerResult<SuccessData<long>, IErrorResult>> getCurrentPointForPlayer(long PlayerId)
+    {
+        var player = await _dataContext.Players.FindAsync(PlayerId);
+        if (player == null)
+        {
+            return new EntityNotFoundErrorResult()
+            {
+                Title = "return null",
+                Message = "Nie ma gracza z tym id"
             };
         }
 
+        return new SuccessData<long>()
+        {
+            Data = player.Points
+        };
+    }
+
+    public async Task<HandlerResult<SuccessData<List<Player>>, IErrorResult>> getLeadboards()
+    {
+        var players =  from player in _dataContext.Players
+                orderby player.Points
+                select player;
         
-    }
-
-    public async Task<ServiceResponse<bool>> addPoints(long PlayerId, long Points)
-    {
-        
-        try
+        return new SuccessData<List<Player>>()
         {
-            var player = await _dataContext.Players.FindAsync(PlayerId);
-            player.Points += Points;
-            _dataContext.Players.Update((player));
-            PointHistory pointHistory = new PointHistory()
-            {
-                PlayerId = player.Id,
-                Gain = Points,
-                Loss = 0,
-                LogDate = DateTime.Now
-            };
-            _dataContext.PointHistories.AddAsync(pointHistory);
-            _dataContext.SaveChangesAsync();
-            return new ServiceResponse<bool>()
-            {
-                Data = true,
-                Message = "Points added",
-                Success = true
-            };
-        }
-        catch (Exception e)
-        {
-            return new ServiceResponse<bool>()
-            {
-                Data = false,
-                Message = "Problem with database",
-                Success = false
-            };
-        }
-    }
-
-    public async Task<ServiceResponse<bool>> subtracPoints(long PlayerId, long Points)
-    {
-        
-        try
-        {
-            var player = await _dataContext.Players.FindAsync(PlayerId);
-            player.Points -= Points;
-            _dataContext.Players.Update((player));
-            PointHistory pointHistory = new PointHistory()
-            {
-                PlayerId = player.Id,
-                Gain = 0,
-                Loss = Points,
-                LogDate = DateTime.Now
-            };
-            _dataContext.PointHistories.AddAsync(pointHistory);
-            _dataContext.SaveChangesAsync();
-            return new ServiceResponse<bool>()
-            {
-                Data = true,
-                Message = "Points subtracted",
-                Success = true
-            };
-        }
-        catch (Exception e)
-        {
-            return new ServiceResponse<bool>()
-            {
-                Data = false,
-                Message = "Problem with database",
-                Success = false
-            };
-        }
-    }
-
-    public async Task<ServiceResponse<long>> getCurrentPointForPlayer(long PlayerId)
-    {
-       
-        try
-        {
-            var player = await _dataContext.Players.FindAsync(PlayerId);
-            return new ServiceResponse<long>()
-            {
-                Data = player.Points,
-                Message = "Points",
-                Success = true
-            };
-            
-        }
-        catch (Exception e)
-        {
-            return new ServiceResponse<long>()
-            {
-                Data = 0,
-                Message = "Problem with database",
-                Success = false
-            };
-        }
-    }
-
-    public async Task<ServiceResponse<List<Player>>> getLeadboards()
-    {
-        
-        try
-        {
-            var players = await _dataContext.Players.ToListAsync();
-            players.Sort(Compare);
-            return new ServiceResponse<List<Player>>()
-            {
-                Data = players,
-                Message = "Leaderbord",
-                Success = true
-            };
-        }
-        catch (Exception e)
-        {
-            return new ServiceResponse<List<Player>>()
-            {
-                Data = null,
-                Message = "Problem with database",
-                Success = false
-            };
-        }
-    }
-
-    private static int Compare(Player p1 ,Player p2)
-    {
-        if (p1.Points > p2.Points)
-        {
-            return -1;
-        }
-
-        return 1;
+            Data = players.ToList()
+        };
     }
 }

@@ -1,7 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Shared.DataAccess.Context;
 using Shared.DataAccess.DataBaseEntities;
-using Shared.DataAccess.Services.Results;
 
 namespace Shared.DataAccess.Repositories
 {
@@ -12,7 +11,7 @@ namespace Shared.DataAccess.Repositories
         public PlayerRepository(DataContext context) { 
             _context = context;
         }
-
+        /*
         public async Task<ServiceResponse<Player>> CreatePlayerAsync(Player player)
         {
             try
@@ -126,6 +125,6 @@ namespace Shared.DataAccess.Repositories
                     Message = "An error occured while updating Player"
                 };
             }
-        }
+        }*/
     }
 }

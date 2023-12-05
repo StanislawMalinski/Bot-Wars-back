@@ -1,19 +1,26 @@
-﻿using Shared.DataAccess.DataBaseEntities;
-using Shared.DataAccess.Services.Results;
+﻿using Shared.DataAccess.DAO;
+using Shared.DataAccess.DataBaseEntities;
+using Shared.Results;
+using Shared.Results.IResults;
+using Shared.Results.SuccessResults;
 
 namespace Shared.DataAccess.RepositoryInterfaces
 {
 	public interface IGameService
     {
-        public Task<ServiceResponse<List<Game>>> GetGamesAsync();
+        public Task<HandlerResult<SuccessData<List<GameDto>>,IErrorResult>> GetGameTypes();
 
-        public Task<ServiceResponse<Game>> GetGameAsync(long id);
+        //public Task<HandlerResult<SuccessData<GameDto>,IErrorResult>> GetGameAsync(long id);
 
-        public Task<ServiceResponse<Game>> UpdateGameAsync(Game product);
+        public Task<HandlerResult<Success,IErrorResult>>  ModifyGameType(long id, GameDto gameDto);
 
-        public Task<ServiceResponse<Game>> DeleteGameAsync(long id);
+        public Task<HandlerResult<Success,IErrorResult>> DeleteGame(long id);
 
-        public Task<ServiceResponse<Game>> CreateGameAsync(Game product);
+        public Task<HandlerResult<Success,IErrorResult>> CreateGameType(GameDto gameDto);
+        
+        
+        
+      
     }
 
 
