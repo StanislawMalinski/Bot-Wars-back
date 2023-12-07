@@ -17,7 +17,7 @@ namespace Shared.DataAccess.Mappers
                 PostedDate = dto.PostedDate,
                 TournamentsDate = dto.TournamentsDate,
                 WasPlayedOut = dto.WasPlayedOut,
-                Constrains = dto.Contrains,
+                Constraints = dto.Contrains,
                 Image = dto.Image
             };
         }
@@ -34,7 +34,7 @@ namespace Shared.DataAccess.Mappers
                 PostedDate = tournament.PostedDate,
                 TournamentsDate = tournament.TournamentsDate,
                 WasPlayedOut = tournament.WasPlayedOut,
-                Contrains = tournament.Constrains,
+                Contrains = tournament.Constraints,
                 Image = tournament.Image
             };
         }

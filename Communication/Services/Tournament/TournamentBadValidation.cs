@@ -42,13 +42,13 @@ namespace Communication.Services.Tournament
 			return new AccessDeniedError();
 		}
 
-		public async Task<HandlerResult<Success, IErrorResult>> RegisterSelfForTournament(long tournamentId, long playerId)
+		public async Task<HandlerResult<Success, IErrorResult>> RegisterSelfForTournament(long tournamentId, long botId)
 		{
 			
 			return new AccessDeniedError();
 		}
 
-		public async Task<HandlerResult<Success, IErrorResult>> UnregisterSelfForTournament(long tournamentId, long playerId)
+		public async Task<HandlerResult<Success, IErrorResult>> UnregisterSelfForTournament(long tournamentId, long botId)
 		{
 			
 			return new AccessDeniedError();

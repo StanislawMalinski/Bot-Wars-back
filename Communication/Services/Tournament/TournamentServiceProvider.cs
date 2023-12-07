@@ -43,14 +43,14 @@ namespace Communication.Services.Tournament
 			return await _tournamentRepository.GetTournamentAsync(id);
 		}
 
-		public async Task<HandlerResult<Success, IErrorResult>> RegisterSelfForTournament(long tournamentId, long playerId)
+		public async Task<HandlerResult<Success, IErrorResult>> RegisterSelfForTournament(long tournamentId, long botId)
 		{
-			return await _tournamentRepository.RegisterSelfForTournament(tournamentId, playerId);
+			return await _tournamentRepository.RegisterSelfForTournament(tournamentId, botId);
 		}
 
-		public async Task<HandlerResult<Success, IErrorResult>> UnregisterSelfForTournament(long tournamentId, long playerId)
+		public async Task<HandlerResult<Success, IErrorResult>> UnregisterSelfForTournament(long tournamentId, long botId)
 		{
-			return await _tournamentRepository.UnregisterSelfForTournament(tournamentId, playerId);
+			return await _tournamentRepository.UnregisterSelfForTournament(tournamentId, botId);
 		}
 
 		public async Task<HandlerResult<Success, IErrorResult>> UpdateTournament(long id, TournamentDto tournament)

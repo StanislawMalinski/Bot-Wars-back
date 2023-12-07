@@ -34,7 +34,7 @@ public class TournamentConfigurations : IEntityTypeConfiguration<Tournament>
         builder.Property(entity => entity.WasPlayedOut)
             .IsRequired();
 
-        builder.Property(entity => entity.Constrains)
+        builder.Property(entity => entity.Constraints)
             .IsRequired();
     }
 }

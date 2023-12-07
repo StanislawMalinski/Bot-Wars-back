@@ -30,7 +30,7 @@ public class GameConfigurations : IEntityTypeConfiguration<Game>
             .IsRequired()
             .HasMaxLength(400);
 
-        builder.Property(entity => entity.IsAvaiableForPlay)
+        builder.Property(entity => entity.IsAvailableForPlay)
             .IsRequired();
         
     }
