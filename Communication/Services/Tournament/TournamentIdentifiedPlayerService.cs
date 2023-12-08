@@ -11,14 +11,14 @@ namespace Communication.Services.Tournament
 		public TournamentIdentifiedPlayerService(TournamentServiceProvider tournamentServiceProvider) : base(tournamentServiceProvider)
 		{
 		}
-		public async Task<HandlerResult<Success, IErrorResult>> RegisterSelfForTournament(long tournamentId, long playerId)
+		public async Task<HandlerResult<Success, IErrorResult>> RegisterSelfForTournament(long tournamentId, long botId)
 		{
-			return await _tournamentServiceProvider.RegisterSelfForTournament(tournamentId, playerId);
+			return await _tournamentServiceProvider.RegisterSelfForTournament(tournamentId, botId);
 		}
 
-		public async Task<HandlerResult<Success, IErrorResult>> UnregisterSelfForTournament(long tournamentId, long playerId)
+		public async Task<HandlerResult<Success, IErrorResult>> UnregisterSelfForTournament(long tournamentId, long botId)
 		{
-			return await _tournamentServiceProvider.UnregisterSelfForTournament(tournamentId, playerId);
+			return await _tournamentServiceProvider.UnregisterSelfForTournament(tournamentId, botId);
 		}
 	}
 }

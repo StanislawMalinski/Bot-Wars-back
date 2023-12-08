@@ -53,16 +53,16 @@ namespace Communication.Services.Tournament
 			return await _playerTypeService.GetTournament(id);
 		}
 
-		public async Task<HandlerResult<Success, IErrorResult>> RegisterSelfForTournament(long tournamentId, long playerId)
+		public async Task<HandlerResult<Success, IErrorResult>> RegisterSelfForTournament(long tournamentId, long botId)
 		{
 			_playerTypeService = Validate(login, key);
-			return await _playerTypeService.RegisterSelfForTournament(tournamentId, playerId);
+			return await _playerTypeService.RegisterSelfForTournament(tournamentId, botId);
 		}
 
-		public async Task<HandlerResult<Success, IErrorResult>> UnregisterSelfForTournament(long tournamentId, long playerId)
+		public async Task<HandlerResult<Success, IErrorResult>> UnregisterSelfForTournament(long tournamentId, long botId)
 		{
 			_playerTypeService = Validate(login, key);
-			return await _playerTypeService.UnregisterSelfForTournament(tournamentId, playerId);
+			return await _playerTypeService.UnregisterSelfForTournament(tournamentId, botId);
 		}
 
 		public async Task<HandlerResult<Success, IErrorResult>> UpdateTournament(long id, TournamentDto tournament)

@@ -19,8 +19,8 @@ namespace Shared.DataAccess.RepositoryInterfaces
 
         public Task<HandlerResult<Success,IErrorResult>> AddTournament(TournamentDto tournament);
 
-        public Task<HandlerResult<Success,IErrorResult>> UnregisterSelfForTournament(long tournamentId, long playerId);
+        public Task<HandlerResult<Success,IErrorResult>> UnregisterSelfForTournament(long tournamentId, long botId);
 
-        public Task<HandlerResult<Success,IErrorResult>> RegisterSelfForTournament(long tournamentId, long playerId);
+        public Task<HandlerResult<Success,IErrorResult>> RegisterSelfForTournament(long tournamentId, long botId);
     }
 }

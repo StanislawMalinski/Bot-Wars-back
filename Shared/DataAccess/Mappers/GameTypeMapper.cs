@@ -17,7 +17,7 @@ namespace Shared.DataAccess.Mappers
                 GameFile = game.GameFile,
                 GameInstructions = game.GameInstructions,
                 InterfaceDefinition = game.InterfaceDefinition,
-                IsAvaiableForPlay = game.IsAvaiableForPlay,
+                IsAvaiableForPlay = game.IsAvailableForPlay,
                 LastModification = game.LastModification
             };
             
@@ -32,7 +32,7 @@ namespace Shared.DataAccess.Mappers
                 GameFile = game.GameFile,
                 GameInstructions = game.GameInstructions,
                 InterfaceDefinition = game.InterfaceDefinition,
-                IsAvaiableForPlay = game.IsAvaiableForPlay,
+                IsAvailableForPlay = game.IsAvaiableForPlay,
                 LastModification = game.LastModification
             };
           

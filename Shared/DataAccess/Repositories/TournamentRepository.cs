@@ -78,7 +78,7 @@ namespace Shared.DataAccess.Repositories
             TournamentToEdit.PlayersLimit = tournament.PlayersLimit;
             TournamentToEdit.TournamentsDate = tournament.TournamentsDate;
             TournamentToEdit.WasPlayedOut = tournament.WasPlayedOut;
-            TournamentToEdit.Constrains = tournament.Constrains;
+            TournamentToEdit.Constraints = tournament.Constraints;
             TournamentToEdit.Image = tournament.Image;
 
             await _dataContext.SaveChangesAsync();
@@ -98,14 +98,46 @@ namespace Shared.DataAccess.Repositories
 
         }
 
-        public async Task<HandlerResult<Success, IErrorResult>> RegisterSelfForTournament(long tournamentId, long playerId)
+        public async Task<HandlerResult<Success, IErrorResult>> RegisterSelfForTournament(long tournamentId, long botId)
         {
-            return new NotImplementedError();
+            var result =await _dataContext.TournamentReferences.FirstOrDefaultAsync(x => x.tournamentId == tournamentId && x.botId == botId);
+            if (result == null)
+            {
+                return new AlreadyRegisterForTournamentError()
+                {
+                    Title = "Tournament Registration",
+                    Message = "You are already registered for tournament"
+                };
+            }
+            TournamentReference tournamentReference = new TournamentReference()
+            {
+                tournamentId = tournamentId,
+                botId = botId,
+                LastModification = new DateTime()
+            };
+            await _dataContext.TournamentReferences.AddAsync(tournamentReference);
+            return new Success();
         }
 
-        public async Task<HandlerResult<Success, IErrorResult>> UnregisterSelfForTournament(long tournamentId, long playerId)
+        public async Task<HandlerResult<Success, IErrorResult>> UnregisterSelfForTournament(long tournamentId, long botId)
         {
-            return new NotImplementedError();
+            var result =await _dataContext.TournamentReferences.FirstOrDefaultAsync(x => x.tournamentId == tournamentId && x.botId == botId);
+            if (result == null)
+            {
+                return new EntityNotFoundErrorResult()
+                {
+                    Title = "Tournament Registration",
+                    Message = "You was not registered for tournament"
+                };
+            }
+            TournamentReference tournamentReference = new TournamentReference()
+            {
+                tournamentId = tournamentId,
+                botId = botId,
+                LastModification = new DateTime()
+            };
+            _dataContext.TournamentReferences.Remove(tournamentReference);
+            return new Success();
         }
 
     }

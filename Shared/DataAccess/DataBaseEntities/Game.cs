@@ -8,7 +8,7 @@
         public string? GameFile { get; set; }
         public string? GameInstructions { get; set; }
         public string? InterfaceDefinition { get; set; }
-        public bool IsAvaiableForPlay { get; set; }
+        public bool IsAvailableForPlay { get; set; }
 
 
         public List<Bot>? Bot { get; set; }

@@ -52,15 +52,15 @@ namespace Communication.APIs.Controllers
         }
 
         [HttpPut("register")]
-        public async Task<IActionResult> RegisterSelfForTournament([FromQuery] long tournamentId, [FromQuery] long playerId)
+        public async Task<IActionResult> RegisterSelfForTournament([FromQuery] long tournamentId, [FromQuery] long botId)
         {
-            return (await _tournamentService.RegisterSelfForTournament(tournamentId, playerId)).Match(Ok,this.ErrorResult);
+            return (await _tournamentService.RegisterSelfForTournament(tournamentId, botId)).Match(Ok,this.ErrorResult);
         }
 
         [HttpPut("unregister")]
-        public async Task<IActionResult> UnregisterSelfForTournament([FromQuery] long tournamentId, [FromQuery] long playerId)
+        public async Task<IActionResult> UnregisterSelfForTournament([FromQuery] long tournamentId, [FromQuery] long botId)
         {
-            return (await _tournamentService.UnregisterSelfForTournament(tournamentId, playerId)).Match(Ok,this.ErrorResult);
+            return (await _tournamentService.UnregisterSelfForTournament(tournamentId, botId)).Match(Ok,this.ErrorResult);
         }
 
         [HttpPut("update")]
