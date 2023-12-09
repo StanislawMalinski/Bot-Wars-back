@@ -1,5 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Shared.DataAccess.DataBaseEntities;
 using Shared.DataAccess.EntitiesConfigurations;
 using Shared.DataAccess.Seeders;
