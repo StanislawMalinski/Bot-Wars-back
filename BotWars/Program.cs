@@ -1,3 +1,4 @@
+using Communication.Services;
 using Communication.Services.GameType;
 using Communication.Services.Tournament;
 using Communication.Services.Validation;
@@ -52,6 +53,21 @@ builder.Services.AddDbContext<DataContext>(options =>
 });
 var app = builder.Build();
 
+// apply migrations to initialize database
+using (var serviceScope = builder.Services.BuildServiceProvider().CreateScope())
+{
+    var dbContext = serviceScope.ServiceProvider.GetRequiredService<DataContext>();
+    var pendingMigrations = await dbContext.Database.GetPendingMigrationsAsync();
+    if (pendingMigrations.Any())
+    {
+        Console.WriteLine($"Applying {pendingMigrations.Count()} pending migrations.");
+        await dbContext.Database.MigrateAsync();
+    }
+    else
+    {
+        Console.WriteLine("No pending migrations.");
+    }
+}
 
 app.UseSwagger();
 app.UseSwaggerUI();
