@@ -13,7 +13,7 @@ public abstract class Service<T>(T adminInterface, T identifiedPlayerInterface,
     private readonly T _badValidationInterface = badValidationInterface;
     private readonly IPlayerValidator _validator = validator;
 
-    public T Validate(string login, string key)
+    protected T Validate(string login, string key)
     {
         var permissions = _validator.ValidateUser(login, key);
 

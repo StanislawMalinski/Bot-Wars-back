@@ -1,5 +1,4 @@
 ﻿using Shared.DataAccess.DAO;
-using Shared.DataAccess.DataBaseEntities;
 using Shared.Results;
 using Shared.Results.IResults;
 using Shared.Results.SuccessResults;
