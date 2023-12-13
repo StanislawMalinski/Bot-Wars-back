@@ -1,4 +1,4 @@
-using Communication.Services;
+using Communication.Services.Administration;
 using Communication.Services.GameType;
 using Communication.Services.Tournament;
 using Communication.Services.Validation;
@@ -46,6 +46,16 @@ builder.Services.AddScoped<TournamentService, TournamentService>();
 builder.Services.AddScoped<TournamentRepository, TournamentRepository>();
 builder.Services.AddScoped<ITournamentMapper, TournamentMapper>();
 builder.Services.AddScoped<TournamentServiceProvider, TournamentServiceProvider>();
+
+//Administrative services
+builder.Services.AddScoped<IAdministrativeRepository, AdministrativeRepository>();
+builder.Services.AddScoped<AdministrativeServiceProvider, AdministrativeServiceProvider>();
+builder.Services.AddScoped<AdministrativeAdminService, AdministrativeAdminService>();
+builder.Services.AddScoped<AdministrativeIdentifiedPlayerService, AdministrativeIdentifiedPlayerService>();
+builder.Services.AddScoped<AdministrativeUnidentifiedPlayerService, AdministrativeUnidentifiedPlayerService>();
+builder.Services.AddScoped<AdministrativeBannedPlayerService, AdministrativeBannedPlayerService>();
+builder.Services.AddScoped<AdministrativeBadValidationService, AdministrativeBadValidationService>();
+builder.Services.AddScoped<AdministrativeService, AdministrativeService>();
 
 builder.Services.AddDbContext<DataContext>(options =>
 {
