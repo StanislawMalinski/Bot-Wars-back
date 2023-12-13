@@ -8,6 +8,5 @@ namespace Shared.DataAccess.RepositoryInterfaces;
 public interface IPointHistoryRepository
 {
     public Task<HandlerResult<SuccessData<List<PointHistory>>,IErrorResult>> GetHistoryForPlayer(long playerId);
-    public Task<HandlerResult<Success,IErrorResult>> LogNewPointsHistoryPoint();
 
 }
