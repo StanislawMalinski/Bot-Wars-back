@@ -1,130 +1,94 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Shared.DataAccess.Context;
+using Shared.DataAccess.DAO;
 using Shared.DataAccess.DataBaseEntities;
+using Shared.DataAccess.Mappers;
+using Shared.Results;
+using Shared.Results.ErrorResults;
+using Shared.Results.IResults;
+using Shared.Results.SuccessResults;
 
 namespace Shared.DataAccess.Repositories
 {
-	public class PlayerRepository
+    public class PlayerRepository
     {
         private readonly DataContext _context;
+        private readonly IPlayerMapper _playerMapper;
 
-        public PlayerRepository(DataContext context) { 
+        public PlayerRepository(DataContext context, IPlayerMapper playerMapper)
+        {
             _context = context;
+            _playerMapper = playerMapper;
         }
-        /*
-        public async Task<ServiceResponse<Player>> CreatePlayerAsync(Player player)
+
+        public async Task<HandlerResult<Success, IErrorResult>> CreatePlayerAsync(PlayerDto playerDto)
         {
-            try
-            {
-                
-                await _context.Players.AddAsync(player);
-                await _context.SaveChangesAsync();
-                return new ServiceResponse<Player>() { Data = player, Success = true };
-            }
-            catch (Exception)
-            {
-                return new ServiceResponse<Player>()
-                {
-                    Data = player,
-                    Success = false,
-                    Message = "Cannot create Player"
-                };
-            }
+            var resPlayer = await _context.Players.AddAsync(_playerMapper.ToPlayerEntity(playerDto));
+            await _context.SaveChangesAsync();
+            return new Success();
         }
-        public async Task<ServiceResponse<Player>> DeletePlayerAsync(long id)
-        {
-            try
-            {
-                var player = _context.Players.Find(id);
-                if (player == null) return new ServiceResponse<Player>() { Data = player, Success = false, Message = $"Player of id {id} does not exist" };
-                _context.Players.Remove(player);
-                await _context.SaveChangesAsync();
-                var response = new ServiceResponse<Player>()
-                {
-                    Data = player,
-                    Message = "Player was delated",
-                    Success = true
-                };
 
-                return response;
-            }
-            catch (Exception)
+        public async Task<HandlerResult<Success, IErrorResult>> DeletePlayerAsync(long id)
+        {
+            var resPlayer = await _context.Players.FindAsync(id);
+            if (resPlayer == null)
             {
-                return new ServiceResponse<Player>()
+                return new EntityNotFoundErrorResult()
                 {
-                    Data = null,
-                    Message = "Problem with database",
-                    Success = false
+                    Title = "Return null",
+                    Message = "Nie znaleziono gracza w bazie danych"
                 };
             }
+
+            _context.Remove(resPlayer);
+            await _context.SaveChangesAsync();
+            return new Success();
         }
-        public async Task<ServiceResponse<Player>> GetPlayerAsync(long id)
-        {
-            try
-            {
-                var player = _context.Players.Find(id);
-                if (player == null) return new ServiceResponse<Player>() { Data = player, Success = false, Message = $"Player of id {id} dont exits" };
 
-                return new ServiceResponse<Player>() { Data = player, Success = true };
-            }
-            catch (Exception)
+        public async Task<HandlerResult<SuccessData<PlayerDto>, IErrorResult>> GetPlayerAsync(long id)
+        {
+            var resPlayer = await _context.Players.FindAsync(id);
+            if (resPlayer == null)
             {
-                return new ServiceResponse<Player>()
+                return new EntityNotFoundErrorResult()
                 {
-                    Data = null,
-                    Success = false,
-                    Message = "Problem with database"
+                    Title = "return null",
+                    Message = "Nie znaleziono gracza w bazie danych"
                 };
             }
+
+            return new SuccessData<PlayerDto>()
+            {
+                Data = _playerMapper.ToDto(resPlayer)
+            };
         }
-        public async Task<ServiceResponse<List<Player>>> GetPlayersAsync()
+
+        public async Task<HandlerResult<SuccessData<List<PlayerDto>>, IErrorResult>> GetPlayersAsync()
         {
+            var resPlayer = _context.Players.Select(x => _playerMapper.ToDto(x)).ToList();
 
-            var players = await _context.Players.ToListAsync();
-            try
+            return new SuccessData<List<PlayerDto>>()
             {
-                var response = new ServiceResponse<List<Player>>()
-                {
-                    Data = players,
-                    Message = "Ok",
-                    Success = true
-                };
-
-                return response;
-            }
-            catch (Exception)
-            {
-                return new ServiceResponse<List<Player>>()
-                {
-                    Data = null,
-                    Message = "Problem with database",
-                    Success = false
-                };
-            }
-
+                Data = resPlayer
+            };
         }
-        public async Task<ServiceResponse<Player>> UpdatePlayerAsync(Player player)
+
+        public async Task<HandlerResult<Success, IErrorResult>> UpdatePlayerAsync(PlayerDto playerDto)
         {
-            try
+            var resPlayer = await _context.Players.FindAsync(playerDto.Id);
+            if (resPlayer == null)
             {
-                var productToEdit = new Player() { Id = player.Id };
-                _context.Players.Attach(productToEdit);
-
-                //productToEdit.Description = product.Description;
-
-
-                await _context.SaveChangesAsync();
-                return new ServiceResponse<Player> { Data = productToEdit, Success = true };
-            }
-            catch (Exception)
-            {
-                return new ServiceResponse<Player>
+                return new EntityNotFoundErrorResult()
                 {
-                    Data = player,
-                    Success = false,
-                    Message = "An error occured while updating Player"
+                    Title = "Return null",
+                    Message = "Nie ma gracza w bazie danych"
                 };
             }
-        }*/
+
+            var player = _playerMapper.ToPlayerEntity(playerDto);
+            _context.Update(player);
+            await _context.SaveChangesAsync();
+            return new Success();
+        }
     }
 }
