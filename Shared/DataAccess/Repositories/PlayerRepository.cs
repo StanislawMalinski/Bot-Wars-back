@@ -3,6 +3,7 @@ using Shared.DataAccess.Context;
 using Shared.DataAccess.DAO;
 using Shared.DataAccess.DataBaseEntities;
 using Shared.DataAccess.Mappers;
+using Shared.DataAccess.RepositoryInterfaces;
 using Shared.Results;
 using Shared.Results.ErrorResults;
 using Shared.Results.IResults;
@@ -10,7 +11,7 @@ using Shared.Results.SuccessResults;
 
 namespace Shared.DataAccess.Repositories
 {
-    public class PlayerRepository
+    public class PlayerRepository : IPlayerRepository
     {
         private readonly DataContext _context;
         private readonly IPlayerMapper _playerMapper;
@@ -73,22 +74,6 @@ namespace Shared.DataAccess.Repositories
             };
         }
 
-        public async Task<HandlerResult<Success, IErrorResult>> UpdatePlayerAsync(PlayerDto playerDto)
-        {
-            var resPlayer = await _context.Players.FindAsync(playerDto.Id);
-            if (resPlayer == null)
-            {
-                return new EntityNotFoundErrorResult()
-                {
-                    Title = "Return null",
-                    Message = "Nie ma gracza w bazie danych"
-                };
-            }
-
-            var player = _playerMapper.ToPlayerEntity(playerDto);
-            _context.Update(player);
-            await _context.SaveChangesAsync();
-            return new Success();
-        }
+        
     }
 }

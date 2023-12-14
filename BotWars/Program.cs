@@ -1,5 +1,8 @@
+using BotWars.DependencyInjection;
+using Communication.ServiceInterfaces;
 using Communication.Services.Administration;
 using Communication.Services.GameType;
+using Communication.Services.Player;
 using Communication.Services.Tournament;
 using Communication.Services.Validation;
 using Microsoft.EntityFrameworkCore;
@@ -19,43 +22,15 @@ builder.Services.AddLogging();
 
 // Add services to the container.
 builder.Services.AddControllers();
-
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddScoped<PlayerRepository, PlayerRepository>();
 builder.Services.AddScoped<IPlayerValidator, MockValidator>();
 
-// GameType related services
-builder.Services.AddScoped<IGameRepository, GameRepository>();
-builder.Services.AddScoped<GameTypeAdminService, GameTypeAdminService>();
-builder.Services.AddScoped<GameTypeIdentifiedPlayerService, GameTypeIdentifiedPlayerService>();
-builder.Services.AddScoped<GameTypeUnidentifiedPlayerService, GameTypeUnidentifiedPlayerService>();
-builder.Services.AddScoped<GameTypeBannedPlayerService, GameTypeBannedPlayerService>();
-builder.Services.AddScoped<GameTypeBadValidation, GameTypeBadValidation>();
-builder.Services.AddScoped<GameTypeService, GameTypeService>();
-builder.Services.AddScoped<IGameTypeMapper, GameTypeMapper>();
-builder.Services.AddScoped<GameTypeServiceProvider, GameTypeServiceProvider>();
-
-// Tournament related services
-builder.Services.AddScoped<TournamentAdminService, TournamentAdminService>();
-builder.Services.AddScoped<TournamentIdentifiedPlayerService, TournamentIdentifiedPlayerService>();
-builder.Services.AddScoped<TournamentUnidentifiedPlayerService, TournamentUnidentifiedPlayerService>();
-builder.Services.AddScoped<TournamentBannedPlayerService, TournamentBannedPlayerService>();
-builder.Services.AddScoped<TournamentBadValidation, TournamentBadValidation>();
-builder.Services.AddScoped<TournamentService, TournamentService>();
-builder.Services.AddScoped<TournamentRepository, TournamentRepository>();
-builder.Services.AddScoped<ITournamentMapper, TournamentMapper>();
-builder.Services.AddScoped<TournamentServiceProvider, TournamentServiceProvider>();
-
-//Administrative services
-builder.Services.AddScoped<IAdministrativeRepository, AdministrativeRepository>();
-builder.Services.AddScoped<AdministrativeServiceProvider, AdministrativeServiceProvider>();
-builder.Services.AddScoped<AdministrativeAdminService, AdministrativeAdminService>();
-builder.Services.AddScoped<AdministrativeIdentifiedPlayerService, AdministrativeIdentifiedPlayerService>();
-builder.Services.AddScoped<AdministrativeUnidentifiedPlayerService, AdministrativeUnidentifiedPlayerService>();
-builder.Services.AddScoped<AdministrativeBannedPlayerService, AdministrativeBannedPlayerService>();
-builder.Services.AddScoped<AdministrativeBadValidationService, AdministrativeBadValidationService>();
-builder.Services.AddScoped<AdministrativeService, AdministrativeService>();
+builder.Services
+    .AddGameType()
+    .AddPlayer()
+    .AddTournament()
+    .AddAdministrative();
 
 builder.Services.AddDbContext<DataContext>(options =>
 {

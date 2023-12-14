@@ -9,7 +9,7 @@ public static class ErrorResultConverter
 {
     public static IActionResult ErrorResult(this ControllerBase controller, IErrorResult errorResult) => errorResult switch
     {
-        AccessDeniedError => controller.BadRequest(errorResult),
+        AccessDeniedError => controller.BadRequest(),
         EntityNotFoundErrorResult=> controller.NotFound(errorResult),
         NotImplementedError => controller.BadRequest(errorResult),
         AlreadyRegisterForTournamentError => controller.BadRequest(errorResult),

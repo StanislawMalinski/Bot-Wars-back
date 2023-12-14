@@ -42,7 +42,6 @@ public class PointRepository : IPointsRepository
             };
         }
         player.Points += Points;
-        _dataContext.Players.Update((player));
         PointHistory pointHistory = new PointHistory()
         {
             PlayerId = player.Id,
@@ -67,7 +66,6 @@ public class PointRepository : IPointsRepository
             };
         }
         player.Points -= Points;
-        _dataContext.Players.Update((player));
         PointHistory pointHistory = new PointHistory()
         {
             PlayerId = player.Id,
