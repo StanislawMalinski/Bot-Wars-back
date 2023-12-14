@@ -19,6 +19,7 @@ public class PlayerMapper : IPlayerMapper
             Login = player.Login,
             Password = player.HashedPassword,
             Points = player.Points,
+            isBanned = player.isBanned
         };
     }
 
@@ -37,6 +38,7 @@ public class PlayerMapper : IPlayerMapper
             Login = playerDto.Login,
             //TODO hashowanie
             HashedPassword = playerDto.Password,
+            isBanned = playerDto.isBanned,
             Points = playerDto.Points,
         };
     }

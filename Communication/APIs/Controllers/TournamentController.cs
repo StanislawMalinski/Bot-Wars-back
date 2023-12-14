@@ -44,7 +44,7 @@ namespace Communication.APIs.Controllers
             
         }
 
-        [HttpDelete("get")]
+        [HttpGet("get")]
         public async Task<IActionResult> GetTournament([FromQuery] long id)
         {
             return (await _tournamentService.GetTournament(id)).Match(Ok,this.ErrorResult);
