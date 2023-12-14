@@ -62,15 +62,13 @@ namespace Shared.DataAccess.Repositories
 
         public async Task<HandlerResult<Success, IErrorResult>> UpdateTournamentAsync(TournamentDto dto)
         {
-            Tournament tournamenttest = await _dataContext.Tournaments.FindAsync(dto.Id);
-            if (tournamenttest == null) return new EntityNotFoundErrorResult() 
+            Tournament TournamentToEdit = await _dataContext.Tournaments.FindAsync(dto.Id);
+            if (TournamentToEdit == null) return new EntityNotFoundErrorResult() 
             { 
                 Title = "return null",
                 Message = $"Tournament of id {dto.Id} dont exits" 
             };
             Tournament tournament = _mapper.DtoToTournament(dto);
-            var TournamentToEdit = new Tournament() { Id = tournament.Id };
-            _dataContext.Tournaments.Attach(TournamentToEdit);
 
             TournamentToEdit.TournamentTitle = tournament.TournamentTitle;
             TournamentToEdit.Description = tournament.Description;

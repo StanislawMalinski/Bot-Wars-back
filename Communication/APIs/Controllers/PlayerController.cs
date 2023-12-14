@@ -1,5 +1,7 @@
 ﻿using Communication.APIs.Controllers.Helper;
+using Communication.ServiceInterfaces;
 using Microsoft.AspNetCore.Mvc;
+using Shared.DataAccess.DAO;
 using Shared.DataAccess.DataBaseEntities;
 using Shared.DataAccess.RepositoryInterfaces;
 
@@ -14,9 +16,9 @@ namespace Communication.APIs.Controllers
         {
             _playerService = playerService;
         }
-
+        /*
         [HttpPost("add")]
-        public async Task<IActionResult> AddTournament([FromBody] Player dto)
+        public async Task<IActionResult> AddTournament([FromBody] PlayerDto dto)
         {
             return (await _playerService.CreatePlayerAsync(dto)).Match(Ok,this.ErrorResult);;
            
@@ -42,10 +44,10 @@ namespace Communication.APIs.Controllers
         }
 
         [HttpPut("update")]
-        public async Task<IActionResult> UpdateTournament([FromBody] Player player)
+        public async Task<IActionResult> UpdateTournament([FromBody] PlayerDto player)
         {
             return (await _playerService.UpdatePlayerAsync(player)).Match(Ok,this.ErrorResult);;
             
-        }
+        }*/
     }
 }
