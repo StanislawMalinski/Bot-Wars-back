@@ -1,53 +1,44 @@
 ﻿using Communication.APIs.Controllers.Helper;
-using Communication.ServiceInterfaces;
+using Communication.Services.Player;
 using Microsoft.AspNetCore.Mvc;
 using Shared.DataAccess.DAO;
-using Shared.DataAccess.DataBaseEntities;
-using Shared.DataAccess.RepositoryInterfaces;
 
 namespace Communication.APIs.Controllers
 {
 	[Route("api/[controller]")]
     public class PlayerController : Controller
     {
-        private readonly IPlayerService _playerService;
+        private readonly PlayerService _playerService;
 
-        public PlayerController(IPlayerService playerService)
+        public PlayerController(PlayerService playerService)
         {
             _playerService = playerService;
         }
-        /*
-        [HttpPost("add")]
-        public async Task<IActionResult> AddTournament([FromBody] PlayerDto dto)
+        
+        [HttpGet("get-info ")]
+        public async Task<IActionResult> GetPlayerInfo([FromQuery] long id)
         {
-            return (await _playerService.CreatePlayerAsync(dto)).Match(Ok,this.ErrorResult);;
+            return (await _playerService.GetPlayerInfo(id)).Match(Ok,this.ErrorResult);;
            
         }
 
-        [HttpDelete("delete")]
-        public async Task<IActionResult> DeleteTournament([FromQuery] long id)
+        [HttpPost("register")]
+        public async Task<IActionResult> RegisterNewPlayer([FromBody] PlayerDto dto)
         {
-            return (await _playerService.DeletePlayerAsync(id)).Match(Ok,this.ErrorResult);;
+            return (await _playerService.RegisterNewPlayer(dto)).Match(Ok,this.ErrorResult);;
         }
 
-        [HttpGet("getPlayers")]
-        public async Task<IActionResult> GetPlayers()
+        [HttpPut("reset-password-login")]
+        public async Task<IActionResult> ResetPasswordByLogin([FromQuery]string login)
         {
-            return (await _playerService.GetPlayersAsync()).Match(Ok,this.ErrorResult);;
+            return (await _playerService.ResetPassWordByLogin(login)).Match(Ok,this.ErrorResult);;
         }
 
-        [HttpDelete("get")]
-        public async Task<IActionResult> GetTournament([FromQuery] long id)
+        [HttpPut("reset-password-email")]
+        public async Task<IActionResult> ResetPasswordByEmail([FromQuery] string email)
         {
-            return (await _playerService.GetPlayerAsync(id)).Match(Ok,this.ErrorResult);;
+            return (await _playerService.ResetPassWordByEmail(email)).Match(Ok,this.ErrorResult);;
            
         }
-
-        [HttpPut("update")]
-        public async Task<IActionResult> UpdateTournament([FromBody] PlayerDto player)
-        {
-            return (await _playerService.UpdatePlayerAsync(player)).Match(Ok,this.ErrorResult);;
-            
-        }*/
     }
 }

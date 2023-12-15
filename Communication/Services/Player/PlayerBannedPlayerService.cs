@@ -15,22 +15,22 @@ public class PlayerBannedPlayerService : PlayerUnidentifiedPlayerService , IPlay
         
         }
         
-        public async Task<HandlerResult<SuccessData<PlayerDto>, IErrorResult>> getPlayerInfo(long PlayerId)
+        public async Task<HandlerResult<SuccessData<PlayerDto>, IErrorResult>> GetPlayerInfo(long PlayerId)
         {
                 return new AccessDeniedError();
         }
 
-        public async Task<HandlerResult<Success, IErrorResult>> registerNewPlayer(PlayerDto PlayerModel)
+        public async Task<HandlerResult<Success, IErrorResult>> RegisterNewPlayer(PlayerDto PlayerModel)
         {
                 return new AccessDeniedError();
         }
 
-        public async Task<HandlerResult<Success, IErrorResult>> resetPassWordByEmail(string Email)
+        public async Task<HandlerResult<Success, IErrorResult>> ResetPassWordByEmail(string Email)
         {
                 return new AccessDeniedError();
         }
 
-        public async Task<HandlerResult<Success, IErrorResult>> resetPassWordByLogin(string Login)
+        public async Task<HandlerResult<Success, IErrorResult>> ResetPassWordByLogin(string Login)
         {
                 return new AccessDeniedError();
         }

@@ -28,27 +28,27 @@ public class PlayerService : Service<IPlayerService>
         
     }
     
-    public async Task<HandlerResult<SuccessData<PlayerDto>, IErrorResult>> getPlayerInfo(long PlayerId)
+    public async Task<HandlerResult<SuccessData<PlayerDto>, IErrorResult>> GetPlayerInfo(long PlayerId)
     {
         _playerTypeService = Validate(login, key);
-        return await _playerTypeService.getPlayerInfo(PlayerId);
+        return await _playerTypeService.GetPlayerInfo(PlayerId);
     }
 
-    public async Task<HandlerResult<Success, IErrorResult>> registerNewPlayer(PlayerDto PlayerModel)
+    public async Task<HandlerResult<Success, IErrorResult>> RegisterNewPlayer(PlayerDto PlayerModel)
     {
         _playerTypeService = Validate(login, key);
-        return await _playerTypeService.registerNewPlayer(PlayerModel);
+        return await _playerTypeService.RegisterNewPlayer(PlayerModel);
     }
 
-    public async Task<HandlerResult<Success, IErrorResult>> resetPassWordByLogin(String Login)
+    public async Task<HandlerResult<Success, IErrorResult>> ResetPassWordByLogin(string Login)
     {
         _playerTypeService = Validate(login, key);
-        return await _playerTypeService.resetPassWordByLogin(Login);
+        return await _playerTypeService.ResetPassWordByLogin(Login);
     }
 
-    public async Task<HandlerResult<Success, IErrorResult>> resetPassWordByEmail(String Email)
+    public async Task<HandlerResult<Success, IErrorResult>> ResetPassWordByEmail(string Email)
     {
         _playerTypeService = Validate(login, key);
-        return await _playerTypeService.resetPassWordByEmail(Email);
+        return await _playerTypeService.ResetPassWordByEmail(Email);
     }
 }

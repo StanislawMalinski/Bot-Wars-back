@@ -15,12 +15,12 @@ public class PlayerAdminService : PlayerUnidentifiedPlayerService , IPlayerServi
         
     }
 
-    public async Task<HandlerResult<Success, IErrorResult>> registerNewPlayer(PlayerDto PlayerModel)
+    public async Task<HandlerResult<Success, IErrorResult>> RegisterNewPlayer(PlayerDto PlayerModel)
     {
         return new AccessDeniedError();
     }
 
-    public async Task<HandlerResult<SuccessData<PlayerDto>, IErrorResult>> getPlayerInfo(long PlayerId)
+    public async Task<HandlerResult<SuccessData<PlayerDto>, IErrorResult>> GetPlayerInfo(long PlayerId)
     {
         return await _playerServiceProvider.getPlayerInfo(PlayerId);
     }

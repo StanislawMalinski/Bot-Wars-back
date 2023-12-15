@@ -14,7 +14,7 @@ public class PlayerIdentifiedPlayerService : PlayerUnidentifiedPlayerService , I
         
     }
 
-    public async Task<HandlerResult<SuccessData<PlayerDto>, IErrorResult>> getPlayerInfo(long PlayerId)
+    public async Task<HandlerResult<SuccessData<PlayerDto>, IErrorResult>> GetPlayerInfo(long PlayerId)
     {
         return  await _playerServiceProvider.getPlayerInfo(PlayerId);
     }

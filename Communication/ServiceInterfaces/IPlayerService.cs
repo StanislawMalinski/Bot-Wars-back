@@ -7,10 +7,10 @@ namespace Communication.ServiceInterfaces;
 
 public interface IPlayerService
 {
-    public Task<HandlerResult<SuccessData<PlayerDto>, IErrorResult>> getPlayerInfo(long PlayerId);
-    public Task<HandlerResult<Success, IErrorResult>> registerNewPlayer(PlayerDto PlayerModel);
-    public Task<HandlerResult<Success, IErrorResult>> resetPassWordByLogin(String Login);
-    public Task<HandlerResult<Success, IErrorResult>> resetPassWordByEmail(String Email);
+    public Task<HandlerResult<SuccessData<PlayerDto>, IErrorResult>> GetPlayerInfo(long PlayerId);
+    public Task<HandlerResult<Success, IErrorResult>> RegisterNewPlayer(PlayerDto PlayerModel);
+    public Task<HandlerResult<Success, IErrorResult>> ResetPassWordByLogin(string Login);
+    public Task<HandlerResult<Success, IErrorResult>> ResetPassWordByEmail(string Email);
     
    
 }
