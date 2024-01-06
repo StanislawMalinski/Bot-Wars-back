@@ -30,7 +30,8 @@ builder.Services
     .AddGameType()
     .AddPlayer()
     .AddTournament()
-    .AddAdministrative();
+    .AddAdministrative()
+    .AddFileSystem();
 
 builder.Services.AddDbContext<DataContext>(options =>
 {
