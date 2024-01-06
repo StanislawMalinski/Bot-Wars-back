@@ -2,7 +2,7 @@
 {
     public interface ICorespondable
     {
-        public Task<string?> Send();
+        public string Send(string data);
         public void Interrupt();
     }
 }
