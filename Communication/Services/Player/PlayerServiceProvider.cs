@@ -37,6 +37,9 @@ public class PlayerServiceProvider
         return new NotImplementedError();
     }
     
-   
+    public async Task<HandlerResult<SuccessData<string>, IErrorResult>> GenerateJwt(LoginDto dto)
+    {
+        return await _playerRepository.GenerateJwt(dto);
+    }
 
 }

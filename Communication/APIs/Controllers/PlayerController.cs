@@ -16,6 +16,19 @@ namespace Communication.APIs.Controllers
         {
             _playerService = playerService;
         }
+        
+        [HttpPost("register")]
+        public async Task<IActionResult> RegisterUser([FromBody]PlayerDto dto)
+        {
+            return (await _playerService.registerNewPlayer(dto)).Match(Ok,this.ErrorResult);
+        }
+    
+        [HttpPost("login")]
+        public async Task<IActionResult> Login([FromBody] LoginDto dto)
+        {
+            return (await _playerService.GenerateJwt(dto)).Match(Ok,this.ErrorResult);
+        }
+        
         /*
         [HttpPost("add")]
         public async Task<IActionResult> AddTournament([FromBody] PlayerDto dto)

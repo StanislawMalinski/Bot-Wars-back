@@ -12,8 +12,8 @@ using Shared.DataAccess.Context;
 namespace Shared.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20231209174811_InitialMigration")]
-    partial class InitialMigration
+    [Migration("20240106171607_Initial")]
+    partial class Initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -178,6 +178,27 @@ namespace Shared.Migrations
                         });
                 });
 
+            modelBuilder.Entity("Shared.DataAccess.DataBaseEntities.FileEntity", b =>
+                {
+                    b.Property<int>("FileId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("FileId"));
+
+                    b.Property<byte[]>("FileContent")
+                        .IsRequired()
+                        .HasColumnType("varbinary(max)");
+
+                    b.Property<string>("FilePath")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("FileId");
+
+                    b.ToTable("Files");
+                });
+
             modelBuilder.Entity("Shared.DataAccess.DataBaseEntities.Game", b =>
                 {
                     b.Property<long>("Id")
@@ -222,7 +243,7 @@ namespace Shared.Migrations
                             GameInstructions = "Eliminate the enemy players in fast-paced multiplayer battles.",
                             InterfaceDefinition = "First-Person Shooter (FPS)",
                             IsAvailableForPlay = true,
-                            LastModification = new DateTime(2023, 12, 9, 18, 48, 10, 898, DateTimeKind.Local).AddTicks(8157),
+                            LastModification = new DateTime(2024, 1, 6, 18, 16, 7, 261, DateTimeKind.Local).AddTicks(148),
                             NumbersOfPlayer = 10
                         },
                         new
@@ -232,7 +253,7 @@ namespace Shared.Migrations
                             GameInstructions = "Embark on an epic adventure to defeat the Calamity Ganon and save Hyrule.",
                             InterfaceDefinition = "Action-Adventure",
                             IsAvailableForPlay = true,
-                            LastModification = new DateTime(2023, 12, 9, 18, 48, 10, 898, DateTimeKind.Local).AddTicks(8221),
+                            LastModification = new DateTime(2024, 1, 6, 18, 16, 7, 261, DateTimeKind.Local).AddTicks(200),
                             NumbersOfPlayer = 1
                         },
                         new
@@ -242,7 +263,7 @@ namespace Shared.Migrations
                             GameInstructions = "Experience realistic football simulation with updated teams and gameplay.",
                             InterfaceDefinition = "Sports Simulation",
                             IsAvailableForPlay = true,
-                            LastModification = new DateTime(2023, 12, 9, 18, 48, 10, 898, DateTimeKind.Local).AddTicks(8224),
+                            LastModification = new DateTime(2024, 1, 6, 18, 16, 7, 261, DateTimeKind.Local).AddTicks(203),
                             NumbersOfPlayer = 2
                         },
                         new
@@ -252,7 +273,7 @@ namespace Shared.Migrations
                             GameInstructions = "Work together to complete tasks while identifying the impostors among the crew.",
                             InterfaceDefinition = "Social Deduction",
                             IsAvailableForPlay = true,
-                            LastModification = new DateTime(2023, 12, 9, 18, 48, 10, 898, DateTimeKind.Local).AddTicks(8227),
+                            LastModification = new DateTime(2024, 1, 6, 18, 16, 7, 261, DateTimeKind.Local).AddTicks(205),
                             NumbersOfPlayer = 7
                         },
                         new
@@ -262,7 +283,7 @@ namespace Shared.Migrations
                             GameInstructions = "Build and explore a blocky world, mine resources, and survive.",
                             InterfaceDefinition = "Sandbox",
                             IsAvailableForPlay = false,
-                            LastModification = new DateTime(2023, 12, 9, 18, 48, 10, 898, DateTimeKind.Local).AddTicks(8229),
+                            LastModification = new DateTime(2024, 1, 6, 18, 16, 7, 261, DateTimeKind.Local).AddTicks(208),
                             NumbersOfPlayer = 16
                         },
                         new
@@ -272,7 +293,7 @@ namespace Shared.Migrations
                             GameInstructions = "Navigate the futuristic open world of Night City as the mercenary V.",
                             InterfaceDefinition = "Action RPG",
                             IsAvailableForPlay = true,
-                            LastModification = new DateTime(2023, 12, 9, 18, 48, 10, 898, DateTimeKind.Local).AddTicks(8233),
+                            LastModification = new DateTime(2024, 1, 6, 18, 16, 7, 261, DateTimeKind.Local).AddTicks(211),
                             NumbersOfPlayer = 1
                         },
                         new
@@ -282,7 +303,7 @@ namespace Shared.Migrations
                             GameInstructions = "Play soccer with rocket-powered cars in this unique sports game.",
                             InterfaceDefinition = "Vehicular Soccer",
                             IsAvailableForPlay = true,
-                            LastModification = new DateTime(2023, 12, 9, 18, 48, 10, 898, DateTimeKind.Local).AddTicks(8236),
+                            LastModification = new DateTime(2024, 1, 6, 18, 16, 7, 261, DateTimeKind.Local).AddTicks(213),
                             NumbersOfPlayer = 14
                         },
                         new
@@ -292,7 +313,7 @@ namespace Shared.Migrations
                             GameInstructions = "Engage in intense battle royale action in the Call of Duty universe.",
                             InterfaceDefinition = "First-Person Shooter (Battle Royale)",
                             IsAvailableForPlay = false,
-                            LastModification = new DateTime(2023, 12, 9, 18, 48, 10, 898, DateTimeKind.Local).AddTicks(8238),
+                            LastModification = new DateTime(2024, 1, 6, 18, 16, 7, 261, DateTimeKind.Local).AddTicks(216),
                             NumbersOfPlayer = 8
                         },
                         new
@@ -302,7 +323,7 @@ namespace Shared.Migrations
                             GameInstructions = "Create and customize your own island paradise in a relaxing simulation.",
                             InterfaceDefinition = "Life Simulation",
                             IsAvailableForPlay = true,
-                            LastModification = new DateTime(2023, 12, 9, 18, 48, 10, 898, DateTimeKind.Local).AddTicks(8241),
+                            LastModification = new DateTime(2024, 1, 6, 18, 16, 7, 261, DateTimeKind.Local).AddTicks(218),
                             NumbersOfPlayer = 5
                         },
                         new
@@ -312,7 +333,7 @@ namespace Shared.Migrations
                             GameInstructions = "Compete in strategic team-based battles in this multiplayer online battle arena (MOBA).",
                             InterfaceDefinition = "MOBA",
                             IsAvailableForPlay = true,
-                            LastModification = new DateTime(2023, 12, 9, 18, 48, 10, 898, DateTimeKind.Local).AddTicks(8244),
+                            LastModification = new DateTime(2024, 1, 6, 18, 16, 7, 261, DateTimeKind.Local).AddTicks(221),
                             NumbersOfPlayer = 10
                         });
                 });
@@ -342,7 +363,15 @@ namespace Shared.Migrations
                     b.Property<long>("Points")
                         .HasColumnType("bigint");
 
+                    b.Property<int>("RoleId")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("isBanned")
+                        .HasColumnType("bit");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("RoleId");
 
                     b.ToTable("Players");
 
@@ -353,7 +382,9 @@ namespace Shared.Migrations
                             Email = "john.doe@example.com",
                             HashedPassword = "aasdsdas",
                             Login = "john_doe",
-                            Points = 100L
+                            Points = 100L,
+                            RoleId = 1,
+                            isBanned = false
                         },
                         new
                         {
@@ -361,7 +392,9 @@ namespace Shared.Migrations
                             Email = "jane.smith@example.com",
                             HashedPassword = "sdfgdfg",
                             Login = "jane_smith",
-                            Points = 150L
+                            Points = 150L,
+                            RoleId = 1,
+                            isBanned = false
                         },
                         new
                         {
@@ -369,7 +402,9 @@ namespace Shared.Migrations
                             Email = "alex.jones@example.com",
                             HashedPassword = "hjklhjk",
                             Login = "alex_jones",
-                            Points = 200L
+                            Points = 200L,
+                            RoleId = 1,
+                            isBanned = false
                         },
                         new
                         {
@@ -377,7 +412,9 @@ namespace Shared.Migrations
                             Email = "emily.white@example.com",
                             HashedPassword = "qwertyui",
                             Login = "emily_white",
-                            Points = 75L
+                            Points = 75L,
+                            RoleId = 1,
+                            isBanned = false
                         },
                         new
                         {
@@ -385,7 +422,9 @@ namespace Shared.Migrations
                             Email = "sam.wilson@example.com",
                             HashedPassword = "zxcvbnm",
                             Login = "sam_wilson",
-                            Points = 120L
+                            Points = 120L,
+                            RoleId = 1,
+                            isBanned = false
                         },
                         new
                         {
@@ -393,7 +432,9 @@ namespace Shared.Migrations
                             Email = "olivia.brown@example.com",
                             HashedPassword = "poiuytre",
                             Login = "olivia_brown",
-                            Points = 180L
+                            Points = 180L,
+                            RoleId = 1,
+                            isBanned = false
                         },
                         new
                         {
@@ -401,7 +442,9 @@ namespace Shared.Migrations
                             Email = "david.miller@example.com",
                             HashedPassword = "lkjhgfds",
                             Login = "david_miller",
-                            Points = 90L
+                            Points = 90L,
+                            RoleId = 1,
+                            isBanned = false
                         },
                         new
                         {
@@ -409,7 +452,9 @@ namespace Shared.Migrations
                             Email = "emma.jenkins@example.com",
                             HashedPassword = "mnbvcxz",
                             Login = "emma_jenkins",
-                            Points = 160L
+                            Points = 160L,
+                            RoleId = 1,
+                            isBanned = false
                         },
                         new
                         {
@@ -417,7 +462,9 @@ namespace Shared.Migrations
                             Email = "ryan.clark@example.com",
                             HashedPassword = "asdfghjk",
                             Login = "ryan_clark",
-                            Points = 110L
+                            Points = 110L,
+                            RoleId = 1,
+                            isBanned = true
                         },
                         new
                         {
@@ -425,7 +472,9 @@ namespace Shared.Migrations
                             Email = "sara.taylor@example.com",
                             HashedPassword = "qazwsxed",
                             Login = "sara_taylor",
-                            Points = 130L
+                            Points = 130L,
+                            RoleId = 2,
+                            isBanned = false
                         });
                 });
 
@@ -454,6 +503,35 @@ namespace Shared.Migrations
                     b.HasIndex("PlayerId");
 
                     b.ToTable("PointHistories");
+                });
+
+            modelBuilder.Entity("Shared.DataAccess.DataBaseEntities.Role", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Roles");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Name = "User"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Name = "Admin"
+                        });
                 });
 
             modelBuilder.Entity("Shared.DataAccess.DataBaseEntities.Tournament", b =>
@@ -511,7 +589,7 @@ namespace Shared.Migrations
                             GameId = 1L,
                             Image = "quakethreearena.jpg",
                             PlayersLimit = 0,
-                            PostedDate = new DateTime(2023, 12, 9, 18, 48, 10, 898, DateTimeKind.Local).AddTicks(9603),
+                            PostedDate = new DateTime(2024, 1, 6, 18, 16, 7, 261, DateTimeKind.Local).AddTicks(288),
                             TournamentTitle = "Quake III Arena Championship",
                             TournamentsDate = new DateTime(2023, 1, 20, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             WasPlayedOut = false
@@ -524,7 +602,7 @@ namespace Shared.Migrations
                             GameId = 2L,
                             Image = "zeldabreathofthewild.jpg",
                             PlayersLimit = 0,
-                            PostedDate = new DateTime(2023, 12, 9, 18, 48, 10, 898, DateTimeKind.Local).AddTicks(9658),
+                            PostedDate = new DateTime(2024, 1, 6, 18, 16, 7, 261, DateTimeKind.Local).AddTicks(295),
                             TournamentTitle = "Zelda Master Cup",
                             TournamentsDate = new DateTime(2023, 2, 15, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             WasPlayedOut = false
@@ -537,7 +615,7 @@ namespace Shared.Migrations
                             GameId = 3L,
                             Image = "fifa22worldcup.jpg",
                             PlayersLimit = 0,
-                            PostedDate = new DateTime(2023, 12, 9, 18, 48, 10, 898, DateTimeKind.Local).AddTicks(9671),
+                            PostedDate = new DateTime(2024, 1, 6, 18, 16, 7, 261, DateTimeKind.Local).AddTicks(298),
                             TournamentTitle = "FIFA 22 World Cup",
                             TournamentsDate = new DateTime(2023, 3, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             WasPlayedOut = false
@@ -550,7 +628,7 @@ namespace Shared.Migrations
                             GameId = 4L,
                             Image = "amongusinfiltration.jpg",
                             PlayersLimit = 0,
-                            PostedDate = new DateTime(2023, 12, 9, 18, 48, 10, 898, DateTimeKind.Local).AddTicks(9682),
+                            PostedDate = new DateTime(2024, 1, 6, 18, 16, 7, 261, DateTimeKind.Local).AddTicks(300),
                             TournamentTitle = "Among Us Infiltration Challenge",
                             TournamentsDate = new DateTime(2022, 4, 5, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             WasPlayedOut = true
@@ -563,7 +641,7 @@ namespace Shared.Migrations
                             GameId = 5L,
                             Image = "minecraftbuildingshowcase.jpg",
                             PlayersLimit = 0,
-                            PostedDate = new DateTime(2023, 12, 9, 18, 48, 10, 898, DateTimeKind.Local).AddTicks(9693),
+                            PostedDate = new DateTime(2024, 1, 6, 18, 16, 7, 261, DateTimeKind.Local).AddTicks(303),
                             TournamentTitle = "Minecraft Building Showcase",
                             TournamentsDate = new DateTime(2023, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             WasPlayedOut = false
@@ -576,7 +654,7 @@ namespace Shared.Migrations
                             GameId = 6L,
                             Image = "cyberpunk2077challenge.jpg",
                             PlayersLimit = 0,
-                            PostedDate = new DateTime(2023, 12, 9, 18, 48, 10, 898, DateTimeKind.Local).AddTicks(9711),
+                            PostedDate = new DateTime(2024, 1, 6, 18, 16, 7, 261, DateTimeKind.Local).AddTicks(306),
                             TournamentTitle = "Cyberpunk 2077 Cyberwarfare Challenge",
                             TournamentsDate = new DateTime(2022, 6, 15, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             WasPlayedOut = true
@@ -589,7 +667,7 @@ namespace Shared.Migrations
                             GameId = 7L,
                             Image = "rocketleaguechampionship.jpg",
                             PlayersLimit = 0,
-                            PostedDate = new DateTime(2023, 12, 9, 18, 48, 10, 898, DateTimeKind.Local).AddTicks(9724),
+                            PostedDate = new DateTime(2024, 1, 6, 18, 16, 7, 261, DateTimeKind.Local).AddTicks(309),
                             TournamentTitle = "Rocket League Championship",
                             TournamentsDate = new DateTime(2023, 7, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             WasPlayedOut = false
@@ -602,7 +680,7 @@ namespace Shared.Migrations
                             GameId = 8L,
                             Image = "callofdutywarzone.jpg",
                             PlayersLimit = 0,
-                            PostedDate = new DateTime(2023, 12, 9, 18, 48, 10, 898, DateTimeKind.Local).AddTicks(9729),
+                            PostedDate = new DateTime(2024, 1, 6, 18, 16, 7, 261, DateTimeKind.Local).AddTicks(311),
                             TournamentTitle = "Call of Duty: Warzone Battle Royale",
                             TournamentsDate = new DateTime(2023, 8, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             WasPlayedOut = false
@@ -615,7 +693,7 @@ namespace Shared.Migrations
                             GameId = 9L,
                             Image = "animalcrossingislandshowcase.jpg",
                             PlayersLimit = 0,
-                            PostedDate = new DateTime(2023, 12, 9, 18, 48, 10, 898, DateTimeKind.Local).AddTicks(9734),
+                            PostedDate = new DateTime(2024, 1, 6, 18, 16, 7, 261, DateTimeKind.Local).AddTicks(314),
                             TournamentTitle = "Animal Crossing Island Showcase",
                             TournamentsDate = new DateTime(2023, 9, 5, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             WasPlayedOut = false
@@ -628,7 +706,7 @@ namespace Shared.Migrations
                             GameId = 10L,
                             Image = "dota2clashoftitans.jpg",
                             PlayersLimit = 0,
-                            PostedDate = new DateTime(2023, 12, 9, 18, 48, 10, 898, DateTimeKind.Local).AddTicks(9747),
+                            PostedDate = new DateTime(2024, 1, 6, 18, 16, 7, 261, DateTimeKind.Local).AddTicks(318),
                             TournamentTitle = "Dota 2 Clash of Titans",
                             TournamentsDate = new DateTime(2023, 10, 20, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             WasPlayedOut = false
@@ -752,6 +830,17 @@ namespace Shared.Migrations
                     b.Navigation("Games");
 
                     b.Navigation("Player");
+                });
+
+            modelBuilder.Entity("Shared.DataAccess.DataBaseEntities.Player", b =>
+                {
+                    b.HasOne("Shared.DataAccess.DataBaseEntities.Role", "Role")
+                        .WithMany()
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Role");
                 });
 
             modelBuilder.Entity("Shared.DataAccess.DataBaseEntities.PointHistory", b =>

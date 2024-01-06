@@ -2,7 +2,6 @@ using System;
 using System.IO;
 using System.IO.Compression;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Http.Internal;
 
 namespace Shared.DataAccess.Repositories
 {
