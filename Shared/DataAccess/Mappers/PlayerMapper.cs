@@ -14,9 +14,9 @@ public class PlayerMapper : IPlayerMapper
 
         return new PlayerDto
         {
-            Id = player.Id,
             Email = player.Email,
             Login = player.Login,
+            RoleId = player.RoleId,
             Password = player.HashedPassword,
             Points = player.Points,
             isBanned = player.isBanned
@@ -33,10 +33,9 @@ public class PlayerMapper : IPlayerMapper
         
         return new Player
         {
-            Id = playerDto.Id,
             Email = playerDto.Email,
             Login = playerDto.Login,
-            //TODO hashowanie
+            RoleId = playerDto.RoleId,
             HashedPassword = playerDto.Password,
             isBanned = playerDto.isBanned,
             Points = playerDto.Points,

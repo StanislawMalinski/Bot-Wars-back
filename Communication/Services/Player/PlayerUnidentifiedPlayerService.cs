@@ -25,7 +25,7 @@ public class PlayerUnidentifiedPlayerService : IPlayerService
 
     public async Task<HandlerResult<Success, IErrorResult>> registerNewPlayer(PlayerDto PlayerModel)
     {
-        return await registerNewPlayer(PlayerModel);
+        return await _playerServiceProvider.registerNewPlayer(PlayerModel);
     }
 
     public async Task<HandlerResult<Success, IErrorResult>> resetPassWordByLogin(string Login)
@@ -37,6 +37,9 @@ public class PlayerUnidentifiedPlayerService : IPlayerService
     {
         return await _playerServiceProvider.resetPassWordByEmail(Email);
     }
-    
 
+    public async Task<HandlerResult<SuccessData<string>, IErrorResult>> GenerateJwt(LoginDto dto)
+    {
+        return await _playerServiceProvider.GenerateJwt(dto);
+    }
 }

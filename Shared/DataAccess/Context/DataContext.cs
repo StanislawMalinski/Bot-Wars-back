@@ -18,6 +18,7 @@ namespace Shared.DataAccess.Context
         public DbSet<Tournament> Tournaments { get; set; }
         public DbSet<ArchivedMatches> ArchivedMatches { get; set; }
         public DbSet<ArchivedMatchPlayers> ArchivedMatchPlayers { get; set; }
+        public DbSet<Role> Roles { get; set; }
         public DbSet<TournamentReference> TournamentReferences { get; set; }
         public DbSet<PointHistory> PointHistories { get; set; }
         
@@ -25,6 +26,7 @@ namespace Shared.DataAccess.Context
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.ApplyConfigurationsFromAssembly(typeof(RoleConfigurations).Assembly);
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(PlayerConfigurations).Assembly);
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(TournamentConfigurations).Assembly);
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(ArchivedMatchesConfigurations).Assembly);
@@ -34,19 +36,19 @@ namespace Shared.DataAccess.Context
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(TournamentReferenceConfigurations).Assembly);
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(PointHistoryConfigurations).Assembly);
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(FileEntityConfiguration).Assembly);
-            
+
             Seed(modelBuilder);
         }
 
         private static void Seed(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<Role>().HasData(Seeder.GenerateRoles());
             modelBuilder.Entity<Player>().HasData(Seeder.GeneratePlayers());
             modelBuilder.Entity<Game>().HasData(Seeder.GenerateGames());
             modelBuilder.Entity<Tournament>().HasData(Seeder.GenerateTournaments());
             modelBuilder.Entity<Bot>().HasData(Seeder.GenerateBots());
             modelBuilder.Entity<TournamentReference>().HasData(Seeder.GenerateTournamentReferences());
         }
-
         
     }
 }

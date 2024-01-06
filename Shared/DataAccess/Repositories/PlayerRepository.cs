@@ -1,8 +1,14 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
+using BotWars;
 using Shared.DataAccess.Context;
 using Shared.DataAccess.DAO;
-using Shared.DataAccess.DataBaseEntities;
 using Shared.DataAccess.Mappers;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using Shared.DataAccess.DataBaseEntities;
 using Shared.DataAccess.RepositoryInterfaces;
 using Shared.Results;
 using Shared.Results.ErrorResults;
@@ -15,16 +21,74 @@ namespace Shared.DataAccess.Repositories
     {
         private readonly DataContext _context;
         private readonly IPlayerMapper _playerMapper;
+        private readonly IPasswordHasher<Player?> _passwordHasher;
+        private readonly AuthenticationSettings _settings;
 
-        public PlayerRepository(DataContext context, IPlayerMapper playerMapper)
+        public PlayerRepository(DataContext context, IPlayerMapper playerMapper, IPasswordHasher<Player> passwordHasher, AuthenticationSettings settings)
         {
+            _settings = settings;
+            _passwordHasher = passwordHasher;
             _context = context;
             _playerMapper = playerMapper;
         }
 
+        public async Task<HandlerResult<SuccessData<string>, IErrorResult>> GenerateJwt(LoginDto dto)
+        {
+            var player = await _context.Players
+                .Include(p => p.Role)
+                .FirstOrDefaultAsync(u => u.Email.Equals(dto.Email));
+
+            if (player is null)
+            {
+                return new BadAccountInformationError()
+                {
+                    Title = "Return null",
+                    Message = "Niepoprawny email lub haslo"
+                };
+            }
+
+            var result = _passwordHasher.VerifyHashedPassword(player, player.HashedPassword, dto.Password);
+
+            if (result == PasswordVerificationResult.Failed)
+            {
+                return new BadAccountInformationError()
+                {
+                    Title = "Return null",
+                    Message = "Niepoprawny email lub haslo"
+                };
+            }
+
+            var claims = new List<Claim>()
+            {
+                new Claim(ClaimTypes.NameIdentifier, player.Id.ToString()),
+                new Claim(ClaimTypes.Email, $"{player.Email}"),
+                new Claim(ClaimTypes.Role, $"{player.Role.Name}")
+            };
+
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_settings.JwtKey));
+            var cred = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+            var expires = DateTime.Now.AddDays(_settings.JwtExpireDays);
+
+            var token = new JwtSecurityToken(_settings.JwtIssuer,
+                _settings.JwtIssuer,
+                claims,
+                expires: expires,
+                signingCredentials: cred);
+
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var completeToken = tokenHandler.WriteToken(token);
+            return new SuccessData<string>()
+            {
+                Data = completeToken
+            };
+        }
+
         public async Task<HandlerResult<Success, IErrorResult>> CreatePlayerAsync(PlayerDto playerDto)
         {
-            var resPlayer = await _context.Players.AddAsync(_playerMapper.ToPlayerEntity(playerDto));
+            var newPlayer = _playerMapper.ToPlayerEntity(playerDto);
+            var hashedPassword = _passwordHasher.HashPassword(newPlayer, newPlayer?.HashedPassword);
+            newPlayer.HashedPassword = hashedPassword;
+            var resPlayer = await _context.Players.AddAsync(newPlayer);
             await _context.SaveChangesAsync();
             return new Success();
         }

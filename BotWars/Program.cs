@@ -1,3 +1,5 @@
+using System.Text;
+using BotWars;
 using BotWars.DependencyInjection;
 using Communication.ServiceInterfaces;
 using Communication.Services.Administration;
@@ -6,6 +8,7 @@ using Communication.Services.Player;
 using Communication.Services.Tournament;
 using Communication.Services.Validation;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using NLog.Web;
 using Shared.DataAccess.Context;
 using Shared.DataAccess.Mappers;
@@ -26,6 +29,29 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<IPlayerValidator, MockValidator>();
 
+//Jwt configuration
+var authenticationSettings = new AuthenticationSettings();
+
+builder.Services.AddSingleton(authenticationSettings);
+builder.Configuration.GetSection("Authentication").Bind(authenticationSettings);
+
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = "Bearer";
+    options.DefaultScheme = "Bearer";
+    options.DefaultChallengeScheme = "Bearer";
+}).AddJwtBearer(cfg =>
+{
+    cfg.RequireHttpsMetadata = false;
+    cfg.SaveToken = true;
+    cfg.TokenValidationParameters = new TokenValidationParameters()
+    {
+        ValidIssuer = authenticationSettings.JwtIssuer,
+        ValidAudience = authenticationSettings.JwtIssuer,
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(authenticationSettings.JwtKey)),
+    };
+});
+
 builder.Services
     .AddGameType()
     .AddPlayer()
@@ -37,6 +63,7 @@ builder.Services.AddDbContext<DataContext>(options =>
 {
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
+
 var app = builder.Build();
 
 // apply migrations to initialize database
@@ -56,9 +83,16 @@ using (var serviceScope = builder.Services.BuildServiceProvider().CreateScope())
 }
 
 app.UseSwagger();
-app.UseSwaggerUI();
+app.UseSwaggerUI(c =>
+{
+    c.SwaggerEndpoint("/swagger/v1/swagger.json","BotWars API");
+});
+
+app.UseAuthentication();
 
 app.UseHttpsRedirection();
+
+app.UseRouting();
 
 app.UseAuthorization();
 
