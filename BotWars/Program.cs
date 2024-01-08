@@ -57,7 +57,8 @@ builder.Services
     .AddPlayer()
     .AddTournament()
     .AddAdministrative()
-    .AddFileSystem();
+    .AddFileSystem()
+    .AddUserSettings();
 
 builder.Services.AddDbContext<DataContext>(options =>
 {
