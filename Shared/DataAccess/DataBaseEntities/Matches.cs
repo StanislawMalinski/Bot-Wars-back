@@ -1,6 +1,6 @@
 ﻿namespace Shared.DataAccess.DataBaseEntities
 {
-    public class ArchivedMatches
+    public class Matches
     {
         public long Id { get; set; }
         public long GameId { get; set; }
@@ -10,6 +10,6 @@
         public DateTime Played { get; set; }
         public string Match;
 
-        public List<ArchivedMatchPlayers>? ArchivedMatchPlayers { get; set; }
+        public List<MatchPlayers>? MatchPlayers { get; set; }
     }
 }
