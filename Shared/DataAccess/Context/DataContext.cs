@@ -16,27 +16,32 @@ namespace Shared.DataAccess.Context
         public DbSet<Player> Players { get; set; }
         public DbSet<Bot> Bots { get; set; }
         public DbSet<Tournament> Tournaments { get; set; }
-        public DbSet<ArchivedMatches> ArchivedMatches { get; set; }
-        public DbSet<ArchivedMatchPlayers> ArchivedMatchPlayers { get; set; }
+        public DbSet<Matches> Matches { get; set; }
+        public DbSet<MatchPlayers> MatchPlayers { get; set; }
         public DbSet<Role> Roles { get; set; }
         public DbSet<TournamentReference> TournamentReferences { get; set; }
         public DbSet<PointHistory> PointHistories { get; set; }
         public DbSet<FileEntity> Files { get; set; }
+        public DbSet<PlayerPassword> HashedPasswords { get; set; }
         public DbSet<UserSettings> UserSettings { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(RoleConfigurations).Assembly);
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(PlayerConfigurations).Assembly);
+            modelBuilder.ApplyConfigurationsFromAssembly(typeof(PlayerPasswordConfigurations).Assembly);
+            modelBuilder.ApplyConfigurationsFromAssembly(typeof(UserSettingsConfiguration).Assembly);
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(TournamentConfigurations).Assembly);
-            modelBuilder.ApplyConfigurationsFromAssembly(typeof(ArchivedMatchesConfigurations).Assembly);
+            modelBuilder.ApplyConfigurationsFromAssembly(typeof(MatchesConfigurations).Assembly);
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(ArchivedMatchPlayersConfigurations).Assembly);
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(BotConfigurations).Assembly);
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(GameConfigurations).Assembly);
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(TournamentReferenceConfigurations).Assembly);
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(PointHistoryConfigurations).Assembly);
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(FileEntityConfiguration).Assembly);
-            modelBuilder.ApplyConfigurationsFromAssembly(typeof(UserSettingsConfiguration).Assembly);
+            modelBuilder.ApplyConfigurationsFromAssembly(typeof(AchievementRecordConfigurations).Assembly);
+            modelBuilder.ApplyConfigurationsFromAssembly(typeof(AchievementTypeConfigurations).Assembly);
+            modelBuilder.ApplyConfigurationsFromAssembly(typeof(AchievementThresholdConfigurations).Assembly);
 
             Seed(modelBuilder);
         }
@@ -49,6 +54,7 @@ namespace Shared.DataAccess.Context
             modelBuilder.Entity<Tournament>().HasData(Seeder.GenerateTournaments());
             modelBuilder.Entity<Bot>().HasData(Seeder.GenerateBots());
             modelBuilder.Entity<TournamentReference>().HasData(Seeder.GenerateTournamentReferences());
+            modelBuilder.Entity<PlayerPassword>().HasData(Seeder.GeneratePlayerPasswords());
         }
         
     }

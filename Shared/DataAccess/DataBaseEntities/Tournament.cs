@@ -15,7 +15,7 @@
         public string? Image { get; set; }
 
         //public ArchivedMatchPlayers? ArchivedMatchPlayers { get; set; }
-        public List<ArchivedMatches>? ArchivedMatches { get; set; }
+        public List<Matches>? Matches { get; set; }
         public List<TournamentReference>? TournamentReference { get; set; }
 
       

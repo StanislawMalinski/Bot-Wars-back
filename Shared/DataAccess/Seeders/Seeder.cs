@@ -8,19 +8,57 @@ public class Seeder
     {
         return new List<Player>
         {
-            new Player() { Id = 1, Email = "john.doe@example.com", Login = "john_doe", Points = 100, HashedPassword = "aasdsdas", isBanned = false, RoleId = 1},
-            new Player() { Id = 2, Email = "jane.smith@example.com", Login = "jane_smith", Points = 150, HashedPassword = "sdfgdfg", isBanned = false, RoleId = 1},
-            new Player() { Id = 3, Email = "alex.jones@example.com", Login = "alex_jones", Points = 200, HashedPassword = "hjklhjk", isBanned = false, RoleId = 1},
-            new Player() { Id = 4, Email = "emily.white@example.com", Login = "emily_white", Points = 75, HashedPassword = "qwertyui", isBanned = false, RoleId = 1},
-            new Player() { Id = 5, Email = "sam.wilson@example.com", Login = "sam_wilson", Points = 120, HashedPassword = "zxcvbnm", isBanned = false, RoleId = 1},
-            new Player() { Id = 6, Email = "olivia.brown@example.com", Login = "olivia_brown", Points = 180, HashedPassword = "poiuytre", isBanned = false, RoleId = 1},
-            new Player() { Id = 7, Email = "david.miller@example.com", Login = "david_miller", Points = 90, HashedPassword = "lkjhgfds", isBanned = false, RoleId = 1},
-            new Player() { Id = 8, Email = "emma.jenkins@example.com", Login = "emma_jenkins", Points = 160, HashedPassword = "mnbvcxz", isBanned = false, RoleId = 1},
-            new Player() { Id = 9, Email = "ryan.clark@example.com", Login = "ryan_clark", Points = 110, HashedPassword = "asdfghjk", isBanned = true, RoleId = 1},
-            new Player() { Id = 10, Email = "sara.taylor@example.com", Login = "sara_taylor", Points = 130, HashedPassword = "qazwsxed", isBanned = false, RoleId = 2}
+            new Player() { Id = 1, Email = "john.doe@example.com", Login = "john_doe", Points = 100,  isBanned = false, RoleId = 1},
+            new Player() { Id = 2, Email = "jane.smith@example.com", Login = "jane_smith", Points = 150, isBanned = false, RoleId = 1},
+            new Player() { Id = 3, Email = "alex.jones@example.com", Login = "alex_jones", Points = 200, isBanned = false, RoleId = 1},
+            new Player() { Id = 4, Email = "emily.white@example.com", Login = "emily_white", Points = 75, isBanned = false, RoleId = 1},
+            new Player() { Id = 5, Email = "sam.wilson@example.com", Login = "sam_wilson", Points = 120, isBanned = false, RoleId = 1},
+            new Player() { Id = 6, Email = "olivia.brown@example.com", Login = "olivia_brown", Points = 180,  isBanned = false, RoleId = 1},
+            new Player() { Id = 7, Email = "david.miller@example.com", Login = "david_miller", Points = 90,  isBanned = false, RoleId = 1},
+            new Player() { Id = 8, Email = "emma.jenkins@example.com", Login = "emma_jenkins", Points = 160,  isBanned = false, RoleId = 1},
+            new Player() { Id = 9, Email = "ryan.clark@example.com", Login = "ryan_clark", Points = 110, isBanned = true, RoleId = 1},
+            new Player() { Id = 10, Email = "sara.taylor@example.com", Login = "sara_taylor", Points = 130,isBanned = false, RoleId = 2}
         };
     }
-    
+
+    public static List<PlayerPassword> GeneratePlayerPasswords()
+    {
+        return new List<PlayerPassword>
+        {
+            new PlayerPassword()
+            {
+                Id = 1, PlayerId = 1, HashedPassword = "aasdsdas"
+            }, new PlayerPassword()
+            {
+                Id = 2,PlayerId = 2,HashedPassword = "sdfgdfg"
+            },  new PlayerPassword()
+            {
+                Id = 3,PlayerId = 3,HashedPassword = "hjklhjk"
+            },  new PlayerPassword()
+            {
+                Id = 4,PlayerId = 4,HashedPassword = "qwertyui"
+            } ,  new PlayerPassword()
+            {
+                Id = 5,PlayerId = 5,HashedPassword = "zxcvbnm"
+            },  new PlayerPassword()
+            {
+                Id = 6,PlayerId = 6,HashedPassword = "poiuytre"
+            }, new PlayerPassword()
+            {
+                Id = 7,PlayerId = 7,HashedPassword = "lkjhgfds"
+            }, new PlayerPassword()
+            {
+                Id = 8,PlayerId = 8,HashedPassword = "mnbvcxz"
+            }, new PlayerPassword()
+            {
+                Id = 9,PlayerId = 9,HashedPassword = "asdfghjk"
+            }, new PlayerPassword()
+            {
+                Id = 10, PlayerId = 10,HashedPassword = "qazwsxed"
+            }, 
+        };
+    }
+
     public static List<Role> GenerateRoles()
     {
         return new List<Role>

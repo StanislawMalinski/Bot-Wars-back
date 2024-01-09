@@ -4,21 +4,21 @@ using Shared.DataAccess.DataBaseEntities;
 
 namespace Shared.DataAccess.EntitiesConfigurations;
 
-public class ArchivedMatchPlayersConfigurations : IEntityTypeConfiguration<ArchivedMatchPlayers>
+public class ArchivedMatchPlayersConfigurations : IEntityTypeConfiguration<MatchPlayers>
 {
-    public void Configure(EntityTypeBuilder<ArchivedMatchPlayers> builder)
+    public void Configure(EntityTypeBuilder<MatchPlayers> builder)
     {
         
         builder.HasKey(entity => entity.Id);
 
         builder.HasOne(x => x.Player)
-            .WithMany(x => x.ArchivedMatchPlayers)
+            .WithMany(x => x.MatchPlayers)
             .HasForeignKey(x => x.PlayerId);
 
 
 
-        builder.HasOne(x => x.archivedMatches)
-            .WithMany(x => x.ArchivedMatchPlayers)
+        builder.HasOne(x => x.Matches)
+            .WithMany(x => x.MatchPlayers)
             .HasForeignKey(x => x.MatchId);
 
         /*

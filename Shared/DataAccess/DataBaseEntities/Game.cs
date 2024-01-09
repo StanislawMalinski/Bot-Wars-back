@@ -13,7 +13,7 @@
 
         public List<Bot>? Bot { get; set; }
         public List<Tournament>? Tournaments { get; set; }
-        public List<ArchivedMatches>? ArchivedMatches { get; set; }
+        public List<Matches>? Matches { get; set; }
 
         
 
