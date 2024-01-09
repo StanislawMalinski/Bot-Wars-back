@@ -47,7 +47,16 @@ namespace Shared.DataAccess.Repositories
                 };
             }
 
-            var result = _passwordHasher.VerifyHashedPassword(player, player.HashedPassword, dto.Password);
+            var password = await _context.HashedPasswords.FirstOrDefaultAsync(x => x.PlayerId.Equals(player.Id));
+            if (password is null)
+            {
+                return new BadAccountInformationError()
+                {
+                    Title = "Return null",
+                    Message = "Brak hasła w bazie danych"
+                };
+            }
+            var result = _passwordHasher.VerifyHashedPassword(player, password.HashedPassword, dto.Password);
 
             if (result == PasswordVerificationResult.Failed)
             {
@@ -86,9 +95,13 @@ namespace Shared.DataAccess.Repositories
         public async Task<HandlerResult<Success, IErrorResult>> CreatePlayerAsync(PlayerDto playerDto)
         {
             var newPlayer = _playerMapper.ToPlayerEntity(playerDto);
-            var hashedPassword = _passwordHasher.HashPassword(newPlayer, newPlayer?.HashedPassword);
-            newPlayer.HashedPassword = hashedPassword;
+            PlayerPassword password = newPlayer.PlayerPassword;
+            newPlayer.PlayerPassword = null;
+            var hashedPassword = _passwordHasher.HashPassword(newPlayer, password.HashedPassword);
+            password.HashedPassword = hashedPassword;
             var resPlayer = await _context.Players.AddAsync(newPlayer);
+            password.PlayerId = resPlayer.Entity.Id;
+            await _context.HashedPasswords.AddAsync(password);
             await _context.SaveChangesAsync();
             return new Success();
         }

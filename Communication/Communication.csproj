@@ -18,7 +18,6 @@
     <ItemGroup>
       <Folder Include="APIs\DTO\" />
       <Folder Include="APIs\Mappers\" />
-      <Folder Include="Services\idontknowwheretoaddthis\" />
       <Folder Include="Services\Results\" />
     </ItemGroup>
 
