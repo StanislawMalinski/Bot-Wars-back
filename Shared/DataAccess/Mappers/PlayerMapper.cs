@@ -17,7 +17,7 @@ public class PlayerMapper : IPlayerMapper
             Email = player.Email,
             Login = player.Login,
             RoleId = player.RoleId,
-            Password = player.PlayerPassword.HashedPassword,
+            Password = player.HashedPassword,
             Points = player.Points,
             isBanned = player.isBanned
         };
@@ -36,10 +36,7 @@ public class PlayerMapper : IPlayerMapper
             Email = playerDto.Email,
             Login = playerDto.Login,
             RoleId = playerDto.RoleId,
-            PlayerPassword = new PlayerPassword()
-            {
-                HashedPassword = playerDto.Password
-            },
+            HashedPassword = playerDto.Password,
             isBanned = playerDto.isBanned,
             Points = playerDto.Points,
         };

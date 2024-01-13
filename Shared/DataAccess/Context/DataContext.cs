@@ -22,14 +22,12 @@ namespace Shared.DataAccess.Context
         public DbSet<TournamentReference> TournamentReferences { get; set; }
         public DbSet<PointHistory> PointHistories { get; set; }
         public DbSet<FileEntity> Files { get; set; }
-        public DbSet<PlayerPassword> HashedPasswords { get; set; }
         public DbSet<UserSettings> UserSettings { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(RoleConfigurations).Assembly);
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(PlayerConfigurations).Assembly);
-            modelBuilder.ApplyConfigurationsFromAssembly(typeof(PlayerPasswordConfigurations).Assembly);
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(UserSettingsConfiguration).Assembly);
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(TournamentConfigurations).Assembly);
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(MatchesConfigurations).Assembly);
@@ -54,7 +52,6 @@ namespace Shared.DataAccess.Context
             modelBuilder.Entity<Tournament>().HasData(Seeder.GenerateTournaments());
             modelBuilder.Entity<Bot>().HasData(Seeder.GenerateBots());
             modelBuilder.Entity<TournamentReference>().HasData(Seeder.GenerateTournamentReferences());
-            modelBuilder.Entity<PlayerPassword>().HasData(Seeder.GeneratePlayerPasswords());
         }
         
     }
