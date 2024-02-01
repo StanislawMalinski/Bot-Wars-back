@@ -5,7 +5,7 @@ using Shared.DataAccess.DAO;
 
 namespace Communication.APIs.Controllers
 {
-	[Route("api/[controller]")]
+	[Route("api/v1/[controller]")]
     [ApiController]
     public class GameTypeController : Controller
     {
