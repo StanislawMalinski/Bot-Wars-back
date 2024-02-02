@@ -99,7 +99,7 @@ public class AchievementsRepository : IAchievementsRepository
             };
         var nextThreshold = achievementRecords.Count;
         var currentThreshold = achievementThresholds.ElementAt(nextThreshold);
-        if (currentThreshold.Threshold < currentPlayerThreshold)
+        if (currentThreshold.Threshold > currentPlayerThreshold)
         {
             return new NotEnoughAchievementPointsError
             {
