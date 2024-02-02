@@ -1,9 +1,9 @@
 name: Health Check
 on:
   push:
-    branches: [ main ]
+    branches: [ main, achievements ]
   pull_request:
-    branches: [ main ]
+    branches: [ main, achievements ]
 jobs:
   build:
     name: Build & Health Check
