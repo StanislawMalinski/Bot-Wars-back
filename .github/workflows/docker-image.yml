@@ -1,4 +1,4 @@
-name: Docker Image CI
+name: Api Docker Image
 
 on:
   push:
@@ -31,14 +31,23 @@ jobs:
         username: ${{ github.actor }}
         password: ${{ secrets.GH_TOKEN }}
 
-    - name: Build and Push docker image for API
+    - name: Build and Push docker api image to Github Registery
       uses: docker/build-push-action@v5
       with:
         context: .
         file: ./Communication/api.dockerfile
         push: true
         tags: ${{ env.REGISTRY }}/bot-wars-api:latest
-              ${{ secrets.DOCKERHUB_USERNAME }}/bot-wars-api:latest
+
+
+    - name: Build and Push docker api image to Dockerhub
+      uses: docker/build-push-action@v5
+      with:
+        context: .
+        file: ./Communication/api.dockerfile
+        push: true
+        tags: ${{ secrets.DOCKERHUB_USERNAME }}/bot-wars-api:latest
+              
               
 
       
