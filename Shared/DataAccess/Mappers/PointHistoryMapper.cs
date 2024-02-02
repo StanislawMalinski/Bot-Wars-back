@@ -18,26 +18,7 @@ public class PointHistoryMapper : IPointHistoryMapper
             Loss = pointHistory.Loss,
             Gain = pointHistory.Gain,
             PlayerId = pointHistory.PlayerId,
-            Player = pointHistory.Player,
             LogDate = pointHistory.LogDate
-        };
-    }
-    
-    public PointHistory? MapPointHistoryDtoToPointHistory(PointHistoryDto? pointHistoryDto)
-    {
-        if (pointHistoryDto == null)
-        {
-            return null;
-        }
-
-        return new PointHistory
-        {
-            Id = pointHistoryDto.Id,
-            Loss = pointHistoryDto.Loss,
-            Gain = pointHistoryDto.Gain,
-            PlayerId = pointHistoryDto.PlayerId,
-            Player = pointHistoryDto.Player,
-            LogDate = DateTime.Now
         };
     }
 }
