@@ -22,6 +22,8 @@ namespace Shared.DataAccess.Context
         public DbSet<PointHistory> PointHistories { get; set; }
         public DbSet<FileEntity> Files { get; set; }
         public DbSet<UserSettings> UserSettings { get; set; }
+        public DbSet<_Task> Tasks { get; set; }
+        public DbSet<NotificationOutbox> NotificationOutboxes { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -30,7 +32,7 @@ namespace Shared.DataAccess.Context
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(UserSettingsConfiguration).Assembly);
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(TournamentConfigurations).Assembly);
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(MatchesConfigurations).Assembly);
-            modelBuilder.ApplyConfigurationsFromAssembly(typeof(ArchivedMatchPlayersConfigurations).Assembly);
+            modelBuilder.ApplyConfigurationsFromAssembly(typeof(MatchPlayersConfigurations).Assembly);
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(BotConfigurations).Assembly);
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(GameConfigurations).Assembly);
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(TournamentReferenceConfigurations).Assembly);
@@ -39,7 +41,9 @@ namespace Shared.DataAccess.Context
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(AchievementRecordConfigurations).Assembly);
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(AchievementTypeConfigurations).Assembly);
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(AchievementThresholdConfigurations).Assembly);
-
+            modelBuilder.ApplyConfigurationsFromAssembly(typeof(TaskConfiguration).Assembly);
+            modelBuilder.ApplyConfigurationsFromAssembly(typeof(NotificationOutboxConfiguration).Assembly);
+            
             Seed(modelBuilder);
         }
 
