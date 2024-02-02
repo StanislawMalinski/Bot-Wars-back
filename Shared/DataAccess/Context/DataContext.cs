@@ -9,7 +9,6 @@ namespace Shared.DataAccess.Context
     {
         public DataContext(DbContextOptions<DataContext> options) : base(options)
         {
-
         }
 
         public DbSet<Game> Games { get; set; }
@@ -56,7 +55,9 @@ namespace Shared.DataAccess.Context
             modelBuilder.Entity<Tournament>().HasData(Seeder.GenerateTournaments());
             modelBuilder.Entity<Bot>().HasData(Seeder.GenerateBots());
             modelBuilder.Entity<TournamentReference>().HasData(Seeder.GenerateTournamentReferences());
+            modelBuilder.Entity<AchievementType>().HasData(Seeder.GenerateAchievementTypes());
+            modelBuilder.Entity<AchievementThresholds>().HasData(Seeder.GenerateAchievementThresholds());
+            modelBuilder.Entity<AchievementRecord>().HasData(Seeder.GenerateAchievementRecords());
         }
-        
     }
 }

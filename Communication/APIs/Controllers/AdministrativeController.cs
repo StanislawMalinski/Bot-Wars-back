@@ -4,7 +4,8 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Communication.APIs.Controllers;
 
-[Route("api/[controller]")]
+[Route("api/v1/[controller]")]
+[ApiController]
 public class AdministrativeController : Controller
 {
     private readonly AdministrativeService _administrativeService;
@@ -14,13 +15,13 @@ public class AdministrativeController : Controller
         _administrativeService = administrativeService;
     }
 
-    [HttpPut("ban")]
+    [HttpPut("banPlayer")]
     public async Task<IActionResult> BanPlayer([FromQuery] long playerId)
     {
         return (await _administrativeService.BanPlayer(playerId)).Match(Ok,this.ErrorResult);
     }
     
-    [HttpPut("unban")]
+    [HttpPut("unbanPlayer")]
     public async Task<IActionResult> UnbanPlayer([FromQuery] long playerId)
     {
         return (await _administrativeService.UnbanPlayer(playerId)).Match(Ok,this.ErrorResult);

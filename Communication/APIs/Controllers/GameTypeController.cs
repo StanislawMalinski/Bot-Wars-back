@@ -5,7 +5,7 @@ using Shared.DataAccess.DAO;
 
 namespace Communication.APIs.Controllers
 {
-	[Route("api/[controller]")]
+	[Route("api/v1/[controller]")]
     [ApiController]
     public class GameTypeController : Controller
     {
@@ -16,28 +16,28 @@ namespace Communication.APIs.Controllers
             _gameTypeService = gameTypeService;
         }
 
-        [HttpPost("addGameType")]
+        [HttpPost("add")]
         public async Task<IActionResult> CreateGameType([FromBody] GameDto game)
         {
             return (await _gameTypeService.CreateGameType(game)).Match(Ok,this.ErrorResult);
             
         }
 
-        [HttpGet("getGameTypes")]
+        [HttpGet("getAll")]
         public async Task<IActionResult> GetGameTypes()
         {
             return (await _gameTypeService.GetGameTypes()).Match(Ok,this.ErrorResult);;
             
         }
 
-        [HttpDelete("deleteGameType")]
+        [HttpDelete("delete")]
         public async Task<IActionResult> DeleteGame([FromQuery] long id)
         {
             return (await _gameTypeService.DeleteGame(id)).Match(Ok,this.ErrorResult);;
             
         }
 
-        [HttpPut("modifyGameType")]
+        [HttpPut("update")]
         public async Task<IActionResult> ModifyGameType([FromQuery] long id, [FromBody] GameDto gameDto)
         {
             return (await _gameTypeService.ModifyGameType(id, gameDto)).Match(Ok,this.ErrorResult);;
