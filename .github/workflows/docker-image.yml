@@ -18,20 +18,6 @@ jobs:
     steps:
     - uses: actions/checkout@v3
 
-    - name: Log in to the Dockerhub Container Registry
-      uses: docker/login-action@v3
-      with:
-        username: ${{ secrets.DOCKERHUB_USERNAME }}
-        password: ${{ secrets.DOCKERHUB_TOKEN }}
-
-    - name: Build and Push docker api image to Dockerhub
-      uses: docker/build-push-action@v5
-      with:
-        context: .
-        file: ./Communication/api.dockerfile
-        push: true
-        tags: ${{ secrets.DOCKERHUB_USERNAME }}/bot-wars-api:latest
-
     - name: Log in to the Github Container Registry
       uses: docker/login-action@v3
       with:
@@ -45,4 +31,4 @@ jobs:
         context: .
         file: ./Communication/api.dockerfile
         push: true
-        tags: ghcr.io/bot-wars-api:latest
+        tags: ${{ env.REGISTRY }}/bot-wars-api:latest
