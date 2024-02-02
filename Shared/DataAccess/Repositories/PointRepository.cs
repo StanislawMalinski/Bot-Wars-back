@@ -41,8 +41,8 @@ public class PointRepository : IPointsRepository
         
         return new SuccessData<List<PointHistoryDto>>
         {
-            Data = pointHistory.ConvertAll(pointHistory => _pointHistoryMapper
-                .MapPointHistoryToPointHistoryDto(pointHistory))
+            Data = pointHistory.ConvertAll(element => _pointHistoryMapper
+                .MapPointHistoryToPointHistoryDto(element))
         };
 
     }

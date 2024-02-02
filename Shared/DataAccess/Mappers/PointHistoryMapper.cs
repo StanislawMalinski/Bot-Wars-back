@@ -5,13 +5,8 @@ namespace Shared.DataAccess.Mappers;
 
 public class PointHistoryMapper : IPointHistoryMapper
 {
-    public PointHistoryDto? MapPointHistoryToPointHistoryDto(PointHistory? pointHistory)
+    public PointHistoryDto MapPointHistoryToPointHistoryDto(PointHistory pointHistory)
     {
-        if (pointHistory == null)
-        {
-            return null;
-        }
-
         return new PointHistoryDto
         {
             Id = pointHistory.Id,

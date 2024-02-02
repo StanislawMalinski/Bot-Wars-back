@@ -13,6 +13,8 @@ public static class ErrorResultConverter
         EntityNotFoundErrorResult=> controller.NotFound(errorResult),
         NotImplementedError => controller.BadRequest(errorResult),
         AlreadyRegisterForTournamentError => controller.BadRequest(errorResult),
+        AchievementsAlreadyObtainedError => controller.BadRequest(errorResult),
+        NotEnoughAchievementPointsError => controller.BadRequest(errorResult),
         _ => controller.StatusCode((int)HttpStatusCode.InternalServerError, errorResult)
     };
 }

@@ -22,6 +22,9 @@ namespace Shared.DataAccess.Context
         public DbSet<PointHistory> PointHistories { get; set; }
         public DbSet<FileEntity> Files { get; set; }
         public DbSet<UserSettings> UserSettings { get; set; }
+        public DbSet<AchievementRecord> AchievementRecord { get; set; }
+        public DbSet<AchievementType> AchievementType { get; set; }
+        public DbSet<AchievementThresholds> AchievementThresholds { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
