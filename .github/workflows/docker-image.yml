@@ -8,7 +8,6 @@ on:
 
 env:
   REGISTRY: ghcr.io
-  TAG: ${{$(date +'%Y-%m-%dT%H:%M:%S')}}
   
 jobs:
 
