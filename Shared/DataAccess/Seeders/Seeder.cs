@@ -4,7 +4,7 @@ namespace Shared.DataAccess.Seeders;
 
 public class Seeder
 {
-    public static List<Player> GeneratePlayers()
+    public static IEnumerable<Player> GeneratePlayers()
     {
         return new List<Player>
         {
@@ -61,7 +61,7 @@ public class Seeder
         };
     }
 
-    public static List<Role> GenerateRoles()
+    public static IEnumerable<Role> GenerateRoles()
     {
         return new List<Role>
         {
@@ -78,7 +78,7 @@ public class Seeder
         };
     }
 
-    public static List<Game> GenerateGames()
+    public static IEnumerable<Game> GenerateGames()
     {
         return new List<Game>
         {
@@ -148,7 +148,7 @@ public class Seeder
         };
     }
 
-    public static List<Tournament> GenerateTournaments()
+    public static IEnumerable<Tournament> GenerateTournaments()
     {
         return new List<Tournament>()
         {
@@ -285,7 +285,7 @@ public class Seeder
         };
     }
 
-    public static List<Bot> GenerateBots()
+    public static IEnumerable<Bot> GenerateBots()
     {
         return new List<Bot>()
         {
@@ -302,7 +302,7 @@ public class Seeder
         };
     }
 
-    public static List<TournamentReference> GenerateTournamentReferences()
+    public static IEnumerable<TournamentReference> GenerateTournamentReferences()
     {
         return new List<TournamentReference>()
         {
@@ -333,6 +333,10 @@ public class Seeder
             new AchievementThresholds() { Id = 2, AchievementTypeId = 2, Threshold = 4 },
             new AchievementThresholds() { Id = 3, AchievementTypeId = 3, Threshold = 5 },
             new AchievementThresholds() { Id = 4, AchievementTypeId = 4, Threshold = 1 },
+            new AchievementThresholds() { Id = 5, AchievementTypeId = 1, Threshold = 20 },
+            new AchievementThresholds() { Id = 6, AchievementTypeId = 2, Threshold = 8 },
+            new AchievementThresholds() { Id = 7, AchievementTypeId = 3, Threshold = 10 },
+            new AchievementThresholds() { Id = 8, AchievementTypeId = 4, Threshold = 5 },
         };
     }
     

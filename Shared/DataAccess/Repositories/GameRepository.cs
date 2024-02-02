@@ -46,16 +46,22 @@ public class GameRepository : IGameRepository
     public async Task<HandlerResult<Success, IErrorResult>> DeleteGame(long id)
     {
         
-        var resGame = await _dataContext.Games.FindAsync(id);
-        if (resGame == null)
+        var gameToRemove = await _dataContext
+            .Games
+            .Include(g => g.Tournaments)
+            .FirstOrDefaultAsync(g => g.Id == id);
+        
+        if (gameToRemove == null)
         {
             return new EntityNotFoundErrorResult()
             {
-                Title = "Return null",
-                Message = "Nie ma elemętu w bazie danych"
+                Title = "EntityNotFoundErrorResult 404",
+                Message = "No such element could have been found"
             };
         }
-        _dataContext.Remove(resGame);
+
+        if (gameToRemove.Tournaments != null) _dataContext.Tournaments.RemoveRange(gameToRemove.Tournaments);
+        _dataContext.Games.Remove(gameToRemove);
         await _dataContext.SaveChangesAsync();
         return new Success();
 
