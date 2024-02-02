@@ -10,7 +10,7 @@
 		public DateTime TournamentsDate { get; set; }
 		public DateTime PostedDate { get; set; }
 		public bool WasPlayedOut { get; set; }
-		public string? Contrains { get; set; }
+		public string? Constrains { get; set; }
 		public string? Image { get; set; }
 	}
 }

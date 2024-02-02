@@ -21,9 +21,12 @@ public class PlayerConfigurations : IEntityTypeConfiguration<Player>
 
         builder.Property(entity => entity.Points)
             .IsRequired();
-        
+
         builder.Property(entity => entity.HashedPassword)
             .IsRequired();
 
+        // builder.HasOne(entity => entity.Role)
+        //     .WithMany()
+        //     .HasForeignKey(p => p.RoleId);
     }
 }

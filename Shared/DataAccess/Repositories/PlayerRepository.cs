@@ -1,130 +1,143 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
+using BotWars;
 using Shared.DataAccess.Context;
+using Shared.DataAccess.DAO;
+using Shared.DataAccess.Mappers;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using Shared.DataAccess.DataBaseEntities;
+using Shared.DataAccess.RepositoryInterfaces;
+using Shared.Results;
+using Shared.Results.ErrorResults;
+using Shared.Results.IResults;
+using Shared.Results.SuccessResults;
 
 namespace Shared.DataAccess.Repositories
 {
-	public class PlayerRepository
+    public class PlayerRepository : IPlayerRepository
     {
         private readonly DataContext _context;
+        private readonly IPlayerMapper _playerMapper;
+        private readonly IPasswordHasher<Player?> _passwordHasher;
+        private readonly AuthenticationSettings _settings;
 
-        public PlayerRepository(DataContext context) { 
+        public PlayerRepository(DataContext context, IPlayerMapper playerMapper, IPasswordHasher<Player> passwordHasher, AuthenticationSettings settings)
+        {
+            _settings = settings;
+            _passwordHasher = passwordHasher;
             _context = context;
+            _playerMapper = playerMapper;
         }
-        /*
-        public async Task<ServiceResponse<Player>> CreatePlayerAsync(Player player)
+
+        public async Task<HandlerResult<SuccessData<string>, IErrorResult>> GenerateJwt(LoginDto dto)
         {
-            try
+            var player = await _context.Players
+                .Include(p => p.Role)
+                .FirstOrDefaultAsync(u => u.Email.Equals(dto.Email));
+
+            if (player is null)
             {
-                
-                await _context.Players.AddAsync(player);
-                await _context.SaveChangesAsync();
-                return new ServiceResponse<Player>() { Data = player, Success = true };
-            }
-            catch (Exception)
-            {
-                return new ServiceResponse<Player>()
+                return new BadAccountInformationError()
                 {
-                    Data = player,
-                    Success = false,
-                    Message = "Cannot create Player"
+                    Title = "Return null",
+                    Message = "Niepoprawny email lub haslo"
                 };
             }
+
+            var result = _passwordHasher.VerifyHashedPassword(player, player.HashedPassword, dto.Password);
+
+            if (result == PasswordVerificationResult.Failed)
+            {
+                return new BadAccountInformationError()
+                {
+                    Title = "Return null",
+                    Message = "Niepoprawny email lub haslo"
+                };
+            }
+
+            var claims = new List<Claim>()
+            {
+                new Claim(ClaimTypes.NameIdentifier, player.Id.ToString()),
+                new Claim(ClaimTypes.Email, $"{player.Email}"),
+                new Claim(ClaimTypes.Role, $"{player.Role.Name}")
+            };
+
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_settings.JwtKey));
+            var cred = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+            var expires = DateTime.Now.AddDays(_settings.JwtExpireDays);
+
+            var token = new JwtSecurityToken(_settings.JwtIssuer,
+                _settings.JwtIssuer,
+                claims,
+                expires: expires,
+                signingCredentials: cred);
+
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var completeToken = tokenHandler.WriteToken(token);
+            return new SuccessData<string>()
+            {
+                Data = completeToken
+            };
         }
-        public async Task<ServiceResponse<Player>> DeletePlayerAsync(long id)
-        {
-            try
-            {
-                var player = _context.Players.Find(id);
-                if (player == null) return new ServiceResponse<Player>() { Data = player, Success = false, Message = $"Player of id {id} does not exist" };
-                _context.Players.Remove(player);
-                await _context.SaveChangesAsync();
-                var response = new ServiceResponse<Player>()
-                {
-                    Data = player,
-                    Message = "Player was delated",
-                    Success = true
-                };
 
-                return response;
-            }
-            catch (Exception)
-            {
-                return new ServiceResponse<Player>()
-                {
-                    Data = null,
-                    Message = "Problem with database",
-                    Success = false
-                };
-            }
+        public async Task<HandlerResult<Success, IErrorResult>> CreatePlayerAsync(PlayerDto playerDto)
+        {
+            var newPlayer = _playerMapper.ToPlayerEntity(playerDto);
+            var hashedPassword = _passwordHasher.HashPassword(newPlayer, newPlayer?.HashedPassword);
+            newPlayer.HashedPassword = hashedPassword;
+            var resPlayer = await _context.Players.AddAsync(newPlayer);
+            await _context.SaveChangesAsync();
+            return new Success();
         }
-        public async Task<ServiceResponse<Player>> GetPlayerAsync(long id)
-        {
-            try
-            {
-                var player = _context.Players.Find(id);
-                if (player == null) return new ServiceResponse<Player>() { Data = player, Success = false, Message = $"Player of id {id} dont exits" };
 
-                return new ServiceResponse<Player>() { Data = player, Success = true };
-            }
-            catch (Exception)
+        public async Task<HandlerResult<Success, IErrorResult>> DeletePlayerAsync(long id)
+        {
+            var resPlayer = await _context.Players.FindAsync(id);
+            if (resPlayer == null)
             {
-                return new ServiceResponse<Player>()
+                return new EntityNotFoundErrorResult()
                 {
-                    Data = null,
-                    Success = false,
-                    Message = "Problem with database"
+                    Title = "Return null",
+                    Message = "Nie znaleziono gracza w bazie danych"
                 };
             }
+
+            _context.Remove(resPlayer);
+            await _context.SaveChangesAsync();
+            return new Success();
         }
-        public async Task<ServiceResponse<List<Player>>> GetPlayersAsync()
+
+        public async Task<HandlerResult<SuccessData<PlayerDto>, IErrorResult>> GetPlayerAsync(long id)
         {
-
-            var players = await _context.Players.ToListAsync();
-            try
+            var resPlayer = await _context.Players.FindAsync(id);
+            if (resPlayer == null)
             {
-                var response = new ServiceResponse<List<Player>>()
+                return new EntityNotFoundErrorResult()
                 {
-                    Data = players,
-                    Message = "Ok",
-                    Success = true
-                };
-
-                return response;
-            }
-            catch (Exception)
-            {
-                return new ServiceResponse<List<Player>>()
-                {
-                    Data = null,
-                    Message = "Problem with database",
-                    Success = false
+                    Title = "return null",
+                    Message = "Nie znaleziono gracza w bazie danych"
                 };
             }
 
+            return new SuccessData<PlayerDto>()
+            {
+                Data = _playerMapper.ToDto(resPlayer)
+            };
         }
-        public async Task<ServiceResponse<Player>> UpdatePlayerAsync(Player player)
+
+        public async Task<HandlerResult<SuccessData<List<PlayerDto>>, IErrorResult>> GetPlayersAsync()
         {
-            try
+            var resPlayer = _context.Players.Select(x => _playerMapper.ToDto(x)).ToList();
+
+            return new SuccessData<List<PlayerDto>>()
             {
-                var productToEdit = new Player() { Id = player.Id };
-                _context.Players.Attach(productToEdit);
+                Data = resPlayer
+            };
+        }
 
-                //productToEdit.Description = product.Description;
-
-
-                await _context.SaveChangesAsync();
-                return new ServiceResponse<Player> { Data = productToEdit, Success = true };
-            }
-            catch (Exception)
-            {
-                return new ServiceResponse<Player>
-                {
-                    Data = player,
-                    Success = false,
-                    Message = "An error occured while updating Player"
-                };
-            }
-        }*/
+        
     }
 }

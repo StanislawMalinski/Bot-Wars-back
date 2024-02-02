@@ -93,10 +93,14 @@ public class GameRepository : IGameRepository
                 Message = "Nie ma elemętu w bazie danych"
             };
         }
-        var game = _mapper.ToGameType(gameDto);
-        game.Id = id;
-        _dataContext.Update(game);
+        resGame.InterfaceDefinition = gameDto.InterfaceDefinition;
+        resGame.GameInstructions = gameDto.GameInstructions;
+        resGame.GameFile = gameDto.GameFile;
+        resGame.NumbersOfPlayer = gameDto.NumbersOfPlayer;
+        resGame.LastModification = DateTime.Now;
+        resGame.IsAvailableForPlay = gameDto.IsAvaiableForPlay;
         await _dataContext.SaveChangesAsync();
         return new Success();
     }
+    
 }
