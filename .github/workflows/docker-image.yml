@@ -35,7 +35,7 @@ jobs:
     - name: Log in to the Github Container Registry
       uses: docker/login-action@v3
       with:
-        registry: ghcr.io
+        registry: ${{ env.REGISTRY }}
         username: ${{ github.actor }}
         password: ${{ secrets.GH_TOKEN }}
 
@@ -45,11 +45,4 @@ jobs:
         context: .
         file: ./Communication/api.dockerfile
         push: true
-        tags: ${{ env.REGISTRY }}/bot-wars-api:latest
-
-
-
-              
-              
-
-      
+        tags: ghcr.io/bot-wars-api:latest
