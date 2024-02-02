@@ -32,5 +32,4 @@ jobs:
         context: .
         file: ./Communication/api.dockerfile
         push: true
-
         tags: ${{ secrets.DOCKERHUB_USERNAME }}/${{ env.IMAGE_NAME }}:${{ env.TAG }}
