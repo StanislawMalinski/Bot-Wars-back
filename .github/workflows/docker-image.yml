@@ -37,7 +37,7 @@ jobs:
         context: .
         file: ./Communication/api.dockerfile
         push: true
-        tags: ${{ env.REGISTERY }}/bot-wars-api:latest
+        tags: ${{ env.REGISTRY }}/bot-wars-api:latest
               ${{ secrets.DOCKERHUB_USERNAME }}/bot-wars-api:latest
               
 
