@@ -27,4 +27,4 @@ jobs:
         context: .
         file: ./Communication/api.dockerfile
         push: true
-        tags: ${{ secrets.DOCKERHUB_USERNAME }}/bot-wars-api:$(date +%s)
+        tags: ${{ secrets.DOCKERHUB_USERNAME }}/bot-wars-api:${{ github.event.release.created_at }}
