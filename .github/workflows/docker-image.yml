@@ -27,14 +27,6 @@ jobs:
         
     - name: Generate Tag
       run: echo "TAG=$(date +'%y.%m.%d')" >> $GITHUB_ENV
-
-    - name: Get repository name
-      id: repo-name
-      uses: MariachiBear/get-repo-name-action@v1.1.0
-      with:
-        string-case: 'lowercase'
-      env:
-          REPO_NAME: ${{ steps.repo-name.outputs.repository-name }}
       
     - name: Build and Push docker api image to Github Registery
       uses: docker/build-push-action@v5
@@ -42,4 +34,4 @@ jobs:
         context: .
         file: ./Communication/api.dockerfile
         push: true
-        tags: ${{ env.REGISTRY }}/${{ env.REPO_NAME }}/${{ env.TAG }}
+        tags: ${{ env.REGISTRY }}/${{ env.TAG }}
