@@ -4,7 +4,7 @@ using Shared.DataAccess.DataBaseEntities;
 
 namespace Shared.DataAccess.EntitiesConfigurations;
 
-public class ArchivedMatchPlayersConfigurations : IEntityTypeConfiguration<MatchPlayers>
+public class MatchPlayersConfigurations : IEntityTypeConfiguration<MatchPlayers>
 {
     public void Configure(EntityTypeBuilder<MatchPlayers> builder)
     {
