@@ -34,4 +34,4 @@ jobs:
         context: .
         file: ./Communication/api.dockerfile
         push: true
-        tags: ${{ env.REGISTRY }}/${{ env.TAG }}
+        tags: ${{ env.REGISTRY }}/bot-wars-api:${{ env.TAG }}
