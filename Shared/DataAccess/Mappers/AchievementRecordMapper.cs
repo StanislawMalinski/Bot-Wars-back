@@ -15,6 +15,19 @@ public class AchievementRecordMapper : IAchievementRecordMapper
             PlayerId = achievementRecord.PlayerId,
             Value = achievementRecord.Value
         };
+        
+    }
+
+    public AchievementRecordDto ToDto(AchievementRecord achievementRecord, AchievementThresholds achievementThresholds)
+    {
+        return new AchievementRecordDto
+        {
+            Id = achievementRecord.Id,
+            AchievementTypeId = achievementRecord.AchievementTypeId,
+            Description = achievementRecord.AchievementType.Description,
+            PlayerId = achievementRecord.PlayerId,
+            Value = achievementThresholds.Threshold,
+        };
     }
 
     public AchievementRecord ToAchievementRecord(AchievementRecordDto achievementRecordDto)

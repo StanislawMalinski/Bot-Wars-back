@@ -15,5 +15,9 @@ public class NotificationOutboxConfiguration : IEntityTypeConfiguration<Notifica
 
         builder.Property(x => x.NotificationValue)
             .IsRequired();
+
+        builder.HasOne(x => x.Player)
+            .WithMany(x => x.NotificationOutboxes)
+            .HasForeignKey(x => x.PLayerId);
     }
 }

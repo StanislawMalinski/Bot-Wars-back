@@ -1,7 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Internal;
 using Shared.DataAccess.Context;
 using Shared.DataAccess.DAO;
 using Shared.DataAccess.DataBaseEntities;
+using Shared.DataAccess.Enumerations;
 using Shared.DataAccess.Mappers;
 using Shared.DataAccess.RepositoryInterfaces;
 using Shared.Results;
@@ -25,7 +27,7 @@ public class AchievementsRepository : IAchievementsRepository
     }
 
     public async Task<HandlerResult<SuccessData<List<AchievementRecordDto>>, IErrorResult>>
-        GetAchievementsForPlayer(long playerId)
+        GetAchievementsForPlayer1(long playerId)
     {
         var player = await _dataContext
             .Players
@@ -51,7 +53,37 @@ public class AchievementsRepository : IAchievementsRepository
             Data = achievementRecords.ConvertAll(record => _recordMapper.ToDto(record))
         };
     }
+    
     //Nie jestem z tego za bardzo dumny, ale nie wpadłem na lepszy pomysł jak to zaimplementować z naszą architekturą osiągnięć XD
+    public async Task<HandlerResult<SuccessData<List<AchievementRecordDto>>, IErrorResult>>
+        GetAchievementsForPlayer(long playerId)
+    {
+        var player = await _dataContext
+            .Players
+            .FindAsync(playerId);
+        
+        if (player == null)
+        {
+            return new EntityNotFoundErrorResult
+            {
+                Title = "EntityNotFoundError 404",
+                Message = "Player could not have been found"
+            };
+        }
+        
+        var achievementRecords = await _dataContext.AchievementRecord.Include(x=>x.AchievementType).Where(x => x.PlayerId == playerId).ToListAsync();
+        List<AchievementRecordDto> result = new List<AchievementRecordDto>();
+        foreach (var var in achievementRecords)
+        {
+            result.AddRange((await _dataContext.AchievementThresholds.Where(x=>x.Threshold<=var.Value&& x.AchievementTypeId == var.AchievementTypeId).ToListAsync()).ConvertAll(x=>_recordMapper.ToDto(var,x)));
+        }
+
+        return new SuccessData<List<AchievementRecordDto>>
+        {
+            Data = result
+        };
+    }
+    //a ja wpadłem XD
     public async Task<HandlerResult<Success, IErrorResult>> UnlockAchievement(
         long playerId, long achievementTypeId, long currentPlayerThreshold)
     {
@@ -137,5 +169,42 @@ public class AchievementsRepository : IAchievementsRepository
             Data = achievementTypes
         };
     }
+
+    public async Task<HandlerResult<Success, IErrorResult>> UpDateProgress(AchievementsTypes type, long userId)
+    {
+        var res = await _dataContext.AchievementRecord.FirstOrDefaultAsync(x =>
+            x.AchievementTypeId == (long)type && x.PlayerId == userId);
+        long value;
+        if (res == null)
+        {
+            await _dataContext.AchievementRecord.AddAsync(new AchievementRecord()
+            {
+                AchievementTypeId = (long) type,
+                Value = 1,
+                PlayerId = userId,
+            });
+            value = 1;
+        }
+        else
+        {
+            res.Value++;
+            value = res.Value;
+        }
+
+        var notification = await _dataContext.AchievementThresholds.FirstOrDefaultAsync(x =>
+            x.AchievementTypeId == (long)type && x.Threshold == value);
+        if (notification != null)
+        {
+            await _dataContext.NotificationOutboxes.AddAsync(new NotificationOutbox()
+            {
+                Type = NotificationType.Achievement,
+                NotificationValue = 1,
+                PLayerId = userId
+            });
+        }
+
+        await _dataContext.SaveChangesAsync();
+        return new Success();
+    } 
     
 }

@@ -1,4 +1,5 @@
 ﻿using Shared.DataAccess.DataBaseEntities;
+using Shared.DataAccess.Enumerations;
 
 namespace Shared.DataAccess.Seeders;
 
@@ -318,10 +319,10 @@ public class Seeder
     {
         return new List<AchievementType>()
         {
-            new AchievementType() { Id = 1, Description = "You need to play this amount of games" },
-            new AchievementType() { Id = 2, Description = "You need to upload this amount of bots" },
-            new AchievementType() { Id = 3, Description = "You need to win this amount of games" },
-            new AchievementType() { Id = 4, Description = "You need to win this amount of tournaments" },
+            new AchievementType() { Id = (int)AchievementsTypes.GamePlayed, Description = "You need to play this amount of games" },
+            new AchievementType() { Id = (int)AchievementsTypes.BotsUploads, Description = "You need to upload this amount of bots" },
+            new AchievementType() { Id = (int)AchievementsTypes.WinGames, Description = "You need to win this amount of games" },
+            new AchievementType() { Id = (int)AchievementsTypes.TournamentsWon, Description = "You need to win this amount of tournaments" },
         };
     }
 
@@ -329,14 +330,15 @@ public class Seeder
     {
         return new List<AchievementThresholds>()
         {
-            new AchievementThresholds() { Id = 1, AchievementTypeId = 1, Threshold = 10 },
-            new AchievementThresholds() { Id = 2, AchievementTypeId = 2, Threshold = 4 },
-            new AchievementThresholds() { Id = 3, AchievementTypeId = 3, Threshold = 5 },
-            new AchievementThresholds() { Id = 4, AchievementTypeId = 4, Threshold = 1 },
-            new AchievementThresholds() { Id = 5, AchievementTypeId = 1, Threshold = 20 },
-            new AchievementThresholds() { Id = 6, AchievementTypeId = 2, Threshold = 8 },
-            new AchievementThresholds() { Id = 7, AchievementTypeId = 3, Threshold = 10 },
-            new AchievementThresholds() { Id = 8, AchievementTypeId = 4, Threshold = 5 },
+            new AchievementThresholds() { Id = 1, AchievementTypeId = (int)AchievementsTypes.GamePlayed, Threshold = 10 },
+            new AchievementThresholds() { Id = 2, AchievementTypeId = (int)AchievementsTypes.BotsUploads, Threshold = 4 },
+            new AchievementThresholds() { Id = 3, AchievementTypeId = (int)AchievementsTypes.WinGames, Threshold = 5 },
+            new AchievementThresholds() { Id = 4, AchievementTypeId = (int)AchievementsTypes.TournamentsWon, Threshold = 1 },
+            new AchievementThresholds() { Id = 5, AchievementTypeId = (int)AchievementsTypes.GamePlayed, Threshold = 20 },
+            new AchievementThresholds() { Id = 6, AchievementTypeId = (int)AchievementsTypes.BotsUploads, Threshold = 8 },
+            new AchievementThresholds() { Id = 7, AchievementTypeId = (int)AchievementsTypes.WinGames, Threshold = 10 },
+            new AchievementThresholds() { Id = 8, AchievementTypeId = (int)AchievementsTypes.TournamentsWon, Threshold = 5 },
+            new AchievementThresholds() { Id = 9, AchievementTypeId = (int)AchievementsTypes.GamePlayed, Threshold = 5 },
         };
     }
     
@@ -344,7 +346,7 @@ public class Seeder
     {
         return new List<AchievementRecord>()
         {
-            new AchievementRecord() { Id = 1, AchievementTypeId = 1, PlayerId = 1, Value = 10},
+            new AchievementRecord() { Id = 1, AchievementTypeId = 1, PlayerId = 1, Value = 20},
             new AchievementRecord() { Id = 2, AchievementTypeId = 2, PlayerId = 1, Value = 15},
             new AchievementRecord() { Id = 3, AchievementTypeId = 1, PlayerId = 2, Value = 10},
             new AchievementRecord() { Id = 4, AchievementTypeId = 2, PlayerId = 2, Value = 15},
