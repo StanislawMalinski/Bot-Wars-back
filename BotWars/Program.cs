@@ -100,7 +100,12 @@ using (var serviceScope = builder.Services.BuildServiceProvider().CreateScope())
         Console.WriteLine("No pending migrations.");
     }
 }
+app.UseCors(options => {
+    options.AllowAnyMethod();
+    options.AllowAnyHeader();
 
+    options.AllowAnyOrigin();
+});
 app.UseSwagger();
 app.UseSwaggerUI(c =>
 {
