@@ -3,5 +3,6 @@
 public enum NotificationType
 {
     TYPE1,
-    TYPE2
+    TYPE2,
+    Achievement
 }

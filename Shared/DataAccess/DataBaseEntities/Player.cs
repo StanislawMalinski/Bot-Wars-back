@@ -16,5 +16,6 @@
         public List<MatchPlayers>? MatchPlayers { get; set; }
         public List<PointHistory>? PlayerPointsList { get; set; }
         public List<AchievementRecord> AchievementRecords { get; set; }
+        public List<NotificationOutbox> NotificationOutboxes { get; set; }
     }
 }
