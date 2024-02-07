@@ -1,12 +1,14 @@
 using System.Text;
 using BotWars;
 using BotWars.DependencyInjection;
+using BusinessLogic.BackgroundWorkers;
 using Communication.ServiceInterfaces;
 using Communication.Services.Administration;
 using Communication.Services.GameType;
 using Communication.Services.Player;
 using Communication.Services.Tournament;
 using Communication.Services.Validation;
+using Coravel;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using NLog.Web;
@@ -60,7 +62,8 @@ builder.Services
     .AddFileSystem()
     .AddUserSettings()
     .AddPointsSettings()
-    .AddAchievements();
+    .AddAchievements()
+    .AddBackGroundTask();
 
 builder.Services.AddDbContext<DataContext>(options =>
 {
@@ -71,8 +74,10 @@ builder.Services.AddDbContext<TaskDataContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultTaskConnection"));
 });
 
-var app = builder.Build();
 
+
+var app = builder.Build();
+/*
 // apply migrations to initialize database
 using (var serviceScope = builder.Services.BuildServiceProvider().CreateScope())
 {
@@ -99,7 +104,7 @@ using (var serviceScope = builder.Services.BuildServiceProvider().CreateScope())
     {
         Console.WriteLine("No pending migrations.");
     }
-}
+}*/
 app.UseCors(options => {
     options.AllowAnyMethod();
     options.AllowAnyHeader();
@@ -121,5 +126,7 @@ app.UseRouting();
 app.UseAuthorization();
 
 app.MapControllers();
+
+app.Services.UseScheduler(x => x.Schedule<TScheduler>().EverySeconds(5).Once());
 
 app.Run();

@@ -11,7 +11,11 @@
     </ItemGroup>
 
     <ItemGroup>
+      <PackageReference Include="Coravel" Version="5.0.2" />
+    </ItemGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\Shared\Shared.csproj" />
     </ItemGroup>
 
 </Project>
