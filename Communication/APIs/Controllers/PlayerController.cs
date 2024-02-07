@@ -2,12 +2,11 @@
 using Communication.ServiceInterfaces;
 using Microsoft.AspNetCore.Mvc;
 using Shared.DataAccess.DAO;
-using Shared.DataAccess.DataBaseEntities;
-using Shared.DataAccess.RepositoryInterfaces;
 
 namespace Communication.APIs.Controllers
 {
-	[Route("api/[controller]")]
+	[Route("api/v1/[controller]")]
+    [ApiController]
     public class PlayerController : Controller
     {
         private readonly IPlayerService _playerService;

@@ -58,11 +58,17 @@ builder.Services
     .AddTournament()
     .AddAdministrative()
     .AddFileSystem()
-    .AddUserSettings();
+    .AddUserSettings()
+    .AddPointsSettings()
+    .AddAchievements();
 
 builder.Services.AddDbContext<DataContext>(options =>
 {
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
+});
+builder.Services.AddDbContext<TaskDataContext>(options =>
+{
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultTaskConnection"));
 });
 
 var app = builder.Build();
@@ -81,8 +87,25 @@ using (var serviceScope = builder.Services.BuildServiceProvider().CreateScope())
     {
         Console.WriteLine("No pending migrations.");
     }
+    
+    var tdbContext = serviceScope.ServiceProvider.GetRequiredService<TaskDataContext>();
+    var tpendingMigrations = await tdbContext.Database.GetPendingMigrationsAsync();
+    if (tpendingMigrations.Any())
+    {
+        Console.WriteLine($"Applying {tpendingMigrations.Count()} pending migrations.");
+        await tdbContext.Database.MigrateAsync();
+    }
+    else
+    {
+        Console.WriteLine("No pending migrations.");
+    }
 }
+app.UseCors(options => {
+    options.AllowAnyMethod();
+    options.AllowAnyHeader();
 
+    options.AllowAnyOrigin();
+});
 app.UseSwagger();
 app.UseSwaggerUI(c =>
 {

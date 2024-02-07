@@ -98,8 +98,29 @@ namespace Shared.DataAccess.Repositories
 
         public async Task<HandlerResult<Success, IErrorResult>> RegisterSelfForTournament(long tournamentId, long botId)
         {
-            var result =await _dataContext.TournamentReferences.FirstOrDefaultAsync(x => x.tournamentId == tournamentId && x.botId == botId);
-            if (result == null)
+            var tournament = await _dataContext.Tournaments.FindAsync(tournamentId);
+            if (tournament == null)
+            {
+                return new EntityNotFoundErrorResult
+                {
+                    Title = "EntityNotFoundErrorResult 404",
+                    Message = "No tournament with such id has been found"
+                };
+            }
+
+            var bot = await _dataContext.Bots.FindAsync(botId);
+            if (bot == null)
+            {
+                return new EntityNotFoundErrorResult
+                {
+                    Title = "EntityNotFoundErrorResult 404",
+                    Message = "No bot with such id has been found"
+                };
+            }
+            var result =await _dataContext
+                .TournamentReferences
+                .FirstOrDefaultAsync(x => x.tournamentId == tournamentId && x.botId == botId);
+            if (result != null)
             {
                 return new AlreadyRegisterForTournamentError()
                 {
@@ -107,38 +128,55 @@ namespace Shared.DataAccess.Repositories
                     Message = "You are already registered for tournament"
                 };
             }
-            TournamentReference tournamentReference = new TournamentReference()
+            var tournamentReference = new TournamentReference
             {
                 tournamentId = tournamentId,
                 botId = botId,
                 LastModification = new DateTime()
             };
             await _dataContext.TournamentReferences.AddAsync(tournamentReference);
+            await _dataContext.SaveChangesAsync();
             return new Success();
         }
 
         public async Task<HandlerResult<Success, IErrorResult>> UnregisterSelfForTournament(long tournamentId, long botId)
         {
-            var result =await _dataContext.TournamentReferences.FirstOrDefaultAsync(x => x.tournamentId == tournamentId && x.botId == botId);
+            var tournament = await _dataContext.Tournaments.FindAsync(tournamentId);
+            if (tournament == null)
+            {
+                return new EntityNotFoundErrorResult
+                {
+                    Title = "EntityNotFoundErrorResult 404",
+                    Message = "No tournament with such id has been found"
+                };
+            }
+
+            var bot = await _dataContext.Bots.FindAsync(botId);
+            if (bot == null)
+            {
+                return new EntityNotFoundErrorResult
+                {
+                    Title = "EntityNotFoundErrorResult 404",
+                    Message = "No bot with such id has been found"
+                };
+            }
+            
+            var result =await _dataContext
+                .TournamentReferences
+                .FirstOrDefaultAsync(x => x.tournamentId == tournamentId && x.botId == botId);
             if (result == null)
             {
                 return new EntityNotFoundErrorResult()
                 {
                     Title = "Tournament Registration",
-                    Message = "You was not registered for tournament"
+                    Message = "You were not registered for tournament"
                 };
             }
-            TournamentReference tournamentReference = new TournamentReference()
-            {
-                tournamentId = tournamentId,
-                botId = botId,
-                LastModification = new DateTime()
-            };
-            _dataContext.TournamentReferences.Remove(tournamentReference);
+
+            _dataContext.TournamentReferences.Remove(result);
+            await _dataContext.SaveChangesAsync();
             return new Success();
         }
 
     }
-
-  
 }

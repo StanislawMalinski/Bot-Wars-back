@@ -2,12 +2,11 @@
 using Communication.Services.Tournament;
 using Microsoft.AspNetCore.Mvc;
 using Shared.DataAccess.DAO;
-using Shared.DataAccess.DataBaseEntities;
-using Shared.DataAccess.RepositoryInterfaces;
 
 namespace Communication.APIs.Controllers
 {
-	[Route("api/[controller]")]
+	[Route("api/v1/[controller]")]
+    [ApiController]
     public class TournamentController : Controller
     {
         private readonly TournamentService _tournamentService;
@@ -31,33 +30,33 @@ namespace Communication.APIs.Controllers
             
         }
 
-        [HttpGet("list")]
+        [HttpGet("getAll")]
         public async Task<IActionResult> GetListOfTournaments()
         {
             return (await _tournamentService.GetListOfTournaments()).Match(Ok,this.ErrorResult);
         }
 
-        [HttpGet("list/filtered")]
+        [HttpGet("getFiltered")]
         public async Task<IActionResult> GetListOfTournamentsFiltered()
         {
             return (await _tournamentService.GetListOfTournamentsFiltered()).Match(Ok,this.ErrorResult);
             
         }
 
-        [HttpGet("get")]
+        [HttpGet("getOne")]
         public async Task<IActionResult> GetTournament([FromQuery] long id)
         {
             return (await _tournamentService.GetTournament(id)).Match(Ok,this.ErrorResult);
             
         }
 
-        [HttpPut("register")]
+        [HttpPut("registerBot")]
         public async Task<IActionResult> RegisterSelfForTournament([FromQuery] long tournamentId, [FromQuery] long botId)
         {
             return (await _tournamentService.RegisterSelfForTournament(tournamentId, botId)).Match(Ok,this.ErrorResult);
         }
 
-        [HttpPut("unregister")]
+        [HttpPut("unregisterBot")]
         public async Task<IActionResult> UnregisterSelfForTournament([FromQuery] long tournamentId, [FromQuery] long botId)
         {
             return (await _tournamentService.UnregisterSelfForTournament(tournamentId, botId)).Match(Ok,this.ErrorResult);

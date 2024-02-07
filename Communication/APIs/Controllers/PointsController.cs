@@ -4,29 +4,36 @@ using Shared.DataAccess.RepositoryInterfaces;
 
 namespace Communication.APIs.Controllers;
 
-[Route("api/[controller]")]
+[Route("api/v1/[controller]")]
+[ApiController]
 public class PointsController : Controller
 {
-    private readonly IPointsService _pointsService;
+    private readonly PointsService _pointsService;
 
-    public PointsController(IPointsService pointsService)
+    public PointsController(PointsService pointsService)
     {
         _pointsService = pointsService;
     }
 
-    [HttpGet("for-player")]
+    [HttpPost("setPointsForPlayer")]
+    public async Task<IActionResult> SetPointsForPlayer([FromQuery] long playerId, [FromQuery] long points)
+    {
+        return (await _pointsService.SetPointsForPlayer(playerId, points)).Match(Ok, this.ErrorResult);
+    }
+
+    [HttpGet("getPointsForPlayer")]
     public async Task<IActionResult> GetPointsForPlayer([FromQuery]long playerId)
     {
 		return (await _pointsService.GetPointsForPlayer(playerId)).Match(Ok, this.ErrorResult);
 	}
 
-    [HttpGet("leaderboards")]
-    public async Task<IActionResult> GetLeaderBoards()
+    [HttpGet("getLeaderboards")]
+    public async Task<IActionResult> GetLeaderboards()
     {
         return (await _pointsService.GetLeaderboards()).Match(Ok, this.ErrorResult);
     }
 
-	[HttpGet("player-history")]
+	[HttpGet("getPointsHistoryForPlayer")]
 	public async Task<IActionResult> GetHistoryOfPointsForPlayer([FromQuery] long playerId)
     {
         return (await _pointsService.GetHistoryForPlayer(playerId)).Match(Ok, this.ErrorResult);

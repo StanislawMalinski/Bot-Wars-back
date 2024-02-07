@@ -9,7 +9,6 @@ namespace Shared.DataAccess.Context
     {
         public DataContext(DbContextOptions<DataContext> options) : base(options)
         {
-
         }
 
         public DbSet<Game> Games { get; set; }
@@ -23,6 +22,11 @@ namespace Shared.DataAccess.Context
         public DbSet<PointHistory> PointHistories { get; set; }
         public DbSet<FileEntity> Files { get; set; }
         public DbSet<UserSettings> UserSettings { get; set; }
+        public DbSet<AchievementRecord> AchievementRecord { get; set; }
+        public DbSet<AchievementType> AchievementType { get; set; }
+        public DbSet<AchievementThresholds> AchievementThresholds { get; set; }
+        
+        public DbSet<NotificationOutbox> NotificationOutboxes { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -31,7 +35,7 @@ namespace Shared.DataAccess.Context
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(UserSettingsConfiguration).Assembly);
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(TournamentConfigurations).Assembly);
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(MatchesConfigurations).Assembly);
-            modelBuilder.ApplyConfigurationsFromAssembly(typeof(ArchivedMatchPlayersConfigurations).Assembly);
+            modelBuilder.ApplyConfigurationsFromAssembly(typeof(MatchPlayersConfigurations).Assembly);
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(BotConfigurations).Assembly);
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(GameConfigurations).Assembly);
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(TournamentReferenceConfigurations).Assembly);
@@ -40,7 +44,8 @@ namespace Shared.DataAccess.Context
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(AchievementRecordConfigurations).Assembly);
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(AchievementTypeConfigurations).Assembly);
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(AchievementThresholdConfigurations).Assembly);
-
+            modelBuilder.ApplyConfigurationsFromAssembly(typeof(NotificationOutboxConfiguration).Assembly);
+            
             Seed(modelBuilder);
         }
 
@@ -52,7 +57,9 @@ namespace Shared.DataAccess.Context
             modelBuilder.Entity<Tournament>().HasData(Seeder.GenerateTournaments());
             modelBuilder.Entity<Bot>().HasData(Seeder.GenerateBots());
             modelBuilder.Entity<TournamentReference>().HasData(Seeder.GenerateTournamentReferences());
+            modelBuilder.Entity<AchievementType>().HasData(Seeder.GenerateAchievementTypes());
+            modelBuilder.Entity<AchievementThresholds>().HasData(Seeder.GenerateAchievementThresholds());
+            modelBuilder.Entity<AchievementRecord>().HasData(Seeder.GenerateAchievementRecords());
         }
-        
     }
 }
