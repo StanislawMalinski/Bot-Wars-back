@@ -4,7 +4,7 @@ services:
     bot_wars_api:
         build: 
             context: .
-            dockerfile: Dockerfile
+            dockerfile: api.dockerfile
         ports:
             - "8080:8080"
             - "8081:8081"
