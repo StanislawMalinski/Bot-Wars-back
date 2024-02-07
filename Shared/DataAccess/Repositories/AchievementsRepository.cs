@@ -25,36 +25,7 @@ public class AchievementsRepository : IAchievementsRepository
         _recordMapper = recordMapper;
         _typeMapper = typeMapper;
     }
-
-    public async Task<HandlerResult<SuccessData<List<AchievementRecordDto>>, IErrorResult>>
-        GetAchievementsForPlayer1(long playerId)
-    {
-        var player = await _dataContext
-            .Players
-            .FindAsync(playerId);
-        
-        if (player == null)
-        {
-            return new EntityNotFoundErrorResult
-            {
-                Title = "EntityNotFoundError 404",
-                Message = "Player could not have been found"
-            };
-        }
-
-        var achievementRecords = await _dataContext
-            .AchievementRecord
-            .Include(record => record.AchievementType)
-            .Where(record => record.PlayerId == playerId)
-            .ToListAsync();
-
-        return new SuccessData<List<AchievementRecordDto>>
-        {
-            Data = achievementRecords.ConvertAll(record => _recordMapper.ToDto(record))
-        };
-    }
     
-    //Nie jestem z tego za bardzo dumny, ale nie wpadłem na lepszy pomysł jak to zaimplementować z naszą architekturą osiągnięć XD
     public async Task<HandlerResult<SuccessData<List<AchievementRecordDto>>, IErrorResult>>
         GetAchievementsForPlayer(long playerId)
     {
@@ -72,7 +43,7 @@ public class AchievementsRepository : IAchievementsRepository
         }
         
         var achievementRecords = await _dataContext.AchievementRecord.Include(x=>x.AchievementType).Where(x => x.PlayerId == playerId).ToListAsync();
-        List<AchievementRecordDto> result = new List<AchievementRecordDto>();
+        var result = new List<AchievementRecordDto>();
         foreach (var var in achievementRecords)
         {
             result.AddRange((await _dataContext.AchievementThresholds.Where(x=>x.Threshold<=var.Value&& x.AchievementTypeId == var.AchievementTypeId).ToListAsync()).ConvertAll(x=>_recordMapper.ToDto(var,x)));
