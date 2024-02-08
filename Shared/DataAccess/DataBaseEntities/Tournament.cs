@@ -13,6 +13,7 @@
         public bool WasPlayedOut { get; set; }
         public string? Constraints { get; set; }
         public string? Image { get; set; }
+        public bool Synchronized { get; set; }
 
         //public ArchivedMatchPlayers? ArchivedMatchPlayers { get; set; }
         public List<Matches>? Matches { get; set; }

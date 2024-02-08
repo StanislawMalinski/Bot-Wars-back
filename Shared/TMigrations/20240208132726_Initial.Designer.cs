@@ -12,7 +12,7 @@ using Shared.DataAccess.Context;
 namespace Shared.TMigrations
 {
     [DbContext(typeof(TaskDataContext))]
-    [Migration("20240206135502_Initial")]
+    [Migration("20240208132726_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -42,10 +42,12 @@ namespace Shared.TMigrations
                     b.Property<DateTime>("ScheduledOn")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("Status")
-                        .IsRequired()
+                    b.Property<bool>("Status")
                         .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)");
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("Synchronized")
+                        .HasColumnType("bit");
 
                     b.Property<int>("Type")
                         .HasColumnType("int");

@@ -15,6 +15,9 @@ public class TaskConfiguration : IEntityTypeConfiguration<_Task>
 
         builder.Property(x => x.Refid)
             .IsRequired();
+        
+        builder.Property(x => x.Synchronized)
+            .IsRequired();
 
         builder.Property(x => x.Status)
             .IsRequired()

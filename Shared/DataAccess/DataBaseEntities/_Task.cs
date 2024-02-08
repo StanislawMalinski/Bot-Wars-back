@@ -7,7 +7,8 @@ public class _Task
     public long Id { get; set; }
     public TaskTypes Type { get; set; }
     public DateTime ScheduledOn { get; set; }
-    public string? Status { get; set; }
+    public bool Status { get; set; }
+    public bool Synchronized { get; set; }
     public long Refid { get; set; }
     
     public _Task ParentTask { get; set; }

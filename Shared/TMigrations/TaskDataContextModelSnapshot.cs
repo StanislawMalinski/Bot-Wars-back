@@ -39,10 +39,12 @@ namespace Shared.TMigrations
                     b.Property<DateTime>("ScheduledOn")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("Status")
-                        .IsRequired()
+                    b.Property<bool>("Status")
                         .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)");
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("Synchronized")
+                        .HasColumnType("bit");
 
                     b.Property<int>("Type")
                         .HasColumnType("int");

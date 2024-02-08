@@ -77,7 +77,7 @@ builder.Services.AddDbContext<TaskDataContext>(options =>
 
 
 var app = builder.Build();
-/*
+
 // apply migrations to initialize database
 using (var serviceScope = builder.Services.BuildServiceProvider().CreateScope())
 {
@@ -104,7 +104,7 @@ using (var serviceScope = builder.Services.BuildServiceProvider().CreateScope())
     {
         Console.WriteLine("No pending migrations.");
     }
-}*/
+}
 app.UseCors(options => {
     options.AllowAnyMethod();
     options.AllowAnyHeader();
@@ -126,6 +126,6 @@ app.UseRouting();
 app.UseAuthorization();
 
 app.MapControllers();
-app.Services.UseScheduler(async x => x.Schedule<TScheduler>().EverySeconds(5));
+app.Services.UseScheduler(async x => x.Schedule<InicjalizeWorkers>().EverySeconds(10).Once());
 
 app.Run();
