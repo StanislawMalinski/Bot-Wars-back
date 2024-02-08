@@ -126,7 +126,6 @@ app.UseRouting();
 app.UseAuthorization();
 
 app.MapControllers();
-
-app.Services.UseScheduler(x => x.Schedule<TScheduler>().EverySeconds(5).Once());
+app.Services.UseScheduler(async x => x.Schedule<TScheduler>().EverySeconds(5));
 
 app.Run();
