@@ -312,6 +312,11 @@ public class Seeder
             new TournamentReference() { Id = 3, tournamentId = 2, botId = 3 },
             new TournamentReference() { Id = 4, tournamentId = 2, botId = 4 },
             new TournamentReference() { Id = 5, tournamentId = 5, botId = 10 },
+            new TournamentReference() { Id = 6, tournamentId = 1, botId = 5 },
+            new TournamentReference() { Id = 7, tournamentId = 1, botId = 6 },
+            new TournamentReference() { Id = 8, tournamentId = 1, botId = 7 },
+            new TournamentReference() { Id = 9, tournamentId = 1, botId = 8 },
+            new TournamentReference() { Id = 10, tournamentId = 1, botId = 9 },
         };
     }
 

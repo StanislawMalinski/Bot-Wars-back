@@ -15,7 +15,9 @@ public class Synchronizer : IInvocable
 
     public async Task Invoke()
     {
+        Console.WriteLine("synchonizacja");
         await _synchronizedRepository.SynchronizeTournament();
         await _synchronizedRepository.SynchronizeTask();
+        Console.WriteLine("Zakonczona sychronizacji");
     }
 }

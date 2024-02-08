@@ -196,6 +196,15 @@ namespace Shared.DataAccess.Repositories
             };
         }
 
+        public async Task<HandlerResult<Success, IErrorResult>> TournamentEnded(long tournamentId)
+        {
+            var res = await _dataContext.Tournaments.FindAsync(tournamentId);
+            res.WasPlayedOut = true;
+            res.Synchronized = false;
+            await _dataContext.SaveChangesAsync();
+            return new Success();
+        }
+
     }
     
     

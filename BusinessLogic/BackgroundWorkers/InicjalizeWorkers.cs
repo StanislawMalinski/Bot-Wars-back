@@ -14,6 +14,9 @@ public class InicjalizeWorkers : IInvocable
 
     public async Task Invoke()
     {
-        _scheduler.Schedule<Synchronizer>().EveryMinute();
+        Console.WriteLine("inicjalizaca");
+        _scheduler.Schedule<Synchronizer>().EverySeconds(25);
+        await Task.Delay(500);
+        _scheduler.Schedule<TScheduler>().EverySeconds(25);
     }
 }

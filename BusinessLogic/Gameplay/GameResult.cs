@@ -5,5 +5,6 @@ namespace BusinessLogic.Gameplay;
 public class GameResult
 {
     public int Winner {  get; set; }
-    public Bot bot { get; }
+    public Bot botWinner { get; set; }
+    public Bot botLoser { get; set; }
 }

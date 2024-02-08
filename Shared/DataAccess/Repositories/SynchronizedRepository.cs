@@ -31,13 +31,28 @@ public class SynchronizedRepository
         var notSynchoronized = await _dataContext.Tournaments.Where(x => x.Synchronized == false).ToListAsync();
         foreach (var tour in notSynchoronized)
         {
-            await _taskDataContext.Tasks.AddAsync(new _Task()
+            if (tour.WasPlayedOut == false)
             {
-                Type = TaskTypes.PlayTournament,
-                ScheduledOn = tour.TournamentsDate,
-                Synchronized = true
-            });
-            tour.Synchronized = true;
+                await _taskDataContext.Tasks.AddAsync(new _Task()
+                {
+
+                    Type = TaskTypes.PlayTournament,
+                    ScheduledOn = tour.TournamentsDate,
+                    Synchronized = true,
+                    Refid = tour.Id
+                });
+                tour.Synchronized = true;
+            }else if (tour.WasPlayedOut == true)
+            {
+                var result = await _taskDataContext.Tasks.FirstOrDefaultAsync(x =>
+                    x.Refid == tour.Id && x.Type == TaskTypes.PlayTournament && x.Status == true);
+                if (result != null)
+                {
+                    _taskDataContext.Tasks.Remove(result);
+                    tour.Synchronized = true;
+                }
+            }
+
         }
 
         await _taskDataContext.SaveChangesAsync();

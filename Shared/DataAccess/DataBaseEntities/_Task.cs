@@ -11,8 +11,8 @@ public class _Task
     public bool Synchronized { get; set; }
     public long Refid { get; set; }
     
-    public _Task ParentTask { get; set; }
-    public List<_Task> ChildrenTask { get; set; }
-    public long ParentTaskId { get; set; }
+    //public _Task ParentTask { get; set; }
+    //public List<_Task> ChildrenTask { get; set; }
+    //public long ParentTaskId { get; set; }
     
 }

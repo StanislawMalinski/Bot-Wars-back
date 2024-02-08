@@ -7,46 +7,42 @@ using Coravel.Queuing.Broadcast;
 using Coravel.Queuing.Interfaces;
 using Coravel.Scheduling.Schedule;
 using Shared.DataAccess.DataBaseEntities;
+using Shared.DataAccess.Enumerations;
 using Shared.DataAccess.Repositories;
+using Shared.DataAccess.RepositoryInterfaces;
 
 namespace BusinessLogic.BackgroundWorkers;
 
-public class TournamentWorker : IInvocable, IInvocableWithPayload<int>
+public class TournamentWorker : IInvocable
 {
     private Scheduler _scheduler; 
     private ICache _cache;
     private IQueue _queue;
     private TournamentRepository _tournamentRepository;
-    public int Payload { get; set; }
+    private IAchievementsRepository _achievementsRepository;
+    public long TourId { get; set; }
     private Guid da;
-    public TournamentWorker(ICache cache, IQueue queue,TournamentRepository tournamentRepository)
+    public TournamentWorker(ICache cache, IQueue queue,TournamentRepository tournamentRepository,long tournamentId, IAchievementsRepository achievementsRepository)
     {
         _tournamentRepository = tournamentRepository;
         _cache = cache;
         _queue = queue;
+        TourId = tournamentId;
+        _achievementsRepository = achievementsRepository;
     }
 
     public async Task Invoke()
     {
         
         string identifier = this.ToString() + DateTime.Now;
-        var botList = await _tournamentRepository.TournamentBotsToPlay(Payload);
-        int steps =(int) Math.Ceiling(Math.Log2(botList.Match((data => data.Data.Count()),(result => 0))));
-        if (steps == 0)
-        {
-            return;
-        }
-        int begin = 0;
-        for (int i = 0; i < steps; i++)
-        {
-            begin *= 2;
-            begin++;
-        }
+        Console.WriteLine("Ropoczy się turniej "+ TourId);
+        var botList = await _tournamentRepository.TournamentBotsToPlay(TourId);
 
         List<Bot> bots = botList.Match(x => x.Data, x => new List<Bot>());
         
         MadeHeap(bots,identifier);
-        Game gamebot = (await _tournamentRepository.TournamentGame(Payload)).Match(x=>x.Data,x=>null);
+        Game gamebot = (await _tournamentRepository.TournamentGame(TourId)).Match(x=>x.Data,x=>null);
+      
         while (Games.Count() > 1)
         {
             List<int> keylist = [..Games.Keys];
@@ -68,7 +64,7 @@ public class TournamentWorker : IInvocable, IInvocableWithPayload<int>
                                     Games[key2].Bot
                                 },
                                 Game = gamebot,
-                                Id = identifier + identifier + pkey
+                                Id = identifier + pkey
                             });
                             Games.Add(pkey,new GameInfo(identifier + pkey,false,pkey,null ));
                             Games.Remove(key);
@@ -80,10 +76,13 @@ public class TournamentWorker : IInvocable, IInvocableWithPayload<int>
                         if (await _cache.HasAsync(Games[key].Identifier))
                         {
                             GameResult res = await _cache.GetAsync<GameResult>(Games[key].Identifier);
-                           
+                            _cache.Forget(Games[key].Identifier);
+                            await _achievementsRepository.UpDateProgress(AchievementsTypes.GamePlayed, res.botWinner.PlayerId);
+                            await _achievementsRepository.UpDateProgress(AchievementsTypes.WinGames, res.botWinner.PlayerId);
+                            await _achievementsRepository.UpDateProgress(AchievementsTypes.GamePlayed, res.botLoser.PlayerId);
                             GameInfo gameInfo = Games[key];
                             gameInfo.Played = true;
-                            gameInfo.Bot = res.bot;
+                            gameInfo.Bot = res.botWinner;
                             Games[key] = gameInfo;
 
                         }
@@ -91,9 +90,34 @@ public class TournamentWorker : IInvocable, IInvocableWithPayload<int>
                 }
             }
 
-            await Task.Delay(1000);
+            await Task.Delay(2000);
         }
-        
+
+        if (Games.Count() == 0)
+        {
+            
+        }else if (Games[0].Played)
+        {
+            await _achievementsRepository.UpDateProgress(AchievementsTypes.TournamentsWon, Games[0].Bot.PlayerId);
+        }
+        else
+        {
+            
+            
+            while (!(await _cache.HasAsync(identifier+0)))
+            {
+                await Task.Delay(2000);
+            }
+            GameResult res = await _cache.GetAsync<GameResult>(Games[0].Identifier);
+            _cache.Forget(Games[0].Identifier);
+            await _achievementsRepository.UpDateProgress(AchievementsTypes.GamePlayed, res.botWinner.PlayerId);
+            await _achievementsRepository.UpDateProgress(AchievementsTypes.WinGames, res.botWinner.PlayerId);
+            await _achievementsRepository.UpDateProgress(AchievementsTypes.GamePlayed, res.botLoser.PlayerId);
+            await _achievementsRepository.UpDateProgress(AchievementsTypes.TournamentsWon, res.botWinner.PlayerId);
+        }
+
+        await _tournamentRepository.TournamentEnded(TourId);
+        Console.WriteLine("finished tournament");
         
     }
 
@@ -111,7 +135,6 @@ public class TournamentWorker : IInvocable, IInvocableWithPayload<int>
     {
         Games = new Dictionary<int, GameInfo>();
         int i = 0;
-        int p;
         foreach (var bot in bots)
         {
             if (i == 0)
@@ -121,7 +144,7 @@ public class TournamentWorker : IInvocable, IInvocableWithPayload<int>
             }
             else
             {
-                p = (i - 1) / 2;
+                int p = (i - 1) / 2;
                 GameInfo gameInfo = Games[p];
                 gameInfo.Key = i;
                 gameInfo.Identifier = identifier + i;

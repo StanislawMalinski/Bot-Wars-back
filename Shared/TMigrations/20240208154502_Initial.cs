@@ -21,23 +21,12 @@ namespace Shared.TMigrations
                     ScheduledOn = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Status = table.Column<bool>(type: "bit", maxLength: 20, nullable: false),
                     Synchronized = table.Column<bool>(type: "bit", nullable: false),
-                    Refid = table.Column<long>(type: "bigint", nullable: false),
-                    ParentTaskId = table.Column<long>(type: "bigint", nullable: false)
+                    Refid = table.Column<long>(type: "bigint", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Tasks", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Tasks_Tasks_ParentTaskId",
-                        column: x => x.ParentTaskId,
-                        principalTable: "Tasks",
-                        principalColumn: "Id");
                 });
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Tasks_ParentTaskId",
-                table: "Tasks",
-                column: "ParentTaskId");
         }
 
         /// <inheritdoc />

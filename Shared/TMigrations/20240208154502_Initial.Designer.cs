@@ -12,7 +12,7 @@ using Shared.DataAccess.Context;
 namespace Shared.TMigrations
 {
     [DbContext(typeof(TaskDataContext))]
-    [Migration("20240208132726_Initial")]
+    [Migration("20240208154502_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -33,9 +33,6 @@ namespace Shared.TMigrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
 
-                    b.Property<long>("ParentTaskId")
-                        .HasColumnType("bigint");
-
                     b.Property<long>("Refid")
                         .HasColumnType("bigint");
 
@@ -54,25 +51,7 @@ namespace Shared.TMigrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ParentTaskId");
-
                     b.ToTable("Tasks");
-                });
-
-            modelBuilder.Entity("Shared.DataAccess.DataBaseEntities._Task", b =>
-                {
-                    b.HasOne("Shared.DataAccess.DataBaseEntities._Task", "ParentTask")
-                        .WithMany("ChildrenTask")
-                        .HasForeignKey("ParentTaskId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
-                    b.Navigation("ParentTask");
-                });
-
-            modelBuilder.Entity("Shared.DataAccess.DataBaseEntities._Task", b =>
-                {
-                    b.Navigation("ChildrenTask");
                 });
 #pragma warning restore 612, 618
         }
