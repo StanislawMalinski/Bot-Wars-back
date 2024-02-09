@@ -1,5 +1,6 @@
 ﻿using BusinessLogic.BackgroundWorkers.Data;
 using BusinessLogic.Gameplay;
+using BusinessLogic.Gameplay.Interface;
 using Coravel.Cache.Interfaces;
 using Coravel.Invocable;
 
@@ -17,18 +18,23 @@ public class GameWorker : IInvocable, IInvocableWithPayload<GameData>
     GameResult BigDataLocalFunction() 
     {
         GameManager gameManager = new GameManager();
-        GameResult result =  gameManager.PlayGame(Payload.Game,Payload.BotsId);
-        Console.WriteLine("fight bot " +result.botWinner.Id + " bot " + result.botLoser.Id);
-        Console.WriteLine("bot winner "+ result.botWinner.Id);
-        return result;
+        GameResult result =  gameManager.PlayGame(Payload.Game, Payload.BotsId);
+        if (result is SuccessfullGameResult successfullResult)
+        {
+            Console.WriteLine("fight bot " + successfullResult.BotWinner.Id + " bot " + successfullResult.BotLoser.Id);
+            Console.WriteLine("bot winner " + successfullResult.BotWinner.Id);
+            return result;
+        }
+        else
+        {
+            throw new NotImplementedException("Game not successfull");
+        }
     }
+
     public async Task Invoke()
     {
-        
         GameManager gameManager = new GameManager();
         GameResult result =  gameManager.PlayGame(Payload.Game,Payload.BotsId);
         _cache.Remember(Payload.Id, BigDataLocalFunction, TimeSpan.FromHours(2));
     }
-
-   
 }
