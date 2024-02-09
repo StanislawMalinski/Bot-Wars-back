@@ -126,6 +126,7 @@ app.UseRouting();
 app.UseAuthorization();
 
 app.MapControllers();
-app.Services.UseScheduler(async x => x.Schedule<InicjalizeWorkers>().EverySeconds(10).Once());
+app.Services.UseScheduler(async x => x.Schedule<InicjalizeWorkers>()
+    .EverySecond().Once().PreventOverlapping("Initializer"));
 
 app.Run();

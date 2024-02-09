@@ -16,7 +16,7 @@ public class InicjalizeWorkers : IInvocable
     {
         Console.WriteLine("inicjalizaca");
         _scheduler.Schedule<Synchronizer>().EverySeconds(25);
-        await Task.Delay(500);
+        await Task.Delay(10000);
         _scheduler.Schedule<TScheduler>().EverySeconds(25);
     }
 }

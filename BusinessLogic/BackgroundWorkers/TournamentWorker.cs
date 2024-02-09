@@ -21,8 +21,7 @@ public class TournamentWorker : IInvocable
     private TournamentRepository _tournamentRepository;
     private IAchievementsRepository _achievementsRepository;
     public long TourId { get; set; }
-    private Guid da;
-    public TournamentWorker(ICache cache, IQueue queue,TournamentRepository tournamentRepository,long tournamentId, IAchievementsRepository achievementsRepository)
+    public TournamentWorker(ICache cache, IQueue queue,TournamentRepository tournamentRepository, IAchievementsRepository achievementsRepository,long tournamentId)
     {
         _tournamentRepository = tournamentRepository;
         _cache = cache;
@@ -34,7 +33,7 @@ public class TournamentWorker : IInvocable
     public async Task Invoke()
     {
         
-        string identifier = this.ToString() + DateTime.Now;
+        string identifier = this.ToString() +" "+ TourId+ " "+ DateTime.Now;
         Console.WriteLine("Ropoczy się turniej "+ TourId);
         var botList = await _tournamentRepository.TournamentBotsToPlay(TourId);
 
