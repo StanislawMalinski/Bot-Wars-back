@@ -38,7 +38,8 @@ public class TScheduler : IInvocable
                 if ((await _schedulerRepository.Taskdoing(t.Id)).IsSuccess)
                 {
                     
-                    _scheduler.ScheduleWithParams<TournamentWorker>(t.Id).EverySecond().Once().PreventOverlapping("TournamentWorker"+ DateTime.Now+ t.Id);
+                    _scheduler.ScheduleWithParams<TournamentWorker>(t.Id)
+                        .EverySecond().Once().PreventOverlapping("TournamentWorker"+ DateTime.Now+ t.Id);
                 }
                 
             }

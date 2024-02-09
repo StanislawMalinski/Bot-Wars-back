@@ -24,4 +24,7 @@ RUN dotnet publish "./BotWars.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
+RUN mkdir app/FileSystem
+RUN mkdir app/FileSystem/Bots
+RUN mkdir app/FileSystem/Games
 ENTRYPOINT ["dotnet", "BotWars.dll"]
