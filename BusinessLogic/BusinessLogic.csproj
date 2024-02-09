@@ -7,10 +7,6 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <Folder Include="ExternalProgramServices\Corespondable\" />
-    </ItemGroup>
-
-    <ItemGroup>
       <PackageReference Include="Coravel" Version="5.0.2" />
     </ItemGroup>
 

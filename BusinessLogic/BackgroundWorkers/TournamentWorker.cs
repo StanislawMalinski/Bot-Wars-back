@@ -74,14 +74,14 @@ public class TournamentWorker : IInvocable
                     {
                         if (await _cache.HasAsync(Games[key].Identifier))
                         {
-                            GameResult res = await _cache.GetAsync<GameResult>(Games[key].Identifier);
+                            SuccessfullGameResult res = await _cache.GetAsync<SuccessfullGameResult>(Games[key].Identifier);
                             _cache.Forget(Games[key].Identifier);
-                            await _achievementsRepository.UpDateProgress(AchievementsTypes.GamePlayed, res.botWinner.PlayerId);
-                            await _achievementsRepository.UpDateProgress(AchievementsTypes.WinGames, res.botWinner.PlayerId);
-                            await _achievementsRepository.UpDateProgress(AchievementsTypes.GamePlayed, res.botLoser.PlayerId);
+                            await _achievementsRepository.UpDateProgress(AchievementsTypes.GamePlayed, res.BotWinner.PlayerId);
+                            await _achievementsRepository.UpDateProgress(AchievementsTypes.WinGames, res.BotWinner.PlayerId);
+                            await _achievementsRepository.UpDateProgress(AchievementsTypes.GamePlayed, res.BotLoser.PlayerId);
                             GameInfo gameInfo = Games[key];
                             gameInfo.Played = true;
-                            gameInfo.Bot = res.botWinner;
+                            gameInfo.Bot = res.BotWinner;
                             Games[key] = gameInfo;
 
                         }
@@ -107,12 +107,12 @@ public class TournamentWorker : IInvocable
             {
                 await Task.Delay(2000);
             }
-            GameResult res = await _cache.GetAsync<GameResult>(Games[0].Identifier);
+            SuccessfullGameResult res = await _cache.GetAsync<SuccessfullGameResult>(Games[0].Identifier);
             _cache.Forget(Games[0].Identifier);
-            await _achievementsRepository.UpDateProgress(AchievementsTypes.GamePlayed, res.botWinner.PlayerId);
-            await _achievementsRepository.UpDateProgress(AchievementsTypes.WinGames, res.botWinner.PlayerId);
-            await _achievementsRepository.UpDateProgress(AchievementsTypes.GamePlayed, res.botLoser.PlayerId);
-            await _achievementsRepository.UpDateProgress(AchievementsTypes.TournamentsWon, res.botWinner.PlayerId);
+            await _achievementsRepository.UpDateProgress(AchievementsTypes.GamePlayed, res.BotWinner.PlayerId);
+            await _achievementsRepository.UpDateProgress(AchievementsTypes.WinGames, res.BotWinner.PlayerId);
+            await _achievementsRepository.UpDateProgress(AchievementsTypes.GamePlayed, res.BotLoser.PlayerId);
+            await _achievementsRepository.UpDateProgress(AchievementsTypes.TournamentsWon, res.BotWinner.PlayerId);
         }
 
         await _tournamentRepository.TournamentEnded(TourId);

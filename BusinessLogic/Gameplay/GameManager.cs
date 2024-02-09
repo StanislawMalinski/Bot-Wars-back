@@ -1,19 +1,16 @@
-﻿using Shared.DataAccess.DataBaseEntities;
+﻿using BusinessLogic.Gameplay.Interface;
+using Shared.DataAccess.DataBaseEntities;
 
 namespace BusinessLogic.Gameplay;
 
-public class GameManager
+public class GameManager : IGameManager
 {
-    public GameResult PlayGame(Game game, List<Bot> bots)
+    public GameResult PlayGame(Game gameData, List<Bot> botsData)
     {
-        var res = bots.ToArray();
-        return new GameResult()
+        return new SuccessfullGameResult()
         {
-            botWinner = res[0],
-            botLoser = res[1],
-            Winner = 1
+            BotWinner = botsData[0],
+            BotLoser = botsData[1],
         };
-
-
     }
 }
