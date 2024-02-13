@@ -15,11 +15,12 @@ COPY ["Shared/Shared.csproj", "Shared/"]
 RUN dotnet restore "./BotWars/./BotWars.csproj"
 COPY . .
 
-RUN dotnet tool install --global dotnet-ef
+RUN dotnet tool install --global dotnet-ef --version 8.0.1
+
 ENV PATH="$PATH:/root/.dotnet/tools"
 
-RUN dotnet ef migrations add Initial --project Shared/Shared.csproj --startup-project BotWars/BotWars.csproj --context Shared.DataAccess.Context.DataContext --output-dir /src/Shared/Migrations
-RUN dotnet ef migrations add TaskInitial --project Shared/Shared.csproj --startup-project BotWars/BotWars.csproj --context Shared.DataAccess.Context.TaskDataContext --output-dir /src/Shared/TMigrations
+RUN dotnet ef migrations add Initial --project Shared/Shared.csproj --startup-project BotWars/BotWars.csproj --context Shared.DataAccess.Context.DataContext --output-dir Shared/Migrations
+RUN dotnet ef migrations add TaskInitial --project Shared/Shared.csproj --startup-project BotWars/BotWars.csproj --context Shared.DataAccess.Context.TaskDataContext --output-dir Shared/TMigrations
 
 WORKDIR "/src/BotWars"
 RUN dotnet build "./BotWars.csproj" -c $BUILD_CONFIGURATION -o /app/build
