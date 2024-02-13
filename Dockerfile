@@ -6,6 +6,11 @@ WORKDIR /app
 EXPOSE 8080
 EXPOSE 8081
 
+FROM ubuntu:latest AS ubuntu
+
+RUN apt-get update
+RUN apt-get install -y --no-install-recommends g++
+
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
@@ -25,6 +30,7 @@ RUN dotnet ef migrations add TaskInitial --project Shared/Shared.csproj --startu
 WORKDIR "/src/BotWars"
 RUN dotnet build "./BotWars.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
+
 FROM build AS publish
 ARG BUILD_CONFIGURATION=Release
 RUN dotnet publish "./BotWars.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
@@ -32,4 +38,5 @@ RUN dotnet publish "./BotWars.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
+COPY --from=ubuntu /usr/bin/gcc /usr/bin/gcc
 ENTRYPOINT ["dotnet", "BotWars.dll"]
