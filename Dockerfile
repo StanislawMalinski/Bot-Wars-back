@@ -6,14 +6,13 @@ WORKDIR /app
 EXPOSE 8080
 EXPOSE 8081
 
-FROM ubuntu:latest AS ubuntu
+#FROM ubuntu:latest AS ubuntu
 
-RUN apt-get update
-RUN apt-get install -y --no-install-recommends g++
+#RUN apt-get update
+#RUN apt-get install -y --no-install-recommends g++
 
-
-#RUN apt-get update && \
-#    apt-get install -y g++
+RUN apt-get update && \
+    apt-get install -y g++
 
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG BUILD_CONFIGURATION=Release
@@ -45,6 +44,6 @@ COPY --from=publish /app/publish .
 RUN mkdir FileSystem
 RUN mkdir FileSystem/Bots
 RUN mkdir FileSystem/Games
-COPY --from=ubuntu "/usr/bin/g++" "/usr/bin/g++"
-COPY --from=ubuntu /usr/bin/gcc /usr/bin/gcc
+#COPY --from=ubuntu "/usr/bin/g++" "/usr/bin/g++"
+#COPY --from=ubuntu /usr/bin/gcc /usr/bin/gcc
 ENTRYPOINT ["dotnet", "BotWars.dll"]
