@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Server.Kestrel.Core;
+﻿using System.Diagnostics;
+using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Shared.DataAccess.Context;
 using Shared.DataAccess.DAO;
 using Shared.DataAccess.DataBaseEntities;
@@ -36,6 +37,87 @@ public class BotRepository
             await bot.file.CopyToAsync(fileStream);
         }
         return new Success();
-    } 
-    
+    }
+
+    public async Task<HandlerResult<Success, IErrorResult>> compile(long id)
+    {
+        string filepath = BotFilePath + "/" + id + ".cpp";
+        Console.WriteLine(filepath);
+        /*
+        // Compiler command (change this according to your compiler)
+        string compilerCommand = $"g++ -o \"{BotFilePath+"/" +id+".cpp"}\" \"{BotFilePath+"/" +id+".exe"}\"";
+
+        // Create a process to run the compiler
+        Process compilerProcess = new Process();
+        compilerProcess.StartInfo.FileName = "../usr/bin/gcc";
+        compilerProcess.StartInfo.RedirectStandardInput = true;
+        compilerProcess.StartInfo.RedirectStandardOutput = true;
+        compilerProcess.StartInfo.UseShellExecute = false;
+        compilerProcess.StartInfo.CreateNoWindow = true;
+
+        // Start the process
+        compilerProcess.Start();
+
+        // Pass the compiler command to the process
+        compilerProcess.StandardInput.WriteLine(compilerCommand);
+        compilerProcess.StandardInput.Flush();
+        compilerProcess.StandardInput.Close();
+
+        // Wait for the compilation to finish
+        compilerProcess.WaitForExit();
+
+        // Close the process
+        compilerProcess.Close();
+
+        // Check if the compilation was successful
+        if (true)
+        {
+            Console.WriteLine("Compilation successful!");
+        }
+        else
+        {
+            Console.WriteLine("Compilation failed!");
+        }*/
+        
+        string compileCommand = "g++ -o output.exe "+filepath;
+
+        // Create a process to run the compiler command
+        Process compilerProcess = new Process();
+        compilerProcess.StartInfo.FileName = "bash"; // or "cmd" if running on Windows
+        compilerProcess.StartInfo.Arguments = $"-c \"{compileCommand}\"";
+        compilerProcess.StartInfo.RedirectStandardOutput = true;
+        compilerProcess.StartInfo.RedirectStandardError = true;
+        compilerProcess.StartInfo.UseShellExecute = false;
+        compilerProcess.StartInfo.CreateNoWindow = true;
+
+        // Start the process
+        compilerProcess.Start();
+
+        // Read compiler output
+        string output = compilerProcess.StandardOutput.ReadToEnd();
+        string error = compilerProcess.StandardError.ReadToEnd();
+
+        // Wait for the process to exit
+        compilerProcess.WaitForExit();
+
+        // Print output and error messages
+        Console.WriteLine("Compiler Output:");
+        Console.WriteLine(output);
+        Console.WriteLine("Compiler Errors:");
+        Console.WriteLine(error);
+
+        // Check if compilation was successful
+        if (compilerProcess.ExitCode == 0)
+        {
+            Console.WriteLine("Compilation successful!");
+        }
+        else
+        {
+            Console.WriteLine("Compilation failed!");
+        }
+        
+        
+        return new Success();
+    }
+
 }

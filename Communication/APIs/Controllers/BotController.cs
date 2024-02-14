@@ -24,6 +24,13 @@ public class BotController : Controller
         return Ok();
     }
     
+    [HttpPost("compile")]
+    public async Task<IActionResult> compileloadBot( long id)
+    {
+        return  (await _repository.compile(id)).Match(Ok,this.ErrorResult);
+        return Ok();
+    }
+    
     
 }
 
