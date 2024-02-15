@@ -1,19 +1,14 @@
 #See https://aka.ms/customizecontainer to learn how to customize your debug container and how Visual Studio uses this Dockerfile to build your images for faster debugging.
 
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
-USER app
 WORKDIR /app
 EXPOSE 8080
 EXPOSE 8081
 
-#FROM ubuntu:latest AS ubuntu
-
-#RUN apt-get update
-#RUN apt-get install -y --no-install-recommends g++
-
 RUN apt-get update && \
-    apt-get install -y g++
+apt-get install -y g++
 
+USER app
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
@@ -41,9 +36,4 @@ RUN dotnet publish "./BotWars.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-RUN mkdir FileSystem
-RUN mkdir FileSystem/Bots
-RUN mkdir FileSystem/Games
-#COPY --from=ubuntu "/usr/bin/g++" "/usr/bin/g++"
-#COPY --from=ubuntu /usr/bin/gcc /usr/bin/gcc
 ENTRYPOINT ["dotnet", "BotWars.dll"]
