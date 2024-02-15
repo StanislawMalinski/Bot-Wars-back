@@ -31,8 +31,9 @@ public class BotRepository
         var res =  await _dataContext.Bots.AddAsync(newbot);
         await _dataContext.SaveChangesAsync();
         long botId = res.Entity.Id;
-
-        string filePath = Path.Combine(BotFilePath, botId + Path.GetExtension(bot.file.FileName));
+        Console.WriteLine("dsaa");
+        string filePath = BotFilePath + "/"+ botId + Path.GetExtension(bot.file.FileName);
+        Console.WriteLine(filePath);
         using (Stream fileStream = new FileStream(filePath, FileMode.Create)) {
             await bot.file.CopyToAsync(fileStream);
         }
@@ -41,7 +42,7 @@ public class BotRepository
 
     public async Task<HandlerResult<Success, IErrorResult>> compile(long id)
     {
-        string filepath = BotFilePath + "/" + id + ".cpp";
+        string filepath = BotFilePath + "/"+  id + ".cpp";
         Console.WriteLine(filepath);
         /*
         // Compiler command (change this according to your compiler)
