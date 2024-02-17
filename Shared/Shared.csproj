@@ -7,7 +7,6 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <Folder Include="DataAccess\Services\" />
       <Folder Include="Exceptions\" />
       <Folder Include="Migrations\" />
       <Folder Include="Models\" />
@@ -18,9 +17,12 @@
       <Folder Include="Resources\GameViewImages\" />
       <Folder Include="Resources\Instructions\" />
       <Folder Include="Resources\Logs\" />
+      <Folder Include="TMigrations\" />
     </ItemGroup>
 
     <ItemGroup>
+      <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="7.0.9" />
+      <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.2.5" />
       <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.0" />
       <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.0">
         <PrivateAssets>all</PrivateAssets>

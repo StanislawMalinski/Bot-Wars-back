@@ -1,8 +1,14 @@
-using Communication.Services;
+using System.Text;
+using BotWars;
+using BotWars.DependencyInjection;
+using Communication.ServiceInterfaces;
+using Communication.Services.Administration;
 using Communication.Services.GameType;
+using Communication.Services.Player;
 using Communication.Services.Tournament;
 using Communication.Services.Validation;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using NLog.Web;
 using Shared.DataAccess.Context;
 using Shared.DataAccess.Mappers;
@@ -19,38 +25,52 @@ builder.Services.AddLogging();
 
 // Add services to the container.
 builder.Services.AddControllers();
-
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddScoped<PlayerRepository, PlayerRepository>();
 builder.Services.AddScoped<IPlayerValidator, MockValidator>();
 
-// GameType related services
-builder.Services.AddScoped<IGameRepository, GameRepository>();
-builder.Services.AddScoped<GameTypeAdminService, GameTypeAdminService>();
-builder.Services.AddScoped<GameTypeIdentifiedPlayerService, GameTypeIdentifiedPlayerService>();
-builder.Services.AddScoped<GameTypeUnidentifiedPlayerService, GameTypeUnidentifiedPlayerService>();
-builder.Services.AddScoped<GameTypeBannedPlayerService, GameTypeBannedPlayerService>();
-builder.Services.AddScoped<GameTypeBadValidation, GameTypeBadValidation>();
-builder.Services.AddScoped<GameTypeService, GameTypeService>();
-builder.Services.AddScoped<IGameTypeMapper, GameTypeMapper>();
-builder.Services.AddScoped<GameTypeServiceProvider, GameTypeServiceProvider>();
+//Jwt configuration
+var authenticationSettings = new AuthenticationSettings();
 
-// Tournament related services
-builder.Services.AddScoped<TournamentAdminService, TournamentAdminService>();
-builder.Services.AddScoped<TournamentIdentifiedPlayerService, TournamentIdentifiedPlayerService>();
-builder.Services.AddScoped<TournamentUnidentifiedPlayerService, TournamentUnidentifiedPlayerService>();
-builder.Services.AddScoped<TournamentBannedPlayerService, TournamentBannedPlayerService>();
-builder.Services.AddScoped<TournamentBadValidation, TournamentBadValidation>();
-builder.Services.AddScoped<TournamentService, TournamentService>();
-builder.Services.AddScoped<TournamentRepository, TournamentRepository>();
-builder.Services.AddScoped<ITournamentMapper, TournamentMapper>();
-builder.Services.AddScoped<TournamentServiceProvider, TournamentServiceProvider>();
+builder.Services.AddSingleton(authenticationSettings);
+builder.Configuration.GetSection("Authentication").Bind(authenticationSettings);
+
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = "Bearer";
+    options.DefaultScheme = "Bearer";
+    options.DefaultChallengeScheme = "Bearer";
+}).AddJwtBearer(cfg =>
+{
+    cfg.RequireHttpsMetadata = false;
+    cfg.SaveToken = true;
+    cfg.TokenValidationParameters = new TokenValidationParameters()
+    {
+        ValidIssuer = authenticationSettings.JwtIssuer,
+        ValidAudience = authenticationSettings.JwtIssuer,
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(authenticationSettings.JwtKey)),
+    };
+});
+
+builder.Services
+    .AddGameType()
+    .AddPlayer()
+    .AddTournament()
+    .AddAdministrative()
+    .AddFileSystem()
+    .AddUserSettings()
+    .AddPointsSettings()
+    .AddAchievements();
 
 builder.Services.AddDbContext<DataContext>(options =>
 {
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
+builder.Services.AddDbContext<TaskDataContext>(options =>
+{
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultTaskConnection"));
+});
+
 var app = builder.Build();
 
 // apply migrations to initialize database
@@ -67,12 +87,36 @@ using (var serviceScope = builder.Services.BuildServiceProvider().CreateScope())
     {
         Console.WriteLine("No pending migrations.");
     }
+    
+    var tdbContext = serviceScope.ServiceProvider.GetRequiredService<TaskDataContext>();
+    var tpendingMigrations = await tdbContext.Database.GetPendingMigrationsAsync();
+    if (tpendingMigrations.Any())
+    {
+        Console.WriteLine($"Applying {tpendingMigrations.Count()} pending migrations.");
+        await tdbContext.Database.MigrateAsync();
+    }
+    else
+    {
+        Console.WriteLine("No pending migrations.");
+    }
 }
+app.UseCors(options => {
+    options.AllowAnyMethod();
+    options.AllowAnyHeader();
 
+    options.AllowAnyOrigin();
+});
 app.UseSwagger();
-app.UseSwaggerUI();
+app.UseSwaggerUI(c =>
+{
+    c.SwaggerEndpoint("/swagger/v1/swagger.json","BotWars API");
+});
+
+app.UseAuthentication();
 
 app.UseHttpsRedirection();
+
+app.UseRouting();
 
 app.UseAuthorization();
 

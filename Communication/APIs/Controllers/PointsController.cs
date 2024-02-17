@@ -1,27 +1,41 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Shared.DataAccess.DataBaseEntities;
+﻿using Communication.APIs.Controllers.Helper;
+using Microsoft.AspNetCore.Mvc;
+using Shared.DataAccess.RepositoryInterfaces;
 
 namespace Communication.APIs.Controllers;
 
-[Route("api/[controller]")]
+[Route("api/v1/[controller]")]
+[ApiController]
 public class PointsController : Controller
 {
+    private readonly PointsService _pointsService;
 
-    [HttpGet("for-player")]
-    public async Task<IActionResult> GetPointsForPlayer([FromQuery]long playerId)
+    public PointsController(PointsService pointsService)
     {
-		throw new NotImplementedException();
-	}
-
-    [HttpGet("leaderboards")]
-    public async Task<IActionResult> GetLeaderBoards()
-    {
-        throw new NotImplementedException();
+        _pointsService = pointsService;
     }
 
-	[HttpGet("player-history")]
+    [HttpPost("setPointsForPlayer")]
+    public async Task<IActionResult> SetPointsForPlayer([FromQuery] long playerId, [FromQuery] long points)
+    {
+        return (await _pointsService.SetPointsForPlayer(playerId, points)).Match(Ok, this.ErrorResult);
+    }
+
+    [HttpGet("getPointsForPlayer")]
+    public async Task<IActionResult> GetPointsForPlayer([FromQuery]long playerId)
+    {
+		return (await _pointsService.GetPointsForPlayer(playerId)).Match(Ok, this.ErrorResult);
+	}
+
+    [HttpGet("getLeaderboards")]
+    public async Task<IActionResult> GetLeaderboards()
+    {
+        return (await _pointsService.GetLeaderboards()).Match(Ok, this.ErrorResult);
+    }
+
+	[HttpGet("getPointsHistoryForPlayer")]
 	public async Task<IActionResult> GetHistoryOfPointsForPlayer([FromQuery] long playerId)
     {
-        throw new NotImplementedException();
+        return (await _pointsService.GetHistoryForPlayer(playerId)).Match(Ok, this.ErrorResult);
     }
 }

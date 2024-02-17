@@ -1,6 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using Shared.DataAccess.Context;
+using Shared.DataAccess.DAO;
 using Shared.DataAccess.DataBaseEntities;
+using Shared.DataAccess.Mappers;
 using Shared.DataAccess.RepositoryInterfaces;
 using Shared.Results;
 using Shared.Results.ErrorResults;
@@ -11,42 +14,69 @@ namespace Shared.DataAccess.Repositories;
 
 public class PointRepository : IPointsRepository
 {
-    private DataContext _dataContext;
-    public PointRepository(DataContext dataContext)
+    private readonly DataContext _dataContext;
+    private readonly IPointHistoryMapper _pointHistoryMapper;
+
+    public PointRepository(DataContext dataContext, IPointHistoryMapper pointHistoryMapper)
     {
         _dataContext = dataContext;
-    }
-    
-    public async Task<HandlerResult<Success, IErrorResult>> setPointsForPlayer(long PlayerId, long Points)
-    {
-        var player = await _dataContext.Players.FindAsync(PlayerId);
-        if (player.Points > Points)
-        {
-            return await subtracPoints(PlayerId, player.Points - Points);
-        }
-        else
-        {
-            return await addPoints(PlayerId, Points - player.Points);
-        }
+        _pointHistoryMapper = pointHistoryMapper;
     }
 
-    public async Task<HandlerResult<Success, IErrorResult>> addPoints(long PlayerId, long Points)
+    public async Task<HandlerResult<SuccessData<List<PointHistoryDto>>, IErrorResult>> GetHistoryForPlayer(long playerId)
     {
-        var player = await _dataContext.Players.FindAsync(PlayerId);
+        var player = await _dataContext.Players.FindAsync(playerId);
         if (player == null)
         {
             return new EntityNotFoundErrorResult()
             {
-                Title = "return null",
-                Message = "Nie ma gracza z tym id"
+                Title = "EntityNotFoundErrorResult 404",
+                Message = "No player with such id"
             };
         }
-        player.Points += Points;
-        _dataContext.Players.Update((player));
-        PointHistory pointHistory = new PointHistory()
+
+        var pointHistory = await _dataContext.PointHistories
+            .Where(pointsHistory => pointsHistory.PlayerId == playerId)
+            .ToListAsync();
+        
+        return new SuccessData<List<PointHistoryDto>>
+        {
+            Data = pointHistory.ConvertAll(element => _pointHistoryMapper
+                .MapPointHistoryToPointHistoryDto(element))
+        };
+
+    }
+
+    public async Task<HandlerResult<Success, IErrorResult>> SetPointsForPlayer(long playerId, long points)
+    {
+        var player = await _dataContext.Players.FindAsync(playerId);
+        if (player == null)
+        {
+            return new EntityNotFoundErrorResult()
+            {
+                Title = "EntityNotFoundErrorResult 404",
+                Message = "No player with such id"
+            };
+        }
+        if (player.Points > points)
+        {
+            return await SubtractPoints(player, player.Points - points);
+        }
+        if (player.Points < points)
+        {
+            return await AddPoints(player, points - player.Points);
+        }
+
+        return new Success();
+    }
+
+    private async Task<HandlerResult<Success, IErrorResult>> AddPoints(Player player, long points)
+    {
+        player.Points += points;
+        var pointHistory = new PointHistory()
         {
             PlayerId = player.Id,
-            Gain = Points,
+            Gain = points,
             Loss = 0,
             LogDate = DateTime.Now
         };
@@ -55,24 +85,14 @@ public class PointRepository : IPointsRepository
         return new Success();
     }
 
-    public async Task<HandlerResult<Success, IErrorResult>> subtracPoints(long PlayerId, long Points)
+    private async Task<HandlerResult<Success, IErrorResult>> SubtractPoints(Player player, long points)
     {
-        var player = await _dataContext.Players.FindAsync(PlayerId);
-        if (player == null)
-        {
-            return new EntityNotFoundErrorResult()
-            {
-                Title = "return null",
-                Message = "Nie ma gracza z tym id"
-            };
-        }
-        player.Points -= Points;
-        _dataContext.Players.Update((player));
-        PointHistory pointHistory = new PointHistory()
+        player.Points -= points;
+        var pointHistory = new PointHistory
         {
             PlayerId = player.Id,
             Gain = 0,
-            Loss = Points,
+            Loss = points,
             LogDate = DateTime.Now
         };
         await _dataContext.PointHistories.AddAsync(pointHistory);
@@ -80,15 +100,15 @@ public class PointRepository : IPointsRepository
         return new Success();
     }
 
-    public async Task<HandlerResult<SuccessData<long>, IErrorResult>> getCurrentPointForPlayer(long PlayerId)
+    public async Task<HandlerResult<SuccessData<long>, IErrorResult>> GetCurrentPointsForPlayer(long playerId)
     {
-        var player = await _dataContext.Players.FindAsync(PlayerId);
+        var player = await _dataContext.Players.FindAsync(playerId);
         if (player == null)
         {
             return new EntityNotFoundErrorResult()
             {
-                Title = "return null",
-                Message = "Nie ma gracza z tym id"
+                Title = "EntityNotFoundErrorResult 404",
+                Message = "No player with such id"
             };
         }
 
@@ -98,15 +118,16 @@ public class PointRepository : IPointsRepository
         };
     }
 
-    public async Task<HandlerResult<SuccessData<List<Player>>, IErrorResult>> getLeadboards()
+    public async Task<HandlerResult<SuccessData<List<Player>>, IErrorResult>> GetLeaderboards()
     {
-        var players =  from player in _dataContext.Players
-                orderby player.Points
-                select player;
-        
-        return new SuccessData<List<Player>>()
+        var players = await _dataContext.Players
+            .OrderByDescending(player => player.Points)
+            .Take(10)
+            .ToListAsync();
+
+        return new SuccessData<List<Player>>
         {
-            Data = players.ToList()
+            Data = players
         };
     }
 }
