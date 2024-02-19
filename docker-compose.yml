@@ -25,6 +25,15 @@ services:
                sleep 5
                dotnet ef migrations add migration
                dotnet ef database update
+    bot_wars_engine:
+        build:
+            context: .
+            dockerfile: Engine/Dockerfile
+        ports:
+            - "7001:7001"
+        depends_on:
+            - bot_wars_api
+        
 
 volumes:
   bot_wars_db:
