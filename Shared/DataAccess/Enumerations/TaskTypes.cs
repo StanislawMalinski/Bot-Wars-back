@@ -2,6 +2,7 @@
 
 public enum TaskTypes
 {
+    PlayTournament,
     TYPE1,
-    TYPE2
+    TYPE2,
 }

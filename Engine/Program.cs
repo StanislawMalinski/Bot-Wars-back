@@ -17,6 +17,7 @@ builder.Services.AddDbContext<TaskDataContext>(options =>
 });
 var app = builder.Build();
 
-
+//app.Services.UseScheduler(async x => x.Schedule<InicjalizeWorkers>()
+//  .EverySecond().Once().PreventOverlapping("Initializer"));
 
 app.Run();

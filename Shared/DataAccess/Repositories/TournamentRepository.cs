@@ -178,5 +178,31 @@ namespace Shared.DataAccess.Repositories
             return new Success();
         }
 
+        public async Task<HandlerResult<SuccessData<List<Bot>>, IErrorResult>> TournamentBotsToPlay(long tournamentId)
+        {
+            var result =  await _dataContext.TournamentReferences.Where(x => x.tournamentId == tournamentId).Include(x=>x.Bot).Select(x=>x.Bot).ToListAsync();
+            return new SuccessData<List<Bot>>()
+            {
+                Data = result
+            };
+        }
+        public async Task<HandlerResult<SuccessData<Game>, IErrorResult>> TournamentGame(long tournamentId)
+        {
+            var result = await _dataContext.Tournaments.FindAsync(tournamentId);
+            var gameResult = await _dataContext.Games.FindAsync(result.GameId);
+            return new SuccessData<Game>()
+            {
+                Data = gameResult
+            };
+        }
+
+        public async Task<HandlerResult<Success, IErrorResult>> TournamentEnded(long tournamentId)
+        {
+            var res = await _dataContext.Tournaments.FindAsync(tournamentId);
+            res.WasPlayedOut = true;
+            //res.Synchronized = false;
+            await _dataContext.SaveChangesAsync();
+            return new Success();
+        }
     }
 }
