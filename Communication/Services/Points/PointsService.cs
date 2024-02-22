@@ -2,7 +2,7 @@
 using Communication.Services;
 using Communication.Services.Validation;
 using Microsoft.AspNetCore.Identity;
-using Shared.DataAccess.DAO;
+using Shared.DataAccess.DTO;
 using Shared.DataAccess.DataBaseEntities;
 using Shared.Results;
 using Shared.Results.IResults;

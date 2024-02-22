@@ -3,7 +3,7 @@ using System.Security.Claims;
 using System.Text;
 using BotWars;
 using Shared.DataAccess.Context;
-using Shared.DataAccess.DAO;
+using Shared.DataAccess.DTO;
 using Shared.DataAccess.Mappers;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;

@@ -1,7 +1,7 @@
 ﻿using Communication.APIs.Controllers.Helper;
 using Communication.Services.UserSettings;
 using Microsoft.AspNetCore.Mvc;
-using Shared.DataAccess.DAO;
+using Shared.DataAccess.DTO;
 
 namespace Communication.APIs.Controllers;
 

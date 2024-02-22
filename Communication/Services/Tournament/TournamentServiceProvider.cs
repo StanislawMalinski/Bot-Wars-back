@@ -1,4 +1,4 @@
-﻿using Shared.DataAccess.DAO;
+﻿using Shared.DataAccess.DTO;
 using Shared.DataAccess.Repositories;
 using Shared.Results;
 using Shared.Results.IResults;

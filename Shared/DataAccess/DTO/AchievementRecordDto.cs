@@ -1,4 +1,4 @@
-﻿namespace Shared.DataAccess.DAO;
+﻿namespace Shared.DataAccess.DTO;
 
 public class AchievementRecordDto
 {
