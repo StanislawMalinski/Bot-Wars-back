@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics;
 using Shared.DataAccess.DAO;
+using Shared.DataAccess.DTO;
 using Shared.Results;
 using Shared.Results.ErrorResults;
 using Shared.Results.IResults;

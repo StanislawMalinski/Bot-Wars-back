@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 
-namespace Shared.DataAccess.DAO;
+namespace Shared.DataAccess.DTO;
 
 public class GameFileDto
 {
