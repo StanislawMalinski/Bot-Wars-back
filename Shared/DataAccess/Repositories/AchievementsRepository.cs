@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Internal;
 using Shared.DataAccess.Context;
-using Shared.DataAccess.DAO;
+using Shared.DataAccess.DTO;
 using Shared.DataAccess.DataBaseEntities;
 using Shared.DataAccess.Enumerations;
 using Shared.DataAccess.Mappers;

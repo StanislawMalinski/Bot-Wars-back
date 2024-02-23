@@ -1,6 +1,6 @@
 using Shared.DataAccess.DataBaseEntities;
 
-namespace Shared.DataAccess.DAO;
+namespace Shared.DataAccess.DTO;
 
 public class PointHistoryDto
 {
