@@ -30,7 +30,7 @@ services:
             context: .
             dockerfile: Engine/Dockerfile
         ports:
-            - "7001:7001"
+            - "7001:8080"
         depends_on:
             - bot_wars_api
         

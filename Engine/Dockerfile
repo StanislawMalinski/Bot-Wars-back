@@ -1,7 +1,7 @@
 ﻿FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
 
 WORKDIR /app
-EXPOSE 7001
+EXPOSE 8080
 
 RUN apt-get update
 RUN apt-get install -y g++
@@ -23,7 +23,8 @@ RUN dotnet publish "Engine.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:Us
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-
-
+RUN mkdir /FileSystem
+RUN mkdir /FileSystem/Bots
+RUN mkdir /FileSystem/Games
 
 ENTRYPOINT ["dotnet", "Engine.dll"]

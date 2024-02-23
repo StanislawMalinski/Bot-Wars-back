@@ -1,5 +1,6 @@
 ﻿using Coravel;
 using Engine.BusinessLogic.BackgroundWorkers;
+using Engine.FileWorker;
 using Shared.DataAccess.Repositories;
 
 namespace Engine.DependencyInjection;
@@ -16,6 +17,7 @@ public static class BackGroundTasks
         // serviceCollection.AddTransient<TournamentWorker>();
         serviceCollection.AddTransient<GameWorker>();
         serviceCollection.AddScoped<SchedulerRepository>();
+        serviceCollection.AddScoped<FileManager>();
         return serviceCollection;
     }
 }

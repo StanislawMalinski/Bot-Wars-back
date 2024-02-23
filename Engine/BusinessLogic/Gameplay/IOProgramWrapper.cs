@@ -8,6 +8,8 @@ public class IOProgramWrapper : ICorespondable
     private Process? _process;
     private bool isRunning;
     private string _path;
+    private StreamWriter sw;
+    private StreamReader sr;
 
     // Program Configuration parameter should be added
     public IOProgramWrapper(string path)
@@ -29,6 +31,7 @@ public class IOProgramWrapper : ICorespondable
         try
         {
             _process.Start();
+            
         }
         catch (Exception ex)
         {
@@ -37,21 +40,26 @@ public class IOProgramWrapper : ICorespondable
         _process.BeginOutputReadLine();
     }
 
+    public async Task<string?> Get()
+    {
+        throw new NotImplementedException();
+    }
+
     public async Task Interrupt()
     {
         _process.Kill();
     }
 
-    public async Task<string?> Send(string data)
+    public async Task<bool> Send(string data)
     {
         if (!isRunning)
         {
-            throw new Exception("Program is not running");
+            return false;
         }
         StreamWriter sw = _process.StandardInput;
         sw.WriteLine(data);
         StreamReader sr = _process.StandardOutput;
-        return await sr.ReadLineAsync();
+        return true;
     }
 
     private void HandleExit(object? sender, EventArgs e)

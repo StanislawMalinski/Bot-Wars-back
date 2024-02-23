@@ -4,8 +4,12 @@ using Shared.DataAccess.Context;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddControllers();
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
 builder.Services.AddRepositories()
-    .AddMappers();
+    .AddMappers()
+    .AddBackGroundTask();
 
 builder.Services.AddDbContext<DataContext>(options =>
 {
@@ -19,5 +23,7 @@ var app = builder.Build();
 
 //app.Services.UseScheduler(async x => x.Schedule<InicjalizeWorkers>()
 //  .EverySecond().Once().PreventOverlapping("Initializer"));
-
+app.MapControllers();
+app.UseSwagger();
+app.UseSwaggerUI();
 app.Run();

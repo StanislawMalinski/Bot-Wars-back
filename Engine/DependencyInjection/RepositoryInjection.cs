@@ -15,6 +15,7 @@ public static class RepositoryInjection
         serviceCollection.AddScoped<IPointsRepository, PointRepository>();
         serviceCollection.AddScoped<TournamentRepository>();
         serviceCollection.AddScoped<IUserSettingsRepository, UserSettingsRepository>();
+        serviceCollection.AddScoped<BotRepository>();
         return serviceCollection;
     }
 }
