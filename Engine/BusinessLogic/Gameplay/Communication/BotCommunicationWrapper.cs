@@ -20,13 +20,13 @@ public class BotCommunicationWrapper
         commands = _accessor.LoadCommandsFromJson();
     }
 
-    public async void ResetBot()
+    public  void ResetBot()
     {
         var command = _accessor.GetCommandString(_bot.BotFile, commands["ResetBot"], "");
-        await _externalProgramSpeaker.Send(command);
+         _externalProgramSpeaker.Send(command);
     }
 
-    public async Task<Move> GetMove(Position position, List<Move> moves)
+    public  Move GetMove(Position position, List<Move> moves)
     {
         List<string> inputList = new List<string>
         {
@@ -40,7 +40,7 @@ public class BotCommunicationWrapper
         }
 
         var command = _accessor.GetCommandString(_bot.BotFile, commands["GetMove"], inputList);
-        var output = await _externalProgramSpeaker.Send(command);
+        var output = _externalProgramSpeaker.Send(command);
         string[] parts = output?.Split(' ')!;
 
         if (int.TryParse(parts[0], out int x) && int.TryParse(parts[1], out int y) && parts.Length == 2)

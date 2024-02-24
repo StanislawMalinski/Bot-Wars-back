@@ -27,10 +27,10 @@ public class GameCommunicationWrapper
             position.side.ToString()
         };
         var command = _accessor.GetCommandString(_data.Game.GameFile!, commands["SetPosition"], positionList);
-        await _externalProgramSpeaker.Send(command);
+        _externalProgramSpeaker.Send(command);
     }
     
-    public async void PerformMove(Move move)
+    public void PerformMove(Move move)
     {
         List<string> moveList = new List<string>
         {
@@ -38,13 +38,13 @@ public class GameCommunicationWrapper
             move.y.ToString()
         };
         var command = _accessor.GetCommandString(_data.Game.GameFile!, commands["PerformMove"], moveList);
-        await _externalProgramSpeaker.Send(command);
+        _externalProgramSpeaker.Send(command);
     }
 
-    public async Task<Position> GetPosition()
+    public Position GetPosition()
     {
         var command = _accessor.GetCommandString(_data.Game.GameFile!, commands["GetPosition"],"");
-        var output = await _externalProgramSpeaker.Send(command);
+        var output = _externalProgramSpeaker.Send(command);
         string[] parts = output?.Split(' ')!;
         
         if (parts.Length == 2 && int.TryParse(parts[1], out int side))
@@ -63,10 +63,10 @@ public class GameCommunicationWrapper
         }
     }
     
-    public async Task<List<Move>> GetMoves(int side)
+    public List<Move> GetMoves(int side)
     {
         var command = _accessor.GetCommandString(_data.Game.GameFile!, commands["GetMoves"], side.ToString());
-        var output = await _externalProgramSpeaker.Send(command);
+        var output = _externalProgramSpeaker.Send(command);
         string[] parts = output?.Split(' ')!;
         List<Move> moves = new List<Move>();
         for (int i = 1; i < parts.Length; i+=2)
@@ -96,7 +96,7 @@ public class GameCommunicationWrapper
             "Default side placeholder"
         };// TODO
         var command = _accessor.GetCommandString(_data.Game.GameFile!, commands["SetPosition"], positionList);
-        await _externalProgramSpeaker.Send(command);
+        _externalProgramSpeaker.Send(command);
     }
     
 

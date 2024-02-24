@@ -5,11 +5,11 @@ namespace Engine.BusinessLogic.Gameplay;
 
 public class ExternalProgramSpeaker : IExternalProgramSpeaker
 {
-    private readonly ICorespondable _corespondable;
 
-    public ExternalProgramSpeaker(ICorespondable corespondable)
+
+    public ExternalProgramSpeaker()
     {
-        _corespondable = corespondable;
+
     }
 
 
@@ -18,8 +18,8 @@ public class ExternalProgramSpeaker : IExternalProgramSpeaker
         // TODO
     }
 
-    public async Task<String?> Send(string messageData)
+    public string Send(string messageData)
     {
-        return await _corespondable.Send(messageData);
+        return "asfasdfgdsfg";
     }
 }

@@ -1,4 +1,7 @@
-﻿using Shared.DataAccess.Repositories;
+﻿using Engine.BusinessLogic.Gameplay;
+using Engine.BusinessLogic.Gameplay.Communication;
+using Engine.BusinessLogic.Gameplay.Interface;
+using Shared.DataAccess.Repositories;
 using Shared.DataAccess.RepositoryInterfaces;
 
 namespace Engine.DependencyInjection;
