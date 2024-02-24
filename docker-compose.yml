@@ -12,19 +12,14 @@ services:
         volumes:
             - bot_wars_db:/var/lib/mssql
     bot_wars_api:
-        image: stanislawmalinski/bot-wars-api:latest
+        build:
+            context: .
+            dockerfile: Communication/api.dockerfile
         ports:
             - "8080:8080"
             - "8081:8081"
         depends_on:
             - bot_wars_db
-        command: 
-            - /bin/sh
-            - -c
-            - |
-               sleep 5
-               dotnet ef migrations add migration
-               dotnet ef database update
     bot_wars_engine:
         build:
             context: .
