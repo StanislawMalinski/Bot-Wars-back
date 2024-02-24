@@ -17,6 +17,8 @@ public static class RepositoryInjection
         serviceCollection.AddScoped<IUserSettingsRepository, UserSettingsRepository>();
         serviceCollection.AddScoped<BotRepository>();
         serviceCollection.AddScoped<MatchRepository>();
+        serviceCollection.AddScoped<IExternalProgramSpeaker, ExternalProgramSpeaker>();
+        serviceCollection.AddSingleton<GameCommandsAccessor, GameCommandsAccessor>();
         return serviceCollection;
     }
 }

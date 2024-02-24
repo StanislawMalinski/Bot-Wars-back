@@ -1,0 +1,9 @@
+{
+  "SetPosition": "SetPosition",
+  "PerformMove": "PerformMove",
+  "GetPosition": "GetPosition",
+  "GetMoves": "GetMoves",
+  "ResetPosition": "ResetPosition",
+  "ResetBot": "ResetBot",
+  "GetMove": "GetMove"
+}
