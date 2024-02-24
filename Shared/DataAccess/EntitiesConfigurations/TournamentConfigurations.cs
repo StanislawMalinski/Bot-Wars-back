@@ -31,10 +31,13 @@ public class TournamentConfigurations : IEntityTypeConfiguration<Tournament>
         builder.Property(entity => entity.TournamentsDate)
             .IsRequired();
 
-        builder.Property(entity => entity.WasPlayedOut)
+        builder.Property(entity => entity.Status)
             .IsRequired();
 
         builder.Property(entity => entity.Constraints)
+            .IsRequired();
+        
+        builder.Property(entity => entity.RankingType)
             .IsRequired();
     }
 }

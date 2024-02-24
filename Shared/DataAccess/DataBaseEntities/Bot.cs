@@ -10,5 +10,6 @@
         public string BotFile { get; set; }
 
        public List<TournamentReference>? TournamentReference { get; set; }
+       public List<MatchPlayers>? MatchPlayers { get; set; }
     }
 }

@@ -6,6 +6,7 @@
 		CANCELLED,
 		PLAYED,
 		DONE,
-		SUSPENDED
+		SUSPENDED,
+		INPLAY
 	}
 }

@@ -19,24 +19,13 @@ namespace Shared.TMigrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Type = table.Column<int>(type: "int", nullable: false),
                     ScheduledOn = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Status = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
-                    Refid = table.Column<long>(type: "bigint", nullable: false),
-                    ParentTaskId = table.Column<long>(type: "bigint", nullable: false)
+                    Status = table.Column<int>(type: "int", maxLength: 20, nullable: false),
+                    OperatingOn = table.Column<long>(type: "bigint", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Tasks", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Tasks_Tasks_ParentTaskId",
-                        column: x => x.ParentTaskId,
-                        principalTable: "Tasks",
-                        principalColumn: "Id");
                 });
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Tasks_ParentTaskId",
-                table: "Tasks",
-                column: "ParentTaskId");
         }
 
         /// <inheritdoc />

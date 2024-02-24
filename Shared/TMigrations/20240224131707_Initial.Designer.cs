@@ -12,7 +12,7 @@ using Shared.DataAccess.Context;
 namespace Shared.TMigrations
 {
     [DbContext(typeof(TaskDataContext))]
-    [Migration("20240206135502_Initial")]
+    [Migration("20240224131707_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -33,44 +33,22 @@ namespace Shared.TMigrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
 
-                    b.Property<long>("ParentTaskId")
-                        .HasColumnType("bigint");
-
-                    b.Property<long>("Refid")
+                    b.Property<long>("OperatingOn")
                         .HasColumnType("bigint");
 
                     b.Property<DateTime>("ScheduledOn")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("Status")
-                        .IsRequired()
+                    b.Property<int>("Status")
                         .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)");
+                        .HasColumnType("int");
 
                     b.Property<int>("Type")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ParentTaskId");
-
                     b.ToTable("Tasks");
-                });
-
-            modelBuilder.Entity("Shared.DataAccess.DataBaseEntities._Task", b =>
-                {
-                    b.HasOne("Shared.DataAccess.DataBaseEntities._Task", "ParentTask")
-                        .WithMany("ChildrenTask")
-                        .HasForeignKey("ParentTaskId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
-                    b.Navigation("ParentTask");
-                });
-
-            modelBuilder.Entity("Shared.DataAccess.DataBaseEntities._Task", b =>
-                {
-                    b.Navigation("ChildrenTask");
                 });
 #pragma warning restore 612, 618
         }

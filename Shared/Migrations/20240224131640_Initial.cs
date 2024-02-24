@@ -21,18 +21,12 @@ namespace Shared.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Type = table.Column<int>(type: "int", nullable: false),
                     ScheduledOn = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Status = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
-                    Refid = table.Column<long>(type: "bigint", nullable: false),
-                    ParentTaskId = table.Column<long>(type: "bigint", nullable: false)
+                    Status = table.Column<int>(type: "int", maxLength: 20, nullable: false),
+                    OperatingOn = table.Column<long>(type: "bigint", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK__Task", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK__Task__Task_ParentTaskId",
-                        column: x => x.ParentTaskId,
-                        principalTable: "_Task",
-                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -125,7 +119,8 @@ namespace Shared.Migrations
                     PlayersLimit = table.Column<int>(type: "int", nullable: false),
                     TournamentsDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     PostedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    WasPlayedOut = table.Column<bool>(type: "bit", nullable: false),
+                    Status = table.Column<int>(type: "int", nullable: false),
+                    RankingType = table.Column<int>(type: "int", nullable: false),
                     Constraints = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Image = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
@@ -172,7 +167,9 @@ namespace Shared.Migrations
                     GameId = table.Column<long>(type: "bigint", nullable: false),
                     TournamentsId = table.Column<long>(type: "bigint", nullable: false),
                     Played = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Match = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Winner = table.Column<long>(type: "bigint", nullable: false),
+                    Data = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Status = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -314,22 +311,22 @@ namespace Shared.Migrations
                 {
                     Id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    PlayerId = table.Column<long>(type: "bigint", nullable: false),
+                    BotId = table.Column<long>(type: "bigint", nullable: false),
                     MatchId = table.Column<long>(type: "bigint", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_MatchPlayers", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_MatchPlayers_Matches_MatchId",
-                        column: x => x.MatchId,
-                        principalTable: "Matches",
+                        name: "FK_MatchPlayers_Bots_BotId",
+                        column: x => x.BotId,
+                        principalTable: "Bots",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_MatchPlayers_Players_PlayerId",
-                        column: x => x.PlayerId,
-                        principalTable: "Players",
+                        name: "FK_MatchPlayers_Matches_MatchId",
+                        column: x => x.MatchId,
+                        principalTable: "Matches",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -377,16 +374,16 @@ namespace Shared.Migrations
                 columns: new[] { "Id", "GameFile", "GameInstructions", "InterfaceDefinition", "IsAvailableForPlay", "LastModification", "NumbersOfPlayer" },
                 values: new object[,]
                 {
-                    { 1L, "Quake III Arena", "Eliminate the enemy players in fast-paced multiplayer battles.", "First-Person Shooter (FPS)", true, new DateTime(2024, 2, 6, 19, 21, 17, 850, DateTimeKind.Local).AddTicks(5541), 10 },
-                    { 2L, "The Legend of Zelda: Breath of the Wild", "Embark on an epic adventure to defeat the Calamity Ganon and save Hyrule.", "Action-Adventure", true, new DateTime(2024, 2, 6, 19, 21, 17, 850, DateTimeKind.Local).AddTicks(5627), 1 },
-                    { 3L, "FIFA 22", "Experience realistic football simulation with updated teams and gameplay.", "Sports Simulation", true, new DateTime(2024, 2, 6, 19, 21, 17, 850, DateTimeKind.Local).AddTicks(5630), 2 },
-                    { 4L, "Among Us", "Work together to complete tasks while identifying the impostors among the crew.", "Social Deduction", true, new DateTime(2024, 2, 6, 19, 21, 17, 850, DateTimeKind.Local).AddTicks(5633), 7 },
-                    { 5L, "Minecraft", "Build and explore a blocky world, mine resources, and survive.", "Sandbox", false, new DateTime(2024, 2, 6, 19, 21, 17, 850, DateTimeKind.Local).AddTicks(5636), 16 },
-                    { 6L, "Cyberpunk 2077", "Navigate the futuristic open world of Night City as the mercenary V.", "Action RPG", true, new DateTime(2024, 2, 6, 19, 21, 17, 850, DateTimeKind.Local).AddTicks(5640), 1 },
-                    { 7L, "Rocket League", "Play soccer with rocket-powered cars in this unique sports game.", "Vehicular Soccer", true, new DateTime(2024, 2, 6, 19, 21, 17, 850, DateTimeKind.Local).AddTicks(5643), 14 },
-                    { 8L, "Call of Duty: Warzone", "Engage in intense battle royale action in the Call of Duty universe.", "First-Person Shooter (Battle Royale)", false, new DateTime(2024, 2, 6, 19, 21, 17, 850, DateTimeKind.Local).AddTicks(5646), 8 },
-                    { 9L, "Animal Crossing: New Horizons", "Create and customize your own island paradise in a relaxing simulation.", "Life Simulation", true, new DateTime(2024, 2, 6, 19, 21, 17, 850, DateTimeKind.Local).AddTicks(5649), 5 },
-                    { 10L, "Dota 2", "Compete in strategic team-based battles in this multiplayer online battle arena (MOBA).", "MOBA", true, new DateTime(2024, 2, 6, 19, 21, 17, 850, DateTimeKind.Local).AddTicks(5653), 10 }
+                    { 1L, "Quake III Arena", "Eliminate the enemy players in fast-paced multiplayer battles.", "First-Person Shooter (FPS)", true, new DateTime(2024, 2, 24, 14, 16, 40, 99, DateTimeKind.Local).AddTicks(2187), 10 },
+                    { 2L, "The Legend of Zelda: Breath of the Wild", "Embark on an epic adventure to defeat the Calamity Ganon and save Hyrule.", "Action-Adventure", true, new DateTime(2024, 2, 24, 14, 16, 40, 99, DateTimeKind.Local).AddTicks(2239), 1 },
+                    { 3L, "FIFA 22", "Experience realistic football simulation with updated teams and gameplay.", "Sports Simulation", true, new DateTime(2024, 2, 24, 14, 16, 40, 99, DateTimeKind.Local).AddTicks(2242), 2 },
+                    { 4L, "Among Us", "Work together to complete tasks while identifying the impostors among the crew.", "Social Deduction", true, new DateTime(2024, 2, 24, 14, 16, 40, 99, DateTimeKind.Local).AddTicks(2245), 7 },
+                    { 5L, "Minecraft", "Build and explore a blocky world, mine resources, and survive.", "Sandbox", false, new DateTime(2024, 2, 24, 14, 16, 40, 99, DateTimeKind.Local).AddTicks(2247), 16 },
+                    { 6L, "Cyberpunk 2077", "Navigate the futuristic open world of Night City as the mercenary V.", "Action RPG", true, new DateTime(2024, 2, 24, 14, 16, 40, 99, DateTimeKind.Local).AddTicks(2250), 1 },
+                    { 7L, "Rocket League", "Play soccer with rocket-powered cars in this unique sports game.", "Vehicular Soccer", true, new DateTime(2024, 2, 24, 14, 16, 40, 99, DateTimeKind.Local).AddTicks(2253), 14 },
+                    { 8L, "Call of Duty: Warzone", "Engage in intense battle royale action in the Call of Duty universe.", "First-Person Shooter (Battle Royale)", false, new DateTime(2024, 2, 24, 14, 16, 40, 99, DateTimeKind.Local).AddTicks(2255), 8 },
+                    { 9L, "Animal Crossing: New Horizons", "Create and customize your own island paradise in a relaxing simulation.", "Life Simulation", true, new DateTime(2024, 2, 24, 14, 16, 40, 99, DateTimeKind.Local).AddTicks(2258), 5 },
+                    { 10L, "Dota 2", "Compete in strategic team-based battles in this multiplayer online battle arena (MOBA).", "MOBA", true, new DateTime(2024, 2, 24, 14, 16, 40, 99, DateTimeKind.Local).AddTicks(2261), 10 }
                 });
 
             migrationBuilder.InsertData(
@@ -433,19 +430,19 @@ namespace Shared.Migrations
 
             migrationBuilder.InsertData(
                 table: "Tournaments",
-                columns: new[] { "Id", "Constraints", "Description", "GameId", "Image", "PlayersLimit", "PostedDate", "TournamentTitle", "TournamentsDate", "WasPlayedOut" },
+                columns: new[] { "Id", "Constraints", "Description", "GameId", "Image", "PlayersLimit", "PostedDate", "RankingType", "Status", "TournamentTitle", "TournamentsDate" },
                 values: new object[,]
                 {
-                    { 1L, "Participants must have a minimum skill level of intermediate.", "Compete in the ultimate Quake III Arena tournament and prove your skills in fast-paced multiplayer battles.", 1L, "quakethreearena.jpg", 0, new DateTime(2024, 2, 6, 19, 21, 17, 850, DateTimeKind.Local).AddTicks(5736), "Quake III Arena Championship", new DateTime(2023, 1, 20, 0, 0, 0, 0, DateTimeKind.Unspecified), false },
-                    { 2L, "Participants must complete the game on a specific difficulty level.", "Embark on a quest to become the master of The Legend of Zelda: Breath of the Wild. Solve puzzles and defeat foes to claim victory.", 2L, "zeldabreathofthewild.jpg", 0, new DateTime(2024, 2, 6, 19, 21, 17, 850, DateTimeKind.Local).AddTicks(5748), "Zelda Master Cup", new DateTime(2023, 2, 15, 0, 0, 0, 0, DateTimeKind.Unspecified), false },
-                    { 3L, "Teams must consist of real-world players.", "Experience the thrill of virtual football in the FIFA 22 World Cup. Compete with players from around the globe for the championship.", 3L, "fifa22worldcup.jpg", 0, new DateTime(2024, 2, 6, 19, 21, 17, 850, DateTimeKind.Local).AddTicks(5752), "FIFA 22 World Cup", new DateTime(2023, 3, 10, 0, 0, 0, 0, DateTimeKind.Unspecified), false },
-                    { 4L, "Players must use voice communication during the game.", "Test your deception skills in the Among Us Infiltration Challenge. Work as a crew member or impostor to secure victory.", 4L, "amongusinfiltration.jpg", 0, new DateTime(2024, 2, 6, 19, 21, 17, 850, DateTimeKind.Local).AddTicks(5757), "Among Us Infiltration Challenge", new DateTime(2022, 4, 5, 0, 0, 0, 0, DateTimeKind.Unspecified), true },
-                    { 5L, "Builds must adhere to a specific theme.", "Showcase your creative building skills in the Minecraft Building Showcase. Construct impressive structures and compete for recognition.", 5L, "minecraftbuildingshowcase.jpg", 0, new DateTime(2024, 2, 6, 19, 21, 17, 850, DateTimeKind.Local).AddTicks(5869), "Minecraft Building Showcase", new DateTime(2023, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified), false },
-                    { 6L, "Participants must customize their character's appearance.", "Immerse yourself in the cyberpunk world of Night City. Compete in cyberwarfare challenges and emerge as the ultimate netrunner.", 6L, "cyberpunk2077challenge.jpg", 0, new DateTime(2024, 2, 6, 19, 21, 17, 850, DateTimeKind.Local).AddTicks(5874), "Cyberpunk 2077 Cyberwarfare Challenge", new DateTime(2022, 6, 15, 0, 0, 0, 0, DateTimeKind.Unspecified), true },
-                    { 7L, "Teams must consist of three players.", "Take part in high-flying, rocket-powered soccer action. Compete in the Rocket League Championship and score goals to victory.", 7L, "rocketleaguechampionship.jpg", 0, new DateTime(2024, 2, 6, 19, 21, 17, 850, DateTimeKind.Local).AddTicks(5878), "Rocket League Championship", new DateTime(2023, 7, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), false },
-                    { 8L, "Players must adhere to the battle royale ruleset.", "Join the intense battle royale action in Call of Duty: Warzone. Compete against other squads to be the last team standing.", 8L, "callofdutywarzone.jpg", 0, new DateTime(2024, 2, 6, 19, 21, 17, 850, DateTimeKind.Local).AddTicks(5882), "Call of Duty: Warzone Battle Royale", new DateTime(2023, 8, 10, 0, 0, 0, 0, DateTimeKind.Unspecified), false },
-                    { 9L, "Islands must be designed within a specific theme.", "Create the most charming and unique island paradise in the Animal Crossing Island Showcase. Display your creativity and win accolades.", 9L, "animalcrossingislandshowcase.jpg", 0, new DateTime(2024, 2, 6, 19, 21, 17, 850, DateTimeKind.Local).AddTicks(5886), "Animal Crossing Island Showcase", new DateTime(2023, 9, 5, 0, 0, 0, 0, DateTimeKind.Unspecified), false },
-                    { 10L, "Teams must adhere to the standard Dota 2 competitive rules.", "Enter the world of strategic battles in the Dota 2 Clash of Titans. Assemble your team, choose your heroes, and conquer the opposition.", 10L, "dota2clashoftitans.jpg", 0, new DateTime(2024, 2, 6, 19, 21, 17, 850, DateTimeKind.Local).AddTicks(5890), "Dota 2 Clash of Titans", new DateTime(2023, 10, 20, 0, 0, 0, 0, DateTimeKind.Unspecified), false }
+                    { 1L, "Participants must have a minimum skill level of intermediate.", "Compete in the ultimate Quake III Arena tournament and prove your skills in fast-paced multiplayer battles.", 1L, "quakethreearena.jpg", 0, new DateTime(2024, 2, 24, 14, 16, 40, 99, DateTimeKind.Local).AddTicks(2293), 0, 2, "Quake III Arena Championship", new DateTime(2023, 1, 20, 0, 0, 0, 0, DateTimeKind.Unspecified) },
+                    { 2L, "Participants must complete the game on a specific difficulty level.", "Embark on a quest to become the master of The Legend of Zelda: Breath of the Wild. Solve puzzles and defeat foes to claim victory.", 2L, "zeldabreathofthewild.jpg", 0, new DateTime(2024, 2, 24, 14, 16, 40, 99, DateTimeKind.Local).AddTicks(2301), 0, 2, "Zelda Master Cup", new DateTime(2023, 2, 15, 0, 0, 0, 0, DateTimeKind.Unspecified) },
+                    { 3L, "Teams must consist of real-world players.", "Experience the thrill of virtual football in the FIFA 22 World Cup. Compete with players from around the globe for the championship.", 3L, "fifa22worldcup.jpg", 0, new DateTime(2024, 2, 24, 14, 16, 40, 99, DateTimeKind.Local).AddTicks(2304), 0, 2, "FIFA 22 World Cup", new DateTime(2023, 3, 10, 0, 0, 0, 0, DateTimeKind.Unspecified) },
+                    { 4L, "Players must use voice communication during the game.", "Test your deception skills in the Among Us Infiltration Challenge. Work as a crew member or impostor to secure victory.", 4L, "amongusinfiltration.jpg", 0, new DateTime(2024, 2, 24, 14, 16, 40, 99, DateTimeKind.Local).AddTicks(2307), 0, 2, "Among Us Infiltration Challenge", new DateTime(2022, 4, 5, 0, 0, 0, 0, DateTimeKind.Unspecified) },
+                    { 5L, "Builds must adhere to a specific theme.", "Showcase your creative building skills in the Minecraft Building Showcase. Construct impressive structures and compete for recognition.", 5L, "minecraftbuildingshowcase.jpg", 0, new DateTime(2024, 2, 24, 14, 16, 40, 99, DateTimeKind.Local).AddTicks(2309), 0, 2, "Minecraft Building Showcase", new DateTime(2023, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified) },
+                    { 6L, "Participants must customize their character's appearance.", "Immerse yourself in the cyberpunk world of Night City. Compete in cyberwarfare challenges and emerge as the ultimate netrunner.", 6L, "cyberpunk2077challenge.jpg", 0, new DateTime(2024, 2, 24, 14, 16, 40, 99, DateTimeKind.Local).AddTicks(2313), 0, 2, "Cyberpunk 2077 Cyberwarfare Challenge", new DateTime(2022, 6, 15, 0, 0, 0, 0, DateTimeKind.Unspecified) },
+                    { 7L, "Teams must consist of three players.", "Take part in high-flying, rocket-powered soccer action. Compete in the Rocket League Championship and score goals to victory.", 7L, "rocketleaguechampionship.jpg", 0, new DateTime(2024, 2, 24, 14, 16, 40, 99, DateTimeKind.Local).AddTicks(2316), 0, 2, "Rocket League Championship", new DateTime(2023, 7, 1, 0, 0, 0, 0, DateTimeKind.Unspecified) },
+                    { 8L, "Players must adhere to the battle royale ruleset.", "Join the intense battle royale action in Call of Duty: Warzone. Compete against other squads to be the last team standing.", 8L, "callofdutywarzone.jpg", 0, new DateTime(2024, 2, 24, 14, 16, 40, 99, DateTimeKind.Local).AddTicks(2318), 0, 2, "Call of Duty: Warzone Battle Royale", new DateTime(2023, 8, 10, 0, 0, 0, 0, DateTimeKind.Unspecified) },
+                    { 9L, "Islands must be designed within a specific theme.", "Create the most charming and unique island paradise in the Animal Crossing Island Showcase. Display your creativity and win accolades.", 9L, "animalcrossingislandshowcase.jpg", 0, new DateTime(2024, 2, 24, 14, 16, 40, 99, DateTimeKind.Local).AddTicks(2321), 0, 2, "Animal Crossing Island Showcase", new DateTime(2023, 9, 5, 0, 0, 0, 0, DateTimeKind.Unspecified) },
+                    { 10L, "Teams must adhere to the standard Dota 2 competitive rules.", "Enter the world of strategic battles in the Dota 2 Clash of Titans. Assemble your team, choose your heroes, and conquer the opposition.", 10L, "dota2clashoftitans.jpg", 0, new DateTime(2024, 2, 24, 14, 16, 40, 99, DateTimeKind.Local).AddTicks(2324), 0, 2, "Dota 2 Clash of Titans", new DateTime(2023, 10, 20, 0, 0, 0, 0, DateTimeKind.Unspecified) }
                 });
 
             migrationBuilder.InsertData(
@@ -489,11 +486,6 @@ namespace Shared.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX__Task_ParentTaskId",
-                table: "_Task",
-                column: "ParentTaskId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_AchievementRecord_AchievementTypeId",
                 table: "AchievementRecord",
                 column: "AchievementTypeId");
@@ -529,14 +521,14 @@ namespace Shared.Migrations
                 column: "TournamentsId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_MatchPlayers_BotId",
+                table: "MatchPlayers",
+                column: "BotId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_MatchPlayers_MatchId",
                 table: "MatchPlayers",
                 column: "MatchId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_MatchPlayers_PlayerId",
-                table: "MatchPlayers",
-                column: "PlayerId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_NotificationOutboxes_PLayerId",

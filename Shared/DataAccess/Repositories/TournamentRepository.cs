@@ -3,6 +3,7 @@ using Shared.DataAccess.Context;
 using Shared.DataAccess.DAO;
 using Shared.DataAccess.DTO;
 using Shared.DataAccess.DataBaseEntities;
+using Shared.DataAccess.Enumerations;
 using Shared.DataAccess.Mappers;
 using Shared.Results;
 using Shared.Results.ErrorResults;
@@ -26,6 +27,7 @@ namespace Shared.DataAccess.Repositories
             
             Tournament tournament = _mapper.DtoToTournament(dto);
             tournament.PostedDate = DateTime.Now;
+            tournament.Status = TournamentStatus.SCHEDULED;
             await _dataContext.Tournaments.AddAsync(tournament);
             await _dataContext.SaveChangesAsync();
             return new Success();
@@ -76,7 +78,7 @@ namespace Shared.DataAccess.Repositories
             TournamentToEdit.GameId = tournament.GameId;
             TournamentToEdit.PlayersLimit = tournament.PlayersLimit;
             TournamentToEdit.TournamentsDate = tournament.TournamentsDate;
-            TournamentToEdit.WasPlayedOut = tournament.WasPlayedOut;
+            TournamentToEdit.Status = tournament.Status;
             TournamentToEdit.Constraints = tournament.Constraints;
             TournamentToEdit.Image = tournament.Image;
 
@@ -200,7 +202,7 @@ namespace Shared.DataAccess.Repositories
         public async Task<HandlerResult<Success, IErrorResult>> TournamentEnded(long tournamentId)
         {
             var res = await _dataContext.Tournaments.FindAsync(tournamentId);
-            res.WasPlayedOut = true;
+            res.Status = TournamentStatus.PLAYED;
             //res.Synchronized = false;
             await _dataContext.SaveChangesAsync();
             return new Success();

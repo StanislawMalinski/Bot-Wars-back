@@ -1,4 +1,6 @@
 ﻿using System.Diagnostics;
+using Engine.BusinessLogic.Gameplay;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Shared.DataAccess.DAO;
 using Shared.DataAccess.DTO;
 using Shared.Results;
@@ -29,7 +31,15 @@ public class FileManager
             };
         }
 
-        Compile(id, Language.C, BotFilePath);
+        var res = await Compile(id, Language.C, BotFilePath);
+        Console.WriteLine("compie "+ res);
+        if (!res)
+        {
+            return new NotImplementedError()
+            {
+                Message = "bląd kopilcji"
+            };
+        }
         return new Success();
 
     }
@@ -45,7 +55,9 @@ public class FileManager
             };
         }
 
-        if (!Compile(id, Language.C, BotFilePath))
+        var res = await Compile(id, Language.C, BotFilePath);
+       
+        if (!res)
         {
             return new NotImplementedError()
             {
@@ -60,7 +72,7 @@ public class FileManager
         string[] dirs = Directory.GetFiles(BotFilePath, id + ".*");
         foreach(string s in dirs)
         {
-            if (Path.GetExtension(s) == ".cpp")
+            if (Path.GetExtension(s) == ".out")
             {
                 return s;
             }
@@ -90,28 +102,27 @@ public class FileManager
 
         return true;
     }
-    private bool Compile(long id, Language language,string where)
+    private async Task<bool> Compile(long id, Language language,string where)
     {
         switch (language)
         {
             case (Language.C):
                 string filepath = where + "/"+  id + ".cpp";
-                //string compileCommand = "-c g++ -o "+ where + "/"+id+".out "+filepath;
-                string compileCommand = "-c g++ -o output.exe "+filepath;
+                string compileCommand = "g++ -o "+ where + "/"+id+".out "+filepath;
                 
                 //string compileCommand = "-c g++ -o "+ id+".out "+filepath;
-                return ExecuteCommand(compileCommand);
+                return await ExecuteCommand(compileCommand);
         }
 
         return false;
     }
     
 
-    private bool ExecuteCommand(string command)
+    private async Task<bool> ExecuteCommand(string command)
     {
         Process compilerProcess = new Process();
         compilerProcess.StartInfo.FileName = "bash"; // or "cmd" if running on Windows
-        compilerProcess.StartInfo.Arguments = command;
+        compilerProcess.StartInfo.Arguments = $"-c \"{command}\"";;
         Console.WriteLine(command);
         compilerProcess.StartInfo.RedirectStandardOutput = true;
         compilerProcess.StartInfo.RedirectStandardError = true;
@@ -130,6 +141,31 @@ public class FileManager
             return false;
         }
         
+        return true;
+    }
+
+    public async Task<bool> bottest()
+    {
+        Console.WriteLine(GetBotFilepath(4));
+        IOProgramWrapper p4 = new IOProgramWrapper(GetBotFilepath(4));
+        await p4.Run();
+        await p4.Send("0 0 0 1");
+        Console.WriteLine("a");
+        var res = await p4.Get();
+        Console.WriteLine(res);
+        await p4.Send("1");
+        res = await p4.Get();
+        Console.WriteLine(res);
+        p4.Interrupt();
+        /*
+       
+       
+        Console.WriteLine(await  p4.Get());
+        await p4.Send("1");
+        Console.WriteLine(await  p4.Get());
+        await p4.Send("1");
+        Console.WriteLine(await  p4.Get());
+        */
         return true;
     }
 }

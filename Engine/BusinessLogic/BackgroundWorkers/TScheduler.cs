@@ -30,18 +30,19 @@ public class TScheduler: IInvocable
         var tasks = (await _schedulerRepository.TaskToDo()).Match(x=>x.Data,x=>new List<_Task>());
         foreach (var t in tasks)
         {
-            if (t.Type == TaskTypes.PlayTournament)
+
+            switch (t.Type)
             {
-                if ((await _schedulerRepository.Taskdoing(t.Id)).IsSuccess)
-                {
-                    
-                    _scheduler.ScheduleWithParams<TournamentWorker>(t.Id)
-                        .EverySecond().Once().PreventOverlapping("TournamentWorker"+ DateTime.Now+ t.Id);
-                }
+                case TaskTypes.PlayTournament:
+                    if ((await _schedulerRepository.Taskdoing(t.Id)).IsSuccess)
+                    {
+                        _scheduler.ScheduleWithParams<TournamentWorker>(t.Id)
+                            .EverySecond().Once().PreventOverlapping("TournamentWorker"+ DateTime.Now+" "+ t.Id);
+                    }
+                    break;
                 
+                    
             }
-            
-            break;
         }
         Console.WriteLine("zadania wykonane");
 

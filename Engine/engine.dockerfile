@@ -1,5 +1,7 @@
 ﻿FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
 
+
+RUN groupadd -r exe && useradd -r -g exe -d /app -s /sbin/nologin -c "Docker image user" userexe
 WORKDIR /app
 EXPOSE 8080
 
@@ -23,8 +25,8 @@ RUN dotnet publish "Engine.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:Us
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-RUN mkdir /FileSystem
-RUN mkdir /FileSystem/Bots
-RUN mkdir /FileSystem/Games
+RUN mkdir FileSystem
+RUN mkdir FileSystem/Bots
+RUN mkdir FileSystem/Games
 
 ENTRYPOINT ["dotnet", "Engine.dll"]

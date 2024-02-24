@@ -11,9 +11,9 @@ public class MatchPlayersConfigurations : IEntityTypeConfiguration<MatchPlayers>
         
         builder.HasKey(entity => entity.Id);
 
-        builder.HasOne(x => x.Player)
+        builder.HasOne(x => x.Bot)
             .WithMany(x => x.MatchPlayers)
-            .HasForeignKey(x => x.PlayerId);
+            .HasForeignKey(x => x.BotId);
 
 
 

@@ -25,6 +25,14 @@ public class FileController : Controller
         return Ok();
     }
     
+    [HttpPost("commpile")]
+    public async Task<IActionResult> UploadXDBot()
+    {
+        await _fileManager.bottest();
+        return Ok();
+        return Ok();
+    }
+    
    
     [HttpPost("addGame")]
     public async Task<IActionResult> UploadGame( GameFileDto gameFileDto)

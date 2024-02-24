@@ -34,4 +34,9 @@
       <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" Version="6.5.0" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="FileSystem\Bots\" />
+      <Folder Include="FileSystem\Games\" />
+    </ItemGroup>
+
 </Project>

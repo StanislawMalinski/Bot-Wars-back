@@ -14,24 +14,25 @@ namespace Engine.BusinessLogic.BackgroundWorkers;
 public class TournamentWorker: IInvocable
 {
     private Scheduler _scheduler; 
-    private ICache _cache;
+    //private ICache _cache;
     private IQueue _queue;
     private TournamentRepository _tournamentRepository;
     private IAchievementsRepository _achievementsRepository;
+    private MatchRepository _matchRepository;
     public long TourId { get; set; }
-    public TournamentWorker(ICache cache, IQueue queue,TournamentRepository tournamentRepository, IAchievementsRepository achievementsRepository,long tournamentId)
+    public TournamentWorker(ICache cache, IQueue queue,TournamentRepository tournamentRepository,MatchRepository matchRepository , IAchievementsRepository achievementsRepository,long tournamentId)
     {
         _tournamentRepository = tournamentRepository;
-        _cache = cache;
         _queue = queue;
         TourId = tournamentId;
+        _matchRepository = matchRepository;
         _achievementsRepository = achievementsRepository;
     }
 
     public async Task Invoke()
     {
         
-        string identifier = this.ToString() +" "+ TourId+ " "+ DateTime.Now;
+        string identifier = "Tournament "+ TourId+" ";
         Console.WriteLine("Ropoczy się turniej "+ TourId);
         var botList = await _tournamentRepository.TournamentBotsToPlay(TourId);
 
@@ -70,16 +71,16 @@ public class TournamentWorker: IInvocable
                     }
                     else
                     {
-                        if (await _cache.HasAsync(Games[key].Identifier))
+                        var playedGame = await _matchRepository.IsMatchPlayed(TourId, Games[key].Identifier);
+                        if (playedGame.IsSuccess)
                         {
-                            SuccessfullGameResult res = await _cache.GetAsync<SuccessfullGameResult>(Games[key].Identifier);
-                            _cache.Forget(Games[key].Identifier);
-                            await _achievementsRepository.UpDateProgress(AchievementsTypes.GamePlayed, res.BotWinner.PlayerId);
-                            await _achievementsRepository.UpDateProgress(AchievementsTypes.WinGames, res.BotWinner.PlayerId);
-                            await _achievementsRepository.UpDateProgress(AchievementsTypes.GamePlayed, res.BotLoser.PlayerId);
+                            var botWinner = playedGame.Match(x => x.Data, x=>null);
+                            //await _achievementsRepository.UpDateProgress(AchievementsTypes.GamePlayed, botWinner.PlayerId);
+                            //await _achievementsRepository.UpDateProgress(AchievementsTypes.WinGames, botWinner.PlayerId);
+                            //await _achievementsRepository.UpDateProgress(AchievementsTypes.GamePlayed, botLoser.PlayerId);
                             GameInfo gameInfo = Games[key];
                             gameInfo.Played = true;
-                            gameInfo.Bot = res.BotWinner;
+                            gameInfo.Bot = botWinner;
                             Games[key] = gameInfo;
 
                         }
@@ -100,17 +101,17 @@ public class TournamentWorker: IInvocable
         else
         {
             
-            
-            while (!(await _cache.HasAsync(identifier+0)))
+            var playedGame = await _matchRepository.IsMatchPlayed(TourId, Games[0].Identifier);
+            while (!playedGame.IsSuccess)
             {
                 await Task.Delay(2000);
+                playedGame = await _matchRepository.IsMatchPlayed(TourId, Games[0].Identifier);
             }
-            SuccessfullGameResult res = await _cache.GetAsync<SuccessfullGameResult>(Games[0].Identifier);
-            _cache.Forget(Games[0].Identifier);
-            await _achievementsRepository.UpDateProgress(AchievementsTypes.GamePlayed, res.BotWinner.PlayerId);
-            await _achievementsRepository.UpDateProgress(AchievementsTypes.WinGames, res.BotWinner.PlayerId);
-            await _achievementsRepository.UpDateProgress(AchievementsTypes.GamePlayed, res.BotLoser.PlayerId);
-            await _achievementsRepository.UpDateProgress(AchievementsTypes.TournamentsWon, res.BotWinner.PlayerId);
+            var botWinner = playedGame.Match(x => x.Data, x=>null);
+            //await _achievementsRepository.UpDateProgress(AchievementsTypes.GamePlayed, res.BotWinner.PlayerId);
+            //await _achievementsRepository.UpDateProgress(AchievementsTypes.WinGames, res.BotWinner.PlayerId);
+            //await _achievementsRepository.UpDateProgress(AchievementsTypes.GamePlayed, res.BotLoser.PlayerId);
+            await _achievementsRepository.UpDateProgress(AchievementsTypes.TournamentsWon, botWinner.PlayerId);
         }
 
         await _tournamentRepository.TournamentEnded(TourId);

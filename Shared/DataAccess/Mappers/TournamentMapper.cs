@@ -16,7 +16,7 @@ namespace Shared.DataAccess.Mappers
                 PlayersLimit = dto.PlayersLimit,
                 PostedDate = dto.PostedDate,
                 TournamentsDate = dto.TournamentsDate,
-                WasPlayedOut = dto.WasPlayedOut,
+                //Status = dto.WasPlayedOut,
                 Constraints = dto.Constrains,
                 Image = dto.Image
             };
@@ -33,7 +33,7 @@ namespace Shared.DataAccess.Mappers
                 PlayersLimit = tournament.PlayersLimit,
                 PostedDate = tournament.PostedDate,
                 TournamentsDate = tournament.TournamentsDate,
-                WasPlayedOut = tournament.WasPlayedOut,
+                //WasPlayedOut = tournament.Status,
                 Constrains = tournament.Constraints,
                 Image = tournament.Image
             };

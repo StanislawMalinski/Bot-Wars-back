@@ -20,10 +20,10 @@ public class MatchesConfigurations : IEntityTypeConfiguration<Matches>
             .HasForeignKey(x => x.TournamentsId)
             .OnDelete(DeleteBehavior.ClientSetNull);
         
-        builder.Property(entity => entity.Played)
+        builder.Property(entity => entity.Status)
             .IsRequired();
         
-        builder.Property(entity => entity.Match)
+        builder.Property(entity => entity.Data)
             .IsRequired();
         
     }

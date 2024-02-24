@@ -5,6 +5,7 @@ using Shared.Results;
 using Shared.Results.ErrorResults;
 using Shared.Results.IResults;
 using Shared.Results.SuccessResults;
+using TaskStatus = Shared.DataAccess.Enumerations.TaskStatus;
 
 namespace Shared.DataAccess.Repositories;
 
@@ -23,8 +24,7 @@ public class SchedulerRepository
     {
 
         DateTime data = DateTime.Now;
-        data.AddMinutes(1);
-        var result = await _taskDataContext.Tasks.Where(x => x.ScheduledOn < data ).ToListAsync();
+        var result = await _taskDataContext.Tasks.Where(x => x.ScheduledOn >= data && x.Status == TaskStatus.ToDo).ToListAsync();
         //var result = await _taskDataContext.Tasks.Where(x => x.ScheduledOn < data && x.Status == false).ToListAsync();
         return new SuccessData<List<_Task>>()
         {
@@ -39,8 +39,7 @@ public class SchedulerRepository
         {
             return new EntityNotFoundErrorResult();
         }
-
-        //res.Status = true;
+        res.Status = TaskStatus.Doing;
         await _taskDataContext.SaveChangesAsync();
         return new Success();
     }

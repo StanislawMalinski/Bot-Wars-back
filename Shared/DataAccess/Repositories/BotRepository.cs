@@ -26,7 +26,7 @@ public class BotRepository
             GameId = bot.GameId,
             BotFile = bot.BotName
         };
-
+        
         var res =  await _dataContext.Bots.AddAsync(newbot);
         await _dataContext.SaveChangesAsync();
         

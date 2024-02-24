@@ -28,7 +28,7 @@ services:
     bot_wars_engine:
         build:
             context: .
-            dockerfile: Engine/Dockerfile
+            dockerfile: Engine/engine.dockerfile
         ports:
             - "7001:8080"
         depends_on:

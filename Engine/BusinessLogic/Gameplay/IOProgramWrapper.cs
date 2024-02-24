@@ -18,7 +18,7 @@ public class IOProgramWrapper : ICorespondable
     }
 
     // Not safe at all, maybe could be run as user without any privilages
-    public void Run()
+    public async Task<bool> Run()
     {
         if (isRunning)
         {
@@ -26,28 +26,71 @@ public class IOProgramWrapper : ICorespondable
         }
         isRunning = true;
         _process = new Process();
-        _process.StartInfo.FileName = _path;
-        _process.Exited += new EventHandler(HandleExit);
+        Console.WriteLine("-c ./"+_path);
+        ProcessStartInfo startInfo = new ProcessStartInfo
+        {
+            FileName = "bash",
+            Arguments = "-c ./"+_path,
+            RedirectStandardInput = true,
+            RedirectStandardOutput = true,
+            UseShellExecute = false,
+            CreateNoWindow = true,
+            RedirectStandardError = true,
+            //UserName = "userexe"
+            
+        };
+        
+
+        _process.StartInfo = startInfo;
+        _process.Start();
+        sw = _process.StandardInput;
+        sr = _process.StandardOutput;
+        
+        
+        /*
         try
         {
-            _process.Start();
             
         }
         catch (Exception ex)
         {
             throw new Exception($"Program cannot be started: {ex.Message}");
-        }
-        _process.BeginOutputReadLine();
+        }*/
+
+        return true;
     }
 
     public async Task<string?> Get()
     {
-        throw new NotImplementedException();
+        
+        Task<string> readLineTask = sr.ReadLineAsync();
+        Task timeoutTask = Task.Delay(2000); 
+        Task completedTask = await Task.WhenAny(readLineTask, timeoutTask);
+        if (completedTask == readLineTask)
+        {
+            // Line was read within the timeout period
+            var cos = await readLineTask;
+            return cos;
+        }
+        else
+        {
+            // Timeout occurred
+            Console.WriteLine("Timeout occurred while waiting for a line to be read.");
+        }
+
+        throw new Exception("czs się skonczył");
+        return String.Empty;
     }
 
     public async Task Interrupt()
     {
-        _process.Kill();
+        if (isRunning)
+        {
+            _process.Kill();
+        }
+
+        isRunning = false;
+
     }
 
     public async Task<bool> Send(string data)
@@ -56,9 +99,8 @@ public class IOProgramWrapper : ICorespondable
         {
             return false;
         }
-        StreamWriter sw = _process.StandardInput;
-        sw.WriteLine(data);
-        StreamReader sr = _process.StandardOutput;
+        Console.WriteLine("piseczos do pliku");
+        await sw.WriteLineAsync(data+"\n");
         return true;
     }
 
