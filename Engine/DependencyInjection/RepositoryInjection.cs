@@ -17,6 +17,7 @@ public static class RepositoryInjection
         serviceCollection.AddScoped<IUserSettingsRepository, UserSettingsRepository>();
         serviceCollection.AddScoped<BotRepository>();
         serviceCollection.AddScoped<MatchRepository>();
+        serviceCollection.AddScoped<TaskRepository>();
         return serviceCollection;
     }
 }

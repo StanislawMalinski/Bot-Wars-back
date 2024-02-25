@@ -12,20 +12,19 @@ namespace Shared.DataAccess.Repositories;
 public class SchedulerRepository
 {
     private DataContext _dataContext;
-    private TaskDataContext _taskDataContext;
 
-    public SchedulerRepository(DataContext dataContext, TaskDataContext taskDataContext)
+    public SchedulerRepository(DataContext dataContext)
     {
         _dataContext = dataContext;
-        _taskDataContext = taskDataContext;
     }
 
     public async Task<HandlerResult<SuccessData<List<_Task>>, IErrorResult>> TaskToDo()
     {
 
         DateTime data = DateTime.Now;
-        var result = await _taskDataContext.Tasks.Where(x => x.ScheduledOn >= data && x.Status == TaskStatus.ToDo).ToListAsync();
-        //var result = await _taskDataContext.Tasks.Where(x => x.ScheduledOn < data && x.Status == false).ToListAsync();
+        var result = await _dataContext.Tasks.Where(x => x.ScheduledOn <= data && x.Status == TaskStatus.ToDo).ToListAsync();
+        //var result = await _dataContext.Tasks.Where(x => x.ScheduledOn < data && x.Status == false).ToListAsync();
+        Console.WriteLine(result.Count() + " tle zadan");
         return new SuccessData<List<_Task>>()
         {
             Data = result
@@ -34,13 +33,13 @@ public class SchedulerRepository
 
     public async Task<HandlerResult<Success, IErrorResult>> Taskdoing(long taskId)
     {
-        var res = await _taskDataContext.Tasks.FirstOrDefaultAsync(x => x.Id == taskId);
+        var res = await _dataContext.Tasks.FirstOrDefaultAsync(x => x.Id == taskId);
         if (res == null)
         {
             return new EntityNotFoundErrorResult();
         }
         res.Status = TaskStatus.Doing;
-        await _taskDataContext.SaveChangesAsync();
+        await _dataContext.SaveChangesAsync();
         return new Success();
     }
 }

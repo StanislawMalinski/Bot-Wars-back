@@ -10,12 +10,12 @@ namespace Engine.BusinessLogic.BackgroundWorkers;
 
 public class TScheduler: IInvocable
 {
-    private TaskDataContext _taskDataContext;
+    private DataContext _taskDataContext;
     private IQueue _queue;
     private IScheduler _scheduler;
     private SchedulerRepository _schedulerRepository;
 
-    public TScheduler(TaskDataContext taskDataContext, IQueue queue, SchedulerRepository schedulerRepository, IScheduler scheduler)
+    public TScheduler(DataContext taskDataContext, IQueue queue, SchedulerRepository schedulerRepository, IScheduler scheduler)
     {
         _taskDataContext = taskDataContext;
         _queue = queue;

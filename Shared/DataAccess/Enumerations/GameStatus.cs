@@ -6,5 +6,6 @@ public enum GameStatus
 {
     Played,
     ReadyToPlay,
-    Playing
+    Playing,
+    NotReadyToPlay
 }

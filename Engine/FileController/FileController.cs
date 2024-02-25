@@ -1,6 +1,7 @@
 ﻿using Engine.FileWorker;
 using Microsoft.AspNetCore.Mvc;
 using Shared.DataAccess.DAO;
+using Shared.DataAccess.DataBaseEntities;
 using Shared.DataAccess.DTO;
 using Shared.DataAccess.Repositories;
 
@@ -12,10 +13,12 @@ public class FileController : Controller
 {
 
     private FileManager _fileManager;
+    private MatchRepository _matchRepository;
 
-    public FileController(FileManager fileManager)
+    public FileController(FileManager fileManager,MatchRepository matchRepository)
     {
         _fileManager = fileManager;
+        _matchRepository = matchRepository;
     }
     
     [HttpPost("add")]
@@ -30,6 +33,24 @@ public class FileController : Controller
     {
         await _fileManager.bottest();
         return Ok();
+    }
+    
+     
+    [HttpPost("test")]
+    public async Task<IActionResult> dosomthing()
+    {
+        GameInfo gameInfo = new GameInfo(true,2,null,new List<Bot>()
+        {
+          new Bot()
+          {
+              Id = 1
+          } ,
+          new Bot()
+          {
+              Id = 5
+          } 
+        });
+        await _matchRepository.CreateMatch(1,gameInfo);
         return Ok();
     }
     
