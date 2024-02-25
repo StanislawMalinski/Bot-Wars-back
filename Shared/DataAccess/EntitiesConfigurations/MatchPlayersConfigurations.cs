@@ -13,13 +13,15 @@ public class MatchPlayersConfigurations : IEntityTypeConfiguration<MatchPlayers>
 
         builder.HasOne(x => x.Bot)
             .WithMany(x => x.MatchPlayers)
-            .HasForeignKey(x => x.BotId);
+            .HasForeignKey(x => x.BotId)
+            .OnDelete(DeleteBehavior.NoAction);
 
 
 
         builder.HasOne(x => x.Matches)
             .WithMany(x => x.MatchPlayers)
-            .HasForeignKey(x => x.MatchId);
+            .HasForeignKey(x => x.MatchId)
+            .OnDelete(DeleteBehavior.NoAction);
 
         /*
         builder.HasOne(x => x.Tournament)
