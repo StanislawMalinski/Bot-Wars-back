@@ -46,7 +46,7 @@ public class FileManager
     public async Task<HandlerResult<Success,IErrorResult>> addGame(GameFileDto gameFileDto){
         
         long id = gameFileDto.GameId;
-        var fres = await SaveFile(gameFileDto.file,id , BotFilePath);
+        var fres = await SaveFile(gameFileDto.file,id , GameFilePath);
         if (!fres)
         {
             return new NotImplementedError()
@@ -55,7 +55,7 @@ public class FileManager
             };
         }
 
-        var res = await Compile(id, Language.C, BotFilePath);
+        var res = await Compile(id, Language.C, GameFilePath);
        
         if (!res)
         {
