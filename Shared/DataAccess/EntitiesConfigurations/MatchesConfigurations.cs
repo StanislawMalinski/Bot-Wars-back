@@ -22,7 +22,8 @@ public class MatchesConfigurations : IEntityTypeConfiguration<Matches>
         
         builder.Property(entity => entity.Status)
             .IsRequired();
-        
+        builder.Property(entity => entity.Winner)
+            .IsRequired();
         builder.Property(entity => entity.Data)
             .IsRequired();
         

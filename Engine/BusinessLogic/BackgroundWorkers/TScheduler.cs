@@ -37,8 +37,13 @@ public class TScheduler: IInvocable
                     if ((await _schedulerRepository.Taskdoing(t.Id)).IsSuccess)
                     {
                         _scheduler.ScheduleWithParams<TournamentWorker>(t.Id)
-                            .EverySecond().Once().PreventOverlapping("TournamentWorker"+ DateTime.Now+" "+ t.Id);
+                            .EverySecond().Once().PreventOverlapping("TournamentWorker"+ DateTime.Now+" "+ t.OperatingOn);
                     }
+                    break;
+                case TaskTypes.PlayGame:
+                    Console.WriteLine("que invoke");
+                    _scheduler.ScheduleWithParams<GameWorker>(t.Id).EverySecond().Once().PreventOverlapping("game worker " + t.Id);
+                    Console.WriteLine("qinvokeend");
                     break;
                 
                     

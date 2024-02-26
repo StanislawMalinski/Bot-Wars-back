@@ -9,16 +9,17 @@ using Shared.DataAccess.RepositoryInterfaces;
 
 namespace Engine.BusinessLogic.BackgroundWorkers;
 
-public class GameWorker: IInvocable, IInvocableWithPayload<long>
+public class GameWorker: IInvocable
 {
     private IAchievementsRepository _achievementsRepository;
     private MatchRepository _matchRepository;
     private TaskRepository _taskRepository;
-    public GameWorker(IAchievementsRepository achievementsRepository,MatchRepository matchRepository,TaskRepository taskRepository)
+    public GameWorker(IAchievementsRepository achievementsRepository,MatchRepository matchRepository,TaskRepository taskRepository, long taskid)
     {
         _achievementsRepository = achievementsRepository;
         _matchRepository = matchRepository;
         _taskRepository = taskRepository;
+        Payload = taskid;
     }
 
     public long Payload { get; set; }

@@ -7,5 +7,6 @@ public enum GameStatus
     Played,
     ReadyToPlay,
     Playing,
-    NotReadyToPlay
+    NotReadyToPlay,
+    Resolve
 }

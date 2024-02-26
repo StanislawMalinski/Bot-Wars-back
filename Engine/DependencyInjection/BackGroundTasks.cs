@@ -15,7 +15,7 @@ public static class BackGroundTasks
         serviceCollection.AddTransient<InicjalizeWorkers>();
         serviceCollection.AddTransient<TScheduler>();
         // serviceCollection.AddTransient<TournamentWorker>();
-        serviceCollection.AddTransient<GameWorker>();
+        //serviceCollection.AddTransient<GameWorker>();
         serviceCollection.AddScoped<SchedulerRepository>();
         serviceCollection.AddScoped<FileManager>();
         return serviceCollection;

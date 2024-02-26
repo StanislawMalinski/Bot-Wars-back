@@ -104,6 +104,11 @@ public class IOProgramWrapper : ICorespondable
         return true;
     }
 
+    public async Task<string?> SendAndGet(string data)
+    {
+        await Send(data);
+        return await Get();
+    }
     private void HandleExit(object? sender, EventArgs e)
     {
         throw new Exception("Program exited");

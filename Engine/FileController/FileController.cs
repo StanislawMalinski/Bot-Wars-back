@@ -1,4 +1,5 @@
 ﻿using Engine.FileWorker;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Shared.DataAccess.DAO;
 using Shared.DataAccess.DataBaseEntities;
@@ -39,6 +40,10 @@ public class FileController : Controller
     [HttpPost("test")]
     public async Task<IActionResult> dosomthing()
     {
+
+
+        return (await _matchRepository.RestoreLather(1)).Match(Ok,Ok);
+        return Ok();
         GameInfo gameInfo = new GameInfo(true,2,null,new List<Bot>()
         {
           new Bot()
