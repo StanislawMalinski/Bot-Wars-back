@@ -3,6 +3,7 @@ using Shared.DataAccess.Context;
 using Shared.DataAccess.DataBaseEntities;
 using Shared.DataAccess.DTO;
 using Shared.DataAccess.Enumerations;
+using Shared.DataAccess.RepositoryInterfaces;
 using Shared.Results;
 using Shared.Results.ErrorResults;
 using Shared.Results.IResults;
@@ -14,9 +15,11 @@ namespace Shared.DataAccess.Repositories;
 public class MatchRepository
 {
     private readonly DataContext _dataContext;
+    private readonly IAchievementsRepository _achievementsRepository;
 
-    public MatchRepository(DataContext dataContext)
+    public MatchRepository(DataContext dataContext,IAchievementsRepository achievementsRepository)
     {
+        _achievementsRepository = achievementsRepository;
         _dataContext = dataContext;
     }
 
@@ -153,19 +156,25 @@ public class MatchRepository
     }
     
     
-    public async Task<HandlerResult<Success, IErrorResult>> Winner(long matchId, long winner)
+    public async Task<HandlerResult<Success, IErrorResult>> Winner(long matchId, long winner, long taskId)
     {
         var result = await _dataContext.Matches.FirstOrDefaultAsync(x => x.Id == matchId);
-
-        if (result == null) return new EntityNotFoundErrorResult();
+        var TaskDone = await _dataContext.Tasks.FirstOrDefaultAsync(x => x.Id == taskId);
+        if (result == null || TaskDone == null) return new EntityNotFoundErrorResult();
         //await _dataContext.SaveChangesAsync();
+        TaskDone.Status = TaskStatus.Done;
         result.Played = DateTime.Now;
         result.Status = GameStatus.Played;
         result.Winner = winner;
-        _dataContext.Update(result);
-        Console.WriteLine("konrsw " + winner+ " "+result.Winner);
+        await _achievementsRepository.UpDateProgressNoSave(AchievementsTypes.GamePlayed, winner);
+        await _achievementsRepository.UpDateProgressNoSave(AchievementsTypes.WinGames, winner);
+        var bots = await _dataContext.MatchPlayers.Where(x => x.MatchId == matchId && x.BotId != winner).ToListAsync();
+        foreach (var bot in bots)
+        {
+            await _achievementsRepository.UpDateProgressNoSave(AchievementsTypes.GamePlayed, bot.Id);
+        }
+        
         await _dataContext.SaveChangesAsync();
-        Console.WriteLine("koniec a");
         return new Success();
     }
     

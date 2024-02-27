@@ -13,5 +13,6 @@ public interface IAchievementsRepository
     Task<HandlerResult<Success, IErrorResult>> UnlockAchievement(long playerId, long achievementTypeId, long currentPlayerThreshold);
     Task<HandlerResult<SuccessData<List<AchievementTypeDto>>, IErrorResult>> GetAchievementTypes();
     Task<HandlerResult<Success, IErrorResult>> UpDateProgress(AchievementsTypes type, long userId);
+    Task<HandlerResult<Success, IErrorResult>> UpDateProgressNoSave(AchievementsTypes type, long botId);
 
 }

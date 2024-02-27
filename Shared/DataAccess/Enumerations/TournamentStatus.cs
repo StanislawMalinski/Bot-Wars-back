@@ -7,6 +7,7 @@
 		PLAYED,
 		DONE,
 		SUSPENDED,
-		INPLAY
+		INPLAY,
+		NOTSCHEDULED
 	}
 }

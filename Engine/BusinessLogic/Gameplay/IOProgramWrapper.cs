@@ -99,8 +99,7 @@ public class IOProgramWrapper : ICorespondable
         {
             return false;
         }
-        Console.WriteLine("piseczos do pliku");
-        await sw.WriteLineAsync(data+"\n");
+        await sw.WriteLineAsync(data);
         return true;
     }
 
