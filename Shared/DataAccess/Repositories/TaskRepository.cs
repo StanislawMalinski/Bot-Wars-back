@@ -36,6 +36,15 @@ public class TaskRepository
             Data = res.Entity.Id
         };
     }
+    public async Task<HandlerResult<SuccessData<_Task>, IErrorResult>> GetTask(long taskId)
+    {
+        var res = await _taskDataContext.Tasks.FirstOrDefaultAsync(x => x.Id == taskId);
+        if (res == null) return new EntityNotFoundErrorResult();
+        return new SuccessData<_Task>()
+        {
+            Data = res
+        };
+    }
     
     
     
@@ -49,21 +58,24 @@ public class TaskRepository
         };
     }
     
-    public async Task<HandlerResult<SuccessData<_Task>, IErrorResult>> StartTask(long taskId)
-    {
-        var res = await _taskDataContext.Tasks.FirstOrDefaultAsync(x => x.Id == taskId);
-        if (res == null) return new EntityNotFoundErrorResult();
-        return new SuccessData<_Task>()
-        {
-            Data = res
-        };
-    }
+   
     
     public async Task<HandlerResult<Success, IErrorResult>> TaskComplete(long taskId)
     {
         var res = await _taskDataContext.Tasks.FirstOrDefaultAsync(x => x.Id == taskId);
         if (res == null) return new EntityNotFoundErrorResult();
         res.Status = TaskStatus.Done;
+        await _taskDataContext.SaveChangesAsync();
+        return new Success();
+    }
+    
+    public async Task<HandlerResult<Success, IErrorResult>> RestartTasks()
+    {
+        var res = await _taskDataContext.Tasks.Where(x => x.Status == TaskStatus.Doing).ToListAsync();
+        foreach (var task in res)
+        {
+            task.Status = TaskStatus.ToDo;
+        }
         await _taskDataContext.SaveChangesAsync();
         return new Success();
     }

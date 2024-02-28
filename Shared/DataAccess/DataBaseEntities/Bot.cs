@@ -1,4 +1,6 @@
-﻿namespace Shared.DataAccess.DataBaseEntities
+﻿using Shared.DataAccess.Enumerations;
+
+namespace Shared.DataAccess.DataBaseEntities
 {
     public class Bot
     {
@@ -6,6 +8,7 @@
         public long PlayerId { get; set; }
         public Player? Player { get; set; }
         public long GameId { get; set; }   
+        public BotStatus Validation { get; set; }  
         public Game? Games { get; set; }
         public string BotFile { get; set; }
 

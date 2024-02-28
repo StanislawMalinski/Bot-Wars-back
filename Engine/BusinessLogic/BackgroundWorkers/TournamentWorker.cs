@@ -11,19 +11,18 @@ namespace Engine.BusinessLogic.BackgroundWorkers;
 
 public class TournamentWorker: IInvocable 
 {
-    private IScheduler _scheduler; 
-    //private ICache _cache;
-    
-    private TournamentRepository _tournamentRepository;
-    private IAchievementsRepository _achievementsRepository;
-    private MatchRepository _matchRepository;
-    private TaskRepository _taskRepository;
-    public long TourId { get; set; }
-    public TournamentWorker(IScheduler scheduler ,TournamentRepository tournamentRepository,TaskRepository taskRepository, MatchRepository matchRepository , IAchievementsRepository achievementsRepository,long tournamentId)
+    private readonly IScheduler _scheduler; 
+    private readonly TournamentRepository _tournamentRepository;
+    private readonly IAchievementsRepository _achievementsRepository;
+    private readonly MatchRepository _matchRepository;
+    private readonly TaskRepository _taskRepository;
+    private long TaskId { get; set; }
+    private long TourId { get; set; }
+    public TournamentWorker(IScheduler scheduler ,TournamentRepository tournamentRepository,TaskRepository taskRepository, MatchRepository matchRepository , IAchievementsRepository achievementsRepository,long task)
     {
         _scheduler = scheduler;
         _tournamentRepository = tournamentRepository;
-        TourId = tournamentId;
+        TaskId = task;
         _matchRepository = matchRepository;
         _achievementsRepository = achievementsRepository;
         _taskRepository = taskRepository;
@@ -33,9 +32,10 @@ public class TournamentWorker: IInvocable
     {
         
         Console.WriteLine("jaki tunie działa");
-       
-        Game gamebot = (await _tournamentRepository.TournamentGame(TourId)).Match(x=>x.Data,x=>null);
-        List<int> keylist;
+        _Task? task = (await _taskRepository.GetTask(TaskId)).Match(x=>x.Data,x=>null);
+        if(task == null) return;
+        TourId = task.OperatingOn;
+        Game? gameBot = (await _tournamentRepository.TournamentGame(TourId)).Match(x=>x.Data,x=>null);
         if ((await _matchRepository.AreAny(TourId)).IsError)
         {
             
@@ -47,9 +47,13 @@ public class TournamentWorker: IInvocable
             {
                 if (bots.Count == 1)
                 {
-                    await _achievementsRepository.UpDateProgress(AchievementsTypes.TournamentsWon, bots.First().PlayerId);
+                    await _tournamentRepository.TournamentEnded(TourId,bots.First().Id,TaskId);
                 }
-                await _tournamentRepository.TournamentEnded(TourId);
+                else
+                {
+                    await _tournamentRepository.TournamentEnded(TourId,TaskId);
+                }
+                
             }
             MadeHeap(bots);
             
@@ -60,8 +64,8 @@ public class TournamentWorker: IInvocable
             {
                 await _matchRepository.PlayMatch(p);
             }
-            _scheduler.ScheduleWithParams<TournamentWorker>(TourId)
-                .EverySeconds(8).Once().PreventOverlapping("TournamentWorker"+ DateTime.Now+" "+ TourId);
+            _scheduler.ScheduleWithParams<TournamentWorker>(TaskId)
+                .EverySeconds(8).Once().PreventOverlapping("TournamentWorker"+ DateTime.Now+" "+ TaskId);
             return;
         }
 
@@ -79,20 +83,19 @@ public class TournamentWorker: IInvocable
         var tournamentWinner = await _matchRepository.IsResolve(TourId, "0");
         if (tournamentWinner.IsError)
         {
-            _scheduler.ScheduleWithParams<TournamentWorker>(TourId)
-                .EverySeconds(8).Once().PreventOverlapping("TournamentWorker"+ DateTime.Now+" "+ TourId);
+            _scheduler.ScheduleWithParams<TournamentWorker>(TaskId)
+                .EverySeconds(8).Once().PreventOverlapping("TournamentWorker"+ DateTime.Now+" "+ TaskId);
             return;
         }
         
-        //var botTWinner = lastGame.Match(x => x.Data, x=>null);
-        //await _achievementsRepository.UpDateProgress(AchievementsTypes.GamePlayed, res.BotWinner.PlayerId);
-        //await _achievementsRepository.UpDateProgress(AchievementsTypes.WinGames, res.BotWinner.PlayerId);
-        //await _achievementsRepository.UpDateProgress(AchievementsTypes.GamePlayed, res.BotLoser.PlayerId);
-        //await _achievementsRepository.UpDateProgress(AchievementsTypes.TournamentsWon, botTWinner.PlayerId);
-        
 
-        await _tournamentRepository.TournamentEnded(TourId);
-        Console.WriteLine("finished tournament");
+        var end = await _tournamentRepository.TournamentEnded(TourId,TaskId);
+        if (end.IsError)
+        {
+            _scheduler.ScheduleWithParams<TournamentWorker>(TaskId)
+                .EverySeconds(8).Once().PreventOverlapping("TournamentWorker"+ DateTime.Now+" "+ TaskId);
+        }
+        Console.WriteLine("finished tournament "+ TaskId + " " + TourId);
         
        
         

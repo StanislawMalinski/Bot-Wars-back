@@ -1,14 +1,15 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Shared.DataAccess.Context;
-using Shared.DataAccess.DAO;
 using Shared.DataAccess.DTO;
 using Shared.DataAccess.DataBaseEntities;
 using Shared.DataAccess.Enumerations;
 using Shared.DataAccess.Mappers;
+using Shared.DataAccess.RepositoryInterfaces;
 using Shared.Results;
 using Shared.Results.ErrorResults;
 using Shared.Results.IResults;
 using Shared.Results.SuccessResults;
+using TaskStatus = Shared.DataAccess.Enumerations.TaskStatus;
 
 namespace Shared.DataAccess.Repositories
 {
@@ -16,10 +17,12 @@ namespace Shared.DataAccess.Repositories
     {
         private readonly DataContext _dataContext;
         private readonly ITournamentMapper _mapper;
-        public TournamentRepository(DataContext dataContext, ITournamentMapper mapper)
+        private readonly IAchievementsRepository _achievementsRepository;
+        public TournamentRepository(DataContext dataContext, ITournamentMapper mapper,IAchievementsRepository achievementsRepository)
         {
             _dataContext = dataContext;
             _mapper = mapper;
+            _achievementsRepository = achievementsRepository;
         }
         
         public async Task<HandlerResult<Success, IErrorResult>> CreateTournamentAsync(TournamentDto dto)
@@ -27,7 +30,7 @@ namespace Shared.DataAccess.Repositories
             
             Tournament tournament = _mapper.DtoToTournament(dto);
             tournament.PostedDate = DateTime.Now;
-            tournament.Status = TournamentStatus.SCHEDULED;
+            tournament.Status = TournamentStatus.NOTSCHEDULED;
             await _dataContext.Tournaments.AddAsync(tournament);
             await _dataContext.SaveChangesAsync();
             return new Success();
@@ -36,7 +39,7 @@ namespace Shared.DataAccess.Repositories
         public async Task<HandlerResult<Success, IErrorResult>> DeleteTournamentAsync(long id)
         {
             
-            Tournament tournament = await _dataContext.Tournaments.FindAsync(id);
+            Tournament? tournament = await _dataContext.Tournaments.FindAsync(id);
             if (tournament == null) return new EntityNotFoundErrorResult()
             { 
                 Title = "result null",
@@ -50,7 +53,7 @@ namespace Shared.DataAccess.Repositories
         public async Task<HandlerResult<SuccessData<TournamentDto>, IErrorResult>> GetTournamentAsync(long id)
         {
             
-            Tournament tournament = await _dataContext.Tournaments.FindAsync(id);
+            Tournament? tournament = await _dataContext.Tournaments.FindAsync(id);
             if (tournament == null) return new EntityNotFoundErrorResult() 
             { 
                 Title = "return null",
@@ -65,22 +68,22 @@ namespace Shared.DataAccess.Repositories
 
         public async Task<HandlerResult<Success, IErrorResult>> UpdateTournamentAsync(TournamentDto dto)
         {
-            Tournament TournamentToEdit = await _dataContext.Tournaments.FindAsync(dto.Id);
-            if (TournamentToEdit == null) return new EntityNotFoundErrorResult() 
+            Tournament? tournamentToEdit = await _dataContext.Tournaments.FindAsync(dto.Id);
+            if (tournamentToEdit == null) return new EntityNotFoundErrorResult() 
             { 
                 Title = "return null",
                 Message = $"Tournament of id {dto.Id} dont exits" 
             };
             Tournament tournament = _mapper.DtoToTournament(dto);
 
-            TournamentToEdit.TournamentTitle = tournament.TournamentTitle;
-            TournamentToEdit.Description = tournament.Description;
-            TournamentToEdit.GameId = tournament.GameId;
-            TournamentToEdit.PlayersLimit = tournament.PlayersLimit;
-            TournamentToEdit.TournamentsDate = tournament.TournamentsDate;
-            TournamentToEdit.Status = tournament.Status;
-            TournamentToEdit.Constraints = tournament.Constraints;
-            TournamentToEdit.Image = tournament.Image;
+            tournamentToEdit.TournamentTitle = tournament.TournamentTitle;
+            tournamentToEdit.Description = tournament.Description;
+            tournamentToEdit.GameId = tournament.GameId;
+            tournamentToEdit.PlayersLimit = tournament.PlayersLimit;
+            tournamentToEdit.TournamentsDate = tournament.TournamentsDate;
+            tournamentToEdit.Status = tournament.Status;
+            tournamentToEdit.Constraints = tournament.Constraints;
+            tournamentToEdit.Image = tournament.Image;
 
             await _dataContext.SaveChangesAsync();
             return new Success();
@@ -91,10 +94,10 @@ namespace Shared.DataAccess.Repositories
         public async Task<HandlerResult<SuccessData<List<TournamentDto>>, IErrorResult>> GetTournamentsAsync()
         {
             
-                var dtos = _dataContext.Tournaments.Select(x => _mapper.TournamentToDTO(x)).ToList();
+                var dto = await _dataContext.Tournaments.Select(x => _mapper.TournamentToDTO(x)).ToListAsync();
                 return new SuccessData<List<TournamentDto>>()
                 {
-                    Data = dtos
+                    Data = dto
                 };
 
         }
@@ -186,12 +189,13 @@ namespace Shared.DataAccess.Repositories
             var result =  await _dataContext.TournamentReferences.Where(x => x.tournamentId == tournamentId).Include(x=>x.Bot).Select(x=>x.Bot).ToListAsync();
             return new SuccessData<List<Bot>>()
             {
-                Data = result
+                Data = result!
             };
         }
         public async Task<HandlerResult<SuccessData<Game>, IErrorResult>> TournamentGame(long tournamentId)
         {
             var result = await _dataContext.Tournaments.FindAsync(tournamentId);
+            if (result == null) return new EntityNotFoundErrorResult();
             var gameResult = await _dataContext.Games.FindAsync(result.GameId);
             return new SuccessData<Game>()
             {
@@ -199,13 +203,46 @@ namespace Shared.DataAccess.Repositories
             };
         }
 
-        public async Task<HandlerResult<Success, IErrorResult>> TournamentEnded(long tournamentId)
+        public async Task<HandlerResult<Success, IErrorResult>> TournamentEnded(long tournamentId,long winner,long taskId)
         {
             var res = await _dataContext.Tournaments.FindAsync(tournamentId);
+            var taskRes = await _dataContext.Tasks.FindAsync(taskId);
+            if (res == null || taskRes == null) return new EntityNotFoundErrorResult();
             res.Status = TournamentStatus.PLAYED;
-            //res.Synchronized = false;
+            taskRes.Status = TaskStatus.Done;
+            await _achievementsRepository.UpDateProgressNoSave(AchievementsTypes.TournamentsWon, winner);
             await _dataContext.SaveChangesAsync();
             return new Success();
         }
+        
+        public async Task<HandlerResult<Success, IErrorResult>> TournamentEnded(long tournamentId,long taskId)
+        {
+            var res = await _dataContext.Tournaments.FindAsync(tournamentId);
+            var taskRes = await _dataContext.Tasks.FindAsync(taskId);
+            if (res == null || taskRes == null) return new EntityNotFoundErrorResult();
+            res.Status = TournamentStatus.PLAYED;
+            taskRes.Status = TaskStatus.Done;
+            await _dataContext.SaveChangesAsync();
+            return new Success();
+        }
+        
+        public async Task<HandlerResult<Success, IErrorResult>> ScheduleTournament(long tournamentId)
+        {
+            var res = await _dataContext.Tournaments.FindAsync(tournamentId);
+            if (res == null) return new EntityNotFoundErrorResult();
+            if (res.Status != TournamentStatus.NOTSCHEDULED) return new IncorrectOperation();
+            res.Status = TournamentStatus.SCHEDULED;
+            _Task task = new _Task
+            {
+                OperatingOn = tournamentId,
+                ScheduledOn = res.TournamentsDate,
+                Status = TaskStatus.ToDo,
+                Type = TaskTypes.PlayTournament
+            };
+            await _dataContext.Tasks.AddAsync(task);
+            await _dataContext.SaveChangesAsync();
+            return new Success();
+        }
+        
     }
 }

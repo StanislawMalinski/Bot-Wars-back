@@ -85,7 +85,7 @@ public class FileManager
         string[] dirs = Directory.GetFiles(GameFilePath, id + ".*");
         foreach(string s in dirs)
         {
-            if (Path.GetExtension(s) == ".cpp")
+            if (Path.GetExtension(s) == ".out")
             {
                 return s;
             }
