@@ -1,6 +1,7 @@
 version: '3.8'
 
 services:
+
     bot_wars_db:
         image: "mcr.microsoft.com/mssql/server:2022-latest"
         ports:
@@ -11,6 +12,7 @@ services:
             MSSQL_PID: "Evaluation"
         volumes:
             - bot_wars_db:/var/lib/mssql
+
     bot_wars_api:
         image: stanislawmalinski/bot-wars-api:latest
         ports:
@@ -25,6 +27,19 @@ services:
                sleep 5
                dotnet ef migrations add migration
                dotnet ef database update
+
+    bot_wars_front:
+        image: "ghcr.io/jordus100/bot-wars-front:master"
+        ports:
+          - "3000:80"
+
+    proxy:
+        build: ./proxy
+        ports:
+          - "80:80"
+        depends_on:
+          - bot_wars_front
+          - bot_wars_api
 
 volumes:
   bot_wars_db:
