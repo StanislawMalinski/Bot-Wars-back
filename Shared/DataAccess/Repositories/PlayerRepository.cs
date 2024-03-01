@@ -3,7 +3,7 @@ using System.Security.Claims;
 using System.Text;
 using BotWars;
 using Shared.DataAccess.Context;
-using Shared.DataAccess.DAO;
+using Shared.DataAccess.DTO;
 using Shared.DataAccess.Mappers;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -42,8 +42,8 @@ namespace Shared.DataAccess.Repositories
             {
                 return new BadAccountInformationError()
                 {
-                    Title = "Return null",
-                    Message = "Niepoprawny email lub haslo"
+                    Title = "BadAccountInformationError 404",
+                    Message = "Player could not have been found"
                 };
             }
 

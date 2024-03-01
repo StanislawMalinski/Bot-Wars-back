@@ -1,6 +1,6 @@
 ﻿using Communication.ServiceInterfaces;
 using Communication.Services.Validation;
-using Shared.DataAccess.DAO;
+using Shared.DataAccess.DTO;
 using Shared.DataAccess.RepositoryInterfaces;
 using Shared.Results;
 using Shared.Results.ErrorResults;

@@ -1,5 +1,6 @@
 ﻿using Shared.DataAccess.DAO;
 using Shared.DataAccess.DataBaseEntities;
+using Shared.DataAccess.DTO;
 
 namespace Shared.DataAccess.Mappers
 {

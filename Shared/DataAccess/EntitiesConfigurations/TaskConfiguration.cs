@@ -13,7 +13,7 @@ public class TaskConfiguration : IEntityTypeConfiguration<_Task>
         builder.Property(x => x.Type)
             .IsRequired();
 
-        builder.Property(x => x.Refid)
+        builder.Property(x => x.OperatingOn)
             .IsRequired();
 
         builder.Property(x => x.Status)
@@ -23,9 +23,6 @@ public class TaskConfiguration : IEntityTypeConfiguration<_Task>
         builder.Property(x => x.ScheduledOn)
             .IsRequired();
 
-        builder.HasOne(x => x.ParentTask)
-            .WithMany(x => x.ChildrenTask)
-            .HasForeignKey(x => x.ParentTaskId)
-            .OnDelete(DeleteBehavior.NoAction);
+       
     }
 }

@@ -162,7 +162,7 @@ public class Seeder
                     "Compete in the ultimate Quake III Arena tournament and prove your skills in fast-paced multiplayer battles.",
                 PostedDate = DateTime.Now,
                 TournamentsDate = new DateTime(2023, 1, 20),
-                WasPlayedOut = false,
+                Status = TournamentStatus.PLAYED,
                 Constraints = "Participants must have a minimum skill level of intermediate.",
                 Image = "quakethreearena.jpg" // You can replace this with the actual image file or URL
             },
@@ -175,7 +175,7 @@ public class Seeder
                     "Embark on a quest to become the master of The Legend of Zelda: Breath of the Wild. Solve puzzles and defeat foes to claim victory.",
                 PostedDate = DateTime.Now,
                 TournamentsDate = new DateTime(2023, 2, 15),
-                WasPlayedOut = false,
+                Status = TournamentStatus.PLAYED,
                 Constraints = "Participants must complete the game on a specific difficulty level.",
                 Image = "zeldabreathofthewild.jpg" // You can replace this with the actual image file or URL
             },
@@ -188,7 +188,7 @@ public class Seeder
                     "Experience the thrill of virtual football in the FIFA 22 World Cup. Compete with players from around the globe for the championship.",
                 PostedDate = DateTime.Now,
                 TournamentsDate = new DateTime(2023, 3, 10),
-                WasPlayedOut = false,
+                Status = TournamentStatus.PLAYED,
                 Constraints = "Teams must consist of real-world players.",
                 Image = "fifa22worldcup.jpg" // You can replace this with the actual image file or URL
             },
@@ -201,7 +201,7 @@ public class Seeder
                     "Test your deception skills in the Among Us Infiltration Challenge. Work as a crew member or impostor to secure victory.",
                 PostedDate = DateTime.Now,
                 TournamentsDate = new DateTime(2022, 4, 5),
-                WasPlayedOut = true,
+                Status = TournamentStatus.PLAYED,
                 Constraints = "Players must use voice communication during the game.",
                 Image = "amongusinfiltration.jpg" // You can replace this with the actual image file or URL
             },
@@ -214,7 +214,7 @@ public class Seeder
                     "Showcase your creative building skills in the Minecraft Building Showcase. Construct impressive structures and compete for recognition.",
                 PostedDate = DateTime.Now,
                 TournamentsDate = new DateTime(2023, 5, 20),
-                WasPlayedOut = false,
+                Status = TournamentStatus.PLAYED,
                 Constraints = "Builds must adhere to a specific theme.",
                 Image = "minecraftbuildingshowcase.jpg" // You can replace this with the actual image file or URL
             },
@@ -227,7 +227,7 @@ public class Seeder
                     "Immerse yourself in the cyberpunk world of Night City. Compete in cyberwarfare challenges and emerge as the ultimate netrunner.",
                 PostedDate = DateTime.Now,
                 TournamentsDate = new DateTime(2022, 6, 15),
-                WasPlayedOut = true,
+                Status = TournamentStatus.PLAYED,
                 Constraints = "Participants must customize their character's appearance.",
                 Image = "cyberpunk2077challenge.jpg" // You can replace this with the actual image file or URL
             },
@@ -240,7 +240,7 @@ public class Seeder
                     "Take part in high-flying, rocket-powered soccer action. Compete in the Rocket League Championship and score goals to victory.",
                 PostedDate = DateTime.Now,
                 TournamentsDate = new DateTime(2023, 7, 1),
-                WasPlayedOut = false,
+                Status = TournamentStatus.PLAYED,
                 Constraints = "Teams must consist of three players.",
                 Image = "rocketleaguechampionship.jpg" // You can replace this with the actual image file or URL
             },
@@ -253,7 +253,7 @@ public class Seeder
                     "Join the intense battle royale action in Call of Duty: Warzone. Compete against other squads to be the last team standing.",
                 PostedDate = DateTime.Now,
                 TournamentsDate = new DateTime(2023, 8, 10),
-                WasPlayedOut = false,
+                Status = TournamentStatus.PLAYED,
                 Constraints = "Players must adhere to the battle royale ruleset.",
                 Image = "callofdutywarzone.jpg" // You can replace this with the actual image file or URL
             },
@@ -266,7 +266,7 @@ public class Seeder
                     "Create the most charming and unique island paradise in the Animal Crossing Island Showcase. Display your creativity and win accolades.",
                 PostedDate = DateTime.Now,
                 TournamentsDate = new DateTime(2023, 9, 5),
-                WasPlayedOut = false,
+                Status = TournamentStatus.PLAYED,
                 Constraints = "Islands must be designed within a specific theme.",
                 Image = "animalcrossingislandshowcase.jpg" // You can replace this with the actual image file or URL
             },
@@ -279,7 +279,7 @@ public class Seeder
                     "Enter the world of strategic battles in the Dota 2 Clash of Titans. Assemble your team, choose your heroes, and conquer the opposition.",
                 PostedDate = DateTime.Now,
                 TournamentsDate = new DateTime(2023, 10, 20),
-                WasPlayedOut = false,
+                Status = TournamentStatus.PLAYED,
                 Constraints = "Teams must adhere to the standard Dota 2 competitive rules.",
                 Image = "dota2clashoftitans.jpg" // You can replace this with the actual image file or URL
             }
@@ -312,6 +312,11 @@ public class Seeder
             new TournamentReference() { Id = 3, tournamentId = 2, botId = 3 },
             new TournamentReference() { Id = 4, tournamentId = 2, botId = 4 },
             new TournamentReference() { Id = 5, tournamentId = 5, botId = 10 },
+            new TournamentReference() { Id = 6, tournamentId = 1, botId = 5 },
+            new TournamentReference() { Id = 7, tournamentId = 1, botId = 6 },
+            new TournamentReference() { Id = 8, tournamentId = 1, botId = 7 },
+            new TournamentReference() { Id = 9, tournamentId = 1, botId = 8 },
+            new TournamentReference() { Id = 10, tournamentId = 1, botId = 9 },
         };
     }
 
