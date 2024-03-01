@@ -18,6 +18,7 @@ public class TournamentWorker: IInvocable
     private readonly TaskRepository _taskRepository;
     private long TaskId { get; set; }
     private long TourId { get; set; }
+    private Dictionary<int,GameInfo> _games;
     public TournamentWorker(IScheduler scheduler ,TournamentRepository tournamentRepository,TaskRepository taskRepository, MatchRepository matchRepository , IAchievementsRepository achievementsRepository,long task)
     {
         _scheduler = scheduler;
@@ -38,7 +39,7 @@ public class TournamentWorker: IInvocable
         Game? gameBot = (await _tournamentRepository.TournamentGame(TourId)).Match(x=>x.Data,x=>null);
         if ((await _matchRepository.AreAny(TourId)).IsError)
         {
-            
+            await _tournamentRepository.TournamentPlaying(TourId);
             var botList = await _tournamentRepository.TournamentBotsToPlay(TourId);
             //var tournament = (await _tournamentRepository.GetTournamentAsync(TourId)).Match(x=>x.Data,x=>null);
             List<Bot?> bots = botList.Match(x => x.Data, x => new List<Bot>());
@@ -100,11 +101,7 @@ public class TournamentWorker: IInvocable
        
         
     }
-
-   
     
-
-    private Dictionary<int,GameInfo> _games;
 
     private void MadeHeap(List<Bot?> bots)
     {

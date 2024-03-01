@@ -27,8 +27,16 @@ namespace Shared.DataAccess.Repositories
         
         public async Task<HandlerResult<Success, IErrorResult>> CreateTournamentAsync(TournamentDto dto)
         {
-            
-            Tournament tournament = _mapper.DtoToTournament(dto);
+            var game = await _dataContext.Games.FindAsync(dto.GameId);
+            if (game is null)
+            {
+                return new EntityNotFoundErrorResult
+                { 
+                    Title = "EntityNotFoundErrorResult 404",
+                    Message = "Game with given id could not have been found" 
+                };
+            }
+            var tournament = _mapper.DtoToTournament(dto);
             tournament.PostedDate = DateTime.Now;
             tournament.Status = TournamentStatus.NOTSCHEDULED;
             await _dataContext.Tournaments.AddAsync(tournament);
@@ -68,6 +76,15 @@ namespace Shared.DataAccess.Repositories
 
         public async Task<HandlerResult<Success, IErrorResult>> UpdateTournamentAsync(TournamentDto dto)
         {
+            var game = await _dataContext.Games.FindAsync(dto.GameId);
+            if (game is null)
+            {
+                return new EntityNotFoundErrorResult
+                { 
+                    Title = "EntityNotFoundErrorResult 404",
+                    Message = "Game with given id could not have been found" 
+                };
+            }
             Tournament? tournamentToEdit = await _dataContext.Tournaments.FindAsync(dto.Id);
             if (tournamentToEdit == null) return new EntityNotFoundErrorResult() 
             { 
@@ -130,16 +147,26 @@ namespace Shared.DataAccess.Repositories
             {
                 return new AlreadyRegisterForTournamentError()
                 {
-                    Title = "Tournament Registration",
+                    Title = "AlreadyRegisterForTournamentError 400",
                     Message = "You are already registered for tournament"
                 };
             }
+            
             var tournamentReference = new TournamentReference
             {
                 tournamentId = tournamentId,
                 botId = botId,
                 LastModification = new DateTime()
             };
+
+            if (tournament.Status is not (TournamentStatus.SCHEDULED or TournamentStatus.NOTSCHEDULED))
+            {
+                return new TournamentIsBeingPlayedError()
+                {
+                    Title = "TournamentIsBeingPlayedError 400",
+                    Message = "You cannot register a bot while the tournament is being played or has been finished"
+                }; 
+            }
             await _dataContext.TournamentReferences.AddAsync(tournamentReference);
             await _dataContext.SaveChangesAsync();
             return new Success();
@@ -178,7 +205,14 @@ namespace Shared.DataAccess.Repositories
                     Message = "You were not registered for tournament"
                 };
             }
-
+            if (tournament.Status is not (TournamentStatus.SCHEDULED or TournamentStatus.NOTSCHEDULED))
+            {
+                return new TournamentIsBeingPlayedError()
+                {
+                    Title = "TournamentIsBeingPlayedError 400",
+                    Message = "You cannot unregister a bot while the tournament is being played or has been finished"
+                }; 
+            }
             _dataContext.TournamentReferences.Remove(result);
             await _dataContext.SaveChangesAsync();
             return new Success();
@@ -222,6 +256,15 @@ namespace Shared.DataAccess.Repositories
             if (res == null || taskRes == null) return new EntityNotFoundErrorResult();
             res.Status = TournamentStatus.PLAYED;
             taskRes.Status = TaskStatus.Done;
+            await _dataContext.SaveChangesAsync();
+            return new Success();
+        }
+        
+        public async Task<HandlerResult<Success, IErrorResult>> TournamentPlaying(long tournamentId)
+        {
+            var res = await _dataContext.Tournaments.FindAsync(tournamentId);
+            if (res == null) return new EntityNotFoundErrorResult();
+            res.Status = TournamentStatus.INPLAY;
             await _dataContext.SaveChangesAsync();
             return new Success();
         }

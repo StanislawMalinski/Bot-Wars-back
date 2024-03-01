@@ -42,8 +42,8 @@ namespace Shared.DataAccess.Repositories
             {
                 return new BadAccountInformationError()
                 {
-                    Title = "Return null",
-                    Message = "Niepoprawny email lub haslo"
+                    Title = "BadAccountInformationError 404",
+                    Message = "Player could not have been found"
                 };
             }
 
