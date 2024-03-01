@@ -226,6 +226,15 @@ namespace Shared.DataAccess.Repositories
             return new Success();
         }
         
+        public async Task<HandlerResult<Success, IErrorResult>> TournamentPlaying(long tournamentId)
+        {
+            var res = await _dataContext.Tournaments.FindAsync(tournamentId);
+            if (res == null) return new EntityNotFoundErrorResult();
+            res.Status = TournamentStatus.INPLAY;
+            await _dataContext.SaveChangesAsync();
+            return new Success();
+        }
+        
         public async Task<HandlerResult<Success, IErrorResult>> ScheduleTournament(long tournamentId)
         {
             var res = await _dataContext.Tournaments.FindAsync(tournamentId);
