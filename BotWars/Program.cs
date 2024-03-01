@@ -60,7 +60,8 @@ builder.Services
     .AddFileSystem()
     .AddUserSettings()
     .AddPointsSettings()
-    .AddAchievements();
+    .AddAchievements()
+    .AddBot();
 
 builder.Services.AddDbContext<DataContext>(options =>
 {

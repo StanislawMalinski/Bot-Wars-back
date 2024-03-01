@@ -1,4 +1,4 @@
-using Shared.DataAccess.DataBaseEntities;
+﻿using Shared.DataAccess.DataBaseEntities;
 using Shared.DataAccess.DTO.Requests;
 using Shared.DataAccess.DTO.Responses;
 using Shared.Results;
@@ -7,7 +7,7 @@ using Shared.Results.SuccessResults;
 
 namespace Shared.DataAccess.RepositoryInterfaces;
 
-public interface IBotService
+public interface IBotRepository
 {
     Task<HandlerResult<SuccessData<List<BotResponse>>, IErrorResult>> GetAllBots();
     Task<HandlerResult<SuccessData<BotResponse>, IErrorResult>> GetBotResponse(long botId);
