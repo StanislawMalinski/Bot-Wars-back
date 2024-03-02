@@ -22,11 +22,10 @@ public class TScheduler: IInvocable
         _schedulerRepository = schedulerRepository;
         _scheduler = scheduler;
     }
-    
 
     public async Task Invoke()
     {
-        Console.WriteLine("Pobranie zadń do zrobienia");
+        Console.WriteLine("Loading tasks");
         var tasks = (await _schedulerRepository.TaskToDo()).Match(x=>x.Data,x=>new List<_Task>());
         foreach (var t in tasks)
         {
@@ -52,11 +51,8 @@ public class TScheduler: IInvocable
                         _scheduler.ScheduleWithParams<ValidationWorker>(t.Id).EverySecond().Once().PreventOverlapping("Validation worker " + t.Id);
                     }
                     break;
-                
-                    
             }
         }
-        Console.WriteLine("zadania wykonane");
-
+        Console.WriteLine("All tasks completed");
     }
 }
