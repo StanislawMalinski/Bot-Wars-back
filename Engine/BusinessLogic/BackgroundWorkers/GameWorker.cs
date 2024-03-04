@@ -1,6 +1,7 @@
 ﻿using Coravel.Cache.Interfaces;
 using Coravel.Invocable;
 using Engine.BusinessLogic.BackgroundWorkers.Data;
+using Engine.BusinessLogic.BackgroundWorkers.Resolvers;
 using Engine.BusinessLogic.Gameplay;
 using Engine.BusinessLogic.Gameplay.Interface;
 using Shared.DataAccess.DataBaseEntities;
@@ -11,14 +12,10 @@ namespace Engine.BusinessLogic.BackgroundWorkers;
 
 public class GameWorker: IInvocable
 {
-    private readonly IAchievementsRepository _achievementsRepository;
-    private readonly MatchRepository _matchRepository;
-    private readonly TaskRepository _taskRepository;
-    public GameWorker(IAchievementsRepository achievementsRepository,MatchRepository matchRepository,TaskRepository taskRepository, long taskId)
+    private readonly MatchResolver _resolver;
+    public GameWorker(MatchResolver matchResolver, long taskId)
     {
-        _achievementsRepository = achievementsRepository;
-        _matchRepository = matchRepository;
-        _taskRepository = taskRepository;
+        _resolver = matchResolver;
         TaskId = taskId;
     }
 
@@ -28,12 +25,16 @@ public class GameWorker: IInvocable
     {
         Console.WriteLine("inwoke gam workek " +TaskId);
         GameManager gameManager = new GameManager();
-        _Task task = (await _taskRepository.GetTask(TaskId)).Match(x=>x.Data,x=>null);
-        var botlist = (await _matchRepository.AllBots(task.OperatingOn)).Match(x=>x.Data,x=>new List<Bot>());
-        var game = (await _matchRepository.GetGame(task.OperatingOn)).Match(x=>x.Data,x=>null);
+        Console.WriteLine("i???sdd");
+        _Task task = (await _resolver.GetTask(TaskId)).Match(x=>x.Data,x=>null);
+        Console.WriteLine("inwoke gam workek asdasdsa");
+        var botlist = (await _resolver.GetBotsInMatch(task.OperatingOn)).Match(x=>x.Data,x=>new List<Bot>());
+        var game = (await _resolver.GetMatchGame(task.OperatingOn)).Match(x=>x.Data,x=>null);
+        Console.WriteLine("inwoke gamsdadasd");
         GameResult result = await gameManager.PlayGame(game, botlist);
         SuccessfullGameResult sr = (SuccessfullGameResult) result;
-        await _matchRepository.Winner(task.OperatingOn, sr.BotWinner.Id, TaskId);
+        Console.WriteLine("inwodfs");
+        await _resolver.MatchWinner(task.OperatingOn, sr.BotWinner.Id, TaskId);
 
     }
 }
