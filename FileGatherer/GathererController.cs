@@ -14,8 +14,8 @@ namespace FileGatherer
             _gathererService = gathererService;
         }
 
-        [HttpPut]
-        public async Task<IActionResult> UploadFile()
+        [HttpPut("game")]
+        public async Task<IActionResult> UploadGameFile()
         {
             var file = Request.Form.Files[0];
 
@@ -23,7 +23,7 @@ namespace FileGatherer
             {
                 return BadRequest("No file uploaded");
             }
-            var result = await _gathererService.SaveFile(file);
+            var result = await _gathererService.SaveGameFile(file);
             if (result.Success)
             {
                 return Ok(result.Data);
@@ -34,10 +34,41 @@ namespace FileGatherer
             }
         }
 
-        [HttpGet("{id}")]
-        public async Task<IActionResult> GetFile([FromRoute] long id)
+        [HttpPut("bot")]
+        public async Task<IActionResult> UploadBotFile()
         {
-            var result = await _gathererService.GetFile(id);
+            var file = Request.Form.Files[0];
+
+            if (file == null || file.Length == 0)
+            {
+                return BadRequest("No file uploaded");
+            }
+            var result = await _gathererService.SaveBotFile(file);
+            if (result.Success)
+            {
+                return Ok(result.Data);
+            }
+            else
+            {
+                return StatusCode(500, $"Internal server error: {result.Message}");
+            }
+        }
+
+        [HttpGet("game")]
+        public async Task<IActionResult> GetGameFile([FromBody] string fileName)
+        {
+            var result = await _gathererService.GetGameFile(fileName);
+            if (!result.Success)
+            {
+                return StatusCode(500, $"Internal server error: {result.Message}");
+            }
+            return File(result.Data.Content, "application/octet-stream", result.Data.Name);
+        }
+
+        [HttpGet("bot")]
+        public async Task<IActionResult> GetFile([FromBody] string fileName)
+        {
+            var result = await _gathererService.GetBotFile(fileName);
             if (!result.Success)
             {
                 return StatusCode(500, $"Internal server error: {result.Message}");

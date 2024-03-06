@@ -1,30 +1,57 @@
-﻿namespace FileGatherer
+﻿using Microsoft.EntityFrameworkCore.Diagnostics;
+
+namespace FileGatherer
 {
     public class GathererService
     {
-        private readonly Database _db;
         private readonly string storagePath = "./Storage/";
+        private readonly string gamePath = "Game/";
+        private readonly string botPath = "Bot/";
 
-        public GathererService(Database db)
+        public async Task<ServiceResponse<bool>> SaveGameFile(IFormFile file)
         {
-            _db = db;
+            return await SaveFile(file, storagePath + gamePath + file.FileName);
         }
 
-        public async Task<ServiceResponse<FileDto>> GetFile(long id)
+        public async Task<ServiceResponse<bool>> SaveBotFile(IFormFile file)
+        {
+            return await SaveFile(file, storagePath + botPath + file.FileName);
+        }
+
+        public async Task<ServiceResponse<FileDto>> GetGameFile(string name)
+        {
+            if (!ValidateName(name)) {
+                return new ServiceResponse<FileDto>()
+                {
+                    Success = false,
+                    Message = "Invalid filename"
+                };
+            }
+            return await GetFile(storagePath + gamePath + name);
+        }
+
+        public async Task<ServiceResponse<FileDto>> GetBotFile(string name)
+        {
+            if (!ValidateName(name))
+            {
+                return new ServiceResponse<FileDto>()
+                {
+                    Success = false,
+                    Message = "Invalid filename"
+                };
+            }
+            return await GetFile(storagePath + botPath + name);
+        }
+
+        private bool ValidateName(string name)
+        {
+            return !(name.Contains("/") || name.Contains("\\"));
+        }
+
+        private async Task<ServiceResponse<FileDto>> GetFile(string filePath)
         {
             try
             {
-                var fileData = await _db.Files.FindAsync(id);
-                if (fileData == null)
-                {
-                    Console.WriteLine("File info not in database");
-                    return new ServiceResponse<FileDto>()
-                    {
-                        Success = false,
-                        Message = "File info not in database"
-                    };
-                }
-                string filePath = fileData.Path;
                 if (string.IsNullOrEmpty(filePath) || !File.Exists(filePath))
                 {
                     Console.WriteLine("File not found");
@@ -40,7 +67,6 @@
                     Success = true,
                     Data = new FileDto()
                     {
-                        Name = fileData.FileName,
                         Content = fileBytes
                     }
                 };
@@ -56,36 +82,30 @@
             }
         }
 
-        public async Task<ServiceResponse<long>> SaveFile(IFormFile file)
+        public async Task<ServiceResponse<bool>> SaveFile(IFormFile file, string filePath)
         {
             try
             {
-                string filePath;
-                do
+                if (File.Exists(filePath))
                 {
-                    filePath = storagePath + Guid.NewGuid().ToString();
+                    return new ServiceResponse<bool>()
+                    {
+                        Success = false,
+                        Message = $"File {filePath} already exists"
+                    };
                 }
-                while (File.Exists(filePath));
                 using (var stream = new FileStream(filePath, FileMode.Create))
                 {
                     await file.CopyToAsync(stream);
                 }
-                FileData data = new FileData()
-                {
-                    Path = filePath,
-                    FileName = file.FileName
-                };
-                _db.Files.Add(data);
-                _db.SaveChanges();
-                return new ServiceResponse<long>()
+                return new ServiceResponse<bool>()
                 {
                     Success = true,
-                    Data = data.Id
                 };
             }
             catch (Exception ex)
             {
-                return new ServiceResponse<long>()
+                return new ServiceResponse<bool>()
                 {
                     Success = false,
                     Message = ex.Message
