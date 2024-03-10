@@ -1,4 +1,4 @@
-﻿using Shared.DataAccess.DTO;
+﻿using Shared.DataAccess.DTO.Requests;
 using Shared.DataAccess.RepositoryInterfaces;
 using Shared.Results;
 using Shared.Results.IResults;
@@ -12,19 +12,19 @@ namespace Communication.Services.GameType
 		{
 		}
 
-		public override async Task<HandlerResult<Success,IErrorResult>>  CreateGameType(GameDto game)
+		public override async Task<HandlerResult<Success,IErrorResult>>  CreateGameType(GameRequest gameRequest)
 		{
-			return await _gameTypeServiceProvider.addGameType(game);
+			return await _gameTypeServiceProvider.AddGameType(gameRequest);
 		}
 
 		public override async Task<HandlerResult<Success,IErrorResult>>  DeleteGame(long id)
 		{
-			return await _gameTypeServiceProvider.deleteGameType(id);
+			return await _gameTypeServiceProvider.DeleteGameType(id);
 		}
 
-		public override async Task<HandlerResult<Success,IErrorResult>>  ModifyGameType(long id, GameDto gameDto)
+		public override async Task<HandlerResult<Success,IErrorResult>>  ModifyGameType(long id, GameRequest gameRequest)
 		{
-			return await _gameTypeServiceProvider.updateGameType(id, gameDto);
+			return await _gameTypeServiceProvider.UpdateGameType(id, gameRequest);
 		}
 	}
 }

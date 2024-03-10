@@ -28,7 +28,7 @@ namespace Shared.DataAccess.Context
         public DbSet<_Task> Tasks { get; set; }
         
         public DbSet<NotificationOutbox> NotificationOutboxes { get; set; }
-
+        
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(RoleConfigurations).Assembly);

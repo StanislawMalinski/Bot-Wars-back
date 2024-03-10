@@ -1,8 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Shared.DataAccess.Context;
-using Shared.DataAccess.DAO;
-using Shared.DataAccess.DTO;
-using Shared.DataAccess.DataBaseEntities;
+using Shared.DataAccess.DTO.Requests;
+using Shared.DataAccess.DTO.Responses;
 using Shared.DataAccess.Mappers;
 using Shared.DataAccess.RepositoryInterfaces;
 using Shared.Results;
@@ -24,20 +23,30 @@ public class GameRepository : IGameRepository
     }
 
 
-    public async Task<HandlerResult<Success, IErrorResult>> CreateGameType(GameDto game)
+    public async Task<HandlerResult<Success, IErrorResult>> CreateGameType(GameRequest gameRequest)
     {
         
-        var resGame = await _dataContext.Games.AddAsync(_mapper.ToGameType(game));
+        await _dataContext
+            .Games
+            .AddAsync(_mapper.MapRequestToGame(gameRequest));
+        
         await _dataContext.SaveChangesAsync();
         return new Success();
 
     }
 
-    public async Task<HandlerResult<SuccessData<List<GameDto>>, IErrorResult>> GetGameTypes()
+    public async Task<HandlerResult<SuccessData<List<GameResponse>>, IErrorResult>> GetGames()
     {
-        var resGame = _dataContext.Games.Select(x => _mapper.ToDto(x)).ToList();
+        var resGame = await _dataContext
+            .Games
+            .Include(game => game.Bot)
+            .Include(game => game.Matches)
+            .Include(game => game.Tournaments)
+            .Select(x => _mapper.MapGameToResponse(x))
+            .ToListAsync();
         
-        return new SuccessData<List<GameDto>>()
+
+        return new SuccessData<List<GameResponse>>()
         {
             Data = resGame
         };
@@ -61,53 +70,78 @@ public class GameRepository : IGameRepository
             };
         }
 
-        if (gameToRemove.Tournaments != null) _dataContext.Tournaments.RemoveRange(gameToRemove.Tournaments);
+        if (gameToRemove.Tournaments != null) _dataContext
+            .Tournaments
+            .RemoveRange(gameToRemove.Tournaments);
         _dataContext.Games.Remove(gameToRemove);
         await _dataContext.SaveChangesAsync();
+        
         return new Success();
-
-
     }
 
-    public async Task<HandlerResult<SuccessData<GameDto>, IErrorResult>> GetGameType(long id)
+    public async Task<HandlerResult<SuccessData<GameResponse>, IErrorResult>> GetGame(long id)
     {
+
+        var resGame = await _dataContext
+            .Games
+            .Where(game => game.Id==id)
+            .Include(game => game.Bot)
+            .Include(game => game.Matches)
+            .Include(game => game.Tournaments)
+            .FirstOrDefaultAsync();
         
-        var resGame = await _dataContext.Games.FindAsync(id);
         if (resGame == null)
         {
             return new EntityNotFoundErrorResult()
             {
-                Title = "return null",
-                Message = "Nie znaleziono elementu o tym id"
+                Title = "EntityNotFoundErrorResult 404",
+                Message = "No such element could have been found"
             };
         }
 
-        return new SuccessData<GameDto>()
+        return new SuccessData<GameResponse>()
         {
-            Data = _mapper.ToDto(resGame)
+            Data = _mapper.MapGameToResponse(resGame)
         };
 
     }
 
-    public async Task<HandlerResult<Success, IErrorResult>> ModifyGameType(long id, GameDto gameDto)
+    public async Task<HandlerResult<Success, IErrorResult>> ModifyGameType(long id, GameRequest gameRequest)
     {
         var resGame = await _dataContext.Games.FindAsync(id);
         if (resGame == null)
         {
             return new EntityNotFoundErrorResult()
             {
-                Title = "Return null",
-                Message = "Nie ma elemętu w bazie danych"
+                Title = "EntityNotFoundErrorResult 404",
+                Message = "No such element could have been found"
             };
         }
-        resGame.InterfaceDefinition = gameDto.InterfaceDefinition;
-        resGame.GameInstructions = gameDto.GameInstructions;
-        resGame.GameFile = gameDto.GameFile;
-        resGame.NumbersOfPlayer = gameDto.NumbersOfPlayer;
+        resGame.InterfaceDefinition = gameRequest.InterfaceDefinition;
+        resGame.GameInstructions = gameRequest.GameInstructions;
+        resGame.GameFile = gameRequest.GameFile?.FileName;
+        resGame.NumbersOfPlayer = gameRequest.NumberOfPlayer;
         resGame.LastModification = DateTime.Now;
-        resGame.IsAvailableForPlay = gameDto.IsAvaiableForPlay;
+        resGame.IsAvailableForPlay = gameRequest.IsAvailableForPlay;
         await _dataContext.SaveChangesAsync();
         return new Success();
     }
-    
+
+    public async Task<HandlerResult<SuccessData<List<GameResponse>>, IErrorResult>> GetAvailableGames()
+    {
+        var resGame = await _dataContext
+            .Games
+            .Include(game => game.Bot)
+            .Include(game => game.Matches)
+            .Include(game => game.Tournaments)
+            .Where(game => game.IsAvailableForPlay)
+            .Select(game => _mapper.MapGameToResponse(game))
+            .ToListAsync();
+        
+
+        return new SuccessData<List<GameResponse>>()
+        {
+            Data = resGame
+        };
+    }
 }
