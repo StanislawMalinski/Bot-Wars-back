@@ -36,10 +36,10 @@ namespace Communication.APIs.Controllers
             return (await _tournamentService.GetListOfTournaments()).Match(Ok,this.ErrorResult);
         }
 
-        [HttpGet("getFiltered")]
-        public async Task<IActionResult> GetListOfTournamentsFiltered()
+        [HttpPost("getFiltered")]
+        public async Task<IActionResult> GetListOfTournamentsFiltered(TournamentFilterDto tournamentFilterDto)
         {
-            return (await _tournamentService.GetListOfTournamentsFiltered()).Match(Ok,this.ErrorResult);
+            return (await _tournamentService.GetListOfTournamentsFiltered(tournamentFilterDto)).Match(Ok,this.ErrorResult);
             
         }
 

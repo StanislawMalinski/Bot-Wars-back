@@ -39,5 +39,9 @@ public class TournamentConfigurations : IEntityTypeConfiguration<Tournament>
         
         builder.Property(entity => entity.RankingType)
             .IsRequired();
+        
+        builder.HasOne(x => x.Creator)
+            .WithMany(x => x.Tournaments)
+            .HasForeignKey(x => x.CreatorId).OnDelete(DeleteBehavior.NoAction);
     }
 }

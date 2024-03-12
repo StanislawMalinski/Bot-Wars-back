@@ -1,5 +1,6 @@
 ﻿using Communication.ServiceInterfaces;
 using Shared.DataAccess.DTO;
+using Shared.DataAccess.DTO.Requests;
 using Shared.DataAccess.RepositoryInterfaces;
 using Shared.Results;
 using Shared.Results.ErrorResults;
@@ -23,5 +24,10 @@ public class PlayerAdminService : PlayerUnidentifiedPlayerService , IPlayerServi
     public async Task<HandlerResult<SuccessData<PlayerDto>, IErrorResult>> getPlayerInfo(long PlayerId)
     {
         return await _playerServiceProvider.getPlayerInfo(PlayerId);
+    }
+    
+    public async Task<HandlerResult<SuccessData<PlayerInfo>, IErrorResult>> GetPlayerInfoAsync(long playerId)
+    {
+        return await _playerServiceProvider.GetPlayerInfoById(playerId);
     }
 }

@@ -37,6 +37,7 @@ namespace Shared.DataAccess.Repositories
                 };
             }
             var tournament = _mapper.DtoToTournament(dto);
+            tournament.CreatorId = 1; // TO DO !!!!!
             tournament.PostedDate = DateTime.Now;
             tournament.Status = TournamentStatus.NOTSCHEDULED;
             await _dataContext.Tournaments.AddAsync(tournament);
@@ -286,6 +287,36 @@ namespace Shared.DataAccess.Repositories
             await _dataContext.SaveChangesAsync();
             return new Success();
         }
-        
+
+        public async Task<HandlerResult<SuccessData<List<TournamentDto>>,IErrorResult>> GetTournamentsAsync(TournamentFilterDto tournamentFilterDto)
+        {
+            var res = await _dataContext.Tournaments.Include(x => x.Creator).Where(x =>
+                    x.TournamentsDate >= tournamentFilterDto.MinPlayOutDate &&
+                    x.TournamentsDate <= tournamentFilterDto.MaxPlayOutDate &&
+                    (tournamentFilterDto.Creator == null || tournamentFilterDto.Creator.Equals(x.Creator.Login)))
+                .Select(x => _mapper.TournamentToDTO(x)).ToListAsync();
+            List<TournamentDto> result = new List<TournamentDto>();
+            foreach (var t in res)
+            {
+                if( (await PlayerParticipate(t.Id , tournamentFilterDto.UserParticipation)).IsSuccess) result.Add(t);
+            }
+            return new SuccessData<List<TournamentDto>>()
+            {
+                Data = result
+            };
+        }
+
+        private async Task<HandlerResult<Success, IErrorResult>> PlayerParticipate(long tourId, string? playerUsername)
+        {
+            if (playerUsername == null) return new Success();
+            var res = await _dataContext.TournamentReferences.Where(x => x.tournamentId == tourId).Include(x => x.Bot)
+                .ThenInclude(x => x.Player).Select(x => x.Bot.Player.Login).ToListAsync();
+            foreach (var p in res)
+            {
+                if (playerUsername.Equals(p)) return new Success();
+            }
+
+            return new EntityNotFoundErrorResult();
+        } 
     }
 }

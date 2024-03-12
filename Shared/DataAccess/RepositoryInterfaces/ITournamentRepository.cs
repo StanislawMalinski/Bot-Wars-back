@@ -18,4 +18,7 @@ public interface ITournamentRepository
     Task<HandlerResult<SuccessData<List<Bot>>, IErrorResult>> TournamentBotsToPlay(long tournamentId);
     Task<HandlerResult<SuccessData<Game>, IErrorResult>> TournamentGame(long tournamentId);
     Task<HandlerResult<Success, IErrorResult>> TournamentEnded(long tournamentId);
+
+    Task<HandlerResult<SuccessData<List<TournamentDto>>, IErrorResult>> GetTournamentsAsync(
+        TournamentFilterDto tournamentFilterDto);
 }

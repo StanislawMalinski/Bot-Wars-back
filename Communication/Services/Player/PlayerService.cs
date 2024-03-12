@@ -1,6 +1,7 @@
 ﻿using Communication.ServiceInterfaces;
 using Communication.Services.Validation;
 using Shared.DataAccess.DTO;
+using Shared.DataAccess.DTO.Requests;
 using Shared.DataAccess.RepositoryInterfaces;
 using Shared.Results;
 using Shared.Results.ErrorResults;
@@ -33,7 +34,8 @@ public class PlayerService : Service<IPlayerService>
         _playerTypeService = Validate(login, key);
         return await _playerTypeService.getPlayerInfo(PlayerId);
     }
-
+    
+    
     public async Task<HandlerResult<Success, IErrorResult>> registerNewPlayer(PlayerDto PlayerModel)
     {
         _playerTypeService = Validate(login, key);
