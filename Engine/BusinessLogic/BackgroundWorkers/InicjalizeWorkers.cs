@@ -19,7 +19,7 @@ public class InicjalizeWorkers: IInvocable
     {
         Console.WriteLine("inicjalizaca");
         await _taskRepository.RestartTasks();
-        _scheduler.Schedule<TScheduler>().EverySeconds(25);
+        _scheduler.Schedule<TScheduler>().EverySeconds(10);
         Console.WriteLine("inicjalizaca zakończona");
     }
 }

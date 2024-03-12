@@ -1,5 +1,6 @@
 ﻿using Coravel;
 using Engine.BusinessLogic.BackgroundWorkers;
+using Engine.BusinessLogic.BackgroundWorkers.Resolvers;
 using Engine.FileWorker;
 using Shared.DataAccess.Repositories;
 
@@ -18,6 +19,11 @@ public static class BackGroundTasks
         //serviceCollection.AddTransient<GameWorker>();
         serviceCollection.AddScoped<SchedulerRepository>();
         serviceCollection.AddScoped<FileManager>();
+
+        serviceCollection.AddScoped<TournamentResolver>();
+        serviceCollection.AddScoped<MatchResolver>();
+        serviceCollection.AddScoped<ValidationResolver>();
+        serviceCollection.AddScoped<PointsEngineAccessor>();
         return serviceCollection;
     }
 }
