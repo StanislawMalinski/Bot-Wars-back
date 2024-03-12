@@ -10,11 +10,13 @@ public class MatchResolver : Resolver
 {
     private readonly TaskRepository _taskRepository;
     private readonly MatchRepository _matchRepository;
+    private readonly AchievementHandlerService _achievementHandlerService;
 
-    public MatchResolver(TaskRepository taskRepository, MatchRepository matchRepository)
+    public MatchResolver(TaskRepository taskRepository, MatchRepository matchRepository, AchievementHandlerService achievementHandlerService)
     {
         _taskRepository = taskRepository;
         _matchRepository = matchRepository;
+        _achievementHandlerService = achievementHandlerService;
     }
 
     public override async Task<HandlerResult<SuccessData<_Task>, IErrorResult>> GetTask(long taskId)
@@ -33,6 +35,6 @@ public class MatchResolver : Resolver
 
     public async  Task<HandlerResult<Success,IErrorResult>> MatchWinner(long matchId, long winner, long taskId)
     {
-        return await _matchRepository.Winner( matchId, winner, taskId);
+        return await _achievementHandlerService.MatchWinner(matchId, winner, taskId);
     }
 }

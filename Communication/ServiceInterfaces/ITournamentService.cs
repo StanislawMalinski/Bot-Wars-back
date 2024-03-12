@@ -9,7 +9,8 @@ namespace Shared.DataAccess.RepositoryInterfaces
     {
         public Task<HandlerResult<SuccessData<List<TournamentDto>>,IErrorResult>> GetListOfTournaments();
 
-        public Task<HandlerResult<SuccessData<List<TournamentDto>>,IErrorResult>> GetListOfTournamentsFiltered();
+        public Task<HandlerResult<SuccessData<List<TournamentDto>>, IErrorResult>> GetListOfTournamentsFiltered(
+            TournamentFilterDto tournamentFilterDto);
 
         public Task<HandlerResult<SuccessData<TournamentDto>,IErrorResult>> GetTournament(long id);
 

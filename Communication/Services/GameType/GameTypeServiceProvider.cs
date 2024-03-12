@@ -1,4 +1,5 @@
-﻿using Shared.DataAccess.DTO;
+﻿using Shared.DataAccess.DTO.Requests;
+using Shared.DataAccess.DTO.Responses;
 using Shared.DataAccess.RepositoryInterfaces;
 using Shared.Results;
 using Shared.Results.IResults;
@@ -14,33 +15,33 @@ public class GameTypeServiceProvider
         _gameRepository = gameRepository;
     }
 
-    public async Task<HandlerResult<Success,IErrorResult>> deleteGameType(long id)
+    public async Task<HandlerResult<Success,IErrorResult>> DeleteGameType(long id)
     {
         return await _gameRepository.DeleteGame(id);
     }
 
-    public async Task<HandlerResult<Success,IErrorResult>> updateGameType(long id, GameDto game)
+    public async Task<HandlerResult<Success,IErrorResult>> UpdateGameType(long id, GameRequest game)
     {
         return await _gameRepository.ModifyGameType(id, game);
     }
 
-    public async Task<HandlerResult<Success,IErrorResult>> addGameType(GameDto game)
+    public async Task<HandlerResult<Success,IErrorResult>> AddGameType(GameRequest game)
     {
         return await _gameRepository.CreateGameType(game);
     }
 
-    public async Task<HandlerResult<SuccessData<GameDto>,IErrorResult>> getGameType(long id)
+    public async Task<HandlerResult<SuccessData<GameResponse>,IErrorResult>> GetGame(long id)
     {
-        return await _gameRepository.GetGameType(id);
+        return await _gameRepository.GetGame(id);
     }
 
-    public async Task<HandlerResult<SuccessData<List<GameDto>>,IErrorResult>> getListOfTypesOfGames()
+    public async Task<HandlerResult<SuccessData<List<GameResponse>>,IErrorResult>> GetGames()
     {
-        return await _gameRepository.GetGameTypes();
+        return await _gameRepository.GetGames();
     }
 
-    public async Task<HandlerResult<SuccessData<List<GameDto>>,IErrorResult>> getListOfTypesOfAvailableGames()
+    public async Task<HandlerResult<SuccessData<List<GameResponse>>,IErrorResult>> GetListOfTypesOfAvailableGames()
     {
-        return await _gameRepository.GetGameTypes();
+        return await _gameRepository.GetAvailableGames();
     }
 }

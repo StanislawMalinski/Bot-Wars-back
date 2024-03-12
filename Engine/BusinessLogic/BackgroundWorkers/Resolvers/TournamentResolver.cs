@@ -12,13 +12,13 @@ public class TournamentResolver : Resolver
     private readonly TournamentRepository _tournamentRepository;
     private readonly TaskRepository _taskRepository;
     private readonly MatchRepository _matchRepository;
-    private readonly PointsEngineAccessor _pointsEngineAccessor;
+    private readonly AchievementHandlerService _achievementHandlerService;
     
-    public TournamentResolver(TournamentRepository tournamentRepository, TaskRepository taskRepository, PointsEngineAccessor pointsEngineAccessor, MatchRepository matchRepository)
+    public TournamentResolver(TournamentRepository tournamentRepository, TaskRepository taskRepository, AchievementHandlerService achievementHandlerService, MatchRepository matchRepository)
     {
         _tournamentRepository = tournamentRepository;
         _taskRepository = taskRepository;
-        _pointsEngineAccessor = pointsEngineAccessor;
+        _achievementHandlerService = achievementHandlerService;
         _matchRepository = matchRepository;
     }
 
@@ -31,7 +31,7 @@ public class TournamentResolver : Resolver
     
     public async Task<HandlerResult<Success,IErrorResult>> EndTournament(long tourId,long botId, long taskId)
     {
-        return await _tournamentRepository.TournamentEnded(tourId,botId,taskId);
+        return await _achievementHandlerService.EndTournament(tourId, botId, taskId);
     }
     public override async Task<HandlerResult<SuccessData<_Task>, IErrorResult>> GetTask(long taskId)
     {

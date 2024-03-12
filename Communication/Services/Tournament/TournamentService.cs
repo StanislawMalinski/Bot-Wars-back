@@ -41,10 +41,11 @@ namespace Communication.Services.Tournament
 			return await _tournamentService.GetListOfTournaments();
 		}
 
-		public async Task<HandlerResult<SuccessData<List<TournamentDto>>, IErrorResult>> GetListOfTournamentsFiltered()
+		public async Task<HandlerResult<SuccessData<List<TournamentDto>>, IErrorResult>> GetListOfTournamentsFiltered(
+			TournamentFilterDto tournamentFilterDto)
 		{
 			_tournamentService = Validate(login, key);
-			return await _tournamentService.GetListOfTournamentsFiltered();
+			return await _tournamentService.GetListOfTournamentsFiltered(tournamentFilterDto);
 		}
 
 		public async Task<HandlerResult<SuccessData<TournamentDto>, IErrorResult>> GetTournament(long id)

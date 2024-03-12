@@ -304,6 +304,28 @@ public class MatchRepository
             Data = res.Winner
         };
     }
+
+    public async Task<HandlerResult<SuccessData<List<long>>, IErrorResult>> GetAllLosers(long matchId,long winner)
+    {
+        var result = await _dataContext.Matches.FirstOrDefaultAsync(x => x.Id == matchId);
+     
+        if (result == null) return new EntityNotFoundErrorResult();
+        var losers = await _dataContext.MatchPlayers.Where(x => x.MatchId == matchId && x.BotId != winner).Include(x=>x.Bot).Select(x=>x.Bot.PlayerId).ToListAsync();
+        return new SuccessData<List<long>>()
+        {
+            Data = losers
+        };
+    }
+
+    public async Task<HandlerResult<SuccessData<long>, IErrorResult>> GetPlayerFromBot(long botId)
+    {
+        var result = await _dataContext.Bots.FindAsync(botId);
+        if(result == null) return new EntityNotFoundErrorResult();
+        return new SuccessData<long>()
+        {
+            Data = result.PlayerId
+        };
+    } 
     
   
     
