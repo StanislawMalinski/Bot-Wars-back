@@ -1,5 +1,6 @@
 ﻿using Coravel.Invocable;
 using Coravel.Scheduling.Schedule.Interfaces;
+using Engine.BusinessLogic.BackgroundWorkers.Resolvers;
 using Shared.DataAccess.DataBaseEntities;
 using Shared.DataAccess.DTO;
 using Shared.DataAccess.Enumerations;
@@ -11,36 +12,31 @@ namespace Engine.BusinessLogic.BackgroundWorkers;
 
 public class TournamentWorker: IInvocable 
 {
-    private readonly IScheduler _scheduler; 
-    private readonly TournamentRepository _tournamentRepository;
-    private readonly IAchievementsRepository _achievementsRepository;
-    private readonly MatchRepository _matchRepository;
-    private readonly TaskRepository _taskRepository;
+    private readonly IScheduler _scheduler;
+    private readonly TournamentResolver _resolver;
     private long TaskId { get; set; }
     private long TourId { get; set; }
     private Dictionary<int,GameInfo> _games;
-    public TournamentWorker(IScheduler scheduler ,TournamentRepository tournamentRepository,TaskRepository taskRepository, MatchRepository matchRepository , IAchievementsRepository achievementsRepository,long task)
+    public TournamentWorker(IScheduler scheduler ,TournamentResolver resolver,long task)
     {
         _scheduler = scheduler;
-        _tournamentRepository = tournamentRepository;
+        _resolver = resolver;
         TaskId = task;
-        _matchRepository = matchRepository;
-        _achievementsRepository = achievementsRepository;
-        _taskRepository = taskRepository;
+      
     }
 
     public async Task Invoke()
     {
         
         Console.WriteLine("jaki tunie działa");
-        _Task? task = (await _taskRepository.GetTask(TaskId)).Match(x=>x.Data,x=>null);
+        _Task? task = (await _resolver.GetTask(TaskId)).Match(x=>x.Data,x=>null);
         if(task == null) return;
         TourId = task.OperatingOn;
-        Game? gameBot = (await _tournamentRepository.TournamentGame(TourId)).Match(x=>x.Data,x=>null);
-        if ((await _matchRepository.AreAny(TourId)).IsError)
+        Game? gameBot = (await _resolver.GetGame(TourId)).Match(x=>x.Data,x=>null);
+        if ((await _resolver.AreAnyMatchesPlayed(TourId)).IsError)
         {
-            await _tournamentRepository.TournamentPlaying(TourId);
-            var botList = await _tournamentRepository.TournamentBotsToPlay(TourId);
+            await _resolver.StartPlaying(TourId);
+            var botList = await _resolver.GetRegisterBots(TourId);
             //var tournament = (await _tournamentRepository.GetTournamentAsync(TourId)).Match(x=>x.Data,x=>null);
             List<Bot?> bots = botList.Match(x => x.Data, x => new List<Bot>());
         
@@ -48,40 +44,40 @@ public class TournamentWorker: IInvocable
             {
                 if (bots.Count == 1)
                 {
-                    await _tournamentRepository.TournamentEnded(TourId,bots.First().Id,TaskId);
+                    await _resolver.EndTournament(TourId,bots.First().Id,TaskId);
                 }
                 else
                 {
-                    await _tournamentRepository.TournamentEnded(TourId,TaskId);
+                    await _resolver.EndTournament(TourId,TaskId);
                 }
                 
             }
             MadeHeap(bots);
             
-            await _matchRepository.CreateAllLadder([.._games.Values],TourId);
+            await _resolver.CreateLadder([.._games.Values],TourId);
             
-            var startGames =  (await _matchRepository.GetAllReadyToPlay(TourId)).Match(x=>x.Data,x=>new List<long>());
+            var startGames =  (await _resolver.GetMatchesReadyToPlay(TourId) ).Match(x=>x.Data,x=>new List<long>());
             foreach (var p in startGames)
             {
-                await _matchRepository.PlayMatch(p);
+                await _resolver.PlayMatch(p);
             }
             _scheduler.ScheduleWithParams<TournamentWorker>(TaskId)
                 .EverySeconds(8).Once().PreventOverlapping("TournamentWorker"+ DateTime.Now+" "+ TaskId);
             return;
         }
 
-        var playedGames =  (await _matchRepository.GetAllPlayed(TourId)).Match(x=>x.Data,x=>new List<long>());
+        var playedGames =  (await _resolver.GetPlayedMatches(TourId)).Match(x=>x.Data,x=>new List<long>());
         foreach (var p in playedGames)
         {
-            await _matchRepository.ResolveMatch(p);
+            await _resolver.ResolveMatch(p);
         }
-        var readyGames =  (await _matchRepository.GetAllReadyToPlay(TourId)).Match(x=>x.Data,x=>new List<long>());
+        var readyGames =  (await _resolver.GetMatchesReadyToPlay(TourId)).Match(x=>x.Data,x=>new List<long>());
         foreach (var p in readyGames)
         {
-            await _matchRepository.PlayMatch(p);
+            await _resolver.PlayMatch(p);
         }
 
-        var tournamentWinner = await _matchRepository.IsResolve(TourId, "0");
+        var tournamentWinner = await _resolver.IsMatchResolved(TourId, "0");
         if (tournamentWinner.IsError)
         {
             _scheduler.ScheduleWithParams<TournamentWorker>(TaskId)
@@ -90,7 +86,7 @@ public class TournamentWorker: IInvocable
         }
         
 
-        var end = await _tournamentRepository.TournamentEnded(TourId,TaskId);
+        var end = await _resolver.EndTournament(TourId,TaskId);
         if (end.IsError)
         {
             _scheduler.ScheduleWithParams<TournamentWorker>(TaskId)

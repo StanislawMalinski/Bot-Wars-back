@@ -1,4 +1,5 @@
-﻿using Shared.DataAccess.Repositories;
+﻿using Engine.BusinessLogic.BackgroundWorkers.Resolvers;
+using Shared.DataAccess.Repositories;
 using Shared.DataAccess.RepositoryInterfaces;
 
 namespace Engine.DependencyInjection;
@@ -18,6 +19,7 @@ public static class RepositoryInjection
         serviceCollection.AddScoped<BotRepository>();
         serviceCollection.AddScoped<MatchRepository>();
         serviceCollection.AddScoped<TaskRepository>();
+        serviceCollection.AddScoped<AchievementHandlerService>();
         return serviceCollection;
     }
 }

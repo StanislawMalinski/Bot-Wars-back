@@ -37,20 +37,26 @@ public class GameManager : IGameManager
         int nextBot;
         int counter = 0;
         int counterMax = 100000;
+        string gamelog = string.Empty;
+        gamelog += curr;
         while (Int32.Parse(curr)  != -1 && counter < counterMax)
         {
             nextBot = Int32.Parse(curr);
             curr = await game.Get();
+            gamelog += curr;
             await bots[nextBot].Send(curr);
             curr = await bots[nextBot].Get();
+            gamelog += curr;
             await game.Send(curr);
             curr = await game.Get();
+            gamelog += curr;
             counter++;
          
         }
         if (counter < counterMax)
         {
             curr = await game.Get();
+            gamelog += curr;
             nextBot = Int32.Parse(curr);
             Console.WriteLine(curr+ " to jest zwyczezca");
             //winner
@@ -60,6 +66,7 @@ public class GameManager : IGameManager
         {
             nextBot = 0;
         }
+        Console.WriteLine(gamelog);
         Console.WriteLine(nextBot);
         Console.WriteLine("jest zwyciezca");
         var cos =  botsArray[nextBot];
