@@ -86,7 +86,7 @@ public class TournamentWorker: IInvocable
         }
         
 
-        var end = await _resolver.EndTournament(TourId,TaskId);
+        var end = await _resolver.EndTournament(TourId,tournamentWinner.Match(x=>x.Data,x=>0), TaskId);
         if (end.IsError)
         {
             _scheduler.ScheduleWithParams<TournamentWorker>(TaskId)

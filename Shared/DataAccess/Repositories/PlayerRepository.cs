@@ -86,6 +86,7 @@ namespace Shared.DataAccess.Repositories
         public async Task<HandlerResult<Success, IErrorResult>> CreatePlayerAsync(PlayerDto playerDto)
         {
             var newPlayer = _playerMapper.ToPlayerEntity(playerDto);
+            newPlayer.Points = 2000;
             var hashedPassword = _passwordHasher.HashPassword(newPlayer, newPlayer?.HashedPassword);
             newPlayer.HashedPassword = hashedPassword;
             var resPlayer = await _context.Players.AddAsync(newPlayer);

@@ -11,52 +11,52 @@ public class Seeder
         {
             new Player()
             {
-                Id = 1, Email = "john.doe@example.com", Login = "john_doe", Points = 100, HashedPassword = "aasdsdas",
+                Id = 1, Email = "john.doe@example.com", Login = "john_doe", Points = 1000, HashedPassword = "aasdsdas",
                 isBanned = false, RoleId = 1
             },
             new Player()
             {
-                Id = 2, Email = "jane.smith@example.com", Login = "jane_smith", Points = 150,
+                Id = 2, Email = "jane.smith@example.com", Login = "jane_smith", Points = 1000,
                 HashedPassword = "sdfgdfg", isBanned = false, RoleId = 1
             },
             new Player()
             {
-                Id = 3, Email = "alex.jones@example.com", Login = "alex_jones", Points = 200,
+                Id = 3, Email = "alex.jones@example.com", Login = "alex_jones", Points = 1000,
                 HashedPassword = "hjklhjk", isBanned = false, RoleId = 1
             },
             new Player()
             {
-                Id = 4, Email = "emily.white@example.com", Login = "emily_white", Points = 75,
+                Id = 4, Email = "emily.white@example.com", Login = "emily_white", Points = 1000,
                 HashedPassword = "qwertyui", isBanned = false, RoleId = 1
             },
             new Player()
             {
-                Id = 5, Email = "sam.wilson@example.com", Login = "sam_wilson", Points = 120,
+                Id = 5, Email = "sam.wilson@example.com", Login = "sam_wilson", Points = 1000,
                 HashedPassword = "zxcvbnm", isBanned = false, RoleId = 1
             },
             new Player()
             {
-                Id = 6, Email = "olivia.brown@example.com", Login = "olivia_brown", Points = 180,
+                Id = 6, Email = "olivia.brown@example.com", Login = "olivia_brown", Points = 1000,
                 HashedPassword = "poiuytre", isBanned = false, RoleId = 1
             },
             new Player()
             {
-                Id = 7, Email = "david.miller@example.com", Login = "david_miller", Points = 90,
+                Id = 7, Email = "david.miller@example.com", Login = "david_miller", Points = 1000,
                 HashedPassword = "lkjhgfds", isBanned = false, RoleId = 1
             },
             new Player()
             {
-                Id = 8, Email = "emma.jenkins@example.com", Login = "emma_jenkins", Points = 160,
+                Id = 8, Email = "emma.jenkins@example.com", Login = "emma_jenkins", Points = 1000,
                 HashedPassword = "mnbvcxz", isBanned = false, RoleId = 1
             },
             new Player()
             {
-                Id = 9, Email = "ryan.clark@example.com", Login = "ryan_clark", Points = 110,
+                Id = 9, Email = "ryan.clark@example.com", Login = "ryan_clark", Points = 1000,
                 HashedPassword = "asdfghjk", isBanned = true, RoleId = 1
             },
             new Player()
             {
-                Id = 10, Email = "sara.taylor@example.com", Login = "sara_taylor", Points = 130,
+                Id = 10, Email = "sara.taylor@example.com", Login = "sara_taylor", Points = 1000,
                 HashedPassword = "qazwsxed", isBanned = false, RoleId = 2
             }
         };
