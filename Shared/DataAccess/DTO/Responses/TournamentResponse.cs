@@ -11,10 +11,10 @@ public class TournamentResponse
     public int PlayersLimit { get; set; }
     public DateTime TournamentsDate { get; set; }
     public DateTime PostedDate { get; set; }
-    public TournamentStatus Status { get; set; }
     public RankingTypes RankingType { get; set; }
     public string? Constraints { get; set; }
     public string? Image { get; set; }
+    public bool WasPlayedOut { get; set; }
     
     public List<long>? MatchIds { get; set; }
     public List<long>? BotIds { get; set; }

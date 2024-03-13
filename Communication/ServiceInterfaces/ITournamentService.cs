@@ -1,4 +1,5 @@
 ﻿using Shared.DataAccess.DTO;
+using Shared.DataAccess.DTO.Requests;
 using Shared.DataAccess.DTO.Responses;
 using Shared.Results;
 using Shared.Results.IResults;
@@ -10,16 +11,16 @@ namespace Shared.DataAccess.RepositoryInterfaces
     {
         public Task<HandlerResult<SuccessData<List<TournamentResponse>>,IErrorResult>> GetListOfTournaments();
 
-        public Task<HandlerResult<SuccessData<List<TournamentDto>>, IErrorResult>> GetListOfTournamentsFiltered(
-            TournamentFilterDto tournamentFilterDto);
+        public Task<HandlerResult<SuccessData<List<TournamentResponse>>, IErrorResult>> GetListOfTournamentsFiltered(
+            TournamentFilterRequest tournamentFilterRequest);
 
         public Task<HandlerResult<SuccessData<TournamentResponse>,IErrorResult>> GetTournament(long id);
 
-        public Task<HandlerResult<Success,IErrorResult>> UpdateTournament(long id, TournamentDto tournament);
+        public Task<HandlerResult<Success,IErrorResult>> UpdateTournament(long id, TournamentRequest tournamentRequest);
 
         public Task<HandlerResult<Success,IErrorResult>> DeleteTournament(long id);
 
-        public Task<HandlerResult<Success,IErrorResult>> AddTournament(TournamentDto tournament);
+        public Task<HandlerResult<Success,IErrorResult>> AddTournament(TournamentRequest tournamentRequest);
 
         public Task<HandlerResult<Success,IErrorResult>> UnregisterSelfForTournament(long tournamentId, long botId);
 

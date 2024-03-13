@@ -1,5 +1,6 @@
 ﻿using Communication.Services.Validation;
 using Shared.DataAccess.DTO;
+using Shared.DataAccess.DTO.Requests;
 using Shared.DataAccess.DTO.Responses;
 using Shared.DataAccess.RepositoryInterfaces;
 using Shared.Results;
@@ -24,10 +25,10 @@ namespace Communication.Services.Tournament
 		{
 		}
 
-		public async Task<HandlerResult<Success, IErrorResult>> AddTournament(TournamentDto tournament)
+		public async Task<HandlerResult<Success, IErrorResult>> AddTournament(TournamentRequest tournamentRequest)
 		{
 			_tournamentService = Validate(login, key);
-			return await _tournamentService.AddTournament(tournament);
+			return await _tournamentService.AddTournament(tournamentRequest);
 		}
 
 		public async Task<HandlerResult<Success, IErrorResult>> DeleteTournament(long id)
@@ -42,11 +43,11 @@ namespace Communication.Services.Tournament
 			return await _tournamentService.GetListOfTournaments();
 		}
 
-		public async Task<HandlerResult<SuccessData<List<TournamentDto>>, IErrorResult>> GetListOfTournamentsFiltered(
-			TournamentFilterDto tournamentFilterDto)
+		public async Task<HandlerResult<SuccessData<List<TournamentResponse>>, IErrorResult>> GetListOfTournamentsFiltered(
+			TournamentFilterRequest tournamentFilterRequest)
 		{
 			_tournamentService = Validate(login, key);
-			return await _tournamentService.GetListOfTournamentsFiltered(tournamentFilterDto);
+			return await _tournamentService.GetListOfTournamentsFiltered(tournamentFilterRequest);
 		}
 
 		public async Task<HandlerResult<SuccessData<TournamentResponse>, IErrorResult>> GetTournament(long id)
@@ -67,10 +68,10 @@ namespace Communication.Services.Tournament
 			return await _tournamentService.UnregisterSelfForTournament(tournamentId, botId);
 		}
 
-		public async Task<HandlerResult<Success, IErrorResult>> UpdateTournament(long id, TournamentDto tournament)
+		public async Task<HandlerResult<Success, IErrorResult>> UpdateTournament(long id, TournamentRequest tournamentRequest)
 		{
 			_tournamentService = Validate(login, key);
-			return await _tournamentService.UpdateTournament(id, tournament);
+			return await _tournamentService.UpdateTournament(id, tournamentRequest);
 		}
 	}
 }

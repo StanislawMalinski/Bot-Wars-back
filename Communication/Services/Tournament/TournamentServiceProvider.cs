@@ -1,4 +1,5 @@
 ﻿using Shared.DataAccess.DTO;
+using Shared.DataAccess.DTO.Requests;
 using Shared.DataAccess.DTO.Responses;
 using Shared.DataAccess.Repositories;
 using Shared.Results;
@@ -17,9 +18,9 @@ namespace Communication.Services.Tournament
 			_tournamentRepository = tournamentRepository;
 		}
 
-		public async Task<HandlerResult<Success, IErrorResult>> AddTournament(TournamentDto tournament)
+		public async Task<HandlerResult<Success, IErrorResult>> AddTournament(TournamentRequest tournamentRequest)
 		{
-			return await _tournamentRepository.CreateTournamentAsync(tournament);
+			return await _tournamentRepository.CreateTournamentAsync(tournamentRequest);
 		}
 
 		public async Task<HandlerResult<Success, IErrorResult>> DeleteTournament(long id)
@@ -32,12 +33,10 @@ namespace Communication.Services.Tournament
 			return await _tournamentRepository.GetTournamentsAsync();
 		}
 
-		public async Task<HandlerResult<SuccessData<List<TournamentDto>>, IErrorResult>> GetListOfTournamentsFiltered(
-			TournamentFilterDto tournamentFilterDto)
+		public async Task<HandlerResult<SuccessData<List<TournamentResponse>>, IErrorResult>> GetListOfTournamentsFiltered(
+			TournamentFilterRequest tournamentFilterRequest)
 		{
-			var tourlist = await _tournamentRepository.GetTournamentsAsync(tournamentFilterDto);
-			
-			return tourlist;
+			return await _tournamentRepository.GetFilteredTournamentsAsync(tournamentFilterRequest);
 		}
 
 		public async Task<HandlerResult<SuccessData<TournamentResponse>, IErrorResult>> GetTournament(long id)
@@ -55,10 +54,9 @@ namespace Communication.Services.Tournament
 			return await _tournamentRepository.UnregisterSelfForTournament(tournamentId, botId);
 		}
 
-		public async Task<HandlerResult<Success, IErrorResult>> UpdateTournament(long id, TournamentDto tournament)
+		public async Task<HandlerResult<Success, IErrorResult>> UpdateTournament(long id, TournamentRequest tournamentRequest)
 		{
-			tournament.Id = id;
-			return await _tournamentRepository.UpdateTournamentAsync(tournament);
+			return await _tournamentRepository.UpdateTournamentAsync(id, tournamentRequest);
 		}
 	}
 }

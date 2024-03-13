@@ -1,7 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Shared.DataAccess.Context;
-using Shared.DataAccess.DTO;
 using Shared.DataAccess.DataBaseEntities;
+using Shared.DataAccess.DTO;
+using Shared.DataAccess.DTO.Requests;
 using Shared.DataAccess.DTO.Responses;
 using Shared.DataAccess.Enumerations;
 using Shared.DataAccess.Mappers;
@@ -14,126 +15,145 @@ using TaskStatus = Shared.DataAccess.Enumerations.TaskStatus;
 
 namespace Shared.DataAccess.Repositories
 {
-	public class TournamentRepository
+    public class TournamentRepository
     {
         private readonly DataContext _dataContext;
         private readonly ITournamentMapper _mapper;
         private readonly IAchievementsRepository _achievementsRepository;
-        public TournamentRepository(DataContext dataContext, ITournamentMapper mapper,IAchievementsRepository achievementsRepository)
+
+        public TournamentRepository(DataContext dataContext, ITournamentMapper mapper,
+            IAchievementsRepository achievementsRepository)
         {
             _dataContext = dataContext;
             _mapper = mapper;
             _achievementsRepository = achievementsRepository;
         }
-        
-        public async Task<HandlerResult<Success, IErrorResult>> CreateTournamentAsync(TournamentDto dto)
+
+        public async Task<HandlerResult<Success, IErrorResult>> CreateTournamentAsync(
+            TournamentRequest tournamentRequest)
         {
-            var game = await _dataContext.Games.FindAsync(dto.GameId);
+            var game = await _dataContext
+                .Games
+                .FindAsync(tournamentRequest.GameId);
+
             if (game is null)
             {
                 return new EntityNotFoundErrorResult
-                { 
+                {
                     Title = "EntityNotFoundErrorResult 404",
-                    Message = "Game with given id could not have been found" 
+                    Message = "Game with given id could not have been found"
                 };
             }
-            var tournament = _mapper.DtoToTournament(dto);
-            tournament.CreatorId = 1; // TO DO !!!!!
-            tournament.PostedDate = DateTime.Now;
-            tournament.Status = TournamentStatus.NOTSCHEDULED;
-            await _dataContext.Tournaments.AddAsync(tournament);
-            await _dataContext.SaveChangesAsync();
+
+            var tournament = _mapper
+                .TournamentRequestToTournament(tournamentRequest);
+            tournament.CreatorId = 1; // TODO +1
+            await _dataContext
+                .Tournaments
+                .AddAsync(tournament);
+            await _dataContext
+                .SaveChangesAsync();
             return new Success();
         }
 
         public async Task<HandlerResult<Success, IErrorResult>> DeleteTournamentAsync(long id)
         {
-            
-            Tournament? tournament = await _dataContext.Tournaments.FindAsync(id);
-            if (tournament == null) return new EntityNotFoundErrorResult()
-            { 
-                Title = "result null",
-                Message = $"Tournament of id {id} dont exits" 
-            };
-             _dataContext.Tournaments.Remove(tournament);
-            await _dataContext.SaveChangesAsync();
+            var tournament = await _dataContext.Tournaments.FindAsync(id);
+            if (tournament == null)
+                return new EntityNotFoundErrorResult()
+                {
+                    Title = "EntityNotFoundErrorResult 404",
+                    Message = $"Tournament of id {id} does not exist"
+                };
+            _dataContext
+                .Tournaments
+                .Remove(tournament);
+            await _dataContext
+                .SaveChangesAsync();
             return new Success();
         }
 
         public async Task<HandlerResult<SuccessData<TournamentResponse>, IErrorResult>> GetTournamentAsync(long id)
         {
-            
             var tournament = await _dataContext.Tournaments
                 .Include(tournament => tournament.Matches)
                 .Include(tournament => tournament.TournamentReference)
-                .SingleOrDefaultAsync(tournament => tournament.Id==id);
-            
-            if (tournament == null) return new EntityNotFoundErrorResult() 
-            { 
-                Title = "EntityNotFoundErrorResult 404",
-                Message = $"No tournament with given id could have been found" 
-            };
+                .SingleOrDefaultAsync(tournament => tournament.Id == id);
+
+            if (tournament == null)
+                return new EntityNotFoundErrorResult()
+                {
+                    Title = "EntityNotFoundErrorResult 404",
+                    Message = $"No tournament with given id could have been found"
+                };
             return new SuccessData<TournamentResponse>()
-            { 
+            {
                 Data = _mapper.TournamentToTournamentResponse(tournament)
             };
-            
         }
 
-        public async Task<HandlerResult<Success, IErrorResult>> UpdateTournamentAsync(TournamentDto dto)
+        public async Task<HandlerResult<Success, IErrorResult>> UpdateTournamentAsync(long id,
+            TournamentRequest tournamentRequest)
         {
-            var game = await _dataContext.Games.FindAsync(dto.GameId);
+            var game = await _dataContext
+                .Games
+                .FindAsync(tournamentRequest.GameId);
+
             if (game is null)
             {
                 return new EntityNotFoundErrorResult
-                { 
+                {
                     Title = "EntityNotFoundErrorResult 404",
-                    Message = "Game with given id could not have been found" 
+                    Message = "Game with given id could not have been found"
                 };
             }
-            Tournament? tournamentToEdit = await _dataContext.Tournaments.FindAsync(dto.Id);
-            if (tournamentToEdit == null) return new EntityNotFoundErrorResult() 
-            { 
-                Title = "return null",
-                Message = $"Tournament of id {dto.Id} dont exits" 
-            };
-            Tournament tournament = _mapper.DtoToTournament(dto);
+
+            var tournamentToEdit = await _dataContext
+                .Tournaments
+                .FindAsync(id);
+
+            if (tournamentToEdit == null)
+                return new EntityNotFoundErrorResult()
+                {
+                    Title = "EntityNotFoundErrorResult 404",
+                    Message = $"Tournament of id {id} does not exist"
+                };
+            var tournament = _mapper
+                .TournamentRequestToTournament(tournamentRequest);
 
             tournamentToEdit.TournamentTitle = tournament.TournamentTitle;
             tournamentToEdit.Description = tournament.Description;
             tournamentToEdit.GameId = tournament.GameId;
             tournamentToEdit.PlayersLimit = tournament.PlayersLimit;
             tournamentToEdit.TournamentsDate = tournament.TournamentsDate;
-            tournamentToEdit.Status = tournament.Status;
             tournamentToEdit.Constraints = tournament.Constraints;
             tournamentToEdit.Image = tournament.Image;
 
-            await _dataContext.SaveChangesAsync();
+            await _dataContext
+                .SaveChangesAsync();
             return new Success();
-
         }
-
 
         public async Task<HandlerResult<SuccessData<List<TournamentResponse>>, IErrorResult>> GetTournamentsAsync()
         {
-            
-                var tournamentResponses = await _dataContext
-                    .Tournaments
-                    .Include(tournament => tournament.Matches)
-                    .Include(tournament => tournament.TournamentReference)
-                    .Select(tournament => _mapper.TournamentToTournamentResponse(tournament))
-                    .ToListAsync();
-            
-                return new SuccessData<List<TournamentResponse>>()
-                {
-                    Data = tournamentResponses
-                };
+            var tournamentResponses = await _dataContext
+                .Tournaments
+                .Include(tournament => tournament.Matches)
+                .Include(tournament => tournament.TournamentReference)
+                .Select(tournament => _mapper.TournamentToTournamentResponse(tournament))
+                .ToListAsync();
 
+            return new SuccessData<List<TournamentResponse>>()
+            {
+                Data = tournamentResponses
+            };
         }
 
         public async Task<HandlerResult<Success, IErrorResult>> RegisterSelfForTournament(long tournamentId, long botId)
         {
-            var tournament = await _dataContext.Tournaments.FindAsync(tournamentId);
+            var tournament = await _dataContext
+                .Tournaments
+                .FindAsync(tournamentId);
             if (tournament == null)
             {
                 return new EntityNotFoundErrorResult
@@ -143,7 +163,9 @@ namespace Shared.DataAccess.Repositories
                 };
             }
 
-            var bot = await _dataContext.Bots.FindAsync(botId);
+            var bot = await _dataContext
+                .Bots
+                .FindAsync(botId);
             if (bot == null)
             {
                 return new EntityNotFoundErrorResult
@@ -152,7 +174,8 @@ namespace Shared.DataAccess.Repositories
                     Message = "No bot with such id has been found"
                 };
             }
-            var result =await _dataContext
+
+            var result = await _dataContext
                 .TournamentReferences
                 .FirstOrDefaultAsync(x => x.tournamentId == tournamentId && x.botId == botId);
             if (result != null)
@@ -163,7 +186,7 @@ namespace Shared.DataAccess.Repositories
                     Message = "You are already registered for tournament"
                 };
             }
-            
+
             var tournamentReference = new TournamentReference
             {
                 tournamentId = tournamentId,
@@ -171,20 +194,26 @@ namespace Shared.DataAccess.Repositories
                 LastModification = new DateTime()
             };
 
-            if (tournament.Status is not (TournamentStatus.SCHEDULED or TournamentStatus.NOTSCHEDULED))
+            if (tournament.Status is not (TournamentStatus.SCHEDULED
+                or TournamentStatus.NOTSCHEDULED))
             {
                 return new TournamentIsBeingPlayedError()
                 {
                     Title = "TournamentIsBeingPlayedError 400",
                     Message = "You cannot register a bot while the tournament is being played or has been finished"
-                }; 
+                };
             }
-            await _dataContext.TournamentReferences.AddAsync(tournamentReference);
-            await _dataContext.SaveChangesAsync();
+
+            await _dataContext
+                .TournamentReferences
+                .AddAsync(tournamentReference);
+            await _dataContext
+                .SaveChangesAsync();
             return new Success();
         }
 
-        public async Task<HandlerResult<Success, IErrorResult>> UnregisterSelfForTournament(long tournamentId, long botId)
+        public async Task<HandlerResult<Success, IErrorResult>> UnregisterSelfForTournament(long tournamentId,
+            long botId)
         {
             var tournament = await _dataContext.Tournaments.FindAsync(tournamentId);
             if (tournament == null)
@@ -205,8 +234,8 @@ namespace Shared.DataAccess.Repositories
                     Message = "No bot with such id has been found"
                 };
             }
-            
-            var result =await _dataContext
+
+            var result = await _dataContext
                 .TournamentReferences
                 .FirstOrDefaultAsync(x => x.tournamentId == tournamentId && x.botId == botId);
             if (result == null)
@@ -217,27 +246,34 @@ namespace Shared.DataAccess.Repositories
                     Message = "You were not registered for tournament"
                 };
             }
+
             if (tournament.Status is not (TournamentStatus.SCHEDULED or TournamentStatus.NOTSCHEDULED))
             {
                 return new TournamentIsBeingPlayedError()
                 {
                     Title = "TournamentIsBeingPlayedError 400",
                     Message = "You cannot unregister a bot while the tournament is being played or has been finished"
-                }; 
+                };
             }
-            _dataContext.TournamentReferences.Remove(result);
-            await _dataContext.SaveChangesAsync();
+
+            _dataContext
+                .TournamentReferences
+                .Remove(result);
+            await _dataContext
+                .SaveChangesAsync();
             return new Success();
         }
 
         public async Task<HandlerResult<SuccessData<List<Bot>>, IErrorResult>> TournamentBotsToPlay(long tournamentId)
         {
-            var result =  await _dataContext.TournamentReferences.Where(x => x.tournamentId == tournamentId).Include(x=>x.Bot).Select(x=>x.Bot).ToListAsync();
+            var result = await _dataContext.TournamentReferences.Where(x => x.tournamentId == tournamentId)
+                .Include(x => x.Bot).Select(x => x.Bot).ToListAsync();
             return new SuccessData<List<Bot>>()
             {
                 Data = result!
             };
         }
+
         public async Task<HandlerResult<SuccessData<Game>, IErrorResult>> TournamentGame(long tournamentId)
         {
             var result = await _dataContext.Tournaments.FindAsync(tournamentId);
@@ -249,7 +285,8 @@ namespace Shared.DataAccess.Repositories
             };
         }
 
-        public async Task<HandlerResult<Success, IErrorResult>> TournamentEnded(long tournamentId,long winner,long taskId)
+        public async Task<HandlerResult<Success, IErrorResult>> TournamentEnded(long tournamentId, long winner,
+            long taskId)
         {
             var res = await _dataContext.Tournaments.FindAsync(tournamentId);
             var taskRes = await _dataContext.Tasks.FindAsync(taskId);
@@ -260,8 +297,8 @@ namespace Shared.DataAccess.Repositories
             await _dataContext.SaveChangesAsync();
             return new Success();
         }
-        
-        public async Task<HandlerResult<Success, IErrorResult>> TournamentEnded(long tournamentId,long taskId)
+
+        public async Task<HandlerResult<Success, IErrorResult>> TournamentEnded(long tournamentId, long taskId)
         {
             var res = await _dataContext.Tournaments.FindAsync(tournamentId);
             var taskRes = await _dataContext.Tasks.FindAsync(taskId);
@@ -271,7 +308,7 @@ namespace Shared.DataAccess.Repositories
             await _dataContext.SaveChangesAsync();
             return new Success();
         }
-        
+
         public async Task<HandlerResult<Success, IErrorResult>> TournamentPlaying(long tournamentId)
         {
             var res = await _dataContext.Tournaments.FindAsync(tournamentId);
@@ -280,7 +317,7 @@ namespace Shared.DataAccess.Repositories
             await _dataContext.SaveChangesAsync();
             return new Success();
         }
-        
+
         public async Task<HandlerResult<Success, IErrorResult>> ScheduleTournament(long tournamentId)
         {
             var res = await _dataContext.Tournaments.FindAsync(tournamentId);
@@ -299,35 +336,78 @@ namespace Shared.DataAccess.Repositories
             return new Success();
         }
 
-        public async Task<HandlerResult<SuccessData<List<TournamentDto>>,IErrorResult>> GetTournamentsAsync(TournamentFilterDto tournamentFilterDto)
+        public async Task<HandlerResult<SuccessData<List<TournamentResponse>>, IErrorResult>>
+            GetFilteredTournamentsAsync(TournamentFilterRequest tournamentFilterRequest)
         {
-            var res = await _dataContext.Tournaments.Include(x => x.Creator).Where(x =>
-                    x.TournamentsDate >= tournamentFilterDto.MinPlayOutDate &&
-                    x.TournamentsDate <= tournamentFilterDto.MaxPlayOutDate &&
-                    (tournamentFilterDto.Creator == null || tournamentFilterDto.Creator.Equals(x.Creator.Login)))
-                .Select(x => _mapper.TournamentToDTO(x)).ToListAsync();
-            List<TournamentDto> result = new List<TournamentDto>();
-            foreach (var t in res)
+            var unfilteredTournaments = _dataContext
+                .Tournaments.Include(tournament => tournament.Creator)
+                .Where(tournament => true);
+
+            if (tournamentFilterRequest.MaxPlayOutDate != null)
             {
-                if( (await PlayerParticipate(t.Id , tournamentFilterDto.UserParticipation)).IsSuccess) result.Add(t);
+                unfilteredTournaments = unfilteredTournaments.Where(tournament =>
+                    tournament.TournamentsDate <= tournamentFilterRequest.MaxPlayOutDate);
             }
-            return new SuccessData<List<TournamentDto>>()
+
+            if (tournamentFilterRequest.MinPlayOutDate != null)
             {
-                Data = result
+                unfilteredTournaments = unfilteredTournaments.Where(tournament =>
+                    tournament.TournamentsDate >= tournamentFilterRequest.MinPlayOutDate);
+            }
+
+            if (tournamentFilterRequest.Creator != null)
+            {
+                unfilteredTournaments = unfilteredTournaments.Where(tournament =>
+                    tournamentFilterRequest.Creator == null
+                    || tournamentFilterRequest.Creator.Equals(tournament.Creator.Login));
+            }
+
+            if (tournamentFilterRequest.TournamentTitle != null)
+            {
+                unfilteredTournaments = unfilteredTournaments.Where(tournament =>
+                    tournament.TournamentTitle.Contains(tournamentFilterRequest.TournamentTitle));
+            }
+
+            var filteredTournaments = await unfilteredTournaments
+                .Select(tournament => _mapper.TournamentToTournamentResponse(tournament))
+                .ToListAsync();
+
+            if (tournamentFilterRequest.UserParticipation == null)
+            {
+                return new SuccessData<List<TournamentResponse>>()
+                {
+                    Data = filteredTournaments
+                };
+            }
+
+            var filteredTournamentList = new List<TournamentResponse>();
+            foreach (var tournamentResponse in filteredTournaments)
+            {
+                if ((await PlayerParticipate(tournamentResponse.Id, tournamentFilterRequest.UserParticipation))
+                    .IsSuccess) filteredTournamentList.Add(tournamentResponse);
+            }
+
+            return new SuccessData<List<TournamentResponse>>()
+            {
+                Data = filteredTournamentList
             };
         }
 
         private async Task<HandlerResult<Success, IErrorResult>> PlayerParticipate(long tourId, string? playerUsername)
         {
             if (playerUsername == null) return new Success();
-            var res = await _dataContext.TournamentReferences.Where(x => x.tournamentId == tourId).Include(x => x.Bot)
-                .ThenInclude(x => x.Player).Select(x => x.Bot.Player.Login).ToListAsync();
+            var res = await _dataContext.TournamentReferences
+                .Where(reference => reference.tournamentId == tourId)
+                .Include(tournamentReference => tournamentReference.Bot)
+                .ThenInclude(bot => bot.Player)
+                .Select(x => x.Bot.Player.Login)
+                .ToListAsync();
             foreach (var p in res)
             {
                 if (playerUsername.Equals(p)) return new Success();
             }
 
             return new EntityNotFoundErrorResult();
-        } 
+        }
     }
 }

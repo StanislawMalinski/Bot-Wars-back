@@ -1,4 +1,5 @@
 ﻿using Shared.DataAccess.DTO;
+using Shared.DataAccess.DTO.Requests;
 using Shared.DataAccess.DTO.Responses;
 using Shared.DataAccess.RepositoryInterfaces;
 using Shared.Results;
@@ -17,7 +18,7 @@ namespace Communication.Services.Tournament
 			_tournamentServiceProvider = tournamentServiceProvider;
 		}
 
-		public async Task<HandlerResult<Success, IErrorResult>> AddTournament(TournamentDto tournament)
+		public async Task<HandlerResult<Success, IErrorResult>> AddTournament(TournamentRequest tournamentRequest)
 		{
 			
 			return new AccessDeniedError();
@@ -34,10 +35,10 @@ namespace Communication.Services.Tournament
 			return await _tournamentServiceProvider.GetListOfTournaments();
 		}
 
-		public async Task<HandlerResult<SuccessData<List<TournamentDto>>, IErrorResult>> GetListOfTournamentsFiltered(
-			TournamentFilterDto tournamentFilterDto)
+		public async Task<HandlerResult<SuccessData<List<TournamentResponse>>, IErrorResult>> GetListOfTournamentsFiltered(
+			TournamentFilterRequest tournamentFilterRequest)
 		{
-			return await _tournamentServiceProvider.GetListOfTournamentsFiltered(tournamentFilterDto);
+			return await _tournamentServiceProvider.GetListOfTournamentsFiltered(tournamentFilterRequest);
 		}
 
 		public async Task<HandlerResult<SuccessData<TournamentResponse>, IErrorResult>> GetTournament(long id)
@@ -57,9 +58,8 @@ namespace Communication.Services.Tournament
 			return new AccessDeniedError();
 		}
 
-		public async Task<HandlerResult<Success, IErrorResult>> UpdateTournament(long id, TournamentDto tournament)
+		public async Task<HandlerResult<Success, IErrorResult>> UpdateTournament(long id, TournamentRequest tournamentRequest)
 		{
-			
 			return new AccessDeniedError();
 		}
 	}

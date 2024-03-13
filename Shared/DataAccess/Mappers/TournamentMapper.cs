@@ -1,6 +1,8 @@
 ﻿using Shared.DataAccess.DTO;
 using Shared.DataAccess.DataBaseEntities;
+using Shared.DataAccess.DTO.Requests;
 using Shared.DataAccess.DTO.Responses;
+using Shared.DataAccess.Enumerations;
 
 namespace Shared.DataAccess.Mappers
 {
@@ -50,16 +52,33 @@ namespace Shared.DataAccess.Mappers
                 PlayersLimit = tournament.PlayersLimit,
                 TournamentsDate = tournament.TournamentsDate,
                 PostedDate = tournament.PostedDate,
-                Status = tournament.Status,
                 RankingType = tournament.RankingType,
                 Constraints = tournament.Constraints,
                 Image = tournament.Image,
                 MatchIds = tournament.Matches?
                     .Select(match => match.Id)
                     .ToList(),
-                BotIds = tournament.TournamentReference
+                BotIds = tournament.TournamentReference?
                     .Select(reference => reference.botId)
-                    .ToList()
+                    .ToList(),
+                WasPlayedOut = tournament.Status == TournamentStatus.DONE 
+                               
+            };
+        }
+
+        public Tournament TournamentRequestToTournament(TournamentRequest tournamentRequest)
+        {
+            return new Tournament()
+            {
+                TournamentTitle = tournamentRequest.TournamentTitle,
+                Description = tournamentRequest.Description,
+                GameId = tournamentRequest.GameId,
+                PlayersLimit = tournamentRequest.PlayersLimit,
+                PostedDate = DateTime.Now,
+                TournamentsDate = tournamentRequest.TournamentsDate,
+                Status = TournamentStatus.SCHEDULED,
+                Constraints = tournamentRequest.Constraints,
+                Image = tournamentRequest.Image,
             };
         }
     }
