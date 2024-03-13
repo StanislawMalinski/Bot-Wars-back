@@ -1,12 +1,14 @@
 ﻿using Shared.DataAccess.DAO;
 using Shared.DataAccess.DTO;
 using Shared.DataAccess.DataBaseEntities;
+using Shared.DataAccess.DTO.Responses;
 
 namespace Shared.DataAccess.Mappers
 {
 	public interface ITournamentMapper
     {
-        public Tournament DtoToTournament(TournamentDto dto);
-        public TournamentDto TournamentToDTO(Tournament tournament);
+        Tournament DtoToTournament(TournamentDto dto);
+        TournamentDto TournamentToDTO(Tournament tournament);
+        TournamentResponse TournamentToTournamentResponse(Tournament tournament);
     }
 }

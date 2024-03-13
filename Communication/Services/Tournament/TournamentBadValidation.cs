@@ -1,4 +1,5 @@
 ﻿using Shared.DataAccess.DTO;
+using Shared.DataAccess.DTO.Responses;
 using Shared.DataAccess.RepositoryInterfaces;
 using Shared.Results;
 using Shared.Results.ErrorResults;
@@ -25,7 +26,7 @@ namespace Communication.Services.Tournament
 			return new AccessDeniedError();
 		}
 
-		public async Task<HandlerResult<SuccessData<List<TournamentDto>>, IErrorResult>> GetListOfTournaments()
+		public async Task<HandlerResult<SuccessData<List<TournamentResponse>>, IErrorResult>> GetListOfTournaments()
 		{
 			return new AccessDeniedError();
 		}
@@ -37,7 +38,7 @@ namespace Communication.Services.Tournament
 			return new AccessDeniedError();
 		}
 
-		public async Task<HandlerResult<SuccessData<TournamentDto>, IErrorResult>> GetTournament(long id)
+		public async Task<HandlerResult<SuccessData<TournamentResponse>, IErrorResult>> GetTournament(long id)
 		{
 			
 			return new AccessDeniedError();

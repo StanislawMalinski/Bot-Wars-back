@@ -1,4 +1,5 @@
 ﻿using Shared.DataAccess.DTO;
+using Shared.DataAccess.DTO.Responses;
 using Shared.DataAccess.Repositories;
 using Shared.Results;
 using Shared.Results.IResults;
@@ -26,7 +27,7 @@ namespace Communication.Services.Tournament
 			return await _tournamentRepository.DeleteTournamentAsync(id);
 		}
 
-		public async Task<HandlerResult<SuccessData<List<TournamentDto>>, IErrorResult>> GetListOfTournaments()
+		public async Task<HandlerResult<SuccessData<List<TournamentResponse>>, IErrorResult>> GetListOfTournaments()
 		{
 			return await _tournamentRepository.GetTournamentsAsync();
 		}
@@ -39,7 +40,7 @@ namespace Communication.Services.Tournament
 			return tourlist;
 		}
 
-		public async Task<HandlerResult<SuccessData<TournamentDto>, IErrorResult>> GetTournament(long id)
+		public async Task<HandlerResult<SuccessData<TournamentResponse>, IErrorResult>> GetTournament(long id)
 		{
 			return await _tournamentRepository.GetTournamentAsync(id);
 		}

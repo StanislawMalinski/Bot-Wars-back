@@ -1,12 +1,11 @@
 ﻿using Shared.DataAccess.DTO.Requests;
-using Shared.DataAccess.RepositoryInterfaces;
 using Shared.Results;
 using Shared.Results.IResults;
 using Shared.Results.SuccessResults;
 
 namespace Communication.Services.GameType
 {
-	public class GameTypeAdminService : GameTypeUnidentifiedPlayerService, IGameService
+	public class GameTypeAdminService : GameTypeUnidentifiedPlayerService
 	{
 		public GameTypeAdminService(GameTypeServiceProvider gameTypeServiceProvider) : base(gameTypeServiceProvider)
 		{

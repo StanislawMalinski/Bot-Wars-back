@@ -2,6 +2,7 @@
 using Shared.DataAccess.Context;
 using Shared.DataAccess.DTO;
 using Shared.DataAccess.DataBaseEntities;
+using Shared.DataAccess.DTO.Responses;
 using Shared.DataAccess.Enumerations;
 using Shared.DataAccess.Mappers;
 using Shared.DataAccess.RepositoryInterfaces;
@@ -59,18 +60,22 @@ namespace Shared.DataAccess.Repositories
             return new Success();
         }
 
-        public async Task<HandlerResult<SuccessData<TournamentDto>, IErrorResult>> GetTournamentAsync(long id)
+        public async Task<HandlerResult<SuccessData<TournamentResponse>, IErrorResult>> GetTournamentAsync(long id)
         {
             
-            Tournament? tournament = await _dataContext.Tournaments.FindAsync(id);
+            var tournament = await _dataContext.Tournaments
+                .Include(tournament => tournament.Matches)
+                .Include(tournament => tournament.TournamentReference)
+                .SingleOrDefaultAsync(tournament => tournament.Id==id);
+            
             if (tournament == null) return new EntityNotFoundErrorResult() 
             { 
-                Title = "return null",
-                Message = $"Tournament of id {id} dont exits" 
+                Title = "EntityNotFoundErrorResult 404",
+                Message = $"No tournament with given id could have been found" 
             };
-            return new SuccessData<TournamentDto>()
+            return new SuccessData<TournamentResponse>()
             { 
-                Data = _mapper.TournamentToDTO(tournament)
+                Data = _mapper.TournamentToTournamentResponse(tournament)
             };
             
         }
@@ -109,13 +114,19 @@ namespace Shared.DataAccess.Repositories
         }
 
 
-        public async Task<HandlerResult<SuccessData<List<TournamentDto>>, IErrorResult>> GetTournamentsAsync()
+        public async Task<HandlerResult<SuccessData<List<TournamentResponse>>, IErrorResult>> GetTournamentsAsync()
         {
             
-                var dto = await _dataContext.Tournaments.Select(x => _mapper.TournamentToDTO(x)).ToListAsync();
-                return new SuccessData<List<TournamentDto>>()
+                var tournamentResponses = await _dataContext
+                    .Tournaments
+                    .Include(tournament => tournament.Matches)
+                    .Include(tournament => tournament.TournamentReference)
+                    .Select(tournament => _mapper.TournamentToTournamentResponse(tournament))
+                    .ToListAsync();
+            
+                return new SuccessData<List<TournamentResponse>>()
                 {
-                    Data = dto
+                    Data = tournamentResponses
                 };
 
         }
