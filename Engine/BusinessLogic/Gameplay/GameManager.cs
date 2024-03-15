@@ -18,7 +18,7 @@ public class GameManager : IGameManager
             BotLoser = botsData[1],
         };*/
         var botsArray = botsData.ToArray();
-        FileManager manager = new FileManager(); //?
+        FileManager manager = new FileManager(new HttpClient()); //???
         IOProgramWrapper[] bots = new IOProgramWrapper[botsData.Count()];
         IOProgramWrapper game = new IOProgramWrapper(manager.GetGameFilepath(gameData.Id));
         int ind = 0;
