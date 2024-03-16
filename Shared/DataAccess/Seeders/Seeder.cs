@@ -87,7 +87,7 @@ public class Seeder
             {
                 Id = 1, NumbersOfPlayer = 10, LastModification = DateTime.Now, GameFile = "Quake III Arena",
                 GameInstructions = "Eliminate the enemy players in fast-paced multiplayer battles.",
-                InterfaceDefinition = "First-Person Shooter (FPS)", IsAvailableForPlay = true, FileId = 1
+                InterfaceDefinition = "First-Person Shooter (FPS)", IsAvailableForPlay = true, FileId = 5
             },
             new Game()
             {
@@ -300,16 +300,16 @@ public class Seeder
     {
         return new List<Bot>()
         {
-            new Bot() { Id = 1, GameId = 1, PlayerId = 1, BotFile = "quake3_bot_1", FileId = 1 },
-            new Bot() { Id = 2, GameId = 1, PlayerId = 2, BotFile = "quake3_bot_2", FileId = 1 },
-            new Bot() { Id = 3, GameId = 2, PlayerId = 3, BotFile = "zelda_bot_1", FileId = 1 },
-            new Bot() { Id = 4, GameId = 2, PlayerId = 4, BotFile = "zelda_bot_2", FileId = 1 },
-            new Bot() { Id = 5, GameId = 3, PlayerId = 5, BotFile = "fifa22_bot_1", FileId = 1 },
-            new Bot() { Id = 6, GameId = 3, PlayerId = 6, BotFile = "fifa22_bot_2", FileId = 1 },
-            new Bot() { Id = 7, GameId = 4, PlayerId = 7, BotFile = "amongus_bot_1", FileId = 1 },
-            new Bot() { Id = 8, GameId = 4, PlayerId = 8, BotFile = "amongus_bot_2", FileId = 1 },
-            new Bot() { Id = 9, GameId = 5, PlayerId = 9, BotFile = "minecraft_bot_1", FileId = 1 },
-            new Bot() { Id = 10, GameId = 5, PlayerId = 10, BotFile = "minecraft_bot_2", FileId = 1 }
+            new Bot() { Id = 1, GameId = 1, PlayerId = 1, BotFile = "quake3_bot_1", FileId = 2 },
+            new Bot() { Id = 2, GameId = 1, PlayerId = 2, BotFile = "quake3_bot_2", FileId = 3 },
+            new Bot() { Id = 3, GameId = 2, PlayerId = 3, BotFile = "zelda_bot_1", FileId = 2 },
+            new Bot() { Id = 4, GameId = 2, PlayerId = 4, BotFile = "zelda_bot_2", FileId = 2 },
+            new Bot() { Id = 5, GameId = 3, PlayerId = 5, BotFile = "fifa22_bot_1", FileId = 4 },
+            new Bot() { Id = 6, GameId = 3, PlayerId = 6, BotFile = "fifa22_bot_2", FileId = 2 },
+            new Bot() { Id = 7, GameId = 4, PlayerId = 7, BotFile = "amongus_bot_1", FileId = 3 },
+            new Bot() { Id = 8, GameId = 4, PlayerId = 8, BotFile = "amongus_bot_2", FileId = 4 },
+            new Bot() { Id = 9, GameId = 5, PlayerId = 9, BotFile = "minecraft_bot_1", FileId = 2 },
+            new Bot() { Id = 10, GameId = 5, PlayerId = 10, BotFile = "minecraft_bot_2", FileId = 4 }
         };
     }
 

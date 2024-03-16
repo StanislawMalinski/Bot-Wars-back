@@ -45,4 +45,4 @@ volumes:
         driver_opts:
             type: none
             o: bind
-            device: /FileGatherer/Storage
+            device: FileGatherer/Storage

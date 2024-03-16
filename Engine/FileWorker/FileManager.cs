@@ -29,7 +29,6 @@ public class FileManager
     {
         try
         {
-            Console.WriteLine(string.Format(_gathererEndpoint, bot.FileId));
             HttpResponseMessage res = await _httpClient.GetAsync(string.Format(_gathererEndpoint, bot.FileId));
             if (!res.IsSuccessStatusCode)
             {
@@ -53,7 +52,6 @@ public class FileManager
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error: {ex.Message}");
             return new EntityNotFoundErrorResult
             {
                 Title = "Exception",
@@ -61,7 +59,8 @@ public class FileManager
             };
         }
     }
-
+    
+   
     public async Task<HandlerResult<Success,IErrorResult>> addbot(BotFileDto botFileDto)
     {
         long id = botFileDto.BotId;
@@ -75,7 +74,6 @@ public class FileManager
         }
 
         var res = await Compile(id, Language.C, BotFilePath);
-        Console.WriteLine("compie "+ res);
         if (!res)
         {
             return new NotImplementedError()
@@ -109,10 +107,37 @@ public class FileManager
         }
         return new Success();
     }
-    
-    public string GetBotFilepath(long id)
+
+    private async Task getBotFile(long id, long fileId)
     {
-        string[] dirs = Directory.GetFiles(BotFilePath, id + ".*");
+        var file = await GetFileFromStorage(fileId);
+        
+        
+        SaveFileAs(BotFilePath,id,file);
+        await Compile(id, Language.C, BotFilePath);
+    }
+    private async Task getGameFile(long id, long fileId)
+    {
+        var file = await GetFileFromStorage(fileId);
+        SaveFileAs(GameFilePath,id,file);
+        bool res = await Compile(id, Language.C, GameFilePath);
+    }
+    private async Task<string> GetFileFromStorage(long fileId)
+    {
+        HttpResponseMessage res = await _httpClient.GetAsync(string.Format(_gathererEndpoint, fileId));
+        if (!res.IsSuccessStatusCode)
+        {
+            return string.Empty;
+        }
+        return await res.Content.ReadAsStringAsync();
+    }
+    private void SaveFileAs( string where,long id, string fileContent)
+    {
+        System.IO.File.WriteAllText($"{where}/{id}.cpp", fileContent);
+    }
+    public async Task<string> GetBotFilepath(Bot bot)
+    {
+        string[] dirs = Directory.GetFiles(BotFilePath, bot.Id + ".*");
         foreach(string s in dirs)
         {
             if (Path.GetExtension(s) == ".out")
@@ -120,12 +145,13 @@ public class FileManager
                 return s;
             }
         }
-        return string.Empty;
+        await getBotFile(bot.Id,bot.FileId);
+        return $"{BotFilePath}/{bot.Id}.out";
     }
     
-    public string GetGameFilepath(long id)
+    public async Task<string> GetGameFilepath(Game game)
     {
-        string[] dirs = Directory.GetFiles(GameFilePath, id + ".*");
+        string[] dirs = Directory.GetFiles(GameFilePath, game.Id + ".*");
         foreach(string s in dirs)
         {
             if (Path.GetExtension(s) == ".out")
@@ -133,7 +159,8 @@ public class FileManager
                 return s;
             }
         }
-        return string.Empty;
+        await getGameFile(game.Id,game.FileId);
+        return $"{GameFilePath}/{game.Id}.out";
     }
 
     public async Task<bool> TestSaveFile(IFormFile file, long id, string where)
@@ -153,6 +180,7 @@ public class FileManager
 
     private async Task<bool> Compile(long id, Language language,string where)
     {
+       
         switch (language)
         {
             case (Language.C):
@@ -172,7 +200,6 @@ public class FileManager
         Process compilerProcess = new Process();
         compilerProcess.StartInfo.FileName = "bash"; // or "cmd" if running on Windows
         compilerProcess.StartInfo.Arguments = $"-c \"{command}\"";;
-        Console.WriteLine(command);
         compilerProcess.StartInfo.RedirectStandardOutput = true;
         compilerProcess.StartInfo.RedirectStandardError = true;
         compilerProcess.StartInfo.UseShellExecute = false;
@@ -182,39 +209,13 @@ public class FileManager
         string output = compilerProcess.StandardOutput.ReadToEnd();
         string error = compilerProcess.StandardError.ReadToEnd();
         compilerProcess.WaitForExit();
-        Console.WriteLine(output);
         if (compilerProcess.ExitCode != 0)
         {
             
-            Console.WriteLine(error);
             return false;
         }
         
         return true;
     }
-
-    public async Task<bool> bottest()
-    {
-        Console.WriteLine(GetBotFilepath(4));
-        IOProgramWrapper p4 = new IOProgramWrapper(GetBotFilepath(4));
-        await p4.Run();
-        await p4.Send("0 0 0 1");
-        Console.WriteLine("a");
-        var res = await p4.Get();
-        Console.WriteLine(res);
-        await p4.Send("1");
-        res = await p4.Get();
-        Console.WriteLine(res);
-        p4.Interrupt();
-        /*
-       
-       
-        Console.WriteLine(await  p4.Get());
-        await p4.Send("1");
-        Console.WriteLine(await  p4.Get());
-        await p4.Send("1");
-        Console.WriteLine(await  p4.Get());
-        */
-        return true;
-    }
+    
 }

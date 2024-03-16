@@ -6,6 +6,7 @@ using Shared.DataAccess.DataBaseEntities;
 using Shared.DataAccess.DTO;
 using Shared.DataAccess.Repositories;
 using System.IO;
+using Shared.DataAccess.Enumerations;
 
 namespace Engine.FileController;
 
@@ -16,48 +17,22 @@ public class FileController : Controller
 
     private FileManager _fileManager;
     private MatchRepository _matchRepository;
+    private TaskRepository _taskRepository;
 
-    public FileController(FileManager fileManager,MatchRepository matchRepository)
+    public FileController(FileManager fileManager,MatchRepository matchRepository, TaskRepository taskRepository)
     {
         _fileManager = fileManager;
         _matchRepository = matchRepository;
-    }
-    
-    [HttpPost("add")]
-    public async Task<IActionResult> UploadBot( BotFileDto botDto)
-    {
-        return (await _fileManager.addbot(botDto)).Match(Ok, Ok);
-        return Ok();
-    }
-    
-    [HttpPost("commpile")]
-    public async Task<IActionResult> UploadXDBot()
-    {
-        await _fileManager.bottest();
-        return Ok();
+        _taskRepository = taskRepository;
     }
     
      
     [HttpPost("test")]
     public async Task<IActionResult> dosomthing()
     {
-
-
-        return (await _matchRepository.RestoreLather(1)).Match(Ok,Ok);
-        return Ok();
-        GameInfo gameInfo = new GameInfo(true,2,null,new List<Bot>()
-        {
-          new Bot()
-          {
-              Id = 1
-          } ,
-          new Bot()
-          {
-              Id = 5
-          } 
-        });
-        await _matchRepository.CreateMatch(1,gameInfo);
-        return Ok();
+        
+        return (await  _taskRepository.CreateTask(TaskTypes.PlayTournament, 1L, DateTime.Now)).Match(Ok,Ok);
+        
     }
 
     // TEST - if there is file with id 5 in FileGatherer it should be obtained & saved in FileSystem

@@ -20,13 +20,13 @@ public class GameManager : IGameManager
         var botsArray = botsData.ToArray();
         FileManager manager = new FileManager(new HttpClient()); //???
         IOProgramWrapper[] bots = new IOProgramWrapper[botsData.Count()];
-        IOProgramWrapper game = new IOProgramWrapper(manager.GetGameFilepath(gameData.Id));
+        IOProgramWrapper game = new IOProgramWrapper(await manager.GetGameFilepath(gameData));
         int ind = 0;
         Console.WriteLine("gry gotowe");
         foreach (var bot in botsArray)
         {
             
-            bots[ind] = new IOProgramWrapper(manager.GetBotFilepath(bot.Id));
+            bots[ind] = new IOProgramWrapper( await manager.GetBotFilepath(bot));
             await bots[ind].Run();
             ind++;
         }
