@@ -9,8 +9,6 @@
         public long Points { get; set; }
         public string? HashedPassword { get; set; }
         public int RoleId { get; set; }
-        public DateTime Registered { get; set; }
-        public DateTime LastLogin { get; set; }
         public  Role Role { get; set; }
         
         public List<Bot>? Bot { get; set; }
@@ -19,6 +17,5 @@
         public List<PointHistory>? PlayerPointsList { get; set; }
         public List<AchievementRecord> AchievementRecords { get; set; }
         public List<NotificationOutbox> NotificationOutboxes { get; set; }
-        public List<Tournament> Tournaments { get; set; }
     }
 }

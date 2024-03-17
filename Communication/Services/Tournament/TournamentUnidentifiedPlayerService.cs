@@ -33,10 +33,9 @@ namespace Communication.Services.Tournament
 			return await _tournamentServiceProvider.GetListOfTournaments();
 		}
 
-		public async Task<HandlerResult<SuccessData<List<TournamentDto>>, IErrorResult>> GetListOfTournamentsFiltered(
-			TournamentFilterDto tournamentFilterDto)
+		public async Task<HandlerResult<SuccessData<List<TournamentDto>>, IErrorResult>> GetListOfTournamentsFiltered()
 		{
-			return await _tournamentServiceProvider.GetListOfTournamentsFiltered(tournamentFilterDto);
+			return await _tournamentServiceProvider.GetListOfTournamentsFiltered();
 		}
 
 		public async Task<HandlerResult<SuccessData<TournamentDto>, IErrorResult>> GetTournament(long id)

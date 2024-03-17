@@ -1,7 +1,6 @@
 ﻿using Communication.ServiceInterfaces;
 using Communication.Services.Tournament;
 using Shared.DataAccess.DTO;
-using Shared.DataAccess.DTO.Requests;
 using Shared.DataAccess.RepositoryInterfaces;
 using Shared.Results;
 using Shared.Results.ErrorResults;
@@ -42,10 +41,5 @@ public class PlayerUnidentifiedPlayerService : IPlayerService
     public async Task<HandlerResult<SuccessData<string>, IErrorResult>> GenerateJwt(LoginDto dto)
     {
         return await _playerServiceProvider.GenerateJwt(dto);
-    }
-
-    public async Task<HandlerResult<SuccessData<PlayerInfo>, IErrorResult>> GetPlayerInfoAsync(long playerId)
-    {
-        return await _playerServiceProvider.GetPlayerInfoById(playerId);
     }
 }

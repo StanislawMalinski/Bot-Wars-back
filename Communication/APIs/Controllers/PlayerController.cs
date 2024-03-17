@@ -28,12 +28,6 @@ namespace Communication.APIs.Controllers
             return (await _playerService.GenerateJwt(dto)).Match(Ok,this.ErrorResult);
         }
         
-        [HttpGet("getPlayers")]
-        public async Task<IActionResult> GetPlayers(long id)
-        {
-            return (await _playerService.GetPlayerInfoAsync(id)).Match(Ok,this.ErrorResult);;
-        }
-        
         /*
         [HttpPost("add")]
         public async Task<IActionResult> AddTournament([FromBody] PlayerDto dto)

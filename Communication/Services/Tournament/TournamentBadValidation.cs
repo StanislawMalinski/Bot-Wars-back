@@ -30,8 +30,7 @@ namespace Communication.Services.Tournament
 			return new AccessDeniedError();
 		}
 
-		public async Task<HandlerResult<SuccessData<List<TournamentDto>>, IErrorResult>> GetListOfTournamentsFiltered(
-			TournamentFilterDto tournamentFilterDto)
+		public async Task<HandlerResult<SuccessData<List<TournamentDto>>, IErrorResult>> GetListOfTournamentsFiltered()
 		{
 			
 			return new AccessDeniedError();

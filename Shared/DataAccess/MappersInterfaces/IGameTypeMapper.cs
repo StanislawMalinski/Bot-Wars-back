@@ -1,13 +1,12 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Shared.DataAccess.DAO;
 using Shared.DataAccess.DataBaseEntities;
-using Shared.DataAccess.DTO.Requests;
-using Shared.DataAccess.DTO.Responses;
+using Shared.DataAccess.DTO;
 
 namespace Shared.DataAccess.Mappers
 {
 	public interface IGameTypeMapper
     {
-        Game MapRequestToGame(GameRequest gameRequest);
-        GameResponse MapGameToResponse(Game game);
+        public GameDto ToDto(Game gameType);
+        public Game ToGameType(GameDto gameTypeDto);
     }
 }

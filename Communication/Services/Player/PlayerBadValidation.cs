@@ -1,6 +1,5 @@
 ﻿using Communication.ServiceInterfaces;
 using Shared.DataAccess.DTO;
-using Shared.DataAccess.DTO.Requests;
 using Shared.DataAccess.RepositoryInterfaces;
 using Shared.Results;
 using Shared.Results.ErrorResults;
@@ -32,10 +31,6 @@ public class PlayerBadValidation : PlayerUnidentifiedPlayerService , IPlayerServ
     }
 
     public async Task<HandlerResult<Success, IErrorResult>> resetPassWordByLogin(string Login)
-    {
-        return new AccessDeniedError();
-    }
-    public async Task<HandlerResult<SuccessData<PlayerInfo>, IErrorResult>> GetPlayerInfoAsync(long playerId)
     {
         return new AccessDeniedError();
     }

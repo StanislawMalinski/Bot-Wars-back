@@ -11,52 +11,52 @@ public class Seeder
         {
             new Player()
             {
-                Id = 1, Email = "john.doe@example.com", Login = "john_doe", Points = 1000, HashedPassword = "aasdsdas",Registered = DateTime.Now,
+                Id = 1, Email = "john.doe@example.com", Login = "john_doe", Points = 100, HashedPassword = "aasdsdas",
                 isBanned = false, RoleId = 1
             },
             new Player()
             {
-                Id = 2, Email = "jane.smith@example.com", Login = "jane_smith", Points = 1000,Registered = DateTime.Now,
+                Id = 2, Email = "jane.smith@example.com", Login = "jane_smith", Points = 150,
                 HashedPassword = "sdfgdfg", isBanned = false, RoleId = 1
             },
             new Player()
             {
-                Id = 3, Email = "alex.jones@example.com", Login = "alex_jones", Points = 1000,Registered = DateTime.Now,
+                Id = 3, Email = "alex.jones@example.com", Login = "alex_jones", Points = 200,
                 HashedPassword = "hjklhjk", isBanned = false, RoleId = 1
             },
             new Player()
             {
-                Id = 4, Email = "emily.white@example.com", Login = "emily_white", Points = 1000,Registered = DateTime.Now,
+                Id = 4, Email = "emily.white@example.com", Login = "emily_white", Points = 75,
                 HashedPassword = "qwertyui", isBanned = false, RoleId = 1
             },
             new Player()
             {
-                Id = 5, Email = "sam.wilson@example.com", Login = "sam_wilson", Points = 1000,Registered = DateTime.Now,
+                Id = 5, Email = "sam.wilson@example.com", Login = "sam_wilson", Points = 120,
                 HashedPassword = "zxcvbnm", isBanned = false, RoleId = 1
             },
             new Player()
             {
-                Id = 6, Email = "olivia.brown@example.com", Login = "olivia_brown", Points = 1000,Registered = DateTime.Now,
+                Id = 6, Email = "olivia.brown@example.com", Login = "olivia_brown", Points = 180,
                 HashedPassword = "poiuytre", isBanned = false, RoleId = 1
             },
             new Player()
             {
-                Id = 7, Email = "david.miller@example.com", Login = "david_miller", Points = 1000,Registered = DateTime.Now,
+                Id = 7, Email = "david.miller@example.com", Login = "david_miller", Points = 90,
                 HashedPassword = "lkjhgfds", isBanned = false, RoleId = 1
             },
             new Player()
             {
-                Id = 8, Email = "emma.jenkins@example.com", Login = "emma_jenkins", Points = 1000,Registered = DateTime.Now,
+                Id = 8, Email = "emma.jenkins@example.com", Login = "emma_jenkins", Points = 160,
                 HashedPassword = "mnbvcxz", isBanned = false, RoleId = 1
             },
             new Player()
             {
-                Id = 9, Email = "ryan.clark@example.com", Login = "ryan_clark", Points = 1000,Registered = DateTime.Now,
+                Id = 9, Email = "ryan.clark@example.com", Login = "ryan_clark", Points = 110,
                 HashedPassword = "asdfghjk", isBanned = true, RoleId = 1
             },
             new Player()
             {
-                Id = 10, Email = "sara.taylor@example.com", Login = "sara_taylor", Points = 1000,Registered = DateTime.Now,
+                Id = 10, Email = "sara.taylor@example.com", Login = "sara_taylor", Points = 130,
                 HashedPassword = "qazwsxed", isBanned = false, RoleId = 2
             }
         };
@@ -164,8 +164,7 @@ public class Seeder
                 TournamentsDate = new DateTime(2023, 1, 20),
                 Status = TournamentStatus.PLAYED,
                 Constraints = "Participants must have a minimum skill level of intermediate.",
-                Image = "quakethreearena.jpg", // You can replace this with the actual image file or URL,
-                CreatorId = 1
+                Image = "quakethreearena.jpg" // You can replace this with the actual image file or URL
             },
             new Tournament()
             {
@@ -178,7 +177,6 @@ public class Seeder
                 TournamentsDate = new DateTime(2023, 2, 15),
                 Status = TournamentStatus.PLAYED,
                 Constraints = "Participants must complete the game on a specific difficulty level.",
-                CreatorId = 2,
                 Image = "zeldabreathofthewild.jpg" // You can replace this with the actual image file or URL
             },
             new Tournament()
@@ -192,7 +190,6 @@ public class Seeder
                 TournamentsDate = new DateTime(2023, 3, 10),
                 Status = TournamentStatus.PLAYED,
                 Constraints = "Teams must consist of real-world players.",
-                CreatorId = 3,
                 Image = "fifa22worldcup.jpg" // You can replace this with the actual image file or URL
             },
             new Tournament()
@@ -206,7 +203,6 @@ public class Seeder
                 TournamentsDate = new DateTime(2022, 4, 5),
                 Status = TournamentStatus.PLAYED,
                 Constraints = "Players must use voice communication during the game.",
-                CreatorId = 1,
                 Image = "amongusinfiltration.jpg" // You can replace this with the actual image file or URL
             },
             new Tournament()
@@ -220,7 +216,6 @@ public class Seeder
                 TournamentsDate = new DateTime(2023, 5, 20),
                 Status = TournamentStatus.PLAYED,
                 Constraints = "Builds must adhere to a specific theme.",
-                CreatorId = 1,
                 Image = "minecraftbuildingshowcase.jpg" // You can replace this with the actual image file or URL
             },
             new Tournament()
@@ -234,7 +229,6 @@ public class Seeder
                 TournamentsDate = new DateTime(2022, 6, 15),
                 Status = TournamentStatus.PLAYED,
                 Constraints = "Participants must customize their character's appearance.",
-                CreatorId = 3,
                 Image = "cyberpunk2077challenge.jpg" // You can replace this with the actual image file or URL
             },
             new Tournament()
@@ -248,7 +242,6 @@ public class Seeder
                 TournamentsDate = new DateTime(2023, 7, 1),
                 Status = TournamentStatus.PLAYED,
                 Constraints = "Teams must consist of three players.",
-                CreatorId = 2,
                 Image = "rocketleaguechampionship.jpg" // You can replace this with the actual image file or URL
             },
             new Tournament()
@@ -262,7 +255,6 @@ public class Seeder
                 TournamentsDate = new DateTime(2023, 8, 10),
                 Status = TournamentStatus.PLAYED,
                 Constraints = "Players must adhere to the battle royale ruleset.",
-                CreatorId = 2,
                 Image = "callofdutywarzone.jpg" // You can replace this with the actual image file or URL
             },
             new Tournament()
@@ -276,7 +268,6 @@ public class Seeder
                 TournamentsDate = new DateTime(2023, 9, 5),
                 Status = TournamentStatus.PLAYED,
                 Constraints = "Islands must be designed within a specific theme.",
-                CreatorId = 3,
                 Image = "animalcrossingislandshowcase.jpg" // You can replace this with the actual image file or URL
             },
             new Tournament()
@@ -290,7 +281,6 @@ public class Seeder
                 TournamentsDate = new DateTime(2023, 10, 20),
                 Status = TournamentStatus.PLAYED,
                 Constraints = "Teams must adhere to the standard Dota 2 competitive rules.",
-                CreatorId = 1,
                 Image = "dota2clashoftitans.jpg" // You can replace this with the actual image file or URL
             }
         };

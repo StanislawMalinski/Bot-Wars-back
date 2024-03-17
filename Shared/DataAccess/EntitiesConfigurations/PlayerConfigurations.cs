@@ -24,7 +24,6 @@ public class PlayerConfigurations : IEntityTypeConfiguration<Player>
 
         builder.Property(entity => entity.HashedPassword)
             .IsRequired();
-        
 
         // builder.HasOne(entity => entity.Role)
         //     .WithMany()
