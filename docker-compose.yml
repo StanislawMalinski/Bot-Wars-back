@@ -28,21 +28,8 @@ services:
             - "7001:8080"
         depends_on:
             - bot_wars_api
-    file_gatherer:
-        build:
-            context: .
-            dockerfile: FileGatherer/gatherer.dockerfile
-        ports:
-            - "7002:8080"
-        volumes:
-            - file_gatherer:/app/Storage
         
+
 volumes:
-    bot_wars_db:
-        driver: local
-    file_gatherer:
-        driver: local
-        driver_opts:
-            type: none
-            o: bind
-            device: /FileGatherer/Storage
+  bot_wars_db:
+    driver: local

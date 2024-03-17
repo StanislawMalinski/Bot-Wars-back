@@ -17,7 +17,7 @@ using Shared.DataAccess.RepositoryInterfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Logger
+//Logger
 builder.Logging.ClearProviders();
 builder.Logging.SetMinimumLevel(LogLevel.Trace);
 builder.Host.UseNLog();
@@ -29,11 +29,8 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<IPlayerValidator, MockValidator>();
 
-// Jwt configuration
+//Jwt configuration
 var authenticationSettings = new AuthenticationSettings();
-
-// Http Client for communication with FileGatherer
-builder.Services.AddHttpClient();
 
 builder.Services.AddSingleton(authenticationSettings);
 builder.Configuration.GetSection("Authentication").Bind(authenticationSettings);

@@ -87,64 +87,64 @@ public class Seeder
             {
                 Id = 1, NumbersOfPlayer = 10, LastModification = DateTime.Now, GameFile = "Quake III Arena",
                 GameInstructions = "Eliminate the enemy players in fast-paced multiplayer battles.",
-                InterfaceDefinition = "First-Person Shooter (FPS)", IsAvailableForPlay = true, FileId = 1
+                InterfaceDefinition = "First-Person Shooter (FPS)", IsAvailableForPlay = true
             },
             new Game()
             {
                 Id = 2, NumbersOfPlayer = 1, LastModification = DateTime.Now,
                 GameFile = "The Legend of Zelda: Breath of the Wild",
                 GameInstructions = "Embark on an epic adventure to defeat the Calamity Ganon and save Hyrule.",
-                InterfaceDefinition = "Action-Adventure", IsAvailableForPlay = true, FileId = 1
+                InterfaceDefinition = "Action-Adventure", IsAvailableForPlay = true
             },
             new Game()
             {
                 Id = 3, NumbersOfPlayer = 2, LastModification = DateTime.Now, GameFile = "FIFA 22",
                 GameInstructions = "Experience realistic football simulation with updated teams and gameplay.",
-                InterfaceDefinition = "Sports Simulation", IsAvailableForPlay = true, FileId = 1
+                InterfaceDefinition = "Sports Simulation", IsAvailableForPlay = true
             },
             new Game()
             {
                 Id = 4, NumbersOfPlayer = 7, LastModification = DateTime.Now, GameFile = "Among Us",
                 GameInstructions = "Work together to complete tasks while identifying the impostors among the crew.",
-                InterfaceDefinition = "Social Deduction", IsAvailableForPlay = true, FileId = 1
+                InterfaceDefinition = "Social Deduction", IsAvailableForPlay = true
             },
             new Game()
             {
                 Id = 5, NumbersOfPlayer = 16, LastModification = DateTime.Now, GameFile = "Minecraft",
                 GameInstructions = "Build and explore a blocky world, mine resources, and survive.",
-                InterfaceDefinition = "Sandbox", IsAvailableForPlay = false, FileId = 1
+                InterfaceDefinition = "Sandbox", IsAvailableForPlay = false
             },
             new Game()
             {
                 Id = 6, NumbersOfPlayer = 1, LastModification = DateTime.Now, GameFile = "Cyberpunk 2077",
                 GameInstructions = "Navigate the futuristic open world of Night City as the mercenary V.",
-                InterfaceDefinition = "Action RPG", IsAvailableForPlay = true, FileId = 1
+                InterfaceDefinition = "Action RPG", IsAvailableForPlay = true
             },
             new Game()
             {
                 Id = 7, NumbersOfPlayer = 14, LastModification = DateTime.Now, GameFile = "Rocket League",
                 GameInstructions = "Play soccer with rocket-powered cars in this unique sports game.",
-                InterfaceDefinition = "Vehicular Soccer", IsAvailableForPlay = true, FileId = 1
+                InterfaceDefinition = "Vehicular Soccer", IsAvailableForPlay = true
             },
             new Game()
             {
                 Id = 8, NumbersOfPlayer = 8, LastModification = DateTime.Now, GameFile = "Call of Duty: Warzone",
                 GameInstructions = "Engage in intense battle royale action in the Call of Duty universe.",
-                InterfaceDefinition = "First-Person Shooter (Battle Royale)", IsAvailableForPlay = false, FileId = 1
+                InterfaceDefinition = "First-Person Shooter (Battle Royale)", IsAvailableForPlay = false
             },
             new Game()
             {
                 Id = 9, NumbersOfPlayer = 5, LastModification = DateTime.Now,
                 GameFile = "Animal Crossing: New Horizons",
                 GameInstructions = "Create and customize your own island paradise in a relaxing simulation.",
-                InterfaceDefinition = "Life Simulation", IsAvailableForPlay = true, FileId = 1
+                InterfaceDefinition = "Life Simulation", IsAvailableForPlay = true
             },
             new Game()
             {
                 Id = 10, NumbersOfPlayer = 10, LastModification = DateTime.Now, GameFile = "Dota 2",
                 GameInstructions =
                     "Compete in strategic team-based battles in this multiplayer online battle arena (MOBA).",
-                InterfaceDefinition = "MOBA", IsAvailableForPlay = true, FileId = 1
+                InterfaceDefinition = "MOBA", IsAvailableForPlay = true
             }
         };
     }
@@ -300,16 +300,16 @@ public class Seeder
     {
         return new List<Bot>()
         {
-            new Bot() { Id = 1, GameId = 1, PlayerId = 1, BotFile = "quake3_bot_1", FileId = 1 },
-            new Bot() { Id = 2, GameId = 1, PlayerId = 2, BotFile = "quake3_bot_2", FileId = 1 },
-            new Bot() { Id = 3, GameId = 2, PlayerId = 3, BotFile = "zelda_bot_1", FileId = 1 },
-            new Bot() { Id = 4, GameId = 2, PlayerId = 4, BotFile = "zelda_bot_2", FileId = 1 },
-            new Bot() { Id = 5, GameId = 3, PlayerId = 5, BotFile = "fifa22_bot_1", FileId = 1 },
-            new Bot() { Id = 6, GameId = 3, PlayerId = 6, BotFile = "fifa22_bot_2", FileId = 1 },
-            new Bot() { Id = 7, GameId = 4, PlayerId = 7, BotFile = "amongus_bot_1", FileId = 1 },
-            new Bot() { Id = 8, GameId = 4, PlayerId = 8, BotFile = "amongus_bot_2", FileId = 1 },
-            new Bot() { Id = 9, GameId = 5, PlayerId = 9, BotFile = "minecraft_bot_1", FileId = 1 },
-            new Bot() { Id = 10, GameId = 5, PlayerId = 10, BotFile = "minecraft_bot_2", FileId = 1 }
+            new Bot() { Id = 1, GameId = 1, PlayerId = 1, BotFile = "quake3_bot_1" },
+            new Bot() { Id = 2, GameId = 1, PlayerId = 2, BotFile = "quake3_bot_2" },
+            new Bot() { Id = 3, GameId = 2, PlayerId = 3, BotFile = "zelda_bot_1" },
+            new Bot() { Id = 4, GameId = 2, PlayerId = 4, BotFile = "zelda_bot_2" },
+            new Bot() { Id = 5, GameId = 3, PlayerId = 5, BotFile = "fifa22_bot_1" },
+            new Bot() { Id = 6, GameId = 3, PlayerId = 6, BotFile = "fifa22_bot_2" },
+            new Bot() { Id = 7, GameId = 4, PlayerId = 7, BotFile = "amongus_bot_1" },
+            new Bot() { Id = 8, GameId = 4, PlayerId = 8, BotFile = "amongus_bot_2" },
+            new Bot() { Id = 9, GameId = 5, PlayerId = 9, BotFile = "minecraft_bot_1" },
+            new Bot() { Id = 10, GameId = 5, PlayerId = 10, BotFile = "minecraft_bot_2" }
         };
     }
 

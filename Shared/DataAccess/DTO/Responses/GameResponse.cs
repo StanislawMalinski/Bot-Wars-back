@@ -9,7 +9,7 @@ public class GameResponse
     public string? GameInstructions { get; set; }
     public string? InterfaceDefinition { get; set; }
     public bool IsAvailableForPlay { get; set; }
-    public long FileId { get; set; }
+    
         
     public List<long>? BotIds { get; set; }
     public List<long>? TournamentsIds { get; set; }
