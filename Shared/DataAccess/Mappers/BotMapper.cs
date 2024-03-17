@@ -22,8 +22,7 @@ public class BotMapper : IBotMapper
         {
             Id = bot.Id,
             PlayerId = bot.PlayerId,
-            GameId = bot.GameId,
-            FileId = bot.FileId
+            GameId = bot.GameId
         };
     }
 }

@@ -1,9 +1,7 @@
 ﻿using System.Diagnostics;
-using System.IO;
 using Engine.BusinessLogic.Gameplay;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Shared.DataAccess.DAO;
-using Shared.DataAccess.DataBaseEntities;
 using Shared.DataAccess.DTO;
 using Shared.Results;
 using Shared.Results.ErrorResults;
@@ -16,50 +14,9 @@ public class FileManager
 {
     private string BotFilePath =  "FileSystem/Bots";
     private string GameFilePath = "FileSystem/Games";
-    private readonly HttpClient _httpClient;
-    // move to config
-    private readonly string _gathererEndpoint = "http://host.docker.internal:7002/api/Gatherer/{0}";
-    public FileManager(HttpClient httpClient)
+    public FileManager()
     {
-        _httpClient = httpClient;
-    }
-
-    // FileDto -> BotFileDto with string FileContent instead of IFormFile file
-    public async Task<HandlerResult<SuccessData<FileDto>, IErrorResult>> GetBotFileFromStorage(Bot bot)
-    {
-        try
-        {
-            Console.WriteLine(string.Format(_gathererEndpoint, bot.FileId));
-            HttpResponseMessage res = await _httpClient.GetAsync(string.Format(_gathererEndpoint, bot.FileId));
-            if (!res.IsSuccessStatusCode)
-            {
-                return new EntityNotFoundErrorResult
-                {
-                    Title = "EntityNotFoundErrorResult",
-                    Message = $"File {bot.FileId} not found in Gatherer"
-                };
-            }
-            string cont = await res.Content.ReadAsStringAsync();
-
-            FileDto ret = new FileDto()
-            {
-                PlayerId = bot.PlayerId,
-                GameId = bot.GameId,
-                BotId = bot.Id,
-                BotName = bot.BotFile,
-                FileContent = cont
-            };
-            return new SuccessData<FileDto>() { Data = ret };
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error: {ex.Message}");
-            return new EntityNotFoundErrorResult
-            {
-                Title = "Exception",
-                Message = ex.Message
-            };
-        }
+        
     }
 
     public async Task<HandlerResult<Success,IErrorResult>> addbot(BotFileDto botFileDto)
@@ -136,11 +93,6 @@ public class FileManager
         return string.Empty;
     }
 
-    public async Task<bool> TestSaveFile(IFormFile file, long id, string where)
-    {
-        return await SaveFile(file, id, where);
-    }
-
     private async Task<bool> SaveFile(IFormFile file,long id,string where)
     {
         string filePath = where + "/"+ id + Path.GetExtension(file.FileName);
@@ -150,7 +102,6 @@ public class FileManager
 
         return true;
     }
-
     private async Task<bool> Compile(long id, Language language,string where)
     {
         switch (language)
