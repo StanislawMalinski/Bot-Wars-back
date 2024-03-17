@@ -20,5 +20,5 @@ public interface ITournamentRepository
     Task<HandlerResult<Success, IErrorResult>> TournamentEnded(long tournamentId);
 
     Task<HandlerResult<SuccessData<List<TournamentDto>>, IErrorResult>> GetTournamentsAsync(
-        TournamentFilterDto tournamentFilterDto);
+        TournamentFilterRequest tournamentFilterRequest);
 }

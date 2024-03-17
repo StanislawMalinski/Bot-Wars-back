@@ -28,7 +28,7 @@ namespace Communication.APIs.Controllers
             return (await _playerService.GenerateJwt(dto)).Match(Ok,this.ErrorResult);
         }
         
-        [HttpGet("getPlayers")]
+        [HttpGet("getOne")]
         public async Task<IActionResult> GetPlayers(long id)
         {
             return (await _playerService.GetPlayerInfoAsync(id)).Match(Ok,this.ErrorResult);;

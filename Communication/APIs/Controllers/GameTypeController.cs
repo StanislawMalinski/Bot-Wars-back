@@ -1,5 +1,6 @@
 ﻿using Communication.APIs.Controllers.Helper;
 using Communication.Services.GameType;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Shared.DataAccess.DTO.Requests;
 
@@ -17,6 +18,7 @@ namespace Communication.APIs.Controllers
         }
 
         [HttpPost("add")]
+        [Authorize]
         public async Task<IActionResult> CreateGameType([FromForm] GameRequest gameRequest)
         {
             return (await _gameTypeService
@@ -43,12 +45,14 @@ namespace Communication.APIs.Controllers
         }
 
         [HttpDelete("delete")]
+        [Authorize]
         public async Task<IActionResult> DeleteGame([FromQuery] long id)
         {
             return (await _gameTypeService.DeleteGame(id)).Match(Ok, this.ErrorResult);
         }
 
         [HttpPut("update")]
+        [Authorize]
         public async Task<IActionResult> ModifyGameType([FromQuery] long id, [FromForm] GameRequest gameRequest)
         {
             return (await _gameTypeService
