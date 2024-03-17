@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Http.HttpResults;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Shared.DataAccess.Context;
 using Shared.DataAccess.DAO;
 using Shared.DataAccess.DTO;
@@ -10,8 +9,6 @@ using Shared.Results;
 using Shared.Results.ErrorResults;
 using Shared.Results.IResults;
 using Shared.Results.SuccessResults;
-using Shared.DataAccess.DataBaseEntities;
-using System.Net.Http;
 
 namespace Shared.DataAccess.Repositories;
 
@@ -19,20 +16,17 @@ public class GameRepository : IGameRepository
 {
     private readonly DataContext _dataContext;
     private readonly IGameTypeMapper _mapper;
-    private readonly HttpClient _httpClient;
-    // move to config
-    private readonly string _gathererEndpoint = "http://host.docker.internal:7002/api/Gatherer";
 
-    public GameRepository(DataContext dataContext, IGameTypeMapper gameTypeMapper, HttpClient httpClient)
+    public GameRepository(DataContext dataContext, IGameTypeMapper gameTypeMapper)
     {
         _mapper = gameTypeMapper;
         _dataContext = dataContext;
-        _httpClient = httpClient;
     }
 
 
     public async Task<HandlerResult<Success, IErrorResult>> CreateGameType(GameDto game)
     {
+<<<<<<< HEAD
 <<<<<<< HEAD
         try
         {
@@ -76,6 +70,15 @@ public class GameRepository : IGameRepository
         await _dataContext.SaveChangesAsync();
         return new Success();
 >>>>>>> parent of 82c6fa8 (Merge pull request #91 from StanislawMalinski/eloHell)
+=======
+        
+        await _dataContext
+            .Games
+            .AddAsync(_mapper.MapRequestToGame(gameRequest));
+        
+        await _dataContext.SaveChangesAsync();
+        return new Success();
+>>>>>>> parent of e4c6155 (Integrated adding files to FileGatherer with api)
 
     }
 

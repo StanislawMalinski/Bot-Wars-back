@@ -38,7 +38,7 @@ namespace Shared.DataAccess.Mappers
                 LastModification = DateTime.Now,
                 Bot = new List<Bot>(),
                 Tournaments = new List<Tournament>(),
-                Matches = new List<Matches>(),
+                Matches = new List<Matches>()
             };
         }
 
@@ -59,11 +59,14 @@ namespace Shared.DataAccess.Mappers
                 BotIds = game.Bot?.Select(bot => bot.Id).ToList(),
                 MatchesIds = game.Matches?.Select(match => match.Id).ToList(),
                 TournamentsIds = game.Tournaments?.Select(tournament => tournament.Id).ToList(),
+<<<<<<< HEAD
                 FileId = game.FileId,
 =======
                 IsAvailableForPlay = game.IsAvaiableForPlay,
                 LastModification = game.LastModification
 >>>>>>> parent of 82c6fa8 (Merge pull request #91 from StanislawMalinski/eloHell)
+=======
+>>>>>>> parent of e4c6155 (Integrated adding files to FileGatherer with api)
             };
           
 

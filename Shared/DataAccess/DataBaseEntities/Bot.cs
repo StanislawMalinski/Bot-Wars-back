@@ -11,8 +11,8 @@ namespace Shared.DataAccess.DataBaseEntities
         public BotStatus Validation { get; set; }  
         public Game? Games { get; set; }
         public string BotFile { get; set; }
-        public long FileId { get; set; }
-        public List<TournamentReference>? TournamentReference { get; set; }
-        public List<MatchPlayers>? MatchPlayers { get; set; }
+
+       public List<TournamentReference>? TournamentReference { get; set; }
+       public List<MatchPlayers>? MatchPlayers { get; set; }
     }
 }
