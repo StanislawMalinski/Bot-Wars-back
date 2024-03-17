@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.EntityFrameworkCore;
 using Shared.DataAccess.Context;
 using Shared.DataAccess.DTO.Requests;
 using Shared.DataAccess.DTO.Responses;
@@ -8,6 +9,8 @@ using Shared.Results;
 using Shared.Results.ErrorResults;
 using Shared.Results.IResults;
 using Shared.Results.SuccessResults;
+using Shared.DataAccess.DataBaseEntities;
+using System.Net.Http;
 
 namespace Shared.DataAccess.Repositories;
 
@@ -15,23 +18,56 @@ public class GameRepository : IGameRepository
 {
     private readonly DataContext _dataContext;
     private readonly IGameTypeMapper _mapper;
+    private readonly HttpClient _httpClient;
+    // move to config
+    private readonly string _gathererEndpoint = "http://host.docker.internal:7002/api/Gatherer";
 
-    public GameRepository(DataContext dataContext, IGameTypeMapper gameTypeMapper)
+    public GameRepository(DataContext dataContext, IGameTypeMapper gameTypeMapper, HttpClient httpClient)
     {
         _mapper = gameTypeMapper;
         _dataContext = dataContext;
+        _httpClient = httpClient;
     }
 
 
     public async Task<HandlerResult<Success, IErrorResult>> CreateGameType(GameRequest gameRequest)
     {
-        
-        await _dataContext
-            .Games
-            .AddAsync(_mapper.MapRequestToGame(gameRequest));
-        
-        await _dataContext.SaveChangesAsync();
-        return new Success();
+        try
+        {
+            var content = new MultipartFormDataContent();
+            var streamContent = new StreamContent(gameRequest.GameFile.OpenReadStream());
+            content.Add(streamContent, "file", gameRequest.GameFile.FileName);
+            var res = await _httpClient.PutAsync(_gathererEndpoint, content);
+            long gameFileId;
+            if (res.IsSuccessStatusCode)
+            {
+                string cont = await res.Content.ReadAsStringAsync();
+                gameFileId = Convert.ToInt32(cont);
+            }
+            else
+            {
+                return new IncorrectOperation
+                {
+                    Title = "IncorrectOperation 404",
+                    Message = "Faild to upload file to FileGatherer"
+                };
+            }
+            Game game = _mapper.MapRequestToGame(gameRequest);
+            game.FileId = gameFileId;
+            await _dataContext
+                .Games
+                .AddAsync(game);
+            await _dataContext.SaveChangesAsync();
+            return new Success();
+        }
+        catch (Exception ex)
+        {
+            return new IncorrectOperation
+            {
+                Title = "IncorrectOperation 505",
+                Message = ex.Message
+            };
+        }
 
     }
 
