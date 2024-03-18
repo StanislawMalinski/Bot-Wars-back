@@ -2,6 +2,7 @@
 using Shared.DataAccess.DTO;
 using Shared.DataAccess.DataBaseEntities;
 using Shared.Results;
+using Shared.Results.ErrorResults;
 using Shared.Results.IResults;
 using Shared.Results.SuccessResults;
 
@@ -18,7 +19,7 @@ public class PointsService : IPointsService
 
     public async Task<HandlerResult<Success, IErrorResult>> SetPointsForPlayer(long playerId, long points)
     {
-        return await _pointsRepository.SetPointsForPlayer(playerId, points);
+        return new IncorrectOperation(); //await _pointsRepository.SetPointsForPlayer(playerId, points);
     } 
     
     public async Task<HandlerResult<SuccessData<List<PointHistoryDto>>, IErrorResult>> GetHistoryForPlayer(long playerId)

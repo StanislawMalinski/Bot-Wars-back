@@ -20,5 +20,6 @@
         public List<AchievementRecord> AchievementRecords { get; set; }
         public List<NotificationOutbox> NotificationOutboxes { get; set; }
         public List<Tournament> Tournaments { get; set; }
+        public List<Game> Games { get; set; }
     }
 }

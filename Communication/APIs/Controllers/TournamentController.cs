@@ -21,7 +21,7 @@ namespace Communication.APIs.Controllers
         [HttpPost("add")]
         public async Task<IActionResult> AddTournament([FromBody] TournamentRequest tournamentRequest) 
         {
-            return  (await _tournamentService.AddTournament(tournamentRequest)).Match(Ok,this.ErrorResult);
+            return  (await _tournamentService.AddTournament(1L, tournamentRequest)).Match(Ok,this.ErrorResult);
             
         }
 

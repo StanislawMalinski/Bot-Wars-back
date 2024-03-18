@@ -32,6 +32,10 @@ public class GameConfigurations : IEntityTypeConfiguration<Game>
 
         builder.Property(entity => entity.IsAvailableForPlay)
             .IsRequired();
-        
+
+        builder.HasOne(x => x.Creator)
+            .WithMany(x => x.Games)
+            .HasForeignKey(x => x.CreatorId).OnDelete(DeleteBehavior.NoAction);
+
     }
 }

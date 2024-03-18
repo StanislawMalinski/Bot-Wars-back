@@ -22,11 +22,14 @@ public class AchievementHandlerService
     
     public async  Task<HandlerResult<Success,IErrorResult>> MatchWinner(long matchId, long winner, long taskId)
     {
+        Console.WriteLine($"{matchId} {winner} {taskId} hej to wej to winnera");
         var losers = (await _matchRepository.GetAllLosers(matchId, winner)).Match(x=>x.Data,x=>new List<long>());
         var playerWinner = (await _matchRepository.GetPlayerFromBot(winner)).Match(x => x.Data, x => 0);
-        foreach (var loser in losers)
+        var tour = (await _matchRepository.GetTournament(matchId)).Match(x=>x.Data,null!);
+        foreach (var loser in losers!)
         {
-            await _pointsEngineAccessor.MatchCalculation(playerWinner, loser);
+            Console.WriteLine($"{matchId} {winner} {taskId} hej to bpenta z {loser}");
+            await _pointsEngineAccessor.MatchCalculation(playerWinner, loser,tour!.Id);
         }
         return await _matchRepository.Winner( matchId, winner, taskId);
         

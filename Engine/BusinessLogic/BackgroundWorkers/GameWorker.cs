@@ -35,6 +35,5 @@ public class GameWorker: IInvocable
         SuccessfullGameResult sr = (SuccessfullGameResult) result;
         Console.WriteLine("inwodfs");
         await _resolver.MatchWinner(task.OperatingOn, sr.BotWinner.Id, TaskId);
-
     }
 }

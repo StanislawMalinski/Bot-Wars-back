@@ -23,7 +23,7 @@ namespace Communication.APIs.Controllers
         public async Task<IActionResult> CreateGameType([FromForm] GameRequest gameRequest)
         {
             return (await _gameTypeService
-                    .CreateGameType(gameRequest))
+                    .CreateGameType(1L,gameRequest))
                 .Match(Ok, this.ErrorResult);
         }
 

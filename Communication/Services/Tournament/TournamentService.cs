@@ -19,9 +19,9 @@ namespace Communication.Services.Tournament
 			_tournamentRepository = tournamentRepository;
 		}
 
-		public async Task<HandlerResult<Success, IErrorResult>> AddTournament(TournamentRequest tournamentRequest)
+		public async Task<HandlerResult<Success, IErrorResult>> AddTournament(long userId, TournamentRequest tournamentRequest)
 		{
-			return await _tournamentRepository.CreateTournamentAsync(tournamentRequest);
+			return await _tournamentRepository.CreateTournamentAsync(userId, tournamentRequest);
 		}
 
 		public async Task<HandlerResult<Success, IErrorResult>> DeleteTournament(long id)

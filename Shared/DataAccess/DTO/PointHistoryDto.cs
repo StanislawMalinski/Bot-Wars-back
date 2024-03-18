@@ -6,8 +6,8 @@ public class PointHistoryDto
 {
     public long Id { get; set; }
     public DateTime LogDate { get; set; }
-    public long Loss  { get; set; }
-    public long Gain { get; set; }
+    public long Before  { get; set; }
+    public long Change { get; set; }
     public long PlayerId { get; set; }
 }
 

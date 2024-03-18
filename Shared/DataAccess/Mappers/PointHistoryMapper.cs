@@ -10,8 +10,8 @@ public class PointHistoryMapper : IPointHistoryMapper
         return new PointHistoryDto
         {
             Id = pointHistory.Id,
-            Loss = pointHistory.Loss,
-            Gain = pointHistory.Gain,
+            Change = pointHistory.Change,
+            Before = pointHistory.Before,
             PlayerId = pointHistory.PlayerId,
             LogDate = pointHistory.LogDate
         };
