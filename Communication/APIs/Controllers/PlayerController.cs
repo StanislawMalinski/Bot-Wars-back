@@ -1,7 +1,7 @@
 ﻿using Communication.APIs.Controllers.Helper;
 using Communication.ServiceInterfaces;
 using Microsoft.AspNetCore.Mvc;
-using Shared.DataAccess.DAO;
+using Shared.DataAccess.DTO;
 
 namespace Communication.APIs.Controllers
 {
@@ -26,6 +26,12 @@ namespace Communication.APIs.Controllers
         public async Task<IActionResult> Login([FromBody] LoginDto dto)
         {
             return (await _playerService.GenerateJwt(dto)).Match(Ok,this.ErrorResult);
+        }
+        
+        [HttpGet("getOne")]
+        public async Task<IActionResult> GetPlayers(long id)
+        {
+            return (await _playerService.GetPlayerInfoAsync(id)).Match(Ok,this.ErrorResult);;
         }
         
         /*

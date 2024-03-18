@@ -1,7 +1,8 @@
 ﻿using Communication.APIs.Controllers.Helper;
 using Communication.Services.Tournament;
 using Microsoft.AspNetCore.Mvc;
-using Shared.DataAccess.DAO;
+using Shared.DataAccess.DTO;
+using Shared.DataAccess.DTO.Requests;
 
 namespace Communication.APIs.Controllers
 {
@@ -17,9 +18,9 @@ namespace Communication.APIs.Controllers
         }
 
         [HttpPost("add")]
-        public async Task<IActionResult> AddTournament([FromBody] TournamentDto dto) 
+        public async Task<IActionResult> AddTournament([FromBody] TournamentRequest tournamentRequest) 
         {
-            return  (await _tournamentService.AddTournament(dto)).Match(Ok,this.ErrorResult);
+            return  (await _tournamentService.AddTournament(tournamentRequest)).Match(Ok,this.ErrorResult);
             
         }
 
@@ -36,10 +37,10 @@ namespace Communication.APIs.Controllers
             return (await _tournamentService.GetListOfTournaments()).Match(Ok,this.ErrorResult);
         }
 
-        [HttpGet("getFiltered")]
-        public async Task<IActionResult> GetListOfTournamentsFiltered()
+        [HttpPost("getFiltered")]
+        public async Task<IActionResult> GetListOfTournamentsFiltered(TournamentFilterRequest tournamentFilterRequest)
         {
-            return (await _tournamentService.GetListOfTournamentsFiltered()).Match(Ok,this.ErrorResult);
+            return (await _tournamentService.GetListOfTournamentsFiltered(tournamentFilterRequest)).Match(Ok,this.ErrorResult);
             
         }
 
@@ -63,9 +64,9 @@ namespace Communication.APIs.Controllers
         }
 
         [HttpPut("update")]
-        public async Task<IActionResult> UpdateTournament([FromQuery] long id, [FromBody] TournamentDto tournament)
+        public async Task<IActionResult> UpdateTournament([FromQuery] long id, [FromBody] TournamentRequest tournamentRequest)
         {
-            return (await _tournamentService.UpdateTournament(id, tournament)).Match(Ok,this.ErrorResult);
+            return (await _tournamentService.UpdateTournament(id, tournamentRequest)).Match(Ok,this.ErrorResult);
             
         }
     }

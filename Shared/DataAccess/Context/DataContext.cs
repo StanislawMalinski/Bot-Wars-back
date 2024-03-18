@@ -25,9 +25,10 @@ namespace Shared.DataAccess.Context
         public DbSet<AchievementRecord> AchievementRecord { get; set; }
         public DbSet<AchievementType> AchievementType { get; set; }
         public DbSet<AchievementThresholds> AchievementThresholds { get; set; }
+        public DbSet<_Task> Tasks { get; set; }
         
         public DbSet<NotificationOutbox> NotificationOutboxes { get; set; }
-
+        
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(RoleConfigurations).Assembly);
@@ -45,7 +46,7 @@ namespace Shared.DataAccess.Context
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(AchievementTypeConfigurations).Assembly);
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(AchievementThresholdConfigurations).Assembly);
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(NotificationOutboxConfiguration).Assembly);
-            
+            modelBuilder.ApplyConfigurationsFromAssembly(typeof(TaskConfiguration).Assembly);
             Seed(modelBuilder);
         }
 

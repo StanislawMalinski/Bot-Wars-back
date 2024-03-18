@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Shared.DataAccess.Context;
-using Shared.DataAccess.DAO;
+using Shared.DataAccess.DTO;
 using Shared.DataAccess.DataBaseEntities;
 using Shared.DataAccess.Mappers;
 using Shared.DataAccess.RepositoryInterfaces;
@@ -129,5 +129,33 @@ public class PointRepository : IPointsRepository
         {
             Data = players
         };
+    }
+
+    public async Task<HandlerResult<SuccessData<long>, IErrorResult>> GetPlayerPoint(long playerId)
+    {
+        var res = await _dataContext.Players.FindAsync(playerId);
+        if (res == null) return new EntityNotFoundErrorResult();
+        return new SuccessData<long>()
+        {
+            Data = res.Points
+        };
+    }
+
+    public async Task<HandlerResult<Success, IErrorResult>> UpdatePointsForPlayerNoSave(long playerId, long points)
+    {
+        var res = await _dataContext.Players.FindAsync(playerId);
+        if (res == null) return new EntityNotFoundErrorResult();
+        res.Points += points;
+        var pointHistory = new PointHistory()
+        {
+            PlayerId = playerId,
+            Gain = points > 0 ? points : 0,
+            Loss = points <= 0 ? points : 0,
+            LogDate = DateTime.Now
+        };
+        _dataContext.Players.Update(res);
+        await _dataContext.PointHistories.AddAsync(pointHistory);
+        
+        return new Success();
     }
 }

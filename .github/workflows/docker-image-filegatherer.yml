@@ -1,0 +1,36 @@
+name: File Gatherer Docker Image
+
+on:
+  push:
+    branches: [ "main", "docker" ]
+  
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: bot-wars-filegatherer
+  TAG: latest
+
+jobs:
+  build-and-push-to-dockerhub:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Login to the DockerHub Registry
+      uses: docker/login-action@v3
+      with:
+        username: ${{ secrets.DOCKERHUB_USERNAME }}
+        password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+    - name: Build and Push docker filegatherer image to DockerHub Registery
+      uses: docker/build-push-action@v5
+      with:
+        context: .
+        file: ./FileGatherer/gatherer.dockerfile
+        push: true
+
+        tags: ${{ secrets.DOCKERHUB_USERNAME }}/${{ env.IMAGE_NAME }}:${{ env.TAG }}

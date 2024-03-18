@@ -2,6 +2,7 @@
 
 public enum TaskTypes
 {
-    TYPE1,
-    TYPE2
+    PlayTournament,
+    PlayGame,
+    ValidateBot
 }

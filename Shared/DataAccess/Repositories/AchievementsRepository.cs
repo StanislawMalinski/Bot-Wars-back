@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Internal;
 using Shared.DataAccess.Context;
-using Shared.DataAccess.DAO;
+using Shared.DataAccess.DTO;
 using Shared.DataAccess.DataBaseEntities;
 using Shared.DataAccess.Enumerations;
 using Shared.DataAccess.Mappers;
@@ -175,6 +175,46 @@ public class AchievementsRepository : IAchievementsRepository
         }
 
         await _dataContext.SaveChangesAsync();
+        return new Success();
+    } 
+    
+    
+    public async Task<HandlerResult<Success, IErrorResult>> UpDateProgressNoSave(AchievementsTypes type, long botId)
+    {
+        var botRes = await _dataContext.Bots.FindAsync(botId);
+        if (botRes == null) return new EntityNotFoundErrorResult();
+        long userId = botRes.PlayerId;
+        var res = await _dataContext.AchievementRecord.FirstOrDefaultAsync(x =>
+            x.AchievementTypeId == (long)type && x.PlayerId == userId);
+        long value;
+        if (res == null)
+        {
+            await _dataContext.AchievementRecord.AddAsync(new AchievementRecord()
+            {
+                AchievementTypeId = (long) type,
+                Value = 1,
+                PlayerId = userId,
+            });
+            value = 1;
+        }
+        else
+        {
+            res.Value++;
+            value = res.Value;
+        }
+
+        var notification = await _dataContext.AchievementThresholds.FirstOrDefaultAsync(x =>
+            x.AchievementTypeId == (long)type && x.Threshold == value);
+        if (notification != null)
+        {
+            await _dataContext.NotificationOutboxes.AddAsync(new NotificationOutbox()
+            {
+                Type = NotificationType.Achievement,
+                NotificationValue = 1,
+                PLayerId = userId
+            });
+        }
+        
         return new Success();
     } 
     

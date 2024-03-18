@@ -1,5 +1,6 @@
 ﻿using Communication.ServiceInterfaces;
-using Shared.DataAccess.DAO;
+using Shared.DataAccess.DTO;
+using Shared.DataAccess.DTO.Requests;
 using Shared.Results;
 using Shared.Results.ErrorResults;
 using Shared.Results.IResults;
@@ -19,6 +20,12 @@ public class PlayerBannedPlayerService : PlayerUnidentifiedPlayerService , IPlay
         {
                 return new AccessDeniedError();
         }
+        
+        public async Task<HandlerResult<SuccessData<PlayerInfo>, IErrorResult>> GetPlayerInfoAsync(long playerId)
+        {
+                return new AccessDeniedError();
+        }
+        
 
         public async Task<HandlerResult<Success, IErrorResult>> registerNewPlayer(PlayerDto PlayerModel)
         {

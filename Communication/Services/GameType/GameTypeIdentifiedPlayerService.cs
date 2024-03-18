@@ -1,4 +1,5 @@
-﻿using Shared.DataAccess.DAO;
+﻿using Shared.DataAccess.DTO;
+using Shared.DataAccess.DTO.Requests;
 using Shared.DataAccess.RepositoryInterfaces;
 using Shared.Results;
 using Shared.Results.IResults;
@@ -12,9 +13,9 @@ namespace Communication.Services.GameType
 		{ 
 		}
 
-		public override async Task<HandlerResult<Success,IErrorResult>>  CreateGameType(GameDto game)
+		public override async Task<HandlerResult<Success,IErrorResult>>  CreateGameType(GameRequest gameRequest)
 		{
-			return await _gameTypeServiceProvider.addGameType(game);
+			return await _gameTypeServiceProvider.AddGameType(gameRequest);
 		}
 	}
 }

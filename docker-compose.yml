@@ -2,10 +2,24 @@ version: '3.8'
 
 services:
 
+    bot_wars_engine:
+        image: stanislawmalinski/bot-wars-engine:latest
+        ports:
+            - "7177:7177"
+        depends_on:
+            - bot_wars_db
+            
+    bot_wars_filegatherer:
+        image: stanislawmalinski/bot-wars-gatherer:latest
+        ports:
+            - "7002:8080"
+        volumes:
+            - file_gatherer:/app/Storage
+            
     bot_wars_db:
         image: "mcr.microsoft.com/mssql/server:2022-latest"
         ports:
-          - "1433:1433"
+            - "1433:1433"
         environment:
             SA_PASSWORD: "Sqlhaslo123!"
             ACCEPT_EULA: "Y"
@@ -14,7 +28,9 @@ services:
             - bot_wars_db:/var/lib/mssql
 
     bot_wars_api:
-        image: stanislawmalinski/bot-wars-api:latest
+        build:
+            context: .
+            dockerfile: Communication/api.dockerfile
         ports:
             - "8080:8080"
             - "8081:8081"
@@ -27,12 +43,20 @@ services:
                sleep 5
                dotnet ef migrations add migration
                dotnet ef database update
+               
+    bot_wars_engine:
+        build:
+            context: .
+            dockerfile: Engine/engine.dockerfile
+        ports:
+            - "7001:8080"
+        depends_on:
+            - bot_wars_api
 
     bot_wars_front:
         image: "ghcr.io/jordus100/bot-wars-front:master"
         ports:
           - "3000:80"
-
     proxy:
         build: ./proxy
         ports:
@@ -41,6 +65,13 @@ services:
           - bot_wars_front
           - bot_wars_api
 
+
 volumes:
-  bot_wars_db:
-    driver: local
+    bot_wars_db:
+        driver: local
+    file_gatherer:
+        driver: local
+        driver_opts:
+            type: none
+            o: bind
+            device: FileGatherer/Storage

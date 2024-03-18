@@ -1,5 +1,7 @@
 ﻿using Communication.Services.Validation;
-using Shared.DataAccess.DAO;
+using Shared.DataAccess.DTO;
+using Shared.DataAccess.DTO.Requests;
+using Shared.DataAccess.DTO.Responses;
 using Shared.DataAccess.RepositoryInterfaces;
 using Shared.Results;
 using Shared.Results.IResults;
@@ -23,10 +25,10 @@ namespace Communication.Services.Tournament
 		{
 		}
 
-		public async Task<HandlerResult<Success, IErrorResult>> AddTournament(TournamentDto tournament)
+		public async Task<HandlerResult<Success, IErrorResult>> AddTournament(TournamentRequest tournamentRequest)
 		{
 			_tournamentService = Validate(login, key);
-			return await _tournamentService.AddTournament(tournament);
+			return await _tournamentService.AddTournament(tournamentRequest);
 		}
 
 		public async Task<HandlerResult<Success, IErrorResult>> DeleteTournament(long id)
@@ -35,19 +37,20 @@ namespace Communication.Services.Tournament
 			return await _tournamentService.DeleteTournament(id);
 		}
 
-		public async Task<HandlerResult<SuccessData<List<TournamentDto>>, IErrorResult>> GetListOfTournaments()
+		public async Task<HandlerResult<SuccessData<List<TournamentResponse>>, IErrorResult>> GetListOfTournaments()
 		{
 			_tournamentService = Validate(login, key);
 			return await _tournamentService.GetListOfTournaments();
 		}
 
-		public async Task<HandlerResult<SuccessData<List<TournamentDto>>, IErrorResult>> GetListOfTournamentsFiltered()
+		public async Task<HandlerResult<SuccessData<List<TournamentResponse>>, IErrorResult>> GetListOfTournamentsFiltered(
+			TournamentFilterRequest tournamentFilterRequest)
 		{
 			_tournamentService = Validate(login, key);
-			return await _tournamentService.GetListOfTournamentsFiltered();
+			return await _tournamentService.GetListOfTournamentsFiltered(tournamentFilterRequest);
 		}
 
-		public async Task<HandlerResult<SuccessData<TournamentDto>, IErrorResult>> GetTournament(long id)
+		public async Task<HandlerResult<SuccessData<TournamentResponse>, IErrorResult>> GetTournament(long id)
 		{
 			_tournamentService = Validate(login, key);
 			return await _tournamentService.GetTournament(id);
@@ -65,10 +68,10 @@ namespace Communication.Services.Tournament
 			return await _tournamentService.UnregisterSelfForTournament(tournamentId, botId);
 		}
 
-		public async Task<HandlerResult<Success, IErrorResult>> UpdateTournament(long id, TournamentDto tournament)
+		public async Task<HandlerResult<Success, IErrorResult>> UpdateTournament(long id, TournamentRequest tournamentRequest)
 		{
 			_tournamentService = Validate(login, key);
-			return await _tournamentService.UpdateTournament(id, tournament);
+			return await _tournamentService.UpdateTournament(id, tournamentRequest);
 		}
 	}
 }

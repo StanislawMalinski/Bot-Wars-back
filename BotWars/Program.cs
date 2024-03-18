@@ -1,23 +1,16 @@
 using System.Text;
 using BotWars;
 using BotWars.DependencyInjection;
-using Communication.ServiceInterfaces;
-using Communication.Services.Administration;
-using Communication.Services.GameType;
-using Communication.Services.Player;
-using Communication.Services.Tournament;
 using Communication.Services.Validation;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 using NLog.Web;
 using Shared.DataAccess.Context;
-using Shared.DataAccess.Mappers;
-using Shared.DataAccess.Repositories;
-using Shared.DataAccess.RepositoryInterfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
-//Logger
+// Logger
 builder.Logging.ClearProviders();
 builder.Logging.SetMinimumLevel(LogLevel.Trace);
 builder.Host.UseNLog();
@@ -26,11 +19,40 @@ builder.Services.AddLogging();
 // Add services to the container.
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(option =>
+{
+    option.SwaggerDoc("v1", new OpenApiInfo { Title = "Demo API", Version = "v1" });
+    option.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    {
+        In = ParameterLocation.Header,
+        Description = "Please enter a valid token",
+        Name = "Authorization",
+        Type = SecuritySchemeType.Http,
+        BearerFormat = "JWT",
+        Scheme = "Bearer"
+    });
+    option.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
+        {
+            new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference
+                {
+                    Type=ReferenceType.SecurityScheme,
+                    Id="Bearer"
+                }
+            },
+            new string[]{}
+        }
+    });
+});
 builder.Services.AddScoped<IPlayerValidator, MockValidator>();
 
-//Jwt configuration
+// Jwt configuration
 var authenticationSettings = new AuthenticationSettings();
+
+// Http Client for communication with FileGatherer
+builder.Services.AddHttpClient();
 
 builder.Services.AddSingleton(authenticationSettings);
 builder.Configuration.GetSection("Authentication").Bind(authenticationSettings);
@@ -60,15 +82,12 @@ builder.Services
     .AddFileSystem()
     .AddUserSettings()
     .AddPointsSettings()
-    .AddAchievements();
+    .AddAchievements()
+    .AddBot();
 
 builder.Services.AddDbContext<DataContext>(options =>
 {
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
-});
-builder.Services.AddDbContext<TaskDataContext>(options =>
-{
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultTaskConnection"));
 });
 
 var app = builder.Build();
@@ -87,18 +106,6 @@ using (var serviceScope = builder.Services.BuildServiceProvider().CreateScope())
     {
         Console.WriteLine("No pending migrations.");
     }
-    
-    var tdbContext = serviceScope.ServiceProvider.GetRequiredService<TaskDataContext>();
-    var tpendingMigrations = await tdbContext.Database.GetPendingMigrationsAsync();
-    if (tpendingMigrations.Any())
-    {
-        Console.WriteLine($"Applying {tpendingMigrations.Count()} pending migrations.");
-        await tdbContext.Database.MigrateAsync();
-    }
-    else
-    {
-        Console.WriteLine("No pending migrations.");
-    }
 }
 app.UseCors(options => {
     options.AllowAnyMethod();
@@ -110,6 +117,7 @@ app.UseSwagger();
 app.UseSwaggerUI(c =>
 {
     c.SwaggerEndpoint("/swagger/v1/swagger.json","BotWars API");
+
 });
 
 app.UseAuthentication();

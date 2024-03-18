@@ -1,30 +1,29 @@
-﻿using Shared.DataAccess.DAO;
-using Shared.DataAccess.RepositoryInterfaces;
+﻿using Shared.DataAccess.DTO.Requests;
 using Shared.Results;
 using Shared.Results.IResults;
 using Shared.Results.SuccessResults;
 
 namespace Communication.Services.GameType
 {
-	public class GameTypeAdminService : GameTypeUnidentifiedPlayerService, IGameService
+	public class GameTypeAdminService : GameTypeUnidentifiedPlayerService
 	{
 		public GameTypeAdminService(GameTypeServiceProvider gameTypeServiceProvider) : base(gameTypeServiceProvider)
 		{
 		}
 
-		public override async Task<HandlerResult<Success,IErrorResult>>  CreateGameType(GameDto game)
+		public override async Task<HandlerResult<Success,IErrorResult>>  CreateGameType(GameRequest gameRequest)
 		{
-			return await _gameTypeServiceProvider.addGameType(game);
+			return await _gameTypeServiceProvider.AddGameType(gameRequest);
 		}
 
 		public override async Task<HandlerResult<Success,IErrorResult>>  DeleteGame(long id)
 		{
-			return await _gameTypeServiceProvider.deleteGameType(id);
+			return await _gameTypeServiceProvider.DeleteGameType(id);
 		}
 
-		public override async Task<HandlerResult<Success,IErrorResult>>  ModifyGameType(long id, GameDto gameDto)
+		public override async Task<HandlerResult<Success,IErrorResult>>  ModifyGameType(long id, GameRequest gameRequest)
 		{
-			return await _gameTypeServiceProvider.updateGameType(id, gameDto);
+			return await _gameTypeServiceProvider.UpdateGameType(id, gameRequest);
 		}
 	}
 }

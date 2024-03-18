@@ -14,6 +14,13 @@ COPY ["Communication/Communication.csproj", "Communication/"]
 COPY ["Shared/Shared.csproj", "Shared/"]
 RUN dotnet restore "./BotWars/./BotWars.csproj"
 COPY . .
+
+RUN dotnet tool install --global dotnet-ef --version 8.0.1
+
+ENV PATH="$PATH:/root/.dotnet/tools"
+
+RUN dotnet ef migrations add Initial --project Shared/Shared.csproj --startup-project BotWars/BotWars.csproj --context Shared.DataAccess.Context.DataContext --output-dir Shared/Migrations
+
 WORKDIR "/src/BotWars"
 RUN dotnet build "./BotWars.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
@@ -25,3 +32,4 @@ FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
 ENTRYPOINT ["dotnet", "BotWars.dll"]
+

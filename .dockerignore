@@ -1,5 +1,4 @@
-**/.classpath
-**/.dockerignore
+﻿**/.dockerignore
 **/.env
 **/.git
 **/.gitignore
@@ -8,6 +7,7 @@
 **/.toolstarget
 **/.vs
 **/.vscode
+**/.idea
 **/*.*proj.user
 **/*.dbmdl
 **/*.jfm
@@ -21,10 +21,6 @@
 **/obj
 **/secrets.dev.yaml
 **/values.dev.yaml
+Shared/Migrations/*
 LICENSE
 README.md
-!**/.gitignore
-!.git/HEAD
-!.git/config
-!.git/packed-refs
-!.git/refs/heads/**
