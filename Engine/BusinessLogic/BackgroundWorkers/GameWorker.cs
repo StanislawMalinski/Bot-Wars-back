@@ -25,15 +25,16 @@ public class GameWorker: IInvocable
     {
         Console.WriteLine("inwoke gam workek " +TaskId);
         GameManager gameManager = new GameManager();
-        Console.WriteLine("i???sdd");
+        Console.WriteLine("i???sdd "  +TaskId);
         _Task task = (await _resolver.GetTask(TaskId)).Match(x=>x.Data,x=>null);
-        Console.WriteLine("inwoke gam workek asdasdsa");
+        Console.WriteLine("inwoke gam workek asdasdsa " +TaskId);
         var botlist = (await _resolver.GetBotsInMatch(task.OperatingOn)).Match(x=>x.Data,x=>new List<Bot>());
         var game = (await _resolver.GetMatchGame(task.OperatingOn)).Match(x=>x.Data,x=>null);
-        Console.WriteLine("inwoke gamsdadasd");
+        Console.WriteLine("inwoke gamsdadasd " +TaskId);
         GameResult result = await gameManager.PlayGame(game, botlist);
         SuccessfullGameResult sr = (SuccessfullGameResult) result;
-        Console.WriteLine("inwodfs");
+        Console.WriteLine("doke " +TaskId);
         await _resolver.MatchWinner(task.OperatingOn, sr.BotWinner.Id, TaskId);
+        Console.WriteLine("zakonczenie zrobie " +TaskId);
     }
 }
