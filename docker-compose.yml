@@ -1,16 +1,9 @@
 version: '3.8'
 
 services:
-
-    bot_wars_engine:
-        image: stanislawmalinski/bot-wars-engine:latest
-        ports:
-            - "7177:7177"
-        depends_on:
-            - bot_wars_db
             
     bot_wars_filegatherer:
-        image: stanislawmalinski/bot-wars-gatherer:latest
+        image: stanislawmalinski/bot-wars-filegatherer:latest
         ports:
             - "7002:8080"
         volumes:
@@ -28,9 +21,7 @@ services:
             - bot_wars_db:/var/lib/mssql
 
     bot_wars_api:
-        build:
-            context: .
-            dockerfile: Communication/api.dockerfile
+        image: stanislawmalinski/bot-wars-api:latest
         ports:
             - "8080:8080"
             - "8081:8081"
@@ -45,9 +36,7 @@ services:
                dotnet ef database update
                
     bot_wars_engine:
-        build:
-            context: .
-            dockerfile: Engine/engine.dockerfile
+        image: stanislawmalinski/bot-wars-engine:latest
         ports:
             - "7001:8080"
         depends_on:
