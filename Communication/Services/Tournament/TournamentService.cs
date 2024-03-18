@@ -4,6 +4,7 @@ using Shared.DataAccess.DTO.Responses;
 using Shared.DataAccess.Repositories;
 using Shared.DataAccess.RepositoryInterfaces;
 using Shared.Results;
+using Shared.Results.ErrorResults;
 using Shared.Results.IResults;
 using Shared.Results.SuccessResults;
 
@@ -21,6 +22,7 @@ namespace Communication.Services.Tournament
 
 		public async Task<HandlerResult<Success, IErrorResult>> AddTournament(long userId, TournamentRequest tournamentRequest)
 		{
+			if (tournamentRequest.Image.Length % 4 != 0) return new IncorrectOperation(){Message = "to nie jest string base 64 musi miec wielkosc podzielna przez 4"};
 			return await _tournamentRepository.CreateTournamentAsync(userId, tournamentRequest);
 		}
 
