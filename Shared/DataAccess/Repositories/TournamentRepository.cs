@@ -35,7 +35,6 @@ namespace Shared.DataAccess.Repositories
             var game = await _dataContext
                 .Games
                 .FindAsync(tournamentRequest.GameId);
-
             if (game is null)
             {
                 return new EntityNotFoundErrorResult
@@ -44,7 +43,6 @@ namespace Shared.DataAccess.Repositories
                     Message = "Game with given id could not have been found"
                 };
             }
-
             var tournament = _mapper
                 .TournamentRequestToTournament(tournamentRequest);
             tournament.CreatorId = userId;

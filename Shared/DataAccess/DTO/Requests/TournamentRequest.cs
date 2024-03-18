@@ -21,5 +21,5 @@ public class TournamentRequest
     [NotNull]
     public string? Constraints { get; set; }
     [NotNull]
-    public IFormFile Image { get; set; }
+    public string Image { get; set; }
 }
