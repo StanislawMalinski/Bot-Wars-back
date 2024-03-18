@@ -7,6 +7,7 @@ using Engine.BusinessLogic.Gameplay.Interface;
 using Shared.DataAccess.DataBaseEntities;
 using Shared.DataAccess.Repositories;
 using Shared.DataAccess.RepositoryInterfaces;
+using TaskStatus = Shared.DataAccess.Enumerations.TaskStatus;
 
 namespace Engine.BusinessLogic.BackgroundWorkers;
 
@@ -23,18 +24,15 @@ public class GameWorker: IInvocable
 
     public async Task Invoke()
     {
-        Console.WriteLine("inwoke gam workek " +TaskId);
+        Console.WriteLine("game worker " +TaskId);
         GameManager gameManager = new GameManager();
-        Console.WriteLine("i???sdd "  +TaskId);
         _Task task = (await _resolver.GetTask(TaskId)).Match(x=>x.Data,x=>null);
-        Console.WriteLine("inwoke gam workek asdasdsa " +TaskId);
+        if (task.Status == TaskStatus.Done) return;
         var botlist = (await _resolver.GetBotsInMatch(task.OperatingOn)).Match(x=>x.Data,x=>new List<Bot>());
         var game = (await _resolver.GetMatchGame(task.OperatingOn)).Match(x=>x.Data,x=>null);
-        Console.WriteLine("inwoke gamsdadasd " +TaskId);
         GameResult result = await gameManager.PlayGame(game, botlist);
         SuccessfullGameResult sr = (SuccessfullGameResult) result;
-        Console.WriteLine("doke " +TaskId);
         await _resolver.MatchWinner(task.OperatingOn, sr.BotWinner.Id, TaskId);
-        Console.WriteLine("zakonczenie zrobie " +TaskId);
+        Console.WriteLine("zakonczenie game " +TaskId);
     }
 }
