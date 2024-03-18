@@ -1,6 +1,7 @@
 ﻿using Communication.APIs.Controllers.Helper;
 using Communication.Services.Administration;
 using Microsoft.AspNetCore.Mvc;
+using Shared.DataAccess.RepositoryInterfaces;
 
 namespace Communication.APIs.Controllers;
 
@@ -8,9 +9,9 @@ namespace Communication.APIs.Controllers;
 [ApiController]
 public class AdministrativeController : Controller
 {
-    private readonly AdministrativeService _administrativeService;
+    private readonly IAdministrativeService _administrativeService;
 
-    public AdministrativeController(AdministrativeService administrativeService)
+    public AdministrativeController(IAdministrativeService administrativeService)
     {
         _administrativeService = administrativeService;
     }

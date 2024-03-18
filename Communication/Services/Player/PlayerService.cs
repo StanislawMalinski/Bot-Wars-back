@@ -1,7 +1,7 @@
 ﻿using Communication.ServiceInterfaces;
-using Communication.Services.Validation;
 using Shared.DataAccess.DTO;
 using Shared.DataAccess.DTO.Requests;
+using Shared.DataAccess.Repositories;
 using Shared.DataAccess.RepositoryInterfaces;
 using Shared.Results;
 using Shared.Results.ErrorResults;
@@ -10,47 +10,42 @@ using Shared.Results.SuccessResults;
 
 namespace Communication.Services.Player;
 
-public class PlayerService : Service<IPlayerService>
+public class PlayerService : IPlayerService
 {
+    private readonly IPlayerRepository _playerRepository;
 
-    private IPlayerService? _playerTypeService;
-    private string login = "login"; // should be obtained in method call
-    private string key = "key";
-    
-    public PlayerService(PlayerAdminService adminService,
-        PlayerBadValidation badValidation,
-        PlayerBannedPlayerService bannedPlayerService,
-        PlayerIdentifiedPlayerService identifiedPlayerService,
-        PlayerUnidentifiedPlayerService unidentifiedPlayerService,
-        IPlayerValidator validator)
-        : base(adminService, badValidation, bannedPlayerService, identifiedPlayerService, unidentifiedPlayerService,
-            validator)
+    public PlayerService(IPlayerRepository playerRepository)
     {
-        
+        _playerRepository = playerRepository;
     }
-    
+
     public async Task<HandlerResult<SuccessData<PlayerDto>, IErrorResult>> getPlayerInfo(long PlayerId)
     {
-        _playerTypeService = Validate(login, key);
-        return await _playerTypeService.getPlayerInfo(PlayerId);
+        return await _playerRepository.GetPlayerAsync(PlayerId);
     }
-    
     
     public async Task<HandlerResult<Success, IErrorResult>> registerNewPlayer(PlayerDto PlayerModel)
     {
-        _playerTypeService = Validate(login, key);
-        return await _playerTypeService.registerNewPlayer(PlayerModel);
+        return await _playerRepository.CreatePlayerAsync(PlayerModel);
     }
 
     public async Task<HandlerResult<Success, IErrorResult>> resetPassWordByLogin(String Login)
     {
-        _playerTypeService = Validate(login, key);
-        return await _playerTypeService.resetPassWordByLogin(Login);
+        return new NotImplementedError();
     }
 
     public async Task<HandlerResult<Success, IErrorResult>> resetPassWordByEmail(String Email)
     {
-        _playerTypeService = Validate(login, key);
-        return await _playerTypeService.resetPassWordByEmail(Email);
+        return new NotImplementedError();
+    }
+    
+    public async Task<HandlerResult<SuccessData<string>, IErrorResult>> GenerateJwt(LoginDto dto)
+    {
+        return await _playerRepository.GenerateJwt(dto);
+    }
+
+    public async Task<HandlerResult<SuccessData<PlayerInfo>, IErrorResult>> GetPlayerInfoAsync(long playerId)
+    {
+        throw new NotImplementedException();
     }
 }

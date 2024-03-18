@@ -3,6 +3,7 @@ using Communication.Services.Tournament;
 using Microsoft.AspNetCore.Mvc;
 using Shared.DataAccess.DTO;
 using Shared.DataAccess.DTO.Requests;
+using Shared.DataAccess.RepositoryInterfaces;
 
 namespace Communication.APIs.Controllers
 {
@@ -10,9 +11,9 @@ namespace Communication.APIs.Controllers
     [ApiController]
     public class TournamentController : Controller
     {
-        private readonly TournamentService _tournamentService;
+        private readonly ITournamentService _tournamentService;
 
-        public TournamentController(TournamentService tournamentService)
+        public TournamentController(ITournamentService tournamentService)
         {
             _tournamentService = tournamentService;
         }

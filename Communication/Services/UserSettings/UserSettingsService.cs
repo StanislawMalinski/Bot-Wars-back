@@ -1,45 +1,35 @@
 ﻿using Communication.ServiceInterfaces;
-using Communication.Services.Validation;
 using Shared.DataAccess.DTO;
+using Shared.DataAccess.Repositories;
+using Shared.DataAccess.RepositoryInterfaces;
 using Shared.Results;
 using Shared.Results.IResults;
 using Shared.Results.SuccessResults;
 
 namespace Communication.Services.UserSettings;
 
-public class UserSettingsService : Service<IUserSettingsService>
+public class UserSettingsService : IUserSettingsService
 {
-    private IUserSettingsService _userSettingsService;
-    private string login = "login";
-    private string key = "key";
+    private readonly IUserSettingsRepository _userSettingsRepository;
 
-    public UserSettingsService(UserSettingsAdminService adminInterface,
-        UserSettingsIdentifiedPlayerService identifiedPlayerInterface,
-        UserSettingsBannedPlayerService bannedPlayerInterface,
-        UserSettingsUnidentifiedPlayerService unidentifiedUserInterface,
-        UserSettingsBadValidation badValidationInterface,
-        IPlayerValidator validator)
-        : base(adminInterface, identifiedPlayerInterface, bannedPlayerInterface, unidentifiedUserInterface,
-            badValidationInterface, validator)
+    public UserSettingsService(IUserSettingsRepository userSettingsRepository)
     {
+        _userSettingsRepository = userSettingsRepository;
     }
-
+    
     public async Task<HandlerResult<Success, IErrorResult>> CreateUserSettingsForPlayer(long playerId)
     {
-        _userSettingsService = Validate(login, key);
-        return await _userSettingsService.CreateUserSettingsForPlayer(playerId);
+        return await _userSettingsRepository.CreateUserSettingsForPlayer(playerId);
     }
 
     public async Task<HandlerResult<SuccessData<UserSettingsDto>, IErrorResult>> GetUserSettingsForPlayer(long playerId)
     {
-        _userSettingsService = Validate(login, key);
-        return await _userSettingsService.GetUserSettingsForPlayer(playerId);
+        return await _userSettingsRepository.GetUserSettingsForPlayer(playerId);
     }
 
     public async Task<HandlerResult<Success, IErrorResult>> UpdateUserSettingsForPlayer(long playerId,
         UserSettingsDto dto)
     {
-        _userSettingsService = Validate(login, key);
-        return await _userSettingsService.UpdateUserSettingsForPlayer(playerId, dto);
+        return await _userSettingsRepository.UpdateUserSettingsForPlayer(playerId, dto);
     }
 }

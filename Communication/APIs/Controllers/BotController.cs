@@ -2,6 +2,7 @@
 using Communication.Services.Bot;
 using Microsoft.AspNetCore.Mvc;
 using Shared.DataAccess.DTO.Requests;
+using Shared.DataAccess.RepositoryInterfaces;
 
 namespace Communication.APIs.Controllers;
 
@@ -9,9 +10,9 @@ namespace Communication.APIs.Controllers;
 [ApiController]
 public class BotController : Controller
 {
-    private readonly BotService _botService;
+    private readonly IBotService _botService;
 
-    public BotController(BotService botService)
+    public BotController(IBotService botService)
     {
         _botService = botService;
     }

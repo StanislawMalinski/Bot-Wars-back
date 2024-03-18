@@ -1,4 +1,5 @@
 ﻿using Communication.APIs.Controllers.Helper;
+using Communication.ServiceInterfaces;
 using Microsoft.AspNetCore.Mvc;
 using Shared.DataAccess.RepositoryInterfaces;
 
@@ -8,9 +9,9 @@ namespace Communication.APIs.Controllers;
 [ApiController]
 public class PointsController : Controller
 {
-    private readonly PointsService _pointsService;
+    private readonly IPointsService _pointsService;
 
-    public PointsController(PointsService pointsService)
+    public PointsController(IPointsService pointsService)
     {
         _pointsService = pointsService;
     }
