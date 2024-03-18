@@ -1,13 +1,12 @@
 ﻿using Communication.APIs.Controllers.Helper;
 using Communication.ServiceInterfaces;
 using Microsoft.AspNetCore.Mvc;
-using Shared.DataAccess.DAO;
-using Shared.DataAccess.DataBaseEntities;
-using Shared.DataAccess.RepositoryInterfaces;
+using Shared.DataAccess.DTO;
 
 namespace Communication.APIs.Controllers
 {
-	[Route("api/[controller]")]
+	[Route("api/v1/[controller]")]
+    [ApiController]
     public class PlayerController : Controller
     {
         private readonly IPlayerService _playerService;
@@ -27,6 +26,12 @@ namespace Communication.APIs.Controllers
         public async Task<IActionResult> Login([FromBody] LoginDto dto)
         {
             return (await _playerService.GenerateJwt(dto)).Match(Ok,this.ErrorResult);
+        }
+        
+        [HttpGet("getOne")]
+        public async Task<IActionResult> GetPlayers(long id)
+        {
+            return (await _playerService.GetPlayerInfoAsync(id)).Match(Ok,this.ErrorResult);;
         }
         
         /*

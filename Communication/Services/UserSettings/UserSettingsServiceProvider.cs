@@ -1,5 +1,6 @@
-﻿using Shared.DataAccess.DAO;
+﻿using Shared.DataAccess.DTO;
 using Shared.DataAccess.Repositories;
+using Shared.DataAccess.RepositoryInterfaces;
 using Shared.Results;
 using Shared.Results.IResults;
 using Shared.Results.SuccessResults;
@@ -8,9 +9,9 @@ namespace Communication.Services.UserSettings;
 
 public class UserSettingsServiceProvider
 {
-    private readonly UserSettingsRepository _userSettingsRepository;
+    private readonly IUserSettingsRepository _userSettingsRepository;
 
-    public UserSettingsServiceProvider(UserSettingsRepository userSettingsRepository)
+    public UserSettingsServiceProvider(IUserSettingsRepository userSettingsRepository)
     {
         _userSettingsRepository = userSettingsRepository;
     }

@@ -1,6 +1,7 @@
 ﻿using System.Data;
+using Microsoft.EntityFrameworkCore;
 using Shared.DataAccess.Context;
-using Shared.DataAccess.DAO;
+using Shared.DataAccess.DTO;
 using Shared.DataAccess.DataBaseEntities;
 using Shared.DataAccess.Mappers;
 using Shared.DataAccess.RepositoryInterfaces;
@@ -34,6 +35,12 @@ public class UserSettingsRepository : IUserSettingsRepository
             };
         }
 
+        if (await _dataContext.UserSettings.FirstOrDefaultAsync(userSettings => 
+                userSettings.PlayerId==playerId) != null)
+        {
+            return new AccessDeniedError();
+        }
+        
         var userSettings = new UserSettings
         {
             PlayerId = playerId,
@@ -47,7 +54,8 @@ public class UserSettingsRepository : IUserSettingsRepository
 
     public async Task<HandlerResult<SuccessData<UserSettingsDto>, IErrorResult>> GetUserSettingsForPlayer(long playerId)
     {
-        var userSettings = await _dataContext.UserSettings.FindAsync(playerId);
+        var userSettings = await _dataContext.UserSettings.FirstOrDefaultAsync(userSettings =>
+            userSettings.PlayerId==playerId);
         if (userSettings == null)
         {
             return new EntityNotFoundErrorResult()

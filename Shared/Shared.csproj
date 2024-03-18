@@ -17,6 +17,7 @@
       <Folder Include="Resources\GameViewImages\" />
       <Folder Include="Resources\Instructions\" />
       <Folder Include="Resources\Logs\" />
+      <Folder Include="TMigrations\" />
     </ItemGroup>
 
     <ItemGroup>

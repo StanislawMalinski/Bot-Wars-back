@@ -1,5 +1,7 @@
 using Communication.Services.Validation;
-using Shared.DataAccess.DAO;
+using Shared.DataAccess.DTO;
+using Shared.DataAccess.DTO.Requests;
+using Shared.DataAccess.DTO.Responses;
 using Shared.DataAccess.RepositoryInterfaces;
 using Shared.Results;
 using Shared.Results.IResults;
@@ -10,7 +12,7 @@ namespace Communication.Services.GameType
 	public class GameTypeService : Service<IGameService>
     {
 
-	    private IGameService? _playerTypeService;
+	    private IGameService? _gameService;
 	    private string login = "login"; // should be obtained in method call
 	    private string key = "key";
 
@@ -24,28 +26,41 @@ namespace Communication.Services.GameType
 	    {
 	    }
 
-	    public async Task<HandlerResult<Success,IErrorResult>> CreateGameType(GameDto gameDto)
+	    public async Task<HandlerResult<Success,IErrorResult>> CreateGameType(GameRequest gameRequest)
         {
-			_playerTypeService = Validate(login, key);
-			return await _playerTypeService.CreateGameType(gameDto);
+			_gameService = Validate(login, key);
+			return await _gameService.CreateGameType(gameRequest);
         }
 
         public async Task<HandlerResult<Success,IErrorResult>>  DeleteGame(long id)
         {
-			_playerTypeService = Validate(login, key);
-			return await _playerTypeService.DeleteGame(id);
+			_gameService = Validate(login, key);
+			return await _gameService.DeleteGame(id);
         }
 
-        public async Task<HandlerResult<SuccessData<List<GameDto>>,IErrorResult>>  GetGameTypes()
+        public async Task<HandlerResult<SuccessData<List<GameResponse>>,IErrorResult>> GetGameTypes()
         {
-			_playerTypeService = Validate(login, key);
-			return await _playerTypeService.GetGameTypes();
+			_gameService = Validate(login, key);
+			return await _gameService.GetGames();
         }
 
-        public async Task<HandlerResult<Success,IErrorResult>>  ModifyGameType(long id, GameDto gameDto)
+        public async Task<HandlerResult<Success,IErrorResult>>  ModifyGameType(long id, GameRequest gameRequest)
         {
-			_playerTypeService = Validate(login, key);
-			return await _playerTypeService.ModifyGameType(id, gameDto);
+			_gameService = Validate(login, key);
+			return await _gameService.ModifyGameType(id, gameRequest);
         }
+        
+        public async Task<HandlerResult<SuccessData<GameResponse>,IErrorResult>> GetGame(long id)
+        {
+	        _gameService = Validate(login, key);
+	        return await _gameService.GetGame(id);
+        }
+
+        public async Task<HandlerResult<SuccessData<List<GameResponse>>,IErrorResult>> GetAvailableGames()
+        {
+	        _gameService = Validate(login, key);
+	        return await _gameService.GetListOfTypesOfAvailableGames();
+        }
+        
     }
 }

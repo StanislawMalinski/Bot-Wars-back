@@ -22,6 +22,9 @@ public class BotConfigurations : IEntityTypeConfiguration<Bot>
         builder.Property(x => x.BotFile)
             .IsRequired()
             .HasMaxLength(400);
-        
+
+        builder.Property(x => x.Validation)
+            .IsRequired();
+
     }
 }

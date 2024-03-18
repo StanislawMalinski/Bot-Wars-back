@@ -1,24 +1,56 @@
-﻿using Shared.DataAccess.DataBaseEntities;
+﻿using Communication.ServiceInterfaces;
+using Communication.Services;
+using Communication.Services.Validation;
+using Microsoft.AspNetCore.Identity;
+using Shared.DataAccess.DTO;
+using Shared.DataAccess.DataBaseEntities;
 using Shared.Results;
 using Shared.Results.IResults;
 using Shared.Results.SuccessResults;
 
 namespace Shared.DataAccess.RepositoryInterfaces;
 
-public class PointsService : IPointsService
+public class PointsService : Service<IPointsService>
 {
-    public Task<HandlerResult<SuccessData<PointHistory>, IErrorResult>> GetHistoryForPlayer(long playerId)
+    
+    private IPointsService? _pointsService;
+    private string login = "login"; // should be obtained in method call
+    private string key = "key";
+    
+    public PointsService(PointsAdminService adminService,
+        PointsBadValidationService badValidation,
+        PointsBannedPlayerService bannedPlayerService,
+        PointsIdentifiedPlayerService identifiedPlayerService,
+        PointsUnidentifiedPlayerService unidentifiedPlayerService,
+        IPlayerValidator validator)
+        : base(adminService, badValidation, bannedPlayerService, identifiedPlayerService, unidentifiedPlayerService,
+            validator)
     {
-        throw new NotImplementedException();
+        
+    }
+    public async Task<HandlerResult<Success, IErrorResult>> SetPointsForPlayer(long playerId, long points)
+    {
+        _pointsService = Validate(login, key);
+        return await _pointsService.SetPointsForPlayer(playerId, points);
+    } 
+    
+    public async Task<HandlerResult<SuccessData<List<PointHistoryDto>>, IErrorResult>> GetHistoryForPlayer(long playerId)
+    {
+        _pointsService = Validate(login, key);
+        return await _pointsService.GetHistoryForPlayer(playerId);
     }
 
-    public Task<HandlerResult<SuccessData<List<long>>, IErrorResult>> GetLeaderboards()
+    public async Task<HandlerResult<SuccessData<List<Player>>, IErrorResult>> GetLeaderboards()
     {
-        throw new NotImplementedException();
+        _pointsService = Validate(login, key);
+        return await _pointsService.GetLeaderboards();
     }
 
-    public Task<HandlerResult<SuccessData<long>, IErrorResult>> GetPointsForPlayer(long playerId)
+    public async Task<HandlerResult<SuccessData<long>, IErrorResult>> GetPointsForPlayer(long playerId)
     {
-        throw new NotImplementedException();
+        _pointsService = Validate(login, key);
+        return await _pointsService.GetPointsForPlayer(playerId);
     }
+    
+    
 }

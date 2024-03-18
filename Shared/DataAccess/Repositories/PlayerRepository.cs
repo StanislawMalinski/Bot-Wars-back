@@ -3,12 +3,13 @@ using System.Security.Claims;
 using System.Text;
 using BotWars;
 using Shared.DataAccess.Context;
-using Shared.DataAccess.DAO;
+using Shared.DataAccess.DTO;
 using Shared.DataAccess.Mappers;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Shared.DataAccess.DataBaseEntities;
+using Shared.DataAccess.DTO.Requests;
 using Shared.DataAccess.RepositoryInterfaces;
 using Shared.Results;
 using Shared.Results.ErrorResults;
@@ -42,8 +43,8 @@ namespace Shared.DataAccess.Repositories
             {
                 return new BadAccountInformationError()
                 {
-                    Title = "Return null",
-                    Message = "Niepoprawny email lub haslo"
+                    Title = "BadAccountInformationError 404",
+                    Message = "Player could not have been found"
                 };
             }
 
@@ -77,6 +78,8 @@ namespace Shared.DataAccess.Repositories
 
             var tokenHandler = new JwtSecurityTokenHandler();
             var completeToken = tokenHandler.WriteToken(token);
+            player.LastLogin = DateTime.Now;
+            await _context.SaveChangesAsync();
             return new SuccessData<string>()
             {
                 Data = completeToken
@@ -86,6 +89,8 @@ namespace Shared.DataAccess.Repositories
         public async Task<HandlerResult<Success, IErrorResult>> CreatePlayerAsync(PlayerDto playerDto)
         {
             var newPlayer = _playerMapper.ToPlayerEntity(playerDto);
+            newPlayer.Registered = DateTime.Now;
+            newPlayer.Points = 2000;
             var hashedPassword = _passwordHasher.HashPassword(newPlayer, newPlayer?.HashedPassword);
             newPlayer.HashedPassword = hashedPassword;
             var resPlayer = await _context.Players.AddAsync(newPlayer);
@@ -138,6 +143,22 @@ namespace Shared.DataAccess.Repositories
             };
         }
 
-        
+        public async Task<HandlerResult<SuccessData<PlayerInfo>, IErrorResult>> GetPlayerInfoAsync(long playerId)
+        {
+            var player = await _context.Players.FindAsync(playerId);
+            if (player == null) return new EntityNotFoundErrorResult();
+            PlayerInfo playerInfo = new PlayerInfo
+            {
+                Login = player.Login,
+                Registered = player.Registered,
+                Point = player.Points
+            };
+            playerInfo.BotsNumber = _context.Bots.Count(x => x.PlayerId == playerId);
+            playerInfo.TournamentNumber = _context.Tournaments.Count(x => x.CreatorId == playerId);
+            return new SuccessData<PlayerInfo>()
+            {
+                Data = playerInfo
+            };
+        }
     }
 }

@@ -1,16 +1,17 @@
 ﻿using Communication.APIs.Controllers.Helper;
-using Communication.ServiceInterfaces;
+using Communication.Services.UserSettings;
 using Microsoft.AspNetCore.Mvc;
-using Shared.DataAccess.DAO;
+using Shared.DataAccess.DTO;
 
 namespace Communication.APIs.Controllers;
 
-[Route("api/[controller]")]
+[Route("api/v1/[controller]")]
+[ApiController]
 public class UserSettingsController : Controller
 {
-    private readonly IUserSettingsService _userSettingsService;
+    private readonly UserSettingsService _userSettingsService;
 
-    public UserSettingsController(IUserSettingsService userSettingsService)
+    public UserSettingsController(UserSettingsService userSettingsService)
     {
         _userSettingsService = userSettingsService;
     }

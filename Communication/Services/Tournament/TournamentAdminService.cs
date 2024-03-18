@@ -1,4 +1,5 @@
-﻿using Shared.DataAccess.DAO;
+﻿using Shared.DataAccess.DTO;
+using Shared.DataAccess.DTO.Requests;
 using Shared.DataAccess.RepositoryInterfaces;
 using Shared.Results;
 using Shared.Results.IResults;
@@ -13,9 +14,9 @@ namespace Communication.Services.Tournament
 		{
 		}
 
-		public async Task<HandlerResult<Success, IErrorResult>> AddTournament(TournamentDto tournament)
+		public async Task<HandlerResult<Success, IErrorResult>> AddTournament(TournamentRequest tournamentRequest)
 		{
-			return await _tournamentServiceProvider.AddTournament(tournament);
+			return await _tournamentServiceProvider.AddTournament(tournamentRequest);
 		}
 
 		public async Task<HandlerResult<Success, IErrorResult>> DeleteTournament(long id)
@@ -33,9 +34,9 @@ namespace Communication.Services.Tournament
 			return await _tournamentServiceProvider.UnregisterSelfForTournament(tournamentId, botId);
 		}
 
-		public async Task<HandlerResult<Success, IErrorResult>> UpdateTournament(long id, TournamentDto tournament)
+		public async Task<HandlerResult<Success, IErrorResult>> UpdateTournament(long id, TournamentRequest tournamentRequest)
 		{
-			return await _tournamentServiceProvider.UpdateTournament(id, tournament);
+			return await _tournamentServiceProvider.UpdateTournament(id, tournamentRequest);
 		}
 	}
 }

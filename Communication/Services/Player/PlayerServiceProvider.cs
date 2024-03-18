@@ -1,4 +1,5 @@
-﻿using Shared.DataAccess.DAO;
+﻿using Shared.DataAccess.DTO;
+using Shared.DataAccess.DTO.Requests;
 using Shared.DataAccess.Repositories;
 using Shared.DataAccess.RepositoryInterfaces;
 using Shared.Results;
@@ -20,6 +21,11 @@ public class PlayerServiceProvider
     public async Task<HandlerResult<SuccessData<PlayerDto>, IErrorResult>> getPlayerInfo(long PlayerId)
     {
         return await _playerRepository.GetPlayerAsync(PlayerId);
+    }
+    
+    public async Task<HandlerResult<SuccessData<PlayerInfo>, IErrorResult>> GetPlayerInfoById(long playerId)
+    {
+        return await _playerRepository.GetPlayerInfoAsync(playerId);
     }
 
     public async Task<HandlerResult<Success, IErrorResult>> registerNewPlayer(PlayerDto PlayerModel)

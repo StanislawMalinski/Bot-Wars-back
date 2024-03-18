@@ -1,5 +1,8 @@
-﻿using Shared.DataAccess.DAO;
+﻿using Shared.DataAccess.DTO;
 using Shared.DataAccess.DataBaseEntities;
+using Shared.DataAccess.DTO.Requests;
+using Shared.DataAccess.DTO.Responses;
+using Shared.DataAccess.Enumerations;
 
 namespace Shared.DataAccess.Mappers
 {
@@ -16,7 +19,7 @@ namespace Shared.DataAccess.Mappers
                 PlayersLimit = dto.PlayersLimit,
                 PostedDate = dto.PostedDate,
                 TournamentsDate = dto.TournamentsDate,
-                WasPlayedOut = dto.WasPlayedOut,
+                //Status = dto.WasPlayedOut,
                 Constraints = dto.Constrains,
                 Image = dto.Image
             };
@@ -33,9 +36,49 @@ namespace Shared.DataAccess.Mappers
                 PlayersLimit = tournament.PlayersLimit,
                 PostedDate = tournament.PostedDate,
                 TournamentsDate = tournament.TournamentsDate,
-                WasPlayedOut = tournament.WasPlayedOut,
+                //WasPlayedOut = tournament.Status,
                 Constrains = tournament.Constraints,
                 Image = tournament.Image
+            };
+        }
+
+        public TournamentResponse TournamentToTournamentResponse(Tournament tournament)
+        {
+            return new TournamentResponse()
+            {
+                Id = tournament.Id,
+                TournamentTitle = tournament.TournamentTitle,
+                Description = tournament.Description,
+                PlayersLimit = tournament.PlayersLimit,
+                TournamentsDate = tournament.TournamentsDate,
+                PostedDate = tournament.PostedDate,
+                RankingType = tournament.RankingType,
+                Constraints = tournament.Constraints,
+                Image = tournament.Image,
+                MatchIds = tournament.Matches?
+                    .Select(match => match.Id)
+                    .ToList(),
+                BotIds = tournament.TournamentReference?
+                    .Select(reference => reference.botId)
+                    .ToList(),
+                WasPlayedOut = tournament.Status == TournamentStatus.DONE 
+                               
+            };
+        }
+
+        public Tournament TournamentRequestToTournament(TournamentRequest tournamentRequest)
+        {
+            return new Tournament()
+            {
+                TournamentTitle = tournamentRequest.TournamentTitle,
+                Description = tournamentRequest.Description,
+                GameId = tournamentRequest.GameId,
+                PlayersLimit = tournamentRequest.PlayersLimit,
+                PostedDate = DateTime.Now,
+                TournamentsDate = tournamentRequest.TournamentsDate,
+                Status = TournamentStatus.SCHEDULED,
+                Constraints = tournamentRequest.Constraints,
+                Image = tournamentRequest.Image,
             };
         }
     }

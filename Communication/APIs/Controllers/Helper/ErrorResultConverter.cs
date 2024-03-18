@@ -7,12 +7,17 @@ namespace Communication.APIs.Controllers.Helper;
 
 public static class ErrorResultConverter
 {
-    public static IActionResult ErrorResult(this ControllerBase controller, IErrorResult errorResult) => errorResult switch
-    {
-        AccessDeniedError => controller.BadRequest(),
-        EntityNotFoundErrorResult=> controller.NotFound(errorResult),
-        NotImplementedError => controller.BadRequest(errorResult),
-        AlreadyRegisterForTournamentError => controller.BadRequest(errorResult),
-        _ => controller.StatusCode((int)HttpStatusCode.InternalServerError, errorResult)
-    };
+    public static IActionResult ErrorResult(this ControllerBase controller, IErrorResult errorResult) =>
+        errorResult switch
+        {
+            AccessDeniedError => controller.BadRequest(),
+            EntityNotFoundErrorResult => controller.NotFound(errorResult),
+            NotImplementedError => controller.BadRequest(errorResult),
+            AlreadyRegisterForTournamentError => controller.BadRequest(errorResult),
+            AchievementsAlreadyObtainedError => controller.BadRequest(errorResult),
+            NotEnoughAchievementPointsError => controller.BadRequest(errorResult),
+            BadAccountInformationError => controller.NotFound(errorResult),
+            TournamentIsBeingPlayedError => controller.BadRequest(errorResult),
+            _ => controller.StatusCode((int)HttpStatusCode.InternalServerError, errorResult)
+        };
 }
