@@ -3,6 +3,7 @@ using Communication.Services.Tournament;
 using Microsoft.AspNetCore.Mvc;
 using Shared.DataAccess.DTO;
 using Shared.DataAccess.DTO.Requests;
+using Shared.DataAccess.RepositoryInterfaces;
 
 namespace Communication.APIs.Controllers
 {
@@ -10,17 +11,17 @@ namespace Communication.APIs.Controllers
     [ApiController]
     public class TournamentController : Controller
     {
-        private readonly TournamentService _tournamentService;
+        private readonly ITournamentService _tournamentService;
 
-        public TournamentController(TournamentService tournamentService)
+        public TournamentController(ITournamentService tournamentService)
         {
             _tournamentService = tournamentService;
         }
 
         [HttpPost("add")]
-        public async Task<IActionResult> AddTournament([FromBody] TournamentRequest tournamentRequest) 
+        public async Task<IActionResult> AddTournament(TournamentRequest tournamentRequest) 
         {
-            return  (await _tournamentService.AddTournament(tournamentRequest)).Match(Ok,this.ErrorResult);
+            return  (await _tournamentService.AddTournament(1L, tournamentRequest)).Match(Ok,this.ErrorResult);
             
         }
 
@@ -64,7 +65,7 @@ namespace Communication.APIs.Controllers
         }
 
         [HttpPut("update")]
-        public async Task<IActionResult> UpdateTournament([FromQuery] long id, [FromBody] TournamentRequest tournamentRequest)
+        public async Task<IActionResult> UpdateTournament([FromQuery] long id, [FromForm] TournamentRequest tournamentRequest)
         {
             return (await _tournamentService.UpdateTournament(id, tournamentRequest)).Match(Ok,this.ErrorResult);
             

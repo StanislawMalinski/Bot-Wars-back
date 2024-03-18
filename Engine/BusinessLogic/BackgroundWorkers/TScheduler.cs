@@ -43,6 +43,7 @@ public class TScheduler: IInvocable
                 case TaskTypes.PlayGame:
                     if ((await _schedulerRepository.Taskdoing(t.Id)).IsSuccess)
                     {
+                        Console.WriteLine("Shceduled "+t.Id);
                         _scheduler.ScheduleWithParams<GameWorker>(t.Id).EverySecond().Once().PreventOverlapping("game worker " + t.Id);    
                     }
                     break;

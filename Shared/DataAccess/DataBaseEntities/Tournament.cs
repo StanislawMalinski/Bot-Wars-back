@@ -15,13 +15,14 @@ namespace Shared.DataAccess.DataBaseEntities
         public TournamentStatus Status { get; set; }
         public RankingTypes RankingType { get; set; }
         public string? Constraints { get; set; }
-        public string? Image { get; set; }
+        public byte[] Image { get; set; }
         public Player Creator { get; set; }
         public long CreatorId { get; set; }
 
         //public ArchivedMatchPlayers? ArchivedMatchPlayers { get; set; }
         public List<Matches>? Matches { get; set; }
         public List<TournamentReference>? TournamentReference { get; set; }
+        public List<PointHistory>? PointHistories { get; set; }
 
       
     }

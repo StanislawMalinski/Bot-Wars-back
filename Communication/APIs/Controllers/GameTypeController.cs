@@ -3,6 +3,7 @@ using Communication.Services.GameType;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Shared.DataAccess.DTO.Requests;
+using Shared.DataAccess.RepositoryInterfaces;
 
 namespace Communication.APIs.Controllers
 {
@@ -10,9 +11,9 @@ namespace Communication.APIs.Controllers
     [ApiController]
     public class GameTypeController : Controller
     {
-        private readonly GameTypeService _gameTypeService;
+        private readonly IGameService _gameTypeService;
 
-        public GameTypeController(GameTypeService gameTypeService)
+        public GameTypeController(IGameService gameTypeService)
         {
             _gameTypeService = gameTypeService;
         }
@@ -22,20 +23,20 @@ namespace Communication.APIs.Controllers
         public async Task<IActionResult> CreateGameType([FromForm] GameRequest gameRequest)
         {
             return (await _gameTypeService
-                    .CreateGameType(gameRequest))
+                    .CreateGameType(1L,gameRequest))
                 .Match(Ok, this.ErrorResult);
         }
 
         [HttpGet("getAll")]
         public async Task<IActionResult> GetGames()
         {
-            return (await _gameTypeService.GetGameTypes()).Match(Ok, this.ErrorResult);
+            return (await _gameTypeService.GetGames()).Match(Ok, this.ErrorResult);
         }
 
         [HttpGet("getAvailable")]
         public async Task<IActionResult> GetAvailableGames()
         {
-            return (await _gameTypeService.GetAvailableGames()).Match(Ok, this.ErrorResult);
+            return (await _gameTypeService.GetListOfTypesOfAvailableGames()).Match(Ok, this.ErrorResult);
         }
 
         [HttpGet("getOne")]

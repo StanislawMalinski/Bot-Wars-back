@@ -1,4 +1,5 @@
 ﻿using Communication.APIs.Controllers.Helper;
+using Communication.ServiceInterfaces;
 using Communication.Services.Achievement;
 using Microsoft.AspNetCore.Mvc;
 using Shared.DataAccess.RepositoryInterfaces;
@@ -9,9 +10,9 @@ namespace Communication.APIs.Controllers;
 [ApiController]
 public class AchievementController : Controller
 {
-    private readonly AchievementService _achievementService;
+    private readonly IAchievementService _achievementService;
 
-    public AchievementController(AchievementService achievementService)
+    public AchievementController(IAchievementService achievementService)
     {
         _achievementService = achievementService;
     }

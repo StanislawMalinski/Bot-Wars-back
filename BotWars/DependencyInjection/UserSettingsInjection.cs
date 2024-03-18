@@ -1,4 +1,5 @@
-﻿using Communication.Services.UserSettings;
+﻿using Communication.ServiceInterfaces;
+using Communication.Services.UserSettings;
 using Shared.DataAccess.Mappers;
 using Shared.DataAccess.Repositories;
 using Shared.DataAccess.RepositoryInterfaces;
@@ -9,15 +10,9 @@ public static class UserSettingsInjection
 {
     public static IServiceCollection AddUserSettings(this IServiceCollection serviceCollection)
     {
-        serviceCollection.AddScoped<UserSettingsAdminService, UserSettingsAdminService>();
-        serviceCollection.AddScoped<UserSettingsIdentifiedPlayerService, UserSettingsIdentifiedPlayerService>();
-        serviceCollection.AddScoped<UserSettingsUnidentifiedPlayerService, UserSettingsUnidentifiedPlayerService>();
-        serviceCollection.AddScoped<UserSettingsBannedPlayerService, UserSettingsBannedPlayerService>();
-        serviceCollection.AddScoped<UserSettingsBadValidation, UserSettingsBadValidation>();
         serviceCollection.AddScoped<IUserSettingsRepository, UserSettingsRepository>();
         serviceCollection.AddScoped<IUserSettingsMapper, UserSettingsMapper>();
-        serviceCollection.AddScoped<UserSettingsService, UserSettingsService>();
-        serviceCollection.AddScoped<UserSettingsServiceProvider, UserSettingsServiceProvider>();
+        serviceCollection.AddScoped<IUserSettingsService, UserSettingsService>();
         return serviceCollection;
     }
 }

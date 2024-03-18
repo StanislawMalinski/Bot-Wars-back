@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Diagnostics.CodeAnalysis;
+using Microsoft.AspNetCore.Http;
 using Shared.DataAccess.Enumerations;
 using Shared.validation;
 
@@ -20,5 +21,5 @@ public class TournamentRequest
     [NotNull]
     public string? Constraints { get; set; }
     [NotNull]
-    public string? Image { get; set; }
+    public IFormFile Image { get; set; }
 }

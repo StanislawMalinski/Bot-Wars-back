@@ -24,9 +24,10 @@ public class AchievementHandlerService
     {
         var losers = (await _matchRepository.GetAllLosers(matchId, winner)).Match(x=>x.Data,x=>new List<long>());
         var playerWinner = (await _matchRepository.GetPlayerFromBot(winner)).Match(x => x.Data, x => 0);
-        foreach (var loser in losers)
+        var tour = (await _matchRepository.GetTournament(matchId)).Match(x=>x.Data,null!);
+        foreach (var loser in losers!)
         {
-            await _pointsEngineAccessor.MatchCalculation(playerWinner, loser);
+            await _pointsEngineAccessor.MatchCalculation(playerWinner, loser,tour!.Id);
         }
         return await _matchRepository.Winner( matchId, winner, taskId);
         

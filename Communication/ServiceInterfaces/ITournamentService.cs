@@ -20,7 +20,7 @@ namespace Shared.DataAccess.RepositoryInterfaces
 
         public Task<HandlerResult<Success,IErrorResult>> DeleteTournament(long id);
 
-        public Task<HandlerResult<Success,IErrorResult>> AddTournament(TournamentRequest tournamentRequest);
+        public Task<HandlerResult<Success,IErrorResult>> AddTournament(long userId,TournamentRequest tournamentRequest);
 
         public Task<HandlerResult<Success,IErrorResult>> UnregisterSelfForTournament(long tournamentId, long botId);
 

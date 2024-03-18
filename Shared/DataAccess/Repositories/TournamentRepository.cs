@@ -29,7 +29,7 @@ namespace Shared.DataAccess.Repositories
             _achievementsRepository = achievementsRepository;
         }
 
-        public async Task<HandlerResult<Success, IErrorResult>> CreateTournamentAsync(
+        public async Task<HandlerResult<Success, IErrorResult>> CreateTournamentAsync(long userId,
             TournamentRequest tournamentRequest)
         {
             var game = await _dataContext
@@ -47,7 +47,7 @@ namespace Shared.DataAccess.Repositories
 
             var tournament = _mapper
                 .TournamentRequestToTournament(tournamentRequest);
-            tournament.CreatorId = 1; // TODO +1
+            tournament.CreatorId = userId;
             await _dataContext
                 .Tournaments
                 .AddAsync(tournament);

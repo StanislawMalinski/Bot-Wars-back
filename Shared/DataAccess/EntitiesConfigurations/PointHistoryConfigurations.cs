@@ -17,5 +17,9 @@ public class PointHistoryConfigurations :IEntityTypeConfiguration<PointHistory>
         builder.Property(x => x.LogDate)
             .IsRequired();
 
+        builder.HasOne(x => x.Tournament)
+            .WithMany(x => x.PointHistories)
+            .HasForeignKey(x => x.TournamentId).OnDelete(DeleteBehavior.NoAction);
+
     }
 }
