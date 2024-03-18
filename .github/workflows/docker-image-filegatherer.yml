@@ -1,4 +1,4 @@
-name: Api Docker Image
+name: File Gatherer Docker Image
 
 on:
   push:
@@ -6,7 +6,7 @@ on:
   
 env:
   REGISTRY: ghcr.io
-  IMAGE_NAME: bot-wars-api
+  IMAGE_NAME: bot-wars-filegatherer
   TAG: latest
 
 jobs:
@@ -26,11 +26,11 @@ jobs:
         username: ${{ secrets.DOCKERHUB_USERNAME }}
         password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-    - name: Build and Push docker api image to DockerHub Registery
+    - name: Build and Push docker filegatherer image to DockerHub Registery
       uses: docker/build-push-action@v5
       with:
         context: .
-        file: ./Communication/api.dockerfile
+        file: ./FileGatherer/gatherer.dockerfile
         push: true
+
         tags: ${{ secrets.DOCKERHUB_USERNAME }}/${{ env.IMAGE_NAME }}:${{ env.TAG }}
-      

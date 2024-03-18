@@ -1,10 +1,26 @@
 version: '3.8'
 
 services:
+    bot_wars_api:
+        image: stanislawmalinski/bot-wars-api:latest
+        ports:
+            - "8080:8080"
+        depends_on:
+            - bot_wars_db
+    bot_wars_engine:
+        image: stanislawmalinski/bot-wars-engine:latest
+        ports:
+            - "7177:7177"
+        depends_on:
+            - bot_wars_db
+    bot_wars_filegatherer:
+        image: stanislawmalinski/bot-wars-gatherer:latest
+        ports:
+            - "8081:8081"
     bot_wars_db:
         image: "mcr.microsoft.com/mssql/server:2022-latest"
         ports:
-          - "1433:1433"
+            - "1433:1433"
         environment:
             SA_PASSWORD: "Sqlhaslo123!"
             ACCEPT_EULA: "Y"
