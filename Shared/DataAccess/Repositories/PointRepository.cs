@@ -3,6 +3,7 @@ using Microsoft.IdentityModel.Tokens;
 using Shared.DataAccess.Context;
 using Shared.DataAccess.DTO;
 using Shared.DataAccess.DataBaseEntities;
+using Shared.DataAccess.DTO.Responses;
 using Shared.DataAccess.Mappers;
 using Shared.DataAccess.RepositoryInterfaces;
 using Shared.Results;
@@ -16,10 +17,12 @@ public class PointRepository : IPointsRepository
 {
     private readonly DataContext _dataContext;
     private readonly IPointHistoryMapper _pointHistoryMapper;
+    private readonly IPlayerMapper _playerMapper;
 
-    public PointRepository(DataContext dataContext, IPointHistoryMapper pointHistoryMapper)
+    public PointRepository(DataContext dataContext, IPointHistoryMapper pointHistoryMapper,IPlayerMapper playerMapper)
     {
         _dataContext = dataContext;
+        _playerMapper = playerMapper;
         _pointHistoryMapper = pointHistoryMapper;
     }
 
@@ -98,14 +101,13 @@ public class PointRepository : IPointsRepository
         };
     }
 
-    public async Task<HandlerResult<SuccessData<List<Player>>, IErrorResult>> GetLeaderboards()
+    public async Task<HandlerResult<SuccessData<List<PlayerResponse>>, IErrorResult>> GetLeaderboards()
     {
         var players = await _dataContext.Players
-            .OrderByDescending(player => player.Points)
-            .Take(10)
+            .OrderByDescending(player => player.Points).Select(x=> _playerMapper.ToPlayerResponse(x))
             .ToListAsync();
 
-        return new SuccessData<List<Player>>
+        return new SuccessData<List<PlayerResponse>>
         {
             Data = players
         };

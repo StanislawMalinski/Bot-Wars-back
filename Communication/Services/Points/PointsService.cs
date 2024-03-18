@@ -1,6 +1,7 @@
 ﻿using Communication.ServiceInterfaces;
 using Shared.DataAccess.DTO;
 using Shared.DataAccess.DataBaseEntities;
+using Shared.DataAccess.DTO.Responses;
 using Shared.Results;
 using Shared.Results.ErrorResults;
 using Shared.Results.IResults;
@@ -27,7 +28,7 @@ public class PointsService : IPointsService
         return await _pointsRepository.GetHistoryForPlayer(playerId);
     }
 
-    public async Task<HandlerResult<SuccessData<List<Player>>,IErrorResult>> GetLeaderboards()
+    public async Task<HandlerResult<SuccessData<List<PlayerResponse>>,IErrorResult>> GetLeaderboards()
     {
         return await _pointsRepository.GetLeaderboards();
     }

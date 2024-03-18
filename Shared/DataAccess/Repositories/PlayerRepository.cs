@@ -98,6 +98,21 @@ namespace Shared.DataAccess.Repositories
             return new Success();
         }
 
+        public async Task<HandlerResult<Success, IErrorResult>> ChangePassword(ChangePasswordRequest password, long userId)
+        {
+            var res = await _context.Players.FindAsync(userId);
+            if (res == null) return new IncorrectOperation();
+            if (_passwordHasher.VerifyHashedPassword(res, res.HashedPassword, password.Password) ==
+                PasswordVerificationResult.Success)
+            {
+                res.HashedPassword = _passwordHasher.HashPassword(res, password.ChangePassword);
+                await _context.SaveChangesAsync();
+                return new Success();
+            }
+            return new IncorrectOperation();
+            
+        }
+
         public async Task<HandlerResult<Success, IErrorResult>> DeletePlayerAsync(long id)
         {
             var resPlayer = await _context.Players.FindAsync(id);

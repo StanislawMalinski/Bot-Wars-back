@@ -19,7 +19,7 @@ namespace Communication.APIs.Controllers
         }
 
         [HttpPost("add")]
-        public async Task<IActionResult> AddTournament([FromBody] TournamentRequest tournamentRequest) 
+        public async Task<IActionResult> AddTournament(TournamentRequest tournamentRequest) 
         {
             return  (await _tournamentService.AddTournament(1L, tournamentRequest)).Match(Ok,this.ErrorResult);
             
@@ -65,7 +65,7 @@ namespace Communication.APIs.Controllers
         }
 
         [HttpPut("update")]
-        public async Task<IActionResult> UpdateTournament([FromQuery] long id, [FromBody] TournamentRequest tournamentRequest)
+        public async Task<IActionResult> UpdateTournament([FromQuery] long id, [FromForm] TournamentRequest tournamentRequest)
         {
             return (await _tournamentService.UpdateTournament(id, tournamentRequest)).Match(Ok,this.ErrorResult);
             

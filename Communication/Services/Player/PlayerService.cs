@@ -38,7 +38,12 @@ public class PlayerService : IPlayerService
     {
         return new NotImplementedError();
     }
-    
+
+    public async Task<HandlerResult<Success, IErrorResult>> ChangePassword(ChangePasswordRequest request, long userId)
+    {
+        return await _playerRepository.ChangePassword(request, userId);
+    }
+
     public async Task<HandlerResult<SuccessData<string>, IErrorResult>> GenerateJwt(LoginDto dto)
     {
         return await _playerRepository.GenerateJwt(dto);

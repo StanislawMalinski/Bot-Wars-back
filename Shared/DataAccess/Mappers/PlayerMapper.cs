@@ -1,5 +1,6 @@
 ﻿using Shared.DataAccess.DTO;
 using Shared.DataAccess.DataBaseEntities;
+using Shared.DataAccess.DTO.Responses;
 
 namespace Shared.DataAccess.Mappers;
 
@@ -39,6 +40,16 @@ public class PlayerMapper : IPlayerMapper
             HashedPassword = playerDto.Password,
             isBanned = playerDto.isBanned,
             Points = playerDto.Points,
+        };
+    }
+
+    public PlayerResponse ToPlayerResponse(Player player)
+    {
+        return new PlayerResponse()
+        {
+            Id = player.Id,
+            Login = player.Login,
+            Points = player.Points
         };
     }
 }

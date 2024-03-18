@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Http;
 using Shared.validation;
 
 namespace Shared.DataAccess.DTO
@@ -17,6 +18,6 @@ namespace Shared.DataAccess.DTO
 		public DateTime PostedDate { get; set; }
 		public bool WasPlayedOut { get; set; }
 		public string? Constrains { get; set; }
-		public string? Image { get; set; }
+		public byte[] Image { get; set; }
 	}
 }

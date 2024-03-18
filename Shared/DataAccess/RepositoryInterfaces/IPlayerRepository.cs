@@ -10,6 +10,7 @@ public interface IPlayerRepository
 {
     public Task<HandlerResult<SuccessData<string>, IErrorResult>> GenerateJwt(LoginDto dto);
     public Task<HandlerResult<Success, IErrorResult>> CreatePlayerAsync(PlayerDto playerDto);
+    public Task<HandlerResult<Success, IErrorResult>> ChangePassword(ChangePasswordRequest password,long userId);
     public Task<HandlerResult<Success, IErrorResult>> DeletePlayerAsync(long id);
     public Task<HandlerResult<SuccessData<PlayerDto>, IErrorResult>> GetPlayerAsync(long id);
 

@@ -1,4 +1,5 @@
-﻿using Shared.DataAccess.DTO;
+﻿using Microsoft.AspNetCore.Http;
+using Shared.DataAccess.DTO;
 using Shared.DataAccess.DataBaseEntities;
 using Shared.DataAccess.DTO.Requests;
 using Shared.DataAccess.DTO.Responses;
@@ -24,6 +25,14 @@ namespace Shared.DataAccess.Mappers
                 Image = dto.Image
             };
         }
+
+        private byte[] FileToBytes(IFormFile file)
+        {
+            using var stream = new MemoryStream();
+            file.CopyTo(stream);
+            return  stream.ToArray();
+        }
+        
 
         public TournamentDto TournamentToDTO(Tournament tournament)
         {
@@ -78,7 +87,7 @@ namespace Shared.DataAccess.Mappers
                 TournamentsDate = tournamentRequest.TournamentsDate,
                 Status = TournamentStatus.SCHEDULED,
                 Constraints = tournamentRequest.Constraints,
-                Image = tournamentRequest.Image,
+                Image = FileToBytes(tournamentRequest.Image),
             };
         }
     }

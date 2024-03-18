@@ -2,6 +2,7 @@
 using Communication.ServiceInterfaces;
 using Microsoft.AspNetCore.Mvc;
 using Shared.DataAccess.DTO;
+using Shared.DataAccess.DTO.Requests;
 
 namespace Communication.APIs.Controllers
 {
@@ -32,6 +33,13 @@ namespace Communication.APIs.Controllers
         public async Task<IActionResult> GetPlayers(long id)
         {
             return (await _playerService.GetPlayerInfoAsync(id)).Match(Ok,this.ErrorResult);;
+        }
+        
+        
+        [HttpPost("changePassword")]
+        public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordRequest dto)
+        {
+            return (await _playerService.ChangePassword(dto ,1L)).Match(Ok,this.ErrorResult);
         }
         
         /*

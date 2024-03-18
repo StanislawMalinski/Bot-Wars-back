@@ -164,7 +164,7 @@ public class Seeder
                 TournamentsDate = new DateTime(2023, 1, 20),
                 Status = TournamentStatus.PLAYED,
                 Constraints = "Participants must have a minimum skill level of intermediate.",
-                Image = "quakethreearena.jpg", // You can replace this with the actual image file or URL,
+                Image = Convert.FromBase64String("iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAAXNSR0IArs4c6QAAADpJREFUKFPt0KERADAIBMF/j0JB/wXRCS08M/EkDeT0qqO7q7vxigAk6epI4sN10dkTEcpMVNUKzQwDWXAoJWfFnuMAAAAASUVORK5CYII="), // You can replace this with the actual image file or URL,
                 CreatorId = 1
             },
             new Tournament()
@@ -179,7 +179,7 @@ public class Seeder
                 Status = TournamentStatus.PLAYED,
                 Constraints = "Participants must complete the game on a specific difficulty level.",
                 CreatorId = 2,
-                Image = "zeldabreathofthewild.jpg" // You can replace this with the actual image file or URL
+                Image = Convert.FromBase64String("iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAAXNSR0IArs4c6QAAADpJREFUKFPt0KERADAIBMF/j0JB/wXRCS08M/EkDeT0qqO7q7vxigAk6epI4sN10dkTEcpMVNUKzQwDWXAoJWfFnuMAAAAASUVORK5CYII=") // You can replace this with the actual image file or URL
             },
             new Tournament()
             {
@@ -193,7 +193,7 @@ public class Seeder
                 Status = TournamentStatus.PLAYED,
                 Constraints = "Teams must consist of real-world players.",
                 CreatorId = 3,
-                Image = "fifa22worldcup.jpg" // You can replace this with the actual image file or URL
+                Image = Convert.FromBase64String("iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAAXNSR0IArs4c6QAAADpJREFUKFPt0KERADAIBMF/j0JB/wXRCS08M/EkDeT0qqO7q7vxigAk6epI4sN10dkTEcpMVNUKzQwDWXAoJWfFnuMAAAAASUVORK5CYII=") // You can replace this with the actual image file or URL
             },
             new Tournament()
             {
@@ -207,7 +207,7 @@ public class Seeder
                 Status = TournamentStatus.PLAYED,
                 Constraints = "Players must use voice communication during the game.",
                 CreatorId = 1,
-                Image = "amongusinfiltration.jpg" // You can replace this with the actual image file or URL
+                Image = Convert.FromBase64String("iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAAXNSR0IArs4c6QAAADpJREFUKFPt0KERADAIBMF/j0JB/wXRCS08M/EkDeT0qqO7q7vxigAk6epI4sN10dkTEcpMVNUKzQwDWXAoJWfFnuMAAAAASUVORK5CYII=")
             },
             new Tournament()
             {
@@ -221,7 +221,7 @@ public class Seeder
                 Status = TournamentStatus.PLAYED,
                 Constraints = "Builds must adhere to a specific theme.",
                 CreatorId = 1,
-                Image = "minecraftbuildingshowcase.jpg" // You can replace this with the actual image file or URL
+                Image = Convert.FromBase64String("iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAAXNSR0IArs4c6QAAADpJREFUKFPt0KERADAIBMF/j0JB/wXRCS08M/EkDeT0qqO7q7vxigAk6epI4sN10dkTEcpMVNUKzQwDWXAoJWfFnuMAAAAASUVORK5CYII=")
             },
             new Tournament()
             {
@@ -235,7 +235,7 @@ public class Seeder
                 Status = TournamentStatus.PLAYED,
                 Constraints = "Participants must customize their character's appearance.",
                 CreatorId = 3,
-                Image = "cyberpunk2077challenge.jpg" // You can replace this with the actual image file or URL
+                Image = Convert.FromBase64String("iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAAXNSR0IArs4c6QAAADpJREFUKFPt0KERADAIBMF/j0JB/wXRCS08M/EkDeT0qqO7q7vxigAk6epI4sN10dkTEcpMVNUKzQwDWXAoJWfFnuMAAAAASUVORK5CYII=")
             },
             new Tournament()
             {
@@ -249,7 +249,7 @@ public class Seeder
                 Status = TournamentStatus.PLAYED,
                 Constraints = "Teams must consist of three players.",
                 CreatorId = 2,
-                Image = "rocketleaguechampionship.jpg" // You can replace this with the actual image file or URL
+                Image = Convert.FromBase64String("iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAAXNSR0IArs4c6QAAADpJREFUKFPt0KERADAIBMF/j0JB/wXRCS08M/EkDeT0qqO7q7vxigAk6epI4sN10dkTEcpMVNUKzQwDWXAoJWfFnuMAAAAASUVORK5CYII=")
             },
             new Tournament()
             {
@@ -263,7 +263,7 @@ public class Seeder
                 Status = TournamentStatus.PLAYED,
                 Constraints = "Players must adhere to the battle royale ruleset.",
                 CreatorId = 2,
-                Image = "callofdutywarzone.jpg" // You can replace this with the actual image file or URL
+                Image = Convert.FromBase64String("iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAAXNSR0IArs4c6QAAADpJREFUKFPt0KERADAIBMF/j0JB/wXRCS08M/EkDeT0qqO7q7vxigAk6epI4sN10dkTEcpMVNUKzQwDWXAoJWfFnuMAAAAASUVORK5CYII=")
             },
             new Tournament()
             {
@@ -277,7 +277,7 @@ public class Seeder
                 Status = TournamentStatus.PLAYED,
                 Constraints = "Islands must be designed within a specific theme.",
                 CreatorId = 3,
-                Image = "animalcrossingislandshowcase.jpg" // You can replace this with the actual image file or URL
+                Image = Convert.FromBase64String("iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAAXNSR0IArs4c6QAAADpJREFUKFPt0KERADAIBMF/j0JB/wXRCS08M/EkDeT0qqO7q7vxigAk6epI4sN10dkTEcpMVNUKzQwDWXAoJWfFnuMAAAAASUVORK5CYII=")
             },
             new Tournament()
             {
@@ -291,7 +291,7 @@ public class Seeder
                 Status = TournamentStatus.PLAYED,
                 Constraints = "Teams must adhere to the standard Dota 2 competitive rules.",
                 CreatorId = 1,
-                Image = "dota2clashoftitans.jpg" // You can replace this with the actual image file or URL
+                Image = Convert.FromBase64String("iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAAXNSR0IArs4c6QAAADpJREFUKFPt0KERADAIBMF/j0JB/wXRCS08M/EkDeT0qqO7q7vxigAk6epI4sN10dkTEcpMVNUKzQwDWXAoJWfFnuMAAAAASUVORK5CYII=")
             }
         };
     }
