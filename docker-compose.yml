@@ -3,14 +3,18 @@ version: '3.8'
 services:
 
     bot_wars_engine:
-        image: stanislawmalinski/bot-wars-engine:latest
+        build:
+            context: .
+            dockerfile: Engine/engine.dockerfile
         ports:
             - "7177:7177"
         depends_on:
             - bot_wars_db
             
     bot_wars_filegatherer:
-        image: stanislawmalinski/bot-wars-gatherer:latest
+        build:
+            context: .
+            dockerfile: FileGatherer/gatherer.dockerfile
         ports:
             - "7002:8080"
         volumes:
@@ -43,15 +47,6 @@ services:
                sleep 5
                dotnet ef migrations add migration
                dotnet ef database update
-               
-    bot_wars_engine:
-        build:
-            context: .
-            dockerfile: Engine/engine.dockerfile
-        ports:
-            - "7001:8080"
-        depends_on:
-            - bot_wars_api
 
     bot_wars_front:
         image: "ghcr.io/jordus100/bot-wars-front:master"
