@@ -1,8 +1,11 @@
-﻿using Communication.APIs.Controllers.Helper;
+﻿using System.Security.Claims;
+using Communication.APIs.Controllers.Helper;
 using Communication.ServiceInterfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Shared.DataAccess.DTO;
 using Shared.DataAccess.DTO.Requests;
+using Shared.DataAccess.RepositoryInterfaces;
 
 namespace Communication.APIs.Controllers
 {
@@ -29,18 +32,23 @@ namespace Communication.APIs.Controllers
             return (await _playerService.GenerateJwt(dto)).Match(Ok,this.ErrorResult);
         }
         
-        [HttpGet("getOne")]
-        public async Task<IActionResult> GetPlayers(long id)
+        [HttpGet("getPlayerInfo")]
+        [Authorize(Roles = "User,Admin")]
+        public async Task<IActionResult> GetPlayerInfo()
         {
-            return (await _playerService.GetPlayerInfoAsync(id)).Match(Ok,this.ErrorResult);;
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            return (await _playerService.GetPlayerInfoAsync(long.Parse(userId))).Match(Ok,this.ErrorResult);
         }
         
         
         [HttpPost("changePassword")]
+        [Authorize(Roles = "User,Admin")]
         public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordRequest dto)
         {
-            return (await _playerService.ChangePassword(dto ,1L)).Match(Ok,this.ErrorResult);
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            return (await _playerService.ChangePassword(dto, long.Parse(userId))).Match(Ok,this.ErrorResult);
         }
+        
         
         /*
         [HttpPost("add")]
@@ -56,11 +64,7 @@ namespace Communication.APIs.Controllers
             return (await _playerService.DeletePlayerAsync(id)).Match(Ok,this.ErrorResult);;
         }
 
-        [HttpGet("getPlayers")]
-        public async Task<IActionResult> GetPlayers()
-        {
-            return (await _playerService.GetPlayersAsync()).Match(Ok,this.ErrorResult);;
-        }
+        
 
         [HttpDelete("get")]
         public async Task<IActionResult> GetTournament([FromQuery] long id)
