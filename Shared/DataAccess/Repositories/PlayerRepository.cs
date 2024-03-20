@@ -42,7 +42,7 @@ namespace Shared.DataAccess.Repositories
                 new RoleNameToCreateAdminRequirement("Admin")).Result;
             if (!authorizationResult.Succeeded)
             {
-                return new AuthenticationError();
+                return new UnauthorizedError();
             }
             
             var newPlayer = _playerMapper.ToPlayerEntity(playerDto);
@@ -60,7 +60,7 @@ namespace Shared.DataAccess.Repositories
         {
             if (playerId is null)
             {
-                return new AuthenticationError();
+                return new UnauthorizedError();
             }
 
             var player = await _context.Players.FindAsync(playerId);
