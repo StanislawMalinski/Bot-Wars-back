@@ -1,63 +1,66 @@
 ﻿using Shared.DataAccess.DataBaseEntities;
 using Shared.DataAccess.Enumerations;
+using Shared.DataAccess.RepositoryInterfaces;
 
 namespace Shared.DataAccess.Seeders;
 
 public class Seeder
 {
+    private static readonly int workFacktor = 12;
     public static IEnumerable<Player> GeneratePlayers()
     {
         return new List<Player>
         {
             new Player()
             {
-                Id = 1, Email = "john.doe@example.com", Login = "john_doe", Points = 1000, HashedPassword = "aasdsdas",Registered = DateTime.Now,
+                Id = 1, Email = "john.doe@example.com", Login = "john_doe", Points = 1000,
+                HashedPassword = BCrypt.Net.BCrypt.HashPassword("1234", workFacktor),Registered = DateTime.Now,
                 isBanned = false, RoleId = 1
             },
             new Player()
             {
                 Id = 2, Email = "jane.smith@example.com", Login = "jane_smith", Points = 1000,Registered = DateTime.Now,
-                HashedPassword = "sdfgdfg", isBanned = false, RoleId = 1
+                HashedPassword = BCrypt.Net.BCrypt.HashPassword("1234", workFacktor), isBanned = false, RoleId = 1
             },
             new Player()
             {
                 Id = 3, Email = "alex.jones@example.com", Login = "alex_jones", Points = 1000,Registered = DateTime.Now,
-                HashedPassword = "hjklhjk", isBanned = false, RoleId = 1
+                HashedPassword = BCrypt.Net.BCrypt.HashPassword("1234", workFacktor), isBanned = false, RoleId = 1
             },
             new Player()
             {
                 Id = 4, Email = "emily.white@example.com", Login = "emily_white", Points = 1000,Registered = DateTime.Now,
-                HashedPassword = "qwertyui", isBanned = false, RoleId = 1
+                HashedPassword = BCrypt.Net.BCrypt.HashPassword("1234", workFacktor), isBanned = false, RoleId = 1
             },
             new Player()
             {
                 Id = 5, Email = "sam.wilson@example.com", Login = "sam_wilson", Points = 1000,Registered = DateTime.Now,
-                HashedPassword = "zxcvbnm", isBanned = false, RoleId = 1
+                HashedPassword = BCrypt.Net.BCrypt.HashPassword("1234", workFacktor), isBanned = false, RoleId = 1
             },
             new Player()
             {
                 Id = 6, Email = "olivia.brown@example.com", Login = "olivia_brown", Points = 1000,Registered = DateTime.Now,
-                HashedPassword = "poiuytre", isBanned = false, RoleId = 1
+                HashedPassword = BCrypt.Net.BCrypt.HashPassword("1234", workFacktor), isBanned = false, RoleId = 1
             },
             new Player()
             {
                 Id = 7, Email = "david.miller@example.com", Login = "david_miller", Points = 1000,Registered = DateTime.Now,
-                HashedPassword = "lkjhgfds", isBanned = false, RoleId = 1
+                HashedPassword = BCrypt.Net.BCrypt.HashPassword("1234", workFacktor), isBanned = false, RoleId = 1
             },
             new Player()
             {
                 Id = 8, Email = "emma.jenkins@example.com", Login = "emma_jenkins", Points = 1000,Registered = DateTime.Now,
-                HashedPassword = "mnbvcxz", isBanned = false, RoleId = 1
+                HashedPassword = BCrypt.Net.BCrypt.HashPassword("1234", workFacktor), isBanned = false, RoleId = 1
             },
             new Player()
             {
                 Id = 9, Email = "ryan.clark@example.com", Login = "ryan_clark", Points = 1000,Registered = DateTime.Now,
-                HashedPassword = "asdfghjk", isBanned = true, RoleId = 1
+                HashedPassword = BCrypt.Net.BCrypt.HashPassword("1234", workFacktor), isBanned = true, RoleId = 1
             },
             new Player()
             {
                 Id = 10, Email = "sara.taylor@example.com", Login = "sara_taylor", Points = 1000,Registered = DateTime.Now,
-                HashedPassword = "qazwsxed", isBanned = false, RoleId = 2
+                HashedPassword = BCrypt.Net.BCrypt.HashPassword("1234", workFacktor), isBanned = false, RoleId = 2
             }
         };
     }

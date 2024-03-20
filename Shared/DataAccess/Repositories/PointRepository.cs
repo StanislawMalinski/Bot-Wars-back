@@ -5,6 +5,7 @@ using Shared.DataAccess.DTO;
 using Shared.DataAccess.DataBaseEntities;
 using Shared.DataAccess.DTO.Responses;
 using Shared.DataAccess.Mappers;
+using Shared.DataAccess.MappersInterfaces;
 using Shared.DataAccess.RepositoryInterfaces;
 using Shared.Results;
 using Shared.Results.ErrorResults;

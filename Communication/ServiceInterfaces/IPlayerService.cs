@@ -12,7 +12,7 @@ public interface IPlayerService
     public Task<HandlerResult<Success, IErrorResult>> registerNewPlayer(PlayerDto PlayerModel);
     public Task<HandlerResult<Success, IErrorResult>> resetPassWordByLogin(String Login);
     public Task<HandlerResult<Success, IErrorResult>> resetPassWordByEmail(String Email);
-    public Task<HandlerResult<Success, IErrorResult>> ChangePassword(ChangePasswordRequest request, long userId);
+    public Task<HandlerResult<Success, IErrorResult>> ChangePassword(ChangePasswordRequest request, long ?playerId);
     public Task<HandlerResult<SuccessData<string>, IErrorResult>> GenerateJwt(LoginDto dto);
-    public Task<HandlerResult<SuccessData<PlayerInfo>, IErrorResult>> GetPlayerInfoAsync(long playerId);
+    public Task<HandlerResult<SuccessData<PlayerInfo>, IErrorResult>> GetPlayerInfoAsync(long ?playerId);
 }

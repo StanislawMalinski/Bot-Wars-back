@@ -1,10 +1,11 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 using Shared.DataAccess.DataBaseEntities;
 
 namespace Shared.DataAccess.DTO;
 
-public class PlayerDto
-{   
+public class PlayerInternalDto
+{
+    public long Id { get; set; }
     [EmailAddress]
     public string Email { get; init; }
     public string Login { get; init; }
@@ -13,4 +14,5 @@ public class PlayerDto
     public int RoleId { get; set; }
     public bool isBanned {get; init;}
     public long Points { get; init; } 
+    public Role Role { get; init; } 
 }
