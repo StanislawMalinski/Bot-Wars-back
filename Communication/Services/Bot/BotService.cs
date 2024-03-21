@@ -35,4 +35,9 @@ public class BotService : IBotService
     {
         return await _botRepository.DeleteBot(botId);
     }
+
+    public async Task<HandlerResult<SuccessData<List<BotResponse>>, IErrorResult>> GetBotsForPlayer(long playerId)
+    {
+        return await _botRepository.GetBotsForPlayer(playerId);
+    }
 }

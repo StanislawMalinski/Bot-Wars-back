@@ -1,5 +1,6 @@
 ﻿using Shared.DataAccess.DTO;
 using Shared.DataAccess.DataBaseEntities;
+using Shared.DataAccess.DTO.Requests;
 using Shared.DataAccess.DTO.Responses;
 using Shared.DataAccess.MappersInterfaces;
 
@@ -42,6 +43,24 @@ public class PlayerMapper : IPlayerMapper
             Points = player.Points,
             isBanned = player.isBanned,
             Role = player.Role
+        };
+    }
+
+    public Player? ToPlayerFromRegistrationRequest(RegistrationRequest? registrationRequest)
+    {
+        if (registrationRequest == null)
+        {
+            return null;
+        }
+
+        return new Player
+        {
+            Email = registrationRequest.Email,
+            Login = registrationRequest.Login,
+            HashedPassword = registrationRequest.Password,
+            Points = 1000,
+            isBanned = false,
+            Registered = DateTime.Now
         };
     }
 

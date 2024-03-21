@@ -41,9 +41,14 @@ public class PlayerService : IPlayerService
         return await _playerRepository.GetPlayerAsync(PlayerId);
     }
     
-    public async Task<HandlerResult<Success, IErrorResult>> registerNewPlayer(PlayerDto PlayerModel)
+    public async Task<HandlerResult<Success, IErrorResult>> RegisterNewPlayer(RegistrationRequest registrationRequest)
     {
-        return await _playerRepository.CreatePlayerAsync(PlayerModel);
+        return await _playerRepository.CreatePlayerAsync(registrationRequest);
+    }
+
+    public async Task<HandlerResult<Success, IErrorResult>> RegisterNewAdmin(RegistrationRequest registrationRequest)
+    {
+        return await _playerRepository.CreateAdminAsync(registrationRequest);
     }
 
     public async Task<HandlerResult<Success, IErrorResult>> resetPassWordByLogin(String Login)
@@ -60,6 +65,11 @@ public class PlayerService : IPlayerService
     {
         long id = 5;
         return await _playerRepository.ChangePassword(request, playerId);
+    }
+
+    public async Task<HandlerResult<Success, IErrorResult>> ChangeLogin(ChangeLoginRequest request, long? playerId)
+    {
+        return await _playerRepository.ChangeLogin(request, playerId);
     }
 
     public async Task<HandlerResult<SuccessData<string>, IErrorResult>> GenerateJwt(LoginDto dto)
