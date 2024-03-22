@@ -1,5 +1,4 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using Shared.DataAccess.DataBaseEntities;
 
 namespace Shared.DataAccess.DTO;
 

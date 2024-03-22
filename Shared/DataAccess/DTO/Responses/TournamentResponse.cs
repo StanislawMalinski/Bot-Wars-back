@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-using Shared.DataAccess.DataBaseEntities;
-using Shared.DataAccess.Enumerations;
+﻿using Shared.DataAccess.Enumerations;
 
 namespace Shared.DataAccess.DTO.Responses;
 
