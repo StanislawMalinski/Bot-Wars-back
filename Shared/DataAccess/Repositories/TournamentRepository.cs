@@ -71,29 +71,20 @@ namespace Shared.DataAccess.Repositories
             return new Success();
         }
 
-        public async Task<HandlerResult<Success, IErrorResult>> DeleteUserScheduledTournamentsAsync(long userId)
+        public async Task<HandlerResult<Success, IErrorResult>> DeleteUserTournamentsAsync(long userId)
         {
             var tournaments = await _dataContext.Tournaments
-                .Where(x => x.CreatorId == userId && x.Status == TournamentStatus.SCHEDULED)
+                .Where(x => x.CreatorId == userId && x.Status != TournamentStatus.DONE && x.Status != TournamentStatus.INPLAY)
                 .ToListAsync();
-            if (tournaments == null)
-                return new EntityNotFoundErrorResult()
-                {
-                    Title = "EntityNotFoundErrorResult 404",
-                    Message = $"Tournament of id does not exist"
-                };
             foreach (Tournament tournament in tournaments)
             {
                 var tasks = await _dataContext
                     .Tasks
                     .Where(x => x.Status == TaskStatus.ToDo && x.Type == TaskTypes.PlayTournament && x.OperatingOn == tournament.Id)
                     .ToListAsync();
-                if (tasks != null)
+                foreach (var task in tasks)
                 {
-                    foreach (var task in tasks)
-                    {
-                        _dataContext.Tasks.Remove(task);
-                    }
+                    _dataContext.Tasks.Remove(task);
                 }
                 _dataContext
                     .Tournaments
