@@ -89,13 +89,14 @@ namespace Shared.DataAccess.Repositories
 
         public async Task<HandlerResult<Success, IErrorResult>> DeletePlayerAsync(long id)
         {
-            var resPlayer = await _context.Players.FindAsync(id);
-            if (resPlayer is null)
+            var player = await _context.Players.FindAsync(id);
+            if (player is null)
             {
                 return new EntityNotFoundErrorResult();
             }
-
-            _context.Remove(resPlayer);
+            player.Email = "";
+            player.Login = "deleted_" + player.Id.ToString();
+            player.Deleted = true;
             await _context.SaveChangesAsync();
             return new Success();
         }

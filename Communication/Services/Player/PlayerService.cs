@@ -24,16 +24,19 @@ public class PlayerService : IPlayerService
     private readonly IPlayerMapper _playerMapper;
     private readonly AuthenticationSettings _settings;
     private readonly IPasswordHasher _passwordHasher;
+    private readonly ITournamentService _tournamentService;
 
     public PlayerService(IPlayerRepository playerRepository,
         AuthenticationSettings settings,
         IPlayerMapper playerMapper,
-        IPasswordHasher passwordHasher)
+        IPasswordHasher passwordHasher,
+        ITournamentService tournamentService)
     {
         _passwordHasher = passwordHasher;
         _settings = settings;
         _playerMapper = playerMapper;
         _playerRepository = playerRepository;
+        _tournamentService = tournamentService;
     }
 
     public async Task<HandlerResult<SuccessData<PlayerDto>, IErrorResult>> getPlayerInfo(long PlayerId)
@@ -44,6 +47,12 @@ public class PlayerService : IPlayerService
     public async Task<HandlerResult<Success, IErrorResult>> registerNewPlayer(PlayerDto PlayerModel)
     {
         return await _playerRepository.CreatePlayerAsync(PlayerModel);
+    }
+
+    public async Task<HandlerResult<Success, IErrorResult>> DeletePlayerAsync(long id)
+    {
+        await _tournamentService.DeleteUserScheduledTournaments(id);
+        return await _playerRepository.DeletePlayerAsync(id);
     }
 
     public async Task<HandlerResult<Success, IErrorResult>> resetPassWordByLogin(String Login)

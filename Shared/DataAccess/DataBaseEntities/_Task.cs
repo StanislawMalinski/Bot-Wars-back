@@ -10,6 +10,4 @@ public class _Task
     public DateTime ScheduledOn { get; set; }
     public TaskStatus Status { get; set; }
     public long OperatingOn { get; set; }
-
-    
 }

@@ -15,4 +15,6 @@ public interface IPlayerService
     public Task<HandlerResult<Success, IErrorResult>> ChangePassword(ChangePasswordRequest request, long ?playerId);
     public Task<HandlerResult<SuccessData<string>, IErrorResult>> GenerateJwt(LoginDto dto);
     public Task<HandlerResult<SuccessData<PlayerInfo>, IErrorResult>> GetPlayerInfoAsync(long ?playerId);
+    public Task<HandlerResult<Success, IErrorResult>> DeletePlayerAsync(long id);
+
 }

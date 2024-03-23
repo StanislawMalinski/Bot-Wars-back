@@ -12,7 +12,7 @@
         public DateTime Registered { get; set; }
         public DateTime LastLogin { get; set; }
         public  Role Role { get; set; }
-        
+        public bool Deleted { get; set; }
         public List<Bot>? Bot { get; set; }
         public UserSettings UserSettings { get; set; }
         //public List<MatchPlayers>? MatchPlayers { get; set; }
