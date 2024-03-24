@@ -133,7 +133,8 @@
                 FileData data = new FileData()
                 {
                     Path = filePath,
-                    FileName = file.FileName
+                    FileName = file.FileName,
+                    Deleted = false
                 };
                 _db.Files.Add(data);
                 _db.SaveChanges();
