@@ -10,6 +10,51 @@
             _db = db;
         }
 
+        public async Task<ServiceResponse<bool>> DeleteFile(long id)
+        {
+            try
+            {
+                var fileData = await _db.Files.FindAsync(id);
+                if (fileData == null)
+                {
+                    Console.WriteLine($"Delete: File {id} info not in database");
+                    return new ServiceResponse<bool>()
+                    {
+                        Message = $"File {id} info not in database"
+                    };
+                }
+                string filePath = fileData.Path;
+                if (string.IsNullOrEmpty(filePath) || !File.Exists(filePath))
+                {
+                    Console.WriteLine("File not found");
+                    return new ServiceResponse<bool>()
+                    {
+                        Success = false,
+                        Message = "File not found"
+                    };
+                }
+                fileData.Deleted = true;
+                await _db.SaveChangesAsync();
+                File.Delete(filePath);
+                _db.Files.Remove(fileData);
+                await _db.SaveChangesAsync();
+                return new ServiceResponse<bool>()
+                {
+                    Success = true,
+                    Data = true,
+                    Message = $"File {id} deleted successfully"
+                };
+            }
+            catch(Exception ex)
+            {
+                Console.WriteLine($"Exception: {ex.Message}");
+                return new ServiceResponse<bool>()
+                {
+                    Message = ex.Message
+                };
+            }
+        }
+
         public async Task<ServiceResponse<FileDto>> GetFile(long id)
         {
             try
@@ -17,11 +62,11 @@
                 var fileData = await _db.Files.FindAsync(id);
                 if (fileData == null)
                 {
-                    Console.WriteLine("File info not in database");
+                    Console.WriteLine($"Get: File {id} info not in database");
                     return new ServiceResponse<FileDto>()
                     {
                         Success = false,
-                        Message = "File info not in database"
+                        Message = $"File {id} info not in database"
                     };
                 }
                 string filePath = fileData.Path;
@@ -34,7 +79,22 @@
                         Message = "File not found"
                     };
                 }
-                byte[] fileBytes = await File.ReadAllBytesAsync(filePath);
+                if (fileData.Deleted)
+                {
+                    Console.WriteLine("File was previously deleted");
+                    File.Delete(filePath);
+                    return new ServiceResponse<FileDto>()
+                    {
+                        Success = false,
+                        Message = $"File {id} was previously deleted"
+                    };
+                }
+                byte[] fileBytes;
+                using (FileStream stream = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.Delete))
+                {
+                    fileBytes = new byte[stream.Length];
+                    await stream.ReadAsync(fileBytes, 0, (int)stream.Length);
+                }
                 return new ServiceResponse<FileDto>()
                 {
                     Success = true,
@@ -66,7 +126,7 @@
                     filePath = storagePath + Guid.NewGuid().ToString();
                 }
                 while (File.Exists(filePath));
-                using (var stream = new FileStream(filePath, FileMode.Create))
+                using (var stream = new FileStream(filePath, FileMode.Create, FileAccess.Write, FileShare.None))
                 {
                     await file.CopyToAsync(stream);
                 }

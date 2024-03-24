@@ -14,13 +14,15 @@ public class GameTypeService : IGameService
     {
         _gameRepository = gameRepository;
     }
-    
-
-  
 
     public async Task<HandlerResult<SuccessData<GameResponse>,IErrorResult>> GetGame(long id)
     {
         return await _gameRepository.GetGame(id);
+    }
+
+    public async Task<HandlerResult<SuccessData<List<GameResponse>>, IErrorResult>> Search(string? name)
+    {
+        return await _gameRepository.Search(name);
     }
 
     public async Task<HandlerResult<Success, IErrorResult>> ModifyGameType(long id, GameRequest gameRequest)

@@ -29,7 +29,6 @@ public class GameRepository : IGameRepository
         _httpClient = httpClient;
     }
 
-
     public async Task<HandlerResult<Success, IErrorResult>> CreateGameType(long userId,GameRequest gameRequest)
     {
     
@@ -59,8 +58,28 @@ public class GameRepository : IGameRepository
             .AddAsync(game);
         await _dataContext.SaveChangesAsync();
         return new Success();
-        
+    }
 
+    public async Task<HandlerResult<SuccessData<List<GameResponse>>, IErrorResult>> Search(string? name)
+    {
+        if (name == null)
+        {
+            return new SuccessData<List<GameResponse>>()
+            {
+                Data = new List<GameResponse>()
+            };
+        }
+
+        var res = await _dataContext
+            .Games
+            .Where(x => x.GameFile != null && x.GameFile.Contains(name))
+            .Select(x => _mapper.MapGameToResponse(x))
+            .ToListAsync();
+
+        return new SuccessData<List<GameResponse>>()
+        {
+            Data = res
+        };
     }
 
     public async Task<HandlerResult<SuccessData<List<GameResponse>>, IErrorResult>> GetGames()
@@ -72,7 +91,6 @@ public class GameRepository : IGameRepository
             .Include(game => game.Tournaments)
             .Select(x => _mapper.MapGameToResponse(x))
             .ToListAsync();
-        
 
         return new SuccessData<List<GameResponse>>()
         {
