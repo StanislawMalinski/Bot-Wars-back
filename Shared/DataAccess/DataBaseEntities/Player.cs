@@ -9,6 +9,7 @@
         public long Points { get; set; }
         public string? HashedPassword { get; set; }
         public int RoleId { get; set; }
+        public byte[]? Image { get; set; }
         public DateTime Registered { get; set; }
         public DateTime LastLogin { get; set; }
         public  Role Role { get; set; }

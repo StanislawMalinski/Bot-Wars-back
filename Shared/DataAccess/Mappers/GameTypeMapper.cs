@@ -40,5 +40,19 @@ namespace Shared.DataAccess.Mappers
                 FileId = game.FileId,
             };
         }
+        
+        public GameSimpleResponse MapGameToSimpleResponse(Game game)
+        {
+            return new GameSimpleResponse
+            {
+                Id = game.Id,
+                NumbersOfPlayer = game.NumbersOfPlayer,
+                GameFileName = game.GameFile,
+                GameInstructions = game.GameInstructions,
+                InterfaceDefinition = game.InterfaceDefinition,
+                IsAvailableForPlay = game.IsAvailableForPlay,
+                LastModification = game.LastModification,
+            };
+        }
     }
 }

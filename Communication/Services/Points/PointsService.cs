@@ -37,4 +37,5 @@ public class PointsService : IPointsService
     {
         return await _pointsRepository.GetCurrentPointsForPlayer(playerId);
     }
+    
 }

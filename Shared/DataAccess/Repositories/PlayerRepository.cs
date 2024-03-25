@@ -4,6 +4,8 @@ using Shared.DataAccess.DTO;
 using Microsoft.EntityFrameworkCore;
 using Shared.DataAccess.AuthorizationRequirements;
 using Shared.DataAccess.DTO.Requests;
+using Shared.DataAccess.DTO.Responses;
+using Shared.DataAccess.Mappers;
 using Shared.DataAccess.MappersInterfaces;
 using Shared.DataAccess.RepositoryInterfaces;
 using Shared.Results;
@@ -20,19 +22,21 @@ namespace Shared.DataAccess.Repositories
         private readonly IPasswordHasher _passwordHasher;
         private readonly IAuthorizationService _authorizationService;
         private readonly IUserContextRepository _userContextRepository;
-
+        private readonly IGameTypeMapper _gameTypeMapper;
 
         public PlayerRepository(DataContext context,
             IPlayerMapper playerMapper,
             IPasswordHasher passwordHasher,
             IAuthorizationService authorizationService,
-            IUserContextRepository userContextRepository)
+            IUserContextRepository userContextRepository,
+            IGameTypeMapper gameTypeMapper)
         {
             _userContextRepository = userContextRepository;
             _authorizationService = authorizationService;
             _passwordHasher = passwordHasher;
             _context = context;
             _playerMapper = playerMapper;
+            _gameTypeMapper = gameTypeMapper;
         }
 
         public async Task<HandlerResult<Success, IErrorResult>> CreatePlayerAsync(PlayerDto playerDto)
@@ -185,6 +189,39 @@ namespace Shared.DataAccess.Repositories
             return new SuccessData<PlayerInfo>()
             {
                 Data = playerInfo
+            };
+        }
+
+        public async Task<HandlerResult<SuccessData<List<GameSimpleResponse>>, IErrorResult>> GetMyGames(long playerId)
+        {
+            
+            var res = await _context.Games.Where(x => x.CreatorId == playerId).Select(x=> _gameTypeMapper.MapGameToSimpleResponse(x)).ToListAsync();
+            return new SuccessData<List<GameSimpleResponse>>()
+            {
+                Data = res
+            };
+        }
+
+        public async Task<HandlerResult<Success, IErrorResult>> ChangeImage(PlayerImageRequest imageRequest, long playerId)
+        {
+            var res = await _context.Players.FindAsync(playerId);
+            if (res == null) return new EntityNotFoundErrorResult();
+            res.Image = Convert.FromBase64String(imageRequest.Image!);
+            await _context.SaveChangesAsync();
+            return new Success();
+        }
+
+        public async Task<HandlerResult<SuccessData<string>, IErrorResult>> GetImage(long playerId)
+        {
+            var res = await _context.Players.FindAsync(playerId);
+            if (res == null) return new EntityNotFoundErrorResult();
+            if (res.Image == null)  return new SuccessData<string>
+            {
+                Data = string.Empty
+            };
+            return new SuccessData<string>
+            {
+                Data = Convert.ToBase64String(res.Image)
             };
         }
     }

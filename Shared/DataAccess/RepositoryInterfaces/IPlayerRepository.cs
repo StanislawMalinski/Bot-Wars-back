@@ -1,5 +1,6 @@
 ﻿using Shared.DataAccess.DTO;
 using Shared.DataAccess.DTO.Requests;
+using Shared.DataAccess.DTO.Responses;
 using Shared.Results;
 using Shared.Results.IResults;
 using Shared.Results.SuccessResults;
@@ -16,5 +17,9 @@ public interface IPlayerRepository
     public Task<HandlerResult<SuccessData<PlayerInternalDto>, IErrorResult>> GetPlayerAsync(string email);
     public Task<HandlerResult<SuccessData<List<PlayerDto>>, IErrorResult>> GetPlayersAsync();
     public Task<HandlerResult<SuccessData<PlayerInfo>, IErrorResult>> GetPlayerInfoAsync(long ?playerId);
+    public Task<HandlerResult<SuccessData<List<GameSimpleResponse>>, IErrorResult>> GetMyGames(long playerId);
+    public Task<HandlerResult<Success, IErrorResult>> ChangeImage(PlayerImageRequest imageRequest, long playerId);
+    public Task<HandlerResult<SuccessData<string>, IErrorResult>> GetImage( long playerId);
+    
     
 }
