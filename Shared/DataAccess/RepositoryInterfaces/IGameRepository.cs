@@ -10,7 +10,7 @@ namespace Shared.DataAccess.RepositoryInterfaces;
 
 public interface IGameRepository
 {
-    public Task<HandlerResult<Success, IErrorResult>> CreateGameType(GameRequest gameRequest);
+    public Task<HandlerResult<Success, IErrorResult>> CreateGameType(long userId,GameRequest gameRequest);
     public Task<HandlerResult<SuccessData<List<GameResponse>>, IErrorResult>> GetGames();
     public Task<HandlerResult<Success, IErrorResult>> DeleteGame(long id);
     public Task<HandlerResult<SuccessData<GameResponse>, IErrorResult>> GetGame(long id);

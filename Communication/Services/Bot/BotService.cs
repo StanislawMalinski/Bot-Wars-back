@@ -1,5 +1,4 @@
-﻿using Communication.Services.Validation;
-using Shared.DataAccess.DTO.Requests;
+﻿using Shared.DataAccess.DTO.Requests;
 using Shared.DataAccess.DTO.Responses;
 using Shared.DataAccess.RepositoryInterfaces;
 using Shared.Results;
@@ -8,51 +7,37 @@ using Shared.Results.SuccessResults;
 
 namespace Communication.Services.Bot;
 
-public class BotService : Service<IBotService>
+public class BotService : IBotService
 {
-    private IBotService _botService;
-    private string login = "login";
-    private string key = "key";
+    private readonly IBotRepository _botRepository;
 
-    public BotService(
-        BotAdminService adminInterface,
-        BotIdentifiedPlayerService identifiedPlayerInterface,
-        BotUnidentifiedPlayerService unidentifiedPlayerInterface,
-        BotBannedPlayerService bannedPlayerInterface,
-        BotBadValidationService badValidationInterface,
-        IPlayerValidator validator
-    ) : base(
-        adminInterface,
-        identifiedPlayerInterface,
-        bannedPlayerInterface,
-        unidentifiedPlayerInterface,
-        badValidationInterface,
-        validator
-    )
+    public BotService(IBotRepository botRepository)
     {
+        _botRepository = botRepository;
     }
-    
+
     public async Task<HandlerResult<SuccessData<List<BotResponse>>, IErrorResult>> GetAllBots()
     {
-        _botService = Validate(login, key);
-        return await _botService.GetAllBots();
+        return await _botRepository.GetAllBots();
     }
 
     public async Task<HandlerResult<SuccessData<BotResponse>, IErrorResult>> GetBotResponse(long botId)
     {
-        _botService = Validate(login, key);
-        return await _botService.GetBotResponse(botId);
+        return await _botRepository.GetBotResponse(botId);
     }
 
     public async Task<HandlerResult<Success, IErrorResult>> AddBot(BotRequest botRequest)
     {
-        _botService = Validate(login, key);
-        return await _botService.AddBot(botRequest);
+        return await _botRepository.AddBot(botRequest);
     }
 
     public async Task<HandlerResult<Success, IErrorResult>> DeleteBot(long botId)
     {
-        _botService = Validate(login, key);
-        return await _botService.DeleteBot(botId);
+        return await _botRepository.DeleteBot(botId);
+    }
+
+    public async Task<HandlerResult<SuccessData<List<BotResponse>>, IErrorResult>> GetBotsForPlayer(long playerId)
+    {
+        return await _botRepository.GetBotsForPlayer(playerId);
     }
 }

@@ -1,44 +1,28 @@
-﻿using Communication.Services.Validation;
-using Shared.DataAccess.RepositoryInterfaces;
+﻿using Shared.DataAccess.RepositoryInterfaces;
 using Shared.Results;
 using Shared.Results.IResults;
 using Shared.Results.SuccessResults;
 
 namespace Communication.Services.Administration;
 
-public class AdministrativeService : Service<IAdministrativeService>
+public class AdministrativeService : IAdministrativeService
 {
-    private IAdministrativeService _administrativeService;
+    private readonly IAdministrativeRepository _administrativeRepository;
     private string login = "login";
     private string key = "key";
 
-    public AdministrativeService(
-        AdministrativeAdminService adminInterface,
-        AdministrativeIdentifiedPlayerService identifiedPlayerInterface,
-        AdministrativeUnidentifiedPlayerService unidentifiedPlayerInterface,
-        AdministrativeBannedPlayerService bannedPlayerInterface,
-        AdministrativeBadValidationService badValidationInterface,
-        IPlayerValidator validator
-    ) : base(
-        adminInterface,
-        identifiedPlayerInterface,
-        bannedPlayerInterface,
-        unidentifiedPlayerInterface,
-        badValidationInterface,
-        validator
-    )
+    public AdministrativeService(IAdministrativeRepository administrativeRepository)
     {
-    }
-
-    public async Task<HandlerResult<Success, IErrorResult>> BanPlayer(long playerId)
-    {
-        _administrativeService = Validate(login, key);
-        return await _administrativeService.BanPlayer(playerId);
+        _administrativeRepository = administrativeRepository;
     }
 
     public async Task<HandlerResult<Success, IErrorResult>> UnbanPlayer(long playerId)
     {
-        _administrativeService = Validate(login, key);
-        return await _administrativeService.UnbanPlayer(playerId);
+        return await _administrativeRepository.UnbanPlayer(playerId);
+    }
+    
+    public async Task<HandlerResult<Success, IErrorResult>> BanPlayer(long playerId)
+    {
+        return await _administrativeRepository.BanPlayer(playerId);
     }
 }

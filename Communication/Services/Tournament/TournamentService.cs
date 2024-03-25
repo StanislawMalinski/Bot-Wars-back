@@ -1,77 +1,65 @@
-﻿using Communication.Services.Validation;
-using Shared.DataAccess.DTO;
+﻿using Shared.DataAccess.DTO;
 using Shared.DataAccess.DTO.Requests;
 using Shared.DataAccess.DTO.Responses;
+using Shared.DataAccess.Repositories;
 using Shared.DataAccess.RepositoryInterfaces;
 using Shared.Results;
+using Shared.Results.ErrorResults;
 using Shared.Results.IResults;
 using Shared.Results.SuccessResults;
 
 namespace Communication.Services.Tournament
 {
-	public class TournamentService : Service<ITournamentService>
+	// created to test state pattern implementation in TournamentService
+	public class TournamentService : ITournamentService
 	{
-		private ITournamentService? _tournamentService;
-		private string login = "login"; // should be obtained in method call
-		private string key = "key";
+		private readonly TournamentRepository _tournamentRepository;
 
-		public TournamentService(TournamentAdminService adminInterface,
-			TournamentIdentifiedPlayerService identifiedPlayerInterface,
-			TournamentBannedPlayerService bannedPlayerInterface,
-			TournamentUnidentifiedPlayerService unidentifiedUserInterface,
-			TournamentBadValidation badValidationInterface,
-			IPlayerValidator validator)
-		: base(adminInterface, identifiedPlayerInterface, bannedPlayerInterface, unidentifiedUserInterface, badValidationInterface, validator)
+		public TournamentService(TournamentRepository tournamentRepository)
 		{
+			_tournamentRepository = tournamentRepository;
 		}
 
-		public async Task<HandlerResult<Success, IErrorResult>> AddTournament(TournamentRequest tournamentRequest)
+		public async Task<HandlerResult<Success, IErrorResult>> AddTournament(long userId, TournamentRequest tournamentRequest)
 		{
-			_tournamentService = Validate(login, key);
-			return await _tournamentService.AddTournament(tournamentRequest);
+			if (tournamentRequest.Image.Length % 4 != 0) return new IncorrectOperation(){Message = "to nie jest string base 64 musi miec wielkosc podzielna przez 4"};
+			return await _tournamentRepository.CreateTournamentAsync(userId, tournamentRequest);
 		}
 
 		public async Task<HandlerResult<Success, IErrorResult>> DeleteTournament(long id)
 		{
-			_tournamentService = Validate(login, key);
-			return await _tournamentService.DeleteTournament(id);
+			return await _tournamentRepository.DeleteTournamentAsync(id);
 		}
 
 		public async Task<HandlerResult<SuccessData<List<TournamentResponse>>, IErrorResult>> GetListOfTournaments()
 		{
-			_tournamentService = Validate(login, key);
-			return await _tournamentService.GetListOfTournaments();
+			return await _tournamentRepository.GetTournamentsAsync();
 		}
 
 		public async Task<HandlerResult<SuccessData<List<TournamentResponse>>, IErrorResult>> GetListOfTournamentsFiltered(
 			TournamentFilterRequest tournamentFilterRequest)
 		{
-			_tournamentService = Validate(login, key);
-			return await _tournamentService.GetListOfTournamentsFiltered(tournamentFilterRequest);
+			return await _tournamentRepository.GetFilteredTournamentsAsync(tournamentFilterRequest);
 		}
 
 		public async Task<HandlerResult<SuccessData<TournamentResponse>, IErrorResult>> GetTournament(long id)
 		{
-			_tournamentService = Validate(login, key);
-			return await _tournamentService.GetTournament(id);
+			return await _tournamentRepository.GetTournamentAsync(id);
 		}
 
 		public async Task<HandlerResult<Success, IErrorResult>> RegisterSelfForTournament(long tournamentId, long botId)
 		{
-			_tournamentService = Validate(login, key);
-			return await _tournamentService.RegisterSelfForTournament(tournamentId, botId);
+			return await _tournamentRepository.RegisterSelfForTournament(tournamentId, botId);
 		}
 
 		public async Task<HandlerResult<Success, IErrorResult>> UnregisterSelfForTournament(long tournamentId, long botId)
 		{
-			_tournamentService = Validate(login, key);
-			return await _tournamentService.UnregisterSelfForTournament(tournamentId, botId);
+			return await _tournamentRepository.UnregisterSelfForTournament(tournamentId, botId);
 		}
 
 		public async Task<HandlerResult<Success, IErrorResult>> UpdateTournament(long id, TournamentRequest tournamentRequest)
 		{
-			_tournamentService = Validate(login, key);
-			return await _tournamentService.UpdateTournament(id, tournamentRequest);
+			return await _tournamentRepository.UpdateTournamentAsync(id, tournamentRequest);
 		}
 	}
 }

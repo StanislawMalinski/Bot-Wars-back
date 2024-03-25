@@ -1,6 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Diagnostics.CodeAnalysis;
-using Shared.DataAccess.Enumerations;
 using Shared.validation;
 
 namespace Shared.DataAccess.DTO.Requests;
@@ -20,5 +19,5 @@ public class TournamentRequest
     [NotNull]
     public string? Constraints { get; set; }
     [NotNull]
-    public string? Image { get; set; }
+    public string Image { get; set; }
 }

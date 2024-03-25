@@ -38,15 +38,15 @@ public class PointsEngineAccessor
         return points;
     }
 
-    public async Task<HandlerResult<Success, IErrorResult>> MatchCalculation(long winnerId,long loserId)
+    public async Task<HandlerResult<Success, IErrorResult>> MatchCalculation(long winnerId,long loserId,long tourId)
     {
         if (winnerId == loserId) return new Success();
         long wp = (await _pointsRepository.GetPlayerPoint(winnerId)).Match(x => x.Data, x => 0);
         long lp = (await _pointsRepository.GetPlayerPoint(loserId)).Match(x => x.Data, x => 0);
         long point = EloRating(wp, lp);
-        var res = await _pointsRepository.UpdatePointsForPlayerNoSave(winnerId, point);
+        var res = await _pointsRepository.UpdatePointsForPlayerNoSave(winnerId, point,tourId);
         if (res.IsError) return res;
-        res = await _pointsRepository.UpdatePointsForPlayerNoSave(loserId, -point);
+        res = await _pointsRepository.UpdatePointsForPlayerNoSave(loserId, -point,tourId);
         return res;
     }
 }

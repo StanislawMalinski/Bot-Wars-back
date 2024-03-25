@@ -1,5 +1,8 @@
 ﻿using Shared.DataAccess.DTO;
 using Shared.DataAccess.DataBaseEntities;
+using Shared.DataAccess.DTO.Requests;
+using Shared.DataAccess.DTO.Responses;
+using Shared.DataAccess.MappersInterfaces;
 
 namespace Shared.DataAccess.Mappers;
 
@@ -19,7 +22,45 @@ public class PlayerMapper : IPlayerMapper
             RoleId = player.RoleId,
             Password = player.HashedPassword,
             Points = player.Points,
-            isBanned = player.isBanned
+            isBanned = player.isBanned,
+        };
+    }
+    
+    public PlayerInternalDto? ToInternalDto(Player? player)
+    {
+        if (player == null)
+        {
+            return null;
+        }
+
+        return new PlayerInternalDto
+        {
+            Id = player.Id,
+            Email = player.Email,
+            Login = player.Login,
+            RoleId = player.RoleId,
+            Password = player.HashedPassword,
+            Points = player.Points,
+            isBanned = player.isBanned,
+            Role = player.Role
+        };
+    }
+
+    public Player? ToPlayerFromRegistrationRequest(RegistrationRequest? registrationRequest)
+    {
+        if (registrationRequest == null)
+        {
+            return null;
+        }
+
+        return new Player
+        {
+            Email = registrationRequest.Email,
+            Login = registrationRequest.Login,
+            HashedPassword = registrationRequest.Password,
+            Points = 1000,
+            isBanned = false,
+            Registered = DateTime.Now
         };
     }
 
@@ -38,7 +79,37 @@ public class PlayerMapper : IPlayerMapper
             RoleId = playerDto.RoleId,
             HashedPassword = playerDto.Password,
             isBanned = playerDto.isBanned,
+            Points = playerDto.Points
+        };
+    }
+    
+    public Player? ToPlayerInternalEntity(PlayerInternalDto? playerDto)
+    {
+        if (playerDto == null)
+        {
+            return null;
+        }
+
+        
+        return new Player
+        {
+            Email = playerDto.Email,
+            Login = playerDto.Login,
+            RoleId = playerDto.RoleId,
+            HashedPassword = playerDto.Password,
+            isBanned = playerDto.isBanned,
             Points = playerDto.Points,
+            Role = playerDto.Role
+        };
+    }
+
+    public PlayerResponse ToPlayerResponse(Player player)
+    {
+        return new PlayerResponse()
+        {
+            Id = player.Id,
+            Login = player.Login,
+            Points = player.Points
         };
     }
 }

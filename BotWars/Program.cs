@@ -7,6 +7,8 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using NLog.Web;
 using Shared.DataAccess.Context;
+using FluentValidation;
+using FluentValidation.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -74,6 +76,15 @@ builder.Services.AddAuthentication(options =>
     };
 });
 
+//Authorization configuration
+// builder.Services.AddAuthorization(options =>
+// {
+//     options.AddPolicy("AdminRequiredToCreateAdmin", policyBuilder =>
+//     {
+//         policyBuilder.AddRequirements(new RoleNameToCreateAdminRequirement("Admin"));
+//     });
+// });
+
 builder.Services
     .AddGameType()
     .AddPlayer()
@@ -84,6 +95,9 @@ builder.Services
     .AddPointsSettings()
     .AddAchievements()
     .AddBot();
+
+builder.Services.AddControllers().AddFluentValidation();
+builder.Services.AddHttpContextAccessor();
 
 builder.Services.AddDbContext<DataContext>(options =>
 {

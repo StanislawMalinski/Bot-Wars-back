@@ -2,6 +2,7 @@
 using Communication.Services.Bot;
 using Microsoft.AspNetCore.Mvc;
 using Shared.DataAccess.DTO.Requests;
+using Shared.DataAccess.RepositoryInterfaces;
 
 namespace Communication.APIs.Controllers;
 
@@ -9,9 +10,9 @@ namespace Communication.APIs.Controllers;
 [ApiController]
 public class BotController : Controller
 {
-    private readonly BotService _botService;
+    private readonly IBotService _botService;
 
-    public BotController(BotService botService)
+    public BotController(IBotService botService)
     {
         _botService = botService;
     }
@@ -21,22 +22,28 @@ public class BotController : Controller
     {
         return (await _botService.GetAllBots()).Match(Ok, this.ErrorResult);
     }
-    
+
     [HttpPost("add")]
     public async Task<IActionResult> AddBot(BotRequest botRequest)
     {
         return (await _botService.AddBot(botRequest)).Match(Ok, this.ErrorResult);
     }
-    
+
     [HttpDelete("delete")]
     public async Task<IActionResult> DeleteBot([FromQuery] long botId)
     {
         return (await _botService.DeleteBot(botId)).Match(Ok, this.ErrorResult);
     }
-    
+
     [HttpGet("getOne")]
     public async Task<IActionResult> GetBot([FromQuery] long botId)
     {
         return (await _botService.GetBotResponse(botId)).Match(Ok, this.ErrorResult);
+    }
+
+    [HttpGet("getForPlayer")]
+    public async Task<IActionResult> GetBotsForPlayer([FromQuery] long playerId)
+    {
+        return (await _botService.GetBotsForPlayer(playerId)).Match(Ok, this.ErrorResult);
     }
 }

@@ -1,4 +1,5 @@
 ﻿using Shared.DataAccess.Mappers;
+using Shared.DataAccess.MappersInterfaces;
 
 namespace Engine.DependencyInjection;
 

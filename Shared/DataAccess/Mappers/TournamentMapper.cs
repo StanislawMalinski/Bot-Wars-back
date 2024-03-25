@@ -1,4 +1,6 @@
-﻿using Shared.DataAccess.DTO;
+﻿using System.Text;
+using Microsoft.AspNetCore.Http;
+using Shared.DataAccess.DTO;
 using Shared.DataAccess.DataBaseEntities;
 using Shared.DataAccess.DTO.Requests;
 using Shared.DataAccess.DTO.Responses;
@@ -21,9 +23,11 @@ namespace Shared.DataAccess.Mappers
                 TournamentsDate = dto.TournamentsDate,
                 //Status = dto.WasPlayedOut,
                 Constraints = dto.Constrains,
-                Image = dto.Image
+                Image = Convert.FromBase64String(dto.Image)
             };
         }
+        
+        
 
         public TournamentDto TournamentToDTO(Tournament tournament)
         {
@@ -38,7 +42,7 @@ namespace Shared.DataAccess.Mappers
                 TournamentsDate = tournament.TournamentsDate,
                 //WasPlayedOut = tournament.Status,
                 Constrains = tournament.Constraints,
-                Image = tournament.Image
+                Image = Convert.ToBase64String(tournament.Image)
             };
         }
 
@@ -54,7 +58,7 @@ namespace Shared.DataAccess.Mappers
                 PostedDate = tournament.PostedDate,
                 RankingType = tournament.RankingType,
                 Constraints = tournament.Constraints,
-                Image = tournament.Image,
+                Image = Convert.ToBase64String(tournament.Image) ,
                 MatchIds = tournament.Matches?
                     .Select(match => match.Id)
                     .ToList(),
@@ -78,7 +82,7 @@ namespace Shared.DataAccess.Mappers
                 TournamentsDate = tournamentRequest.TournamentsDate,
                 Status = TournamentStatus.SCHEDULED,
                 Constraints = tournamentRequest.Constraints,
-                Image = tournamentRequest.Image,
+                Image = Convert.FromBase64String(tournamentRequest.Image),
             };
         }
     }

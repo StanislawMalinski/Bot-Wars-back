@@ -1,15 +1,10 @@
-﻿using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text;
-using BotWars;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.EntityFrameworkCore;
+using Shared.DataAccess.AuthorizationRequirements;
 using Shared.DataAccess.Context;
 using Shared.DataAccess.DTO;
-using Shared.DataAccess.Mappers;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
-using Shared.DataAccess.DataBaseEntities;
 using Shared.DataAccess.DTO.Requests;
+using Shared.DataAccess.MappersInterfaces;
 using Shared.DataAccess.RepositoryInterfaces;
 using Shared.Results;
 using Shared.Results.ErrorResults;
@@ -20,111 +15,206 @@ namespace Shared.DataAccess.Repositories
 {
     public class PlayerRepository : IPlayerRepository
     {
-        private readonly DataContext _context;
+        private readonly DataContext _dataContext;
         private readonly IPlayerMapper _playerMapper;
-        private readonly IPasswordHasher<Player?> _passwordHasher;
-        private readonly AuthenticationSettings _settings;
+        private readonly IPasswordHasher _passwordHasher;
+        private readonly IAuthorizationService _authorizationService;
+        private readonly IUserContextRepository _userContextRepository;
 
-        public PlayerRepository(DataContext context, IPlayerMapper playerMapper, IPasswordHasher<Player> passwordHasher, AuthenticationSettings settings)
+
+        public PlayerRepository(DataContext dataContext,
+            IPlayerMapper playerMapper,
+            IPasswordHasher passwordHasher,
+            IAuthorizationService authorizationService,
+            IUserContextRepository userContextRepository)
         {
-            _settings = settings;
+            _userContextRepository = userContextRepository;
+            _authorizationService = authorizationService;
             _passwordHasher = passwordHasher;
-            _context = context;
+            _dataContext = dataContext;
             _playerMapper = playerMapper;
         }
 
-        public async Task<HandlerResult<SuccessData<string>, IErrorResult>> GenerateJwt(LoginDto dto)
+        public async Task<HandlerResult<Success, IErrorResult>> CreateAdminAsync(
+            RegistrationRequest registrationRequest)
         {
-            var player = await _context.Players
-                .Include(p => p.Role)
-                .FirstOrDefaultAsync(u => u.Email.Equals(dto.Email));
+            var authorizationResult = _authorizationService.AuthorizeAsync(_userContextRepository.GetUser(),
+                2,
+                new RoleNameToCreateAdminRequirement("Admin")).Result;
+            if (!authorizationResult.Succeeded)
+            {
+                return new UnauthorizedError();
+            }
 
+            var emailPlayer = await _dataContext.Players
+                .Where(player => player.Email == registrationRequest.Email)
+                .FirstOrDefaultAsync();
+
+            if (emailPlayer != null)
+            {
+                return new PlayerAlreadyExistsError
+                {
+                    Title = "PlayerAlreadyExistsError 400",
+                    Message = "Player with given email already exists"
+                };
+            }
+
+            var loginPlayer = await _dataContext.Players
+                .Where(player => player.Login == registrationRequest.Login)
+                .FirstOrDefaultAsync();
+
+            if (loginPlayer != null)
+            {
+                return new PlayerAlreadyExistsError
+                {
+                    Title = "PlayerAlreadyExistsError 400",
+                    Message = "Player with given login already exists"
+                };
+            }
+
+            var newAdmin = _playerMapper.ToPlayerFromRegistrationRequest(registrationRequest);
+
+            if (newAdmin is null)
+            {
+                return new EntityNotFoundErrorResult();
+            }
+
+            newAdmin.RoleId = 2;
+            var hashedPassword =
+                (await _passwordHasher.HashPassword(registrationRequest.Password)).Match(x => x.Data, x => null);
+            newAdmin.HashedPassword = hashedPassword;
+            await _dataContext.Players.AddAsync(newAdmin);
+            await _dataContext.SaveChangesAsync();
+            return new Success();
+        }
+
+        public async Task<HandlerResult<Success, IErrorResult>> CreatePlayerAsync(
+            RegistrationRequest registrationRequest)
+        {
+            var newPlayer = _playerMapper.ToPlayerFromRegistrationRequest(registrationRequest);
+
+            if (newPlayer is null)
+            {
+                return new EntityNotFoundErrorResult();
+            }
+
+            var emailPlayer = await _dataContext.Players
+                .Where(player => player.Email == registrationRequest.Email)
+                .FirstOrDefaultAsync();
+
+            if (emailPlayer != null)
+            {
+                return new PlayerAlreadyExistsError
+                {
+                    Title = "PlayerAlreadyExistsError 400",
+                    Message = "Player with given email already exists"
+                };
+            }
+
+            var loginPlayer = await _dataContext.Players
+                .Where(player => player.Login == registrationRequest.Login)
+                .FirstOrDefaultAsync();
+
+            if (loginPlayer != null)
+            {
+                return new PlayerAlreadyExistsError
+                {
+                    Title = "PlayerAlreadyExistsError 400",
+                    Message = "Player with given login already exists"
+                };
+            }
+
+            newPlayer.RoleId = 1;
+            var hashedPassword =
+                (await _passwordHasher.HashPassword(registrationRequest.Password)).Match(x => x.Data, x => null);
+            newPlayer.HashedPassword = hashedPassword;
+            await _dataContext.Players.AddAsync(newPlayer);
+            await _dataContext.SaveChangesAsync();
+            return new Success();
+        }
+
+        public async Task<HandlerResult<Success, IErrorResult>> ChangePassword(ChangePasswordRequest password,
+            long? playerId)
+        {
+            if (playerId is null)
+            {
+                return new UnauthorizedError();
+            }
+
+            var player = await _dataContext.Players.FindAsync(playerId);
             if (player is null)
             {
-                return new BadAccountInformationError()
-                {
-                    Title = "BadAccountInformationError 404",
-                    Message = "Player could not have been found"
-                };
+                return new EntityNotFoundErrorResult();
             }
 
-            var result = _passwordHasher.VerifyHashedPassword(player, player.HashedPassword, dto.Password);
-
-            if (result == PasswordVerificationResult.Failed)
+            var passwordMatchResult =
+                await _passwordHasher.VerifyPasswordHash(password.Password, player.HashedPassword);
+            if (!passwordMatchResult.IsError)
             {
-                return new BadAccountInformationError()
-                {
-                    Title = "Return null",
-                    Message = "Niepoprawny email lub haslo"
-                };
+                var hashedPassword = (await _passwordHasher.HashPassword(password.ChangePassword))
+                    .Match(x => x.Data, x => null);
+                player.HashedPassword = hashedPassword;
+                await _dataContext.SaveChangesAsync();
+                return new Success();
             }
 
-            var claims = new List<Claim>()
+            return new BadAccountInformationError()
             {
-                new Claim(ClaimTypes.NameIdentifier, player.Id.ToString()),
-                new Claim(ClaimTypes.Email, $"{player.Email}"),
-                new Claim(ClaimTypes.Role, $"{player.Role.Name}")
-            };
-
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_settings.JwtKey));
-            var cred = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-            var expires = DateTime.Now.AddDays(_settings.JwtExpireDays);
-
-            var token = new JwtSecurityToken(_settings.JwtIssuer,
-                _settings.JwtIssuer,
-                claims,
-                expires: expires,
-                signingCredentials: cred);
-
-            var tokenHandler = new JwtSecurityTokenHandler();
-            var completeToken = tokenHandler.WriteToken(token);
-            player.LastLogin = DateTime.Now;
-            await _context.SaveChangesAsync();
-            return new SuccessData<string>()
-            {
-                Data = completeToken
+                Title = "Return null",
+                Message = "Hasło nie poprawne"
             };
         }
 
-        public async Task<HandlerResult<Success, IErrorResult>> CreatePlayerAsync(PlayerDto playerDto)
+        public async Task<HandlerResult<Success, IErrorResult>> ChangeLogin(ChangeLoginRequest changeLoginRequest,
+            long? playerId)
         {
-            var newPlayer = _playerMapper.ToPlayerEntity(playerDto);
-            newPlayer.Registered = DateTime.Now;
-            newPlayer.Points = 2000;
-            var hashedPassword = _passwordHasher.HashPassword(newPlayer, newPlayer?.HashedPassword);
-            newPlayer.HashedPassword = hashedPassword;
-            var resPlayer = await _context.Players.AddAsync(newPlayer);
-            await _context.SaveChangesAsync();
+            if (playerId is null)
+            {
+                return new UnauthorizedError();
+            }
+
+            var player = await _dataContext
+                .Players
+                .FindAsync(playerId);
+
+            if (player is null)
+            {
+                return new EntityNotFoundErrorResult();
+            }
+
+            if (player.Login != changeLoginRequest.Login)
+                return new BadAccountInformationError
+                {
+                    Title = "BadAccountInformationError 400",
+                    Message = "Given login does not match"
+                };
+
+            player.Login = changeLoginRequest.NewLogin;
+            await _dataContext.SaveChangesAsync();
             return new Success();
         }
 
         public async Task<HandlerResult<Success, IErrorResult>> DeletePlayerAsync(long id)
         {
-            var resPlayer = await _context.Players.FindAsync(id);
-            if (resPlayer == null)
+            var resPlayer = await _dataContext.Players.FindAsync(id);
+            if (resPlayer is null)
             {
-                return new EntityNotFoundErrorResult()
-                {
-                    Title = "Return null",
-                    Message = "Nie znaleziono gracza w bazie danych"
-                };
+                return new EntityNotFoundErrorResult();
             }
 
-            _context.Remove(resPlayer);
-            await _context.SaveChangesAsync();
+            _dataContext.Remove(resPlayer);
+            await _dataContext.SaveChangesAsync();
             return new Success();
         }
 
         public async Task<HandlerResult<SuccessData<PlayerDto>, IErrorResult>> GetPlayerAsync(long id)
         {
-            var resPlayer = await _context.Players.FindAsync(id);
-            if (resPlayer == null)
+            var resPlayer = await _dataContext.Players
+                .FirstOrDefaultAsync(u => u.Id.Equals(id));
+
+            if (resPlayer is null)
             {
-                return new EntityNotFoundErrorResult()
-                {
-                    Title = "return null",
-                    Message = "Nie znaleziono gracza w bazie danych"
-                };
+                return new EntityNotFoundErrorResult();
             }
 
             return new SuccessData<PlayerDto>()
@@ -133,28 +223,72 @@ namespace Shared.DataAccess.Repositories
             };
         }
 
-        public async Task<HandlerResult<SuccessData<List<PlayerDto>>, IErrorResult>> GetPlayersAsync()
+        public async Task<HandlerResult<Success, IErrorResult>> SetPlayerLastLogin(string email, DateTime lastLogin)
         {
-            var resPlayer = _context.Players.Select(x => _playerMapper.ToDto(x)).ToList();
+            var player = await _dataContext.Players
+                .FirstOrDefaultAsync(u => u.Email.Equals(email));
 
-            return new SuccessData<List<PlayerDto>>()
+            if (player is null)
             {
-                Data = resPlayer
+                return new EntityNotFoundErrorResult();
+            }
+
+            player.LastLogin = DateTime.Now;
+            await _dataContext.SaveChangesAsync();
+            return new Success();
+        }
+
+        public async Task<HandlerResult<SuccessData<PlayerInternalDto>, IErrorResult>> GetPlayerAsync(string email)
+        {
+            var resPlayer = await _dataContext.Players
+                .Include(p => p.Role)
+                .FirstOrDefaultAsync(u => u.Email.Equals(email));
+            if (resPlayer is null)
+            {
+                return new EntityNotFoundErrorResult();
+            }
+
+            return new SuccessData<PlayerInternalDto>()
+            {
+                Data = _playerMapper.ToInternalDto(resPlayer)
             };
         }
 
-        public async Task<HandlerResult<SuccessData<PlayerInfo>, IErrorResult>> GetPlayerInfoAsync(long playerId)
+        public async Task<HandlerResult<SuccessData<List<PlayerDto>>, IErrorResult>> GetPlayersAsync()
         {
-            var player = await _context.Players.FindAsync(playerId);
-            if (player == null) return new EntityNotFoundErrorResult();
+            var resPlayers = await _dataContext.Players
+                .ToListAsync();
+
+            var playerDtos = resPlayers.Select(player => _playerMapper.ToDto(player)).ToList();
+
+            return new SuccessData<List<PlayerDto>>()
+            {
+                Data = playerDtos
+            };
+        }
+
+        public async Task<HandlerResult<SuccessData<PlayerInfo>, IErrorResult>> GetPlayerInfoAsync(long? playerId)
+        {
+            if (playerId is null)
+            {
+                return new EntityNotFoundErrorResult();
+            }
+
+            var player = await _dataContext.Players.FindAsync(playerId);
+
+            if (player is null)
+            {
+                return new EntityNotFoundErrorResult();
+            }
+
             PlayerInfo playerInfo = new PlayerInfo
             {
                 Login = player.Login,
                 Registered = player.Registered,
                 Point = player.Points
             };
-            playerInfo.BotsNumber = _context.Bots.Count(x => x.PlayerId == playerId);
-            playerInfo.TournamentNumber = _context.Tournaments.Count(x => x.CreatorId == playerId);
+            playerInfo.BotsNumber = _dataContext.Bots.Count(x => x.PlayerId == playerId);
+            playerInfo.TournamentNumber = _dataContext.Tournaments.Count(x => x.CreatorId == playerId);
             return new SuccessData<PlayerInfo>()
             {
                 Data = playerInfo

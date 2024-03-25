@@ -18,6 +18,9 @@ public static class ErrorResultConverter
             NotEnoughAchievementPointsError => controller.BadRequest(errorResult),
             BadAccountInformationError => controller.NotFound(errorResult),
             TournamentIsBeingPlayedError => controller.BadRequest(errorResult),
+            IncorrectOperation => controller.BadRequest(errorResult),
+            UnauthorizedError => controller.Unauthorized(errorResult),
+            PlayerAlreadyExistsError => controller.BadRequest(errorResult),
             _ => controller.StatusCode((int)HttpStatusCode.InternalServerError, errorResult)
         };
 }

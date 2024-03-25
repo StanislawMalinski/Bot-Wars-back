@@ -30,44 +30,36 @@ public class GameRepository : IGameRepository
     }
 
 
-    public async Task<HandlerResult<Success, IErrorResult>> CreateGameType(GameRequest gameRequest)
+    public async Task<HandlerResult<Success, IErrorResult>> CreateGameType(long userId,GameRequest gameRequest)
     {
-        try
+    
+        var content = new MultipartFormDataContent();
+        var streamContent = new StreamContent(gameRequest.GameFile.OpenReadStream());
+        content.Add(streamContent, "file", gameRequest.GameFile.FileName);
+        var res = await _httpClient.PutAsync(_gathererEndpoint, content);
+        long gameFileId;
+        if (res.IsSuccessStatusCode)
         {
-            var content = new MultipartFormDataContent();
-            var streamContent = new StreamContent(gameRequest.GameFile.OpenReadStream());
-            content.Add(streamContent, "file", gameRequest.GameFile.FileName);
-            var res = await _httpClient.PutAsync(_gathererEndpoint, content);
-            long gameFileId;
-            if (res.IsSuccessStatusCode)
-            {
-                string cont = await res.Content.ReadAsStringAsync();
-                gameFileId = Convert.ToInt32(cont);
-            }
-            else
-            {
-                return new IncorrectOperation
-                {
-                    Title = "IncorrectOperation 404",
-                    Message = "Faild to upload file to FileGatherer"
-                };
-            }
-            Game game = _mapper.MapRequestToGame(gameRequest);
-            game.FileId = gameFileId;
-            await _dataContext
-                .Games
-                .AddAsync(game);
-            await _dataContext.SaveChangesAsync();
-            return new Success();
+            string cont = await res.Content.ReadAsStringAsync();
+            gameFileId = Convert.ToInt32(cont);
         }
-        catch (Exception ex)
+        else
         {
             return new IncorrectOperation
             {
-                Title = "IncorrectOperation 505",
-                Message = ex.Message
+                Title = "IncorrectOperation 404",
+                Message = "Faild to upload file to FileGatherer"
             };
         }
+        Game game = _mapper.MapRequestToGame(gameRequest);
+        game.FileId = gameFileId;
+        game.CreatorId = userId;
+        await _dataContext
+            .Games
+            .AddAsync(game);
+        await _dataContext.SaveChangesAsync();
+        return new Success();
+        
 
     }
 

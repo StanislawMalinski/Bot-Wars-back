@@ -8,7 +8,7 @@ namespace Shared.DataAccess.RepositoryInterfaces;
 
 public interface ITournamentRepository
 {
-    Task<HandlerResult<Success, IErrorResult>> CreateTournamentAsync(TournamentDto dto);
+    Task<HandlerResult<Success, IErrorResult>> CreateTournamentAsync(long userId, TournamentDto dto);
     Task<HandlerResult<Success, IErrorResult>> DeleteTournamentAsync(long id);
     Task<HandlerResult<SuccessData<TournamentDto>, IErrorResult>> GetTournamentAsync(long id);
     Task<HandlerResult<Success, IErrorResult>> UpdateTournamentAsync(TournamentDto dto);
