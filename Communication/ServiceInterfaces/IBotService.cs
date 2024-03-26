@@ -13,4 +13,5 @@ public interface IBotService
     Task<HandlerResult<SuccessData<BotResponse>, IErrorResult>> GetBotResponse(long botId);
     Task<HandlerResult<Success, IErrorResult>> AddBot(BotRequest botRequest,long playerId);
     Task<HandlerResult<Success, IErrorResult>> DeleteBot(long botId);
+    Task<HandlerResult<SuccessData<List<BotResponse>>, IErrorResult>> GetBotsForPlayer(long playerId);
 }

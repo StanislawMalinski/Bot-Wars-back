@@ -25,6 +25,7 @@ public class BotController : Controller
     {
         return (await _botService.GetAllBots()).Match(Ok, this.ErrorResult);
     }
+    
     [Authorize(Roles = "User,Admin")]
     [HttpPost("add")]
     public async Task<IActionResult> AddBot(BotRequest botRequest)
@@ -32,16 +33,23 @@ public class BotController : Controller
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
         return (await _botService.AddBot(botRequest,long.Parse(userId))).Match(Ok, this.ErrorResult);
     }
+    
     [Authorize(Roles = "User,Admin")]
     [HttpDelete("delete")]
     public async Task<IActionResult> DeleteBot([FromQuery] long botId)
     {
         return (await _botService.DeleteBot(botId)).Match(Ok, this.ErrorResult);
     }
-    
+
     [HttpGet("getOne")]
     public async Task<IActionResult> GetBot([FromQuery] long botId)
     {
         return (await _botService.GetBotResponse(botId)).Match(Ok, this.ErrorResult);
+    }
+
+    [HttpGet("getForPlayer")]
+    public async Task<IActionResult> GetBotsForPlayer([FromQuery] long playerId)
+    {
+        return (await _botService.GetBotsForPlayer(playerId)).Match(Ok, this.ErrorResult);
     }
 }

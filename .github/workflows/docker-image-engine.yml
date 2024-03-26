@@ -1,4 +1,4 @@
-name: Api Docker Image
+name: Engine Docker Image
 
 on:
   push:
@@ -26,7 +26,7 @@ jobs:
         username: ${{ secrets.DOCKERHUB_USERNAME }}
         password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-    - name: Build and Push docker api image to DockerHub Registery
+    - name: Build and Push docker engine image to DockerHub Registery
       uses: docker/build-push-action@v5
       with:
         context: .

@@ -76,7 +76,35 @@ public class BotRepository : IBotRepository
         return new SuccessData<BotResponse>() { Data = _botMapper.MapBotToResponse(bot) };
     }
 
-    public async Task<HandlerResult<Success, IErrorResult>> AddBot(BotRequest botRequest,long playerId)
+    public async Task<HandlerResult<SuccessData<List<BotResponse>>, IErrorResult>> GetBotsForPlayer(long playerId)
+    {
+        var player = await _dataContext
+            .Players
+            .FindAsync(playerId);
+
+        if (player == null)
+        {
+            return new EntityNotFoundErrorResult()
+            {
+                Message = "EntityNotFound 404",
+                Title = "Player with given id does not exist"
+            };
+        }
+
+        var bots = await _dataContext
+            .Bots
+            .Where(bot => bot.PlayerId == playerId)
+            .Select(bot => _botMapper.MapBotToResponse(bot))
+            .ToListAsync();
+
+        return new SuccessData<List<BotResponse>>
+        {
+            Data = bots
+        };
+    }
+    
+   public async Task<HandlerResult<Success, IErrorResult>> AddBot(BotRequest botRequest,long playerId)
+
     {
         try
         {

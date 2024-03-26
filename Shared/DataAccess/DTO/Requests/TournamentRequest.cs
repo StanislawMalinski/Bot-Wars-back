@@ -1,7 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Diagnostics.CodeAnalysis;
-using Microsoft.AspNetCore.Http;
-using Shared.DataAccess.Enumerations;
 using Shared.validation;
 
 namespace Shared.DataAccess.DTO.Requests;
