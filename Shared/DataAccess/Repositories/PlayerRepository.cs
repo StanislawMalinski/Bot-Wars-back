@@ -303,7 +303,7 @@ namespace Shared.DataAccess.Repositories
         public async Task<HandlerResult<SuccessData<List<GameSimpleResponse>>, IErrorResult>> GetMyGames(long playerId)
         {
             
-            var res = await _context.Games.Where(x => x.CreatorId == playerId).Select(x=> _gameTypeMapper.MapGameToSimpleResponse(x)).ToListAsync();
+            var res = await _dataContext.Games.Where(x => x.CreatorId == playerId).Select(x=> _gameTypeMapper.MapGameToSimpleResponse(x)).ToListAsync();
             return new SuccessData<List<GameSimpleResponse>>()
             {
                 Data = res
@@ -312,16 +312,16 @@ namespace Shared.DataAccess.Repositories
 
         public async Task<HandlerResult<Success, IErrorResult>> ChangeImage(PlayerImageRequest imageRequest, long playerId)
         {
-            var res = await _context.Players.FindAsync(playerId);
+            var res = await _dataContext.Players.FindAsync(playerId);
             if (res == null) return new EntityNotFoundErrorResult();
             res.Image = Convert.FromBase64String(imageRequest.Image!);
-            await _context.SaveChangesAsync();
+            await _dataContext.SaveChangesAsync();
             return new Success();
         }
 
         public async Task<HandlerResult<SuccessData<string>, IErrorResult>> GetImage(long playerId)
         {
-            var res = await _context.Players.FindAsync(playerId);
+            var res = await _dataContext.Players.FindAsync(playerId);
             if (res == null) return new EntityNotFoundErrorResult();
             if (res.Image == null)  return new SuccessData<string>
             {
