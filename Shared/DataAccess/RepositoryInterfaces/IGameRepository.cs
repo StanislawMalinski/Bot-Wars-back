@@ -16,4 +16,5 @@ public interface IGameRepository
     public Task<HandlerResult<SuccessData<GameResponse>, IErrorResult>> GetGame(long id);
     public Task<HandlerResult<Success, IErrorResult>> ModifyGameType(long id, GameRequest gameRequest);
     public Task<HandlerResult<SuccessData<List<GameResponse>>, IErrorResult>> GetAvailableGames();
+    public Task<HandlerResult<SuccessData<List<GameResponse>>, IErrorResult>> Search(string? name);
 }

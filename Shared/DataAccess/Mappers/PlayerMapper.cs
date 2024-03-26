@@ -23,6 +23,7 @@ public class PlayerMapper : IPlayerMapper
             Password = player.HashedPassword,
             Points = player.Points,
             isBanned = player.isBanned,
+            Deleted = player.Deleted,
         };
     }
     
@@ -42,7 +43,8 @@ public class PlayerMapper : IPlayerMapper
             Password = player.HashedPassword,
             Points = player.Points,
             isBanned = player.isBanned,
-            Role = player.Role
+            Role = player.Role,
+            Deleted = player.Deleted
         };
     }
 
@@ -79,7 +81,8 @@ public class PlayerMapper : IPlayerMapper
             RoleId = playerDto.RoleId,
             HashedPassword = playerDto.Password,
             isBanned = playerDto.isBanned,
-            Points = playerDto.Points
+            Points = playerDto.Points,
+            Deleted = playerDto.Deleted,
         };
     }
     
@@ -99,7 +102,8 @@ public class PlayerMapper : IPlayerMapper
             HashedPassword = playerDto.Password,
             isBanned = playerDto.isBanned,
             Points = playerDto.Points,
-            Role = playerDto.Role
+            Role = playerDto.Role,
+            Deleted = playerDto.Deleted
         };
     }
 
