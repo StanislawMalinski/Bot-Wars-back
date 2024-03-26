@@ -84,5 +84,13 @@ namespace Communication.APIs.Controllers
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             return (await _playerService.ChangePlayerImage(imageRequest,long.Parse(userId))).Match(Ok,this.ErrorResult);
         }
+
+        [HttpDelete("deleteAccount")]
+        [Authorize(Roles = "User,Admin")]
+        public async Task<IActionResult> DeleteAccount()
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            return (await _playerService.DeletePlayerAsync(long.Parse(userId))).Match(Ok, this.ErrorResult);
+        }
     }
 }
