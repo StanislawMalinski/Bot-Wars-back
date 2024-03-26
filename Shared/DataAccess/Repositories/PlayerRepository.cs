@@ -182,7 +182,8 @@ namespace Shared.DataAccess.Repositories
             {
                 Login = player.Login,
                 Registered = player.Registered,
-                Point = player.Points
+                Point = player.Points,
+                Id = player.Id
             };
             playerInfo.BotsNumber = _context.Bots.Count(x => x.PlayerId == playerId);
             playerInfo.TournamentNumber = _context.Tournaments.Count(x => x.CreatorId == playerId);

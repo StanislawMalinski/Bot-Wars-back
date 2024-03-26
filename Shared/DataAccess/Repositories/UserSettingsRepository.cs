@@ -51,18 +51,44 @@ public class UserSettingsRepository : IUserSettingsRepository
         await _dataContext.SaveChangesAsync();
         return new Success();
     }
+    private async Task<HandlerResult<SuccessData<UserSettingsDto>, IErrorResult>> CreateUserSettings(long playerId)
+    {
+        var player = await _dataContext.Players.FindAsync(playerId);
+        if (player == null)
+        {
+            return new EntityNotFoundErrorResult()
+            {
+                Title = "EntityNotFoundErrorResult 404",
+                Message = "No player with such id"
+            };
+        }
 
+        if (await _dataContext.UserSettings.FirstOrDefaultAsync(userSettings => 
+                userSettings.PlayerId==playerId) != null)
+        {
+            return new AccessDeniedError();
+        }
+        
+        var userSettings = new UserSettings
+        {
+            PlayerId = playerId,
+            IsDarkTheme = false,
+            Language = "English"
+        };
+        await _dataContext.UserSettings.AddAsync(userSettings);
+        await _dataContext.SaveChangesAsync();
+        return new SuccessData<UserSettingsDto>()
+        {
+            Data = _userSettingsMapper.UserSettingsToDTO(userSettings)
+        };
+    }
     public async Task<HandlerResult<SuccessData<UserSettingsDto>, IErrorResult>> GetUserSettingsForPlayer(long playerId)
     {
         var userSettings = await _dataContext.UserSettings.FirstOrDefaultAsync(userSettings =>
             userSettings.PlayerId==playerId);
         if (userSettings == null)
         {
-            return new EntityNotFoundErrorResult()
-            {
-                Title = "EntityNotFoundErrorResult 404",
-                Message = "No user settings for player with such id"
-            };
+            return await CreateUserSettings(playerId);
         }
 
         return new SuccessData<UserSettingsDto>()
@@ -74,19 +100,18 @@ public class UserSettingsRepository : IUserSettingsRepository
     public async Task<HandlerResult<Success, IErrorResult>> UpdateUserSettingsForPlayer(long playerId,
         UserSettingsDto dto)
     {
-        var userSettings = await _dataContext.UserSettings.FindAsync(playerId);
+        var userSettings = await _dataContext.UserSettings.FirstOrDefaultAsync(x=>x.PlayerId == playerId);
         if (userSettings == null)
         {
-            return new EntityNotFoundErrorResult()
-            {
-                Title = "EntityNotFoundErrorResult 404",
-                Message = "No user settings for player with such id"
-            };
-        }
 
-        var newUserSettings = _userSettingsMapper.DtoToUserSettings(dto);
-        userSettings.Language = newUserSettings.Language;
-        userSettings.IsDarkTheme = newUserSettings.IsDarkTheme;
+            var settings = _userSettingsMapper.DtoToUserSettings(dto);
+            settings.PlayerId = playerId;
+            await _dataContext.UserSettings.AddAsync(settings);
+            await _dataContext.SaveChangesAsync();
+            return new Success();
+        }
+        userSettings.Language = dto.Language;
+        userSettings.IsDarkTheme = dto.IsDarkTheme;
         await _dataContext.SaveChangesAsync();
         return new Success();
     }

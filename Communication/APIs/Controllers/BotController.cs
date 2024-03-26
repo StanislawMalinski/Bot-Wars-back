@@ -1,5 +1,7 @@
-﻿using Communication.APIs.Controllers.Helper;
+﻿using System.Security.Claims;
+using Communication.APIs.Controllers.Helper;
 using Communication.Services.Bot;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Shared.DataAccess.DTO.Requests;
 using Shared.DataAccess.RepositoryInterfaces;
@@ -18,17 +20,19 @@ public class BotController : Controller
     }
 
     [HttpGet("getAll")]
-    public async Task<IActionResult> GetAllBots()
+    
+    public async Task<IActionResult> GetAllBots(long playerId)
     {
         return (await _botService.GetAllBots()).Match(Ok, this.ErrorResult);
     }
-    
+    [Authorize(Roles = "User,Admin")]
     [HttpPost("add")]
     public async Task<IActionResult> AddBot(BotRequest botRequest)
-    {
-        return (await _botService.AddBot(botRequest)).Match(Ok, this.ErrorResult);
+    {  
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        return (await _botService.AddBot(botRequest,long.Parse(userId))).Match(Ok, this.ErrorResult);
     }
-    
+    [Authorize(Roles = "User,Admin")]
     [HttpDelete("delete")]
     public async Task<IActionResult> DeleteBot([FromQuery] long botId)
     {

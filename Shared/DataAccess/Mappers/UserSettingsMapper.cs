@@ -9,7 +9,6 @@ public class UserSettingsMapper : IUserSettingsMapper
     {
         return new UserSettings
         {
-            PlayerId = dto.PlayerId,
             IsDarkTheme = dto.IsDarkTheme,
             Language = dto.Language
         };
@@ -19,7 +18,6 @@ public class UserSettingsMapper : IUserSettingsMapper
     {
         return new UserSettingsDto
         {
-            PlayerId = userSettings.PlayerId,
             IsDarkTheme = userSettings.IsDarkTheme,
             Language = userSettings.Language
         };

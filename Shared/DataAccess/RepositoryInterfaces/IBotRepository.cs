@@ -11,6 +11,6 @@ public interface IBotRepository
 {
     Task<HandlerResult<SuccessData<List<BotResponse>>, IErrorResult>> GetAllBots();
     Task<HandlerResult<SuccessData<BotResponse>, IErrorResult>> GetBotResponse(long botId);
-    Task<HandlerResult<Success, IErrorResult>> AddBot(BotRequest botRequest);
+    Task<HandlerResult<Success, IErrorResult>> AddBot(BotRequest botRequest,long playerId);
     Task<HandlerResult<Success, IErrorResult>> DeleteBot(long botId);
 }

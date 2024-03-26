@@ -1,6 +1,8 @@
-﻿using Communication.APIs.Controllers.Helper;
+﻿using System.Security.Claims;
+using Communication.APIs.Controllers.Helper;
 using Communication.ServiceInterfaces;
 using Communication.Services.UserSettings;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Shared.DataAccess.DTO;
 
@@ -17,22 +19,19 @@ public class UserSettingsController : Controller
         _userSettingsService = userSettingsService;
     }
 
+    [Authorize(Roles = "User,Admin")]
     [HttpGet("getForPlayer")]
-    public async Task<IActionResult> GetUserSettingsForPlayer([FromQuery] long playerId)
+    public async Task<IActionResult> GetUserSettingsForPlayer()
     {
-        return (await _userSettingsService.GetUserSettingsForPlayer(playerId)).Match(Ok, this.ErrorResult);
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        return (await _userSettingsService.GetUserSettingsForPlayer(long.Parse(userId))).Match(Ok, this.ErrorResult);
     }
-
-    [HttpPost("createForPlayer")]
-    public async Task<IActionResult> CreateUserSettingsForPlayer([FromQuery] long playerId)
-    {
-        return (await _userSettingsService.CreateUserSettingsForPlayer(playerId)).Match(Ok, this.ErrorResult);
-    }
-
+    
+    [Authorize(Roles = "User,Admin")]
     [HttpPut("updateForPlayer")]
-    public async Task<IActionResult> UpdateUserSettingsForPlayer([FromQuery] long playerId,
-        [FromBody] UserSettingsDto dto)
+    public async Task<IActionResult> UpdateUserSettingsForPlayer( UserSettingsDto dto)
     {
-        return (await _userSettingsService.UpdateUserSettingsForPlayer(playerId, dto)).Match(Ok, this.ErrorResult);
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        return (await _userSettingsService.UpdateUserSettingsForPlayer(long.Parse(userId), dto)).Match(Ok, this.ErrorResult);
     }
 }

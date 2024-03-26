@@ -10,7 +10,6 @@ public class BotMapper : IBotMapper
     {
         return new Bot
         {
-            PlayerId = botRequest.PlayerId,
             GameId = botRequest.GameId,
             BotFile = botRequest.BotFile.FileName
         };

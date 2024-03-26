@@ -76,7 +76,7 @@ public class BotRepository : IBotRepository
         return new SuccessData<BotResponse>() { Data = _botMapper.MapBotToResponse(bot) };
     }
 
-    public async Task<HandlerResult<Success, IErrorResult>> AddBot(BotRequest botRequest)
+    public async Task<HandlerResult<Success, IErrorResult>> AddBot(BotRequest botRequest,long playerId)
     {
         try
         {
@@ -98,13 +98,6 @@ public class BotRepository : IBotRepository
                     Message = "Faild to upload file to FileGatherer"
                 };
             }
-            var player = await _dataContext.Players.FindAsync(botRequest.PlayerId);
-            if (player == null)
-                return new EntityNotFoundErrorResult
-                {
-                    Title = "EntityNotFoundErrorResult 404",
-                    Message = "No user with given id exists"
-                };
 
             var game = await _dataContext.Games.FindAsync(botRequest.GameId);
             if (game == null)
@@ -116,6 +109,7 @@ public class BotRepository : IBotRepository
 
             var bot = _botMapper.MapRequestToBot(botRequest);
             bot.FileId = botFileId;
+            bot.PlayerId = playerId;
             await _dataContext.AddAsync(bot);
             await _dataContext.SaveChangesAsync();
             return new Success();
