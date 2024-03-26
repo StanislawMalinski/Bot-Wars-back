@@ -3,6 +3,7 @@
 public class PlayerInfo
 {
     public string? Login { get; set; }
+    public long Id { get; set; }
     public long Point { get; set; }
     public DateTime Registered { get; set; }
     public int BotsNumber { get; set; }

@@ -15,7 +15,7 @@ public class PointsController : Controller
     {
         _pointsService = pointsService;
     }
-
+    
     [HttpPost("setPointsForPlayer")]
     public async Task<IActionResult> SetPointsForPlayer([FromQuery] long playerId, [FromQuery] long points)
     {

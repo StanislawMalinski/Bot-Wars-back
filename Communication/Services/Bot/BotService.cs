@@ -26,9 +26,9 @@ public class BotService : IBotService
         return await _botRepository.GetBotResponse(botId);
     }
 
-    public async Task<HandlerResult<Success, IErrorResult>> AddBot(BotRequest botRequest)
+    public async Task<HandlerResult<Success, IErrorResult>> AddBot(BotRequest botRequest,long playerId)
     {
-        return await _botRepository.AddBot(botRequest);
+        return await _botRepository.AddBot(botRequest,playerId);
     }
 
     public async Task<HandlerResult<Success, IErrorResult>> DeleteBot(long botId)

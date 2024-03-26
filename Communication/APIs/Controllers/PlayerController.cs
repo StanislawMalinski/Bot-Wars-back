@@ -61,6 +61,31 @@ namespace Communication.APIs.Controllers
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             return (await _playerService.ChangeLogin(changeLoginRequest, long.Parse(userId))).Match(Ok, this.ErrorResult);
         }
+
+        [HttpGet("getMyGames")]
+        [Authorize(Roles = "User,Admin")]
+        public async Task<IActionResult> GetMyGames()
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            return (await _playerService.GetMyGames(long.Parse(userId))).Match(Ok,this.ErrorResult);
+        }
+         
+        [HttpGet("getMyImage")]
+        [Authorize(Roles = "User,Admin")]
+        public async Task<IActionResult> GetMyImage()
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            return (await _playerService.GetPlayerImage(long.Parse(userId))).Match(Ok,this.ErrorResult);
+        }
+         
+        [HttpPost("changeMyImage")]
+        [Authorize(Roles = "User,Admin")]
+        public async Task<IActionResult> ChangeMyImage(PlayerImageRequest imageRequest)
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            return (await _playerService.ChangePlayerImage(imageRequest,long.Parse(userId))).Match(Ok,this.ErrorResult);
+        }
+
         /*
         [HttpPost("add")]
         public async Task<IActionResult> AddTournament([FromBody] PlayerDto dto)

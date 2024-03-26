@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 using Shared.DataAccess.DTO;
 using Shared.DataAccess.DTO.Requests;
+using Shared.DataAccess.DTO.Responses;
 using Shared.DataAccess.Mappers;
 using Shared.DataAccess.MappersInterfaces;
 using Shared.DataAccess.Repositories;
@@ -145,5 +146,22 @@ public class PlayerService : IPlayerService
     public async Task<HandlerResult<SuccessData<PlayerInfo>, IErrorResult>> GetPlayerInfoAsync(long ?playerId)
     {
         return await _playerRepository.GetPlayerInfoAsync(playerId);
+    }
+
+    public async Task<HandlerResult<SuccessData<List<GameSimpleResponse>>, IErrorResult>> GetMyGames(long playerId)
+    {
+        return await _playerRepository.GetMyGames(playerId);
+    }
+
+    public async Task<HandlerResult<Success, IErrorResult>> ChangePlayerImage(PlayerImageRequest imageRequest, long playerId)
+    {
+        if (imageRequest.Image == null) return new IncorrectOperation();
+        if (imageRequest.Image.Length % 4 != 0) return new IncorrectOperation(){Message = "to nie jest string base 64 musi miec wielkosc podzielna przez 4"};
+        return await _playerRepository.ChangeImage(imageRequest, playerId);
+    }
+
+    public async Task<HandlerResult<SuccessData<string>, IErrorResult>> GetPlayerImage(long playerId)
+    {
+        return await _playerRepository.GetImage(playerId);
     }
 }
