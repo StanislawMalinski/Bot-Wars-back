@@ -23,13 +23,14 @@ namespace Shared.DataAccess.Repositories
         private readonly IAuthorizationService _authorizationService;
         private readonly IUserContextRepository _userContextRepository;
         private readonly IGameTypeMapper _gameTypeMapper;
+        private readonly IBotMapper _botMapper;
 
         public PlayerRepository(DataContext dataContext,
             IPlayerMapper playerMapper,
             IPasswordHasher passwordHasher,
             IAuthorizationService authorizationService,
             IUserContextRepository userContextRepository,
-            IGameTypeMapper gameTypeMapper)
+            IGameTypeMapper gameTypeMapper, IBotMapper botMapper)
         {
             _userContextRepository = userContextRepository;
             _authorizationService = authorizationService;
@@ -37,6 +38,7 @@ namespace Shared.DataAccess.Repositories
             _dataContext = dataContext;
             _playerMapper = playerMapper;
             _gameTypeMapper = gameTypeMapper;
+            _botMapper = botMapper;
         }
 
         public async Task<HandlerResult<Success, IErrorResult>> CreateAdminAsync(
@@ -269,6 +271,33 @@ namespace Shared.DataAccess.Repositories
             return new SuccessData<List<PlayerDto>>()
             {
                 Data = playerDtos
+            };
+        }
+        
+        public async Task<HandlerResult<SuccessData<List<BotResponse>>, IErrorResult>> GetBotsForPlayer(long playerId)
+        {
+            var player = await _dataContext
+                .Players
+                .FindAsync(playerId);
+
+            if (player == null)
+            {
+                return new EntityNotFoundErrorResult()
+                {
+                    Message = "EntityNotFound 404",
+                    Title = "Player with given id does not exist"
+                };
+            }
+
+            var bots = await _dataContext
+                .Bots
+                .Where(bot => bot.PlayerId == playerId)
+                .Select(bot => _botMapper.MapBotToResponse(bot))
+                .ToListAsync();
+
+            return new SuccessData<List<BotResponse>>
+            {
+                Data = bots
             };
         }
 

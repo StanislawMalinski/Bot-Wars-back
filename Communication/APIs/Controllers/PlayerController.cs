@@ -92,5 +92,13 @@ namespace Communication.APIs.Controllers
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             return (await _playerService.DeletePlayerAsync(long.Parse(userId))).Match(Ok, this.ErrorResult);
         }
+        
+        [HttpGet("getMyBots")]
+        [Authorize(Roles = "User,Admin")]
+        public async Task<IActionResult> GetMyBots()
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            return (await _playerService.GetPlayerBots(long.Parse(userId))).Match(Ok,this.ErrorResult);
+        }
     }
 }

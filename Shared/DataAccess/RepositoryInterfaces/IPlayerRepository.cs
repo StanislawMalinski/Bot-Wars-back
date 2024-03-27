@@ -9,19 +9,20 @@ namespace Shared.DataAccess.RepositoryInterfaces;
 
 public interface IPlayerRepository
 {
-    public Task<HandlerResult<Success, IErrorResult>> CreateAdminAsync(RegistrationRequest registrationRequest);
-    public Task<HandlerResult<Success, IErrorResult>> CreatePlayerAsync(RegistrationRequest registrationRequest);
-    public Task<HandlerResult<Success, IErrorResult>> ChangePassword(ChangePasswordRequest password, long? playerId);
-    public Task<HandlerResult<Success, IErrorResult>> ChangeLogin(ChangeLoginRequest changeLoginRequest, long? playerId);
-    public Task<HandlerResult<Success, IErrorResult>> DeletePlayerAsync(long id);
-    public Task<HandlerResult<SuccessData<PlayerDto>, IErrorResult>> GetPlayerAsync(long id);
-    public Task<HandlerResult<Success, IErrorResult>> SetPlayerLastLogin(string email, DateTime lastLogin);
-    public Task<HandlerResult<SuccessData<PlayerInternalDto>, IErrorResult>> GetPlayerAsync(string email);
-    public Task<HandlerResult<SuccessData<List<PlayerDto>>, IErrorResult>> GetPlayersAsync();
-    public Task<HandlerResult<SuccessData<PlayerInfo>, IErrorResult>> GetPlayerInfoAsync(long ?playerId);
-    public Task<HandlerResult<SuccessData<List<GameSimpleResponse>>, IErrorResult>> GetMyGames(long playerId);
-    public Task<HandlerResult<Success, IErrorResult>> ChangeImage(PlayerImageRequest imageRequest, long playerId);
-    public Task<HandlerResult<SuccessData<string>, IErrorResult>> GetImage( long playerId);
-    
-    
+    Task<HandlerResult<Success, IErrorResult>> CreateAdminAsync(RegistrationRequest registrationRequest);
+    Task<HandlerResult<Success, IErrorResult>> CreatePlayerAsync(RegistrationRequest registrationRequest);
+    Task<HandlerResult<Success, IErrorResult>> ChangePassword(ChangePasswordRequest password, long? playerId);
+    Task<HandlerResult<Success, IErrorResult>> ChangeLogin(ChangeLoginRequest changeLoginRequest, long? playerId);
+    Task<HandlerResult<Success, IErrorResult>> DeletePlayerAsync(long id);
+    Task<HandlerResult<SuccessData<PlayerDto>, IErrorResult>> GetPlayerAsync(long id);
+    Task<HandlerResult<Success, IErrorResult>> SetPlayerLastLogin(string email, DateTime lastLogin);
+    Task<HandlerResult<SuccessData<PlayerInternalDto>, IErrorResult>> GetPlayerAsync(string email);
+    Task<HandlerResult<SuccessData<List<PlayerDto>>, IErrorResult>> GetPlayersAsync();
+    Task<HandlerResult<SuccessData<PlayerInfo>, IErrorResult>> GetPlayerInfoAsync(long ?playerId);
+    Task<HandlerResult<SuccessData<List<GameSimpleResponse>>, IErrorResult>> GetMyGames(long playerId);
+    Task<HandlerResult<Success, IErrorResult>> ChangeImage(PlayerImageRequest imageRequest, long playerId);
+    Task<HandlerResult<SuccessData<string>, IErrorResult>> GetImage( long playerId);
+    Task<HandlerResult<SuccessData<List<BotResponse>>, IErrorResult>> GetBotsForPlayer(long playerId);
+
+
 }

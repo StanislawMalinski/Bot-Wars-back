@@ -61,6 +61,11 @@ public class PlayerService : IPlayerService
         return await _playerRepository.DeletePlayerAsync(id);
     }
 
+    public async Task<HandlerResult<SuccessData<List<BotResponse>>, IErrorResult>> GetPlayerBots(long id)
+    {
+        return await _playerRepository.GetBotsForPlayer(id);
+    }
+
     public async Task<HandlerResult<Success, IErrorResult>> resetPassWordByLogin(String Login)
     {
         return new NotImplementedError();
