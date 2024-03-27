@@ -11,5 +11,6 @@ public class PlayerDto
     [Range(1, 2, ErrorMessage = "Value must be between 1 and 2.")]
     public int RoleId { get; set; }
     public bool isBanned {get; init;}
-    public long Points { get; init; } 
+    public long Points { get; init; }
+    public bool Deleted {  get; init; }
 }

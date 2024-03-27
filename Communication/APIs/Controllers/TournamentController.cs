@@ -1,9 +1,11 @@
 ﻿using Communication.APIs.Controllers.Helper;
 using Communication.Services.Tournament;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Shared.DataAccess.DTO;
 using Shared.DataAccess.DTO.Requests;
 using Shared.DataAccess.RepositoryInterfaces;
+using System.Security.Claims;
 
 namespace Communication.APIs.Controllers
 {
@@ -19,10 +21,11 @@ namespace Communication.APIs.Controllers
         }
 
         [HttpPost("add")]
+        [Authorize(Roles = "User,Admin")]
         public async Task<IActionResult> AddTournament(TournamentRequest tournamentRequest) 
         {
-            return  (await _tournamentService.AddTournament(1L, tournamentRequest)).Match(Ok,this.ErrorResult);
-            
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            return  (await _tournamentService.AddTournament(long.Parse(userId), tournamentRequest)).Match(Ok,this.ErrorResult);
         }
 
         [HttpDelete("delete")]

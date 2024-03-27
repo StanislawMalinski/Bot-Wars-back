@@ -19,9 +19,6 @@ namespace Shared.DataAccess.RepositoryInterfaces
 
         Task<HandlerResult<Success,IErrorResult>> CreateGameType(long userId,GameRequest gameRequest);
         Task<HandlerResult<SuccessData<List<GameResponse>>, IErrorResult>> GetListOfTypesOfAvailableGames();
-
-        
+        Task<HandlerResult<SuccessData<List<GameResponse>>, IErrorResult>> Search(string? name);
     }
-
-
 }

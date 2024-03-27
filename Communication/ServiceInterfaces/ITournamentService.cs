@@ -17,7 +17,7 @@ namespace Shared.DataAccess.RepositoryInterfaces
         public Task<HandlerResult<SuccessData<TournamentResponse>,IErrorResult>> GetTournament(long id);
 
         public Task<HandlerResult<Success,IErrorResult>> UpdateTournament(long id, TournamentRequest tournamentRequest);
-
+        public Task<HandlerResult<Success, IErrorResult>> DeleteUserScheduledTournaments(long userId);
         public Task<HandlerResult<Success,IErrorResult>> DeleteTournament(long id);
 
         public Task<HandlerResult<Success,IErrorResult>> AddTournament(long userId,TournamentRequest tournamentRequest);

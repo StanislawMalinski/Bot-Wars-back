@@ -44,5 +44,16 @@ namespace FileGatherer
             }
             return File(result.Data.Content, "application/octet-stream", result.Data.Name);
         }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteFile([FromRoute] long id)
+        {
+            var result = await _gathererService.DeleteFile(id);
+            if (!result.Success)
+            {
+                return StatusCode(500, $"Internal server error: {result.Message}");
+            }
+            return Ok(result.Message);
+        }
     }
 }

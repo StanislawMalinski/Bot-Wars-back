@@ -31,7 +31,12 @@ namespace Communication.Services.Tournament
 			return await _tournamentRepository.DeleteTournamentAsync(id);
 		}
 
-		public async Task<HandlerResult<SuccessData<List<TournamentResponse>>, IErrorResult>> GetListOfTournaments()
+        public async Task<HandlerResult<Success, IErrorResult>> DeleteUserScheduledTournaments(long userId)
+        {
+            return await _tournamentRepository.DeleteUserTournamentsAsync(userId);
+        }
+
+        public async Task<HandlerResult<SuccessData<List<TournamentResponse>>, IErrorResult>> GetListOfTournaments()
 		{
 			return await _tournamentRepository.GetTournamentsAsync();
 		}

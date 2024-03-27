@@ -71,6 +71,30 @@ namespace Shared.DataAccess.Repositories
             return new Success();
         }
 
+        public async Task<HandlerResult<Success, IErrorResult>> DeleteUserTournamentsAsync(long userId)
+        {
+            var tournaments = await _dataContext.Tournaments
+                .Where(x => x.CreatorId == userId && x.Status != TournamentStatus.DONE && x.Status != TournamentStatus.INPLAY)
+                .ToListAsync();
+            foreach (Tournament tournament in tournaments)
+            {
+                var tasks = await _dataContext
+                    .Tasks
+                    .Where(x => x.Status == TaskStatus.ToDo && x.Type == TaskTypes.PlayTournament && x.OperatingOn == tournament.Id)
+                    .ToListAsync();
+                foreach (var task in tasks)
+                {
+                    _dataContext.Tasks.Remove(task);
+                }
+                _dataContext
+                    .Tournaments
+                    .Remove(tournament);
+            }
+            await _dataContext
+                    .SaveChangesAsync();
+            return new Success();
+        }
+
         public async Task<HandlerResult<SuccessData<TournamentResponse>, IErrorResult>> GetTournamentAsync(long id)
         {
             var tournament = await _dataContext.Tournaments

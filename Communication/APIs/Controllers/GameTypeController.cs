@@ -45,6 +45,12 @@ namespace Communication.APIs.Controllers
             return (await _gameTypeService.GetGame(id)).Match(Ok, this.ErrorResult);
         }
 
+        [HttpGet("getByName")]
+        public async Task<IActionResult> GetByName([FromQuery] string name)
+        {
+            return (await _gameTypeService.Search(name)).Match(Ok, this.ErrorResult);
+        }
+
         [HttpDelete("delete")]
         [Authorize]
         public async Task<IActionResult> DeleteGame([FromQuery] long id)

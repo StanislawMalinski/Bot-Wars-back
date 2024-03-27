@@ -8,6 +8,7 @@ namespace FileGatherer
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public long Id { get; set; } 
+        public bool Deleted { get; set; }
         public string Path { get; set; }
         public string FileName { get; set; }
         public DateTime CreatedDate { get; set; }
