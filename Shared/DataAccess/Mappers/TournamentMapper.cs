@@ -1,14 +1,12 @@
-﻿using System.Text;
-using Microsoft.AspNetCore.Http;
+﻿using Shared.DataAccess.DataBaseEntities;
 using Shared.DataAccess.DTO;
-using Shared.DataAccess.DataBaseEntities;
 using Shared.DataAccess.DTO.Requests;
 using Shared.DataAccess.DTO.Responses;
 using Shared.DataAccess.Enumerations;
 
 namespace Shared.DataAccess.Mappers
 {
-	public class TournamentMapper : ITournamentMapper
+    public class TournamentMapper : ITournamentMapper
     {
         public Tournament DtoToTournament(TournamentDto dto)
         {
@@ -26,12 +24,11 @@ namespace Shared.DataAccess.Mappers
                 Image = Convert.FromBase64String(dto.Image)
             };
         }
-        
-        
+
 
         public TournamentDto TournamentToDTO(Tournament tournament)
         {
-            return new TournamentDto()
+            var dto = new TournamentDto()
             {
                 Id = tournament.Id,
                 TournamentsTitle = tournament.TournamentTitle,
@@ -40,15 +37,19 @@ namespace Shared.DataAccess.Mappers
                 PlayersLimit = tournament.PlayersLimit,
                 PostedDate = tournament.PostedDate,
                 TournamentsDate = tournament.TournamentsDate,
-                //WasPlayedOut = tournament.Status,
                 Constrains = tournament.Constraints,
-                Image = Convert.ToBase64String(tournament.Image)
             };
+            if (tournament.Image != null)
+            {
+                dto.Image = Convert.ToBase64String(tournament.Image);
+            }
+
+            return dto;
         }
 
         public TournamentResponse TournamentToTournamentResponse(Tournament tournament)
         {
-            return new TournamentResponse()
+            var tournamentResponse = new TournamentResponse()
             {
                 Id = tournament.Id,
                 TournamentTitle = tournament.TournamentTitle,
@@ -58,21 +59,26 @@ namespace Shared.DataAccess.Mappers
                 PostedDate = tournament.PostedDate,
                 RankingType = tournament.RankingType,
                 Constraints = tournament.Constraints,
-                Image = Convert.ToBase64String(tournament.Image) ,
                 MatchIds = tournament.Matches?
                     .Select(match => match.Id)
                     .ToList(),
                 BotIds = tournament.TournamentReference?
                     .Select(reference => reference.botId)
                     .ToList(),
-                WasPlayedOut = tournament.Status == TournamentStatus.DONE 
-                               
+                WasPlayedOut = tournament.Status == TournamentStatus.DONE
             };
+
+            if (tournament.Image != null)
+            {
+                tournamentResponse.Image = Convert.ToBase64String(tournament.Image);
+            }
+
+            return tournamentResponse;
         }
 
         public Tournament TournamentRequestToTournament(TournamentRequest tournamentRequest)
         {
-            return new Tournament()
+            var tournament = new Tournament()
             {
                 TournamentTitle = tournamentRequest.TournamentTitle,
                 Description = tournamentRequest.Description,
@@ -82,8 +88,14 @@ namespace Shared.DataAccess.Mappers
                 TournamentsDate = tournamentRequest.TournamentsDate,
                 Status = TournamentStatus.SCHEDULED,
                 Constraints = tournamentRequest.Constraints,
-                Image = Convert.FromBase64String(tournamentRequest.Image),
             };
+
+            if (tournamentRequest.Image != null)
+            {
+                tournament.Image = Convert.FromBase64String(tournamentRequest.Image);
+            }
+
+            return tournament;
         }
     }
 }
