@@ -20,7 +20,7 @@ public class PointsService : IPointsService
 
     public async Task<HandlerResult<Success, IErrorResult>> SetPointsForPlayer(long playerId, long points)
     {
-        return new IncorrectOperation(); //await _pointsRepository.SetPointsForPlayer(playerId, points);
+        return new IncorrectOperation();
     } 
     
     public async Task<HandlerResult<SuccessData<List<PointHistoryDto>>, IErrorResult>> GetHistoryForPlayer(long playerId)
@@ -28,9 +28,9 @@ public class PointsService : IPointsService
         return await _pointsRepository.GetHistoryForPlayer(playerId);
     }
 
-    public async Task<HandlerResult<SuccessData<List<PlayerResponse>>,IErrorResult>> GetLeaderboards()
+    public async Task<HandlerResult<SuccessData<List<PlayerResponse>>,IErrorResult>> GetLeaderboards(int page, int pagesize)
     {
-        return await _pointsRepository.GetLeaderboards();
+        return await _pointsRepository.GetLeaderboards(page, pagesize);
     }
 
     public async Task<HandlerResult<SuccessData<long>, IErrorResult>> GetPointsForPlayer(long playerId)

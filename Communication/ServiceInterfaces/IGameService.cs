@@ -9,7 +9,7 @@ namespace Shared.DataAccess.RepositoryInterfaces
 {
 	public interface IGameService
     {
-        Task<HandlerResult<SuccessData<List<GameResponse>>,IErrorResult>> GetGames();
+        Task<HandlerResult<SuccessData<List<GameResponse>>,IErrorResult>> GetGames(int page, int pagesize);
 
         Task<HandlerResult<SuccessData<GameResponse>,IErrorResult>> GetGame(long id);
 
@@ -18,7 +18,7 @@ namespace Shared.DataAccess.RepositoryInterfaces
         Task<HandlerResult<Success,IErrorResult>> DeleteGame(long id);
 
         Task<HandlerResult<Success,IErrorResult>> CreateGameType(long userId,GameRequest gameRequest);
-        Task<HandlerResult<SuccessData<List<GameResponse>>, IErrorResult>> GetListOfTypesOfAvailableGames();
-        Task<HandlerResult<SuccessData<List<GameResponse>>, IErrorResult>> Search(string? name);
+        Task<HandlerResult<SuccessData<List<GameResponse>>, IErrorResult>> GetListOfTypesOfAvailableGames(int page, int pagesize);
+        Task<HandlerResult<SuccessData<List<GameResponse>>, IErrorResult>> Search(string? name, int page, int pagesize);
     }
 }

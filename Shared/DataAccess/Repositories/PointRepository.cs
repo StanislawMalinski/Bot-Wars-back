@@ -50,39 +50,6 @@ public class PointRepository : IPointsRepository
         };
 
     }
-    /*
-    public async Task<HandlerResult<Success, IErrorResult>> SetPointsForPlayer(long playerId, long points)
-    {
-        var player = await _dataContext.Players.FindAsync(playerId);
-        if (player == null)
-        {
-            return new EntityNotFoundErrorResult()
-            {
-                Title = "EntityNotFoundErrorResult 404",
-                Message = "No player with such id"
-            };
-        }
-
-        await ChangePoints(player, points - player.Points);
-
-        return new Success();
-    }
-
-    private async Task<HandlerResult<Success, IErrorResult>> ChangePoints(Player player, long points)
-    {
-        var pointHistory = new PointHistory()
-        {
-            PlayerId = player.Id,
-            Before = player.Points,
-            Change = points,
-            LogDate = DateTime.Now
-        };
-        player.Points += points;
-        await _dataContext.PointHistories.AddAsync(pointHistory);
-        await _dataContext.SaveChangesAsync();
-        return new Success();
-    }*/
-    
 
     public async Task<HandlerResult<SuccessData<long>, IErrorResult>> GetCurrentPointsForPlayer(long playerId)
     {
@@ -102,10 +69,12 @@ public class PointRepository : IPointsRepository
         };
     }
 
-    public async Task<HandlerResult<SuccessData<List<PlayerResponse>>, IErrorResult>> GetLeaderboards()
+    public async Task<HandlerResult<SuccessData<List<PlayerResponse>>, IErrorResult>> GetLeaderboards(int page, int pagesize)
     {
         var players = await _dataContext.Players
             .OrderByDescending(player => player.Points).Select(x=> _playerMapper.ToPlayerResponse(x))
+            .Skip(page * pagesize)
+            .Take(pagesize)
             .ToListAsync();
 
         return new SuccessData<List<PlayerResponse>>

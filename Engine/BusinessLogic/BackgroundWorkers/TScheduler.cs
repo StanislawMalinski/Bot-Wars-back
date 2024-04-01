@@ -22,7 +22,6 @@ public class TScheduler: IInvocable
         _schedulerRepository = schedulerRepository;
         _scheduler = scheduler;
     }
-    
 
     public async Task Invoke()
     {
@@ -53,11 +52,8 @@ public class TScheduler: IInvocable
                         _scheduler.ScheduleWithParams<ValidationWorker>(t.Id).EverySecond().Once().PreventOverlapping("Validation worker " + t.Id);
                     }
                     break;
-                
-                    
             }
         }
         Console.WriteLine("zadania wykonane");
-
     }
 }

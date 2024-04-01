@@ -60,7 +60,7 @@ public class GameRepository : IGameRepository
         return new Success();
     }
 
-    public async Task<HandlerResult<SuccessData<List<GameResponse>>, IErrorResult>> Search(string? name)
+    public async Task<HandlerResult<SuccessData<List<GameResponse>>, IErrorResult>> Search(string? name, int page, int pagesize)
     {
         if (name == null)
         {
@@ -74,6 +74,8 @@ public class GameRepository : IGameRepository
             .Games
             .Where(x => x.GameFile != null && x.GameFile.Contains(name))
             .Select(x => _mapper.MapGameToResponse(x))
+            .Skip(page * pagesize)
+            .Take(pagesize)
             .ToListAsync();
 
         return new SuccessData<List<GameResponse>>()
@@ -82,7 +84,7 @@ public class GameRepository : IGameRepository
         };
     }
 
-    public async Task<HandlerResult<SuccessData<List<GameResponse>>, IErrorResult>> GetGames()
+    public async Task<HandlerResult<SuccessData<List<GameResponse>>, IErrorResult>> GetGames(int page, int pagesize)
     {
         var resGame = await _dataContext
             .Games
@@ -90,6 +92,8 @@ public class GameRepository : IGameRepository
             .Include(game => game.Matches)
             .Include(game => game.Tournaments)
             .Select(x => _mapper.MapGameToResponse(x))
+            .Skip(page * pagesize)
+            .Take(pagesize)
             .ToListAsync();
 
         return new SuccessData<List<GameResponse>>()
@@ -173,7 +177,7 @@ public class GameRepository : IGameRepository
         return new Success();
     }
 
-    public async Task<HandlerResult<SuccessData<List<GameResponse>>, IErrorResult>> GetAvailableGames()
+    public async Task<HandlerResult<SuccessData<List<GameResponse>>, IErrorResult>> GetAvailableGames(int page, int pagesize)
     {
         var resGame = await _dataContext
             .Games
@@ -182,6 +186,8 @@ public class GameRepository : IGameRepository
             .Include(game => game.Tournaments)
             .Where(game => game.IsAvailableForPlay)
             .Select(game => _mapper.MapGameToResponse(game))
+            .Skip(page * pagesize)
+            .Take(pagesize)
             .ToListAsync();
         
 

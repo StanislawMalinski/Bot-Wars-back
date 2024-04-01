@@ -2,6 +2,7 @@
 using Communication.Services.Tournament;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore.Metadata.Conventions;
 using Shared.DataAccess.DTO;
 using Shared.DataAccess.DTO.Requests;
 using Shared.DataAccess.RepositoryInterfaces;
@@ -35,16 +36,11 @@ namespace Communication.APIs.Controllers
             
         }
 
-        [HttpGet("getAll")]
-        public async Task<IActionResult> GetListOfTournaments()
-        {
-            return (await _tournamentService.GetListOfTournaments()).Match(Ok,this.ErrorResult);
-        }
-
         [HttpPost("getFiltered")]
-        public async Task<IActionResult> GetListOfTournamentsFiltered(TournamentFilterRequest tournamentFilterRequest)
+
+        public async Task<IActionResult> GetListOfTournamentsFiltered(TournamentFilterRequest tournamentFilterRequest, [FromQuery] int page = 0, [FromQuery] int pagesize = 10)
         {
-            return (await _tournamentService.GetListOfTournamentsFiltered(tournamentFilterRequest)).Match(Ok,this.ErrorResult);
+            return (await _tournamentService.GetListOfTournamentsFiltered(tournamentFilterRequest, page, pagesize)).Match(Ok,this.ErrorResult);
             
         }
 
