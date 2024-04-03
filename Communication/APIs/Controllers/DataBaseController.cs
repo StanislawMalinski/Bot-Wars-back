@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Hosting;
 using Shared.DataAccess.Context;
 
 namespace Communication.APIs.Controllers;
@@ -8,14 +9,22 @@ namespace Communication.APIs.Controllers;
 public class DataBaseController : Controller
 {
     private readonly DataContext _dataContext;
-    public DataBaseController(DataContext dataContext)
+    private readonly IHostEnvironment _env;
+
+    public DataBaseController(DataContext dataContext, IHostEnvironment env)
     {
         _dataContext = dataContext;
+        _env = env;
     }
     
     [HttpGet("reset")]
     public async Task<IActionResult> reset()
     {
+        if (!_env.IsDevelopment())
+        {
+            return NotFound();
+        }
+        
         var pendingMigrations = await _dataContext.Database.GetPendingMigrationsAsync();
         if (pendingMigrations.Any())
         {
@@ -33,7 +42,10 @@ public class DataBaseController : Controller
     [HttpDelete("delete")]
     public async Task<IActionResult> delete()
     {
-
+        if (!_env.IsDevelopment())
+        {
+            return NotFound();
+        }
         await _dataContext.Database.EnsureDeletedAsync();
         
         return Ok();
