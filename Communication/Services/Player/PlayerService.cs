@@ -78,7 +78,6 @@ public class PlayerService : IPlayerService
 
     public async Task<HandlerResult<Success, IErrorResult>> ChangePassword(ChangePasswordRequest request, long ?playerId)
     {
-        long id = 5;
         return await _playerRepository.ChangePassword(request, playerId);
     }
 

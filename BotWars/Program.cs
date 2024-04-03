@@ -90,7 +90,6 @@ builder.Services
     .AddPlayer()
     .AddTournament()
     .AddAdministrative()
-    .AddFileSystem()
     .AddUserSettings()
     .AddPointsSettings()
     .AddAchievements()
