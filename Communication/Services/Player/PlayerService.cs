@@ -162,7 +162,7 @@ public class PlayerService : IPlayerService
         return await _playerRepository.GetPlayerInfoAsync(playerId);
     }
 
-    public async Task<HandlerResult<SuccessData<List<GameSimpleResponse>>, IErrorResult>> GetMyGames(long playerId)
+    public async Task<HandlerResult<SuccessData<List<GameSimpleResponse>>, IErrorResult>> GetGamesForPlayer(long playerId)
     {
         return await _playerRepository.GetMyGames(playerId);
     }
