@@ -26,6 +26,7 @@ namespace Communication.APIs.Controllers
         }
 
         [HttpPost("registerAdmin")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> RegisterAdmin([FromBody] RegistrationRequest registrationRequest)
         {
             return (await _playerService.RegisterNewAdmin(registrationRequest)).Match(Ok, this.ErrorResult);
@@ -38,11 +39,9 @@ namespace Communication.APIs.Controllers
         }
 
         [HttpGet("getPlayerInfo")]
-        [Authorize(Roles = "User,Admin")]
-        public async Task<IActionResult> GetPlayerInfo()
+        public async Task<IActionResult> GetPlayerInfo([FromQuery] long playerId)
         {
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            return (await _playerService.GetPlayerInfoAsync(long.Parse(userId))).Match(Ok, this.ErrorResult);
+            return (await _playerService.GetPlayerInfoAsync(playerId)).Match(Ok, this.ErrorResult);
         }
 
         [HttpPost("changePassword")]
@@ -50,7 +49,8 @@ namespace Communication.APIs.Controllers
         public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordRequest changePasswordRequest)
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            return (await _playerService.ChangePassword(changePasswordRequest, long.Parse(userId))).Match(Ok, this.ErrorResult);
+            return (await _playerService.ChangePassword(changePasswordRequest, long.Parse(userId))).Match(Ok,
+                this.ErrorResult);
         }
 
         [HttpPost("changeLogin")]
@@ -58,31 +58,29 @@ namespace Communication.APIs.Controllers
         public async Task<IActionResult> ChangeLogin([FromBody] ChangeLoginRequest changeLoginRequest)
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            return (await _playerService.ChangeLogin(changeLoginRequest, long.Parse(userId))).Match(Ok, this.ErrorResult);
+            return (await _playerService.ChangeLogin(changeLoginRequest, long.Parse(userId))).Match(Ok,
+                this.ErrorResult);
         }
 
-        [HttpGet("getMyGames")]
-        [Authorize(Roles = "User,Admin")]
-        public async Task<IActionResult> GetMyGames()
+        [HttpGet("getGamesForPlayer")]
+        public async Task<IActionResult> GetGamesForPlayer([FromQuery] long playerId)
         {
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            return (await _playerService.GetMyGames(long.Parse(userId))).Match(Ok,this.ErrorResult);
+            return (await _playerService.GetGamesForPlayer(playerId)).Match(Ok, this.ErrorResult);
         }
-         
-        [HttpGet("getMyImage")]
-        [Authorize(Roles = "User,Admin")]
-        public async Task<IActionResult> GetMyImage()
+
+        [HttpGet("getImageForPlayer")]
+        public async Task<IActionResult> GetPlayerImage([FromQuery] long playerId)
         {
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            return (await _playerService.GetPlayerImage(long.Parse(userId))).Match(Ok,this.ErrorResult);
+            return (await _playerService.GetPlayerImage(playerId)).Match(Ok, this.ErrorResult);
         }
-         
+
         [HttpPost("changeMyImage")]
         [Authorize(Roles = "User,Admin")]
         public async Task<IActionResult> ChangeMyImage(PlayerImageRequest imageRequest)
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            return (await _playerService.ChangePlayerImage(imageRequest,long.Parse(userId))).Match(Ok,this.ErrorResult);
+            return (await _playerService.ChangePlayerImage(imageRequest, long.Parse(userId))).Match(Ok,
+                this.ErrorResult);
         }
 
         [HttpDelete("deleteAccount")]
@@ -92,13 +90,11 @@ namespace Communication.APIs.Controllers
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             return (await _playerService.DeletePlayerAsync(long.Parse(userId))).Match(Ok, this.ErrorResult);
         }
-        
-        [HttpGet("getMyBots")]
-        [Authorize(Roles = "User,Admin")]
-        public async Task<IActionResult> GetMyBots()
+
+        [HttpGet("getBotsForPlayer")]
+        public async Task<IActionResult> GetPlayerBots([FromQuery] long playerId)
         {
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            return (await _playerService.GetPlayerBots(long.Parse(userId))).Match(Ok,this.ErrorResult);
+            return (await _playerService.GetPlayerBots(playerId)).Match(Ok, this.ErrorResult);
         }
     }
 }

@@ -21,6 +21,8 @@ public static class ErrorResultConverter
             IncorrectOperation => controller.BadRequest(errorResult),
             UnauthorizedError => controller.Unauthorized(errorResult),
             PlayerAlreadyExistsError => controller.BadRequest(errorResult),
+            NotTournamentCreatorError => controller.BadRequest(errorResult),
+            NotBotCreatorError => controller.BadRequest(errorResult),
             _ => controller.StatusCode((int)HttpStatusCode.InternalServerError, errorResult)
         };
 }

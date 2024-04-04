@@ -32,9 +32,9 @@ namespace Communication.Services.Tournament
             return await _tournamentRepository.CreateTournamentAsync(userId, tournamentRequest);
         }
 
-        public async Task<HandlerResult<Success, IErrorResult>> DeleteTournament(long id)
+        public async Task<HandlerResult<Success, IErrorResult>> DeleteTournament(long id, long playerId)
         {
-            return await _tournamentRepository.DeleteTournamentAsync(id);
+            return await _tournamentRepository.DeleteTournamentAsync(id, playerId);
         }
 
         public async Task<HandlerResult<Success, IErrorResult>> DeleteUserScheduledTournaments(long userId)
@@ -59,19 +59,20 @@ namespace Communication.Services.Tournament
             return await _tournamentRepository.GetTournamentAsync(id);
         }
 
-        public async Task<HandlerResult<Success, IErrorResult>> RegisterSelfForTournament(long tournamentId, long botId)
+        public async Task<HandlerResult<Success, IErrorResult>> RegisterSelfForTournament(long tournamentId, long botId,
+            long playerId)
         {
-            return await _tournamentRepository.RegisterSelfForTournament(tournamentId, botId);
+            return await _tournamentRepository.RegisterSelfForTournament(tournamentId, botId, playerId);
         }
 
         public async Task<HandlerResult<Success, IErrorResult>> UnregisterSelfForTournament(long tournamentId,
-            long botId)
+            long botId, long playerId)
         {
-            return await _tournamentRepository.UnregisterSelfForTournament(tournamentId, botId);
+            return await _tournamentRepository.UnregisterSelfForTournament(tournamentId, botId, playerId);
         }
 
         public async Task<HandlerResult<Success, IErrorResult>> UpdateTournament(long id,
-            TournamentRequest tournamentRequest)
+            TournamentRequest tournamentRequest, long playerId)
         {
             if (tournamentRequest.Image != null && tournamentRequest.Image.Length % 4 != 0)
             {
@@ -79,7 +80,7 @@ namespace Communication.Services.Tournament
                     { Message = "to nie jest string base 64 musi miec wielkosc podzielna przez 4" };
             }
 
-            return await _tournamentRepository.UpdateTournamentAsync(id, tournamentRequest);
+            return await _tournamentRepository.UpdateTournamentAsync(id, tournamentRequest, playerId);
         }
     }
 }
