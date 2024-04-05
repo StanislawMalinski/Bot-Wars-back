@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Conventions;
 using Shared.DataAccess.Context;
 using Shared.DataAccess.DataBaseEntities;
@@ -21,13 +21,16 @@ namespace Shared.DataAccess.Repositories
         private readonly DataContext _dataContext;
         private readonly ITournamentMapper _mapper;
         private readonly IAchievementsRepository _achievementsRepository;
-
+        private readonly IAuthorizationService _authorizationService;
+        private readonly IUserContextRepository _userContextRepository;
         public TournamentRepository(DataContext dataContext, ITournamentMapper mapper,
-            IAchievementsRepository achievementsRepository)
+            IAchievementsRepository achievementsRepository, IAuthorizationService authorizationService, IUserContextRepository userContextRepository)
         {
             _dataContext = dataContext;
             _mapper = mapper;
             _achievementsRepository = achievementsRepository;
+            _authorizationService = authorizationService;
+            _userContextRepository = userContextRepository;
         }
 
         public async Task<HandlerResult<Success, IErrorResult>> CreateTournamentAsync(long userId,
@@ -44,6 +47,7 @@ namespace Shared.DataAccess.Repositories
                     Message = "Game with given id could not have been found"
                 };
             }
+
             var tournament = _mapper
                 .TournamentRequestToTournament(tournamentRequest);
             tournament.CreatorId = userId;
@@ -55,15 +59,35 @@ namespace Shared.DataAccess.Repositories
             return new Success();
         }
 
-        public async Task<HandlerResult<Success, IErrorResult>> DeleteTournamentAsync(long id)
+        public async Task<HandlerResult<Success, IErrorResult>> DeleteTournamentAsync(long id, long playerId)
         {
-            var tournament = await _dataContext.Tournaments.FindAsync(id);
+            var tournament = await _dataContext
+                .Tournaments
+                .Include(t => t.Creator)
+                .Where(t => t.Id == id)
+                .FirstOrDefaultAsync();
+            
             if (tournament == null)
                 return new EntityNotFoundErrorResult()
                 {
                     Title = "EntityNotFoundErrorResult 404",
                     Message = $"Tournament of id {id} does not exist"
                 };
+
+            var authorizationResult = _authorizationService.AuthorizeAsync(_userContextRepository.GetUser(),
+                2,
+                new RoleNameToCreateAdminRequirement("Admin")).Result;
+            
+            Console.WriteLine("tutaj wchodz, więc problem z creatorem");
+            if (tournament.Creator.Id != playerId && !authorizationResult.Succeeded)
+            {
+                return new NotTournamentCreatorError()
+                {
+                    Title = "NotTournamentCreatorError 400",
+                    Message = $"You cannot delete tournament, that you did not create while you are not an admin"
+                };
+            }
+
             _dataContext
                 .Tournaments
                 .Remove(tournament);
@@ -75,24 +99,28 @@ namespace Shared.DataAccess.Repositories
         public async Task<HandlerResult<Success, IErrorResult>> DeleteUserTournamentsAsync(long userId)
         {
             var tournaments = await _dataContext.Tournaments
-                .Where(x => x.CreatorId == userId && x.Status != TournamentStatus.DONE && x.Status != TournamentStatus.INPLAY)
+                .Where(x => x.CreatorId == userId && x.Status != TournamentStatus.DONE &&
+                            x.Status != TournamentStatus.INPLAY)
                 .ToListAsync();
             foreach (Tournament tournament in tournaments)
             {
                 var tasks = await _dataContext
                     .Tasks
-                    .Where(x => x.Status == TaskStatus.ToDo && x.Type == TaskTypes.PlayTournament && x.OperatingOn == tournament.Id)
+                    .Where(x => x.Status == TaskStatus.ToDo && x.Type == TaskTypes.PlayTournament &&
+                                x.OperatingOn == tournament.Id)
                     .ToListAsync();
                 foreach (var task in tasks)
                 {
                     _dataContext.Tasks.Remove(task);
                 }
+
                 _dataContext
                     .Tournaments
                     .Remove(tournament);
             }
+
             await _dataContext
-                    .SaveChangesAsync();
+                .SaveChangesAsync();
             return new Success();
         }
 
@@ -116,12 +144,12 @@ namespace Shared.DataAccess.Repositories
         }
 
         public async Task<HandlerResult<Success, IErrorResult>> UpdateTournamentAsync(long id,
-            TournamentRequest tournamentRequest)
+            TournamentRequest tournamentRequest, long playerId)
         {
             var game = await _dataContext
                 .Games
                 .FindAsync(tournamentRequest.GameId);
-
+            
             if (game is null)
             {
                 return new EntityNotFoundErrorResult
@@ -133,14 +161,30 @@ namespace Shared.DataAccess.Repositories
 
             var tournamentToEdit = await _dataContext
                 .Tournaments
-                .FindAsync(id);
-
+                .Include(t => t.Creator)
+                .Where(t => t.Id == id)
+                .FirstOrDefaultAsync();
+            
             if (tournamentToEdit == null)
                 return new EntityNotFoundErrorResult()
                 {
                     Title = "EntityNotFoundErrorResult 404",
                     Message = $"Tournament of id {id} does not exist"
                 };
+            
+            var authorizationResult = _authorizationService.AuthorizeAsync(_userContextRepository.GetUser(),
+                2,
+                new RoleNameToCreateAdminRequirement("Admin")).Result;
+            
+            if (tournamentToEdit.Creator.Id != playerId && !authorizationResult.Succeeded)
+            {
+                return new NotTournamentCreatorError()
+                {
+                    Title = "NotTournamentCreatorError 400",
+                    Message = $"You cannot update tournament, that you did not create and while you are not an admin"
+                };
+            }
+            
             var tournament = _mapper
                 .TournamentRequestToTournament(tournamentRequest);
 
@@ -172,11 +216,12 @@ namespace Shared.DataAccess.Repositories
             };
         }
 
-        public async Task<HandlerResult<Success, IErrorResult>> RegisterSelfForTournament(long tournamentId, long botId)
+        public async Task<HandlerResult<Success, IErrorResult>> RegisterSelfForTournament(long tournamentId, long botId, long playerId)
         {
             var tournament = await _dataContext
                 .Tournaments
                 .FindAsync(tournamentId);
+            
             if (tournament == null)
             {
                 return new EntityNotFoundErrorResult
@@ -188,7 +233,10 @@ namespace Shared.DataAccess.Repositories
 
             var bot = await _dataContext
                 .Bots
-                .FindAsync(botId);
+                .Include(b => b.Player)
+                .Where(b => b.Id == botId)
+                .FirstOrDefaultAsync();
+            
             if (bot == null)
             {
                 return new EntityNotFoundErrorResult
@@ -197,7 +245,15 @@ namespace Shared.DataAccess.Repositories
                     Message = "No bot with such id has been found"
                 };
             }
-
+            
+            if (bot.Player.Id != playerId)
+            {
+                return new NotBotCreatorError()
+                {
+                    Title = "NotBotCreatorError 400",
+                    Message = $"You cannot register a bot, that you did not create"
+                };
+            }
             var result = await _dataContext
                 .TournamentReferences
                 .FirstOrDefaultAsync(x => x.tournamentId == tournamentId && x.botId == botId);
@@ -236,7 +292,7 @@ namespace Shared.DataAccess.Repositories
         }
 
         public async Task<HandlerResult<Success, IErrorResult>> UnregisterSelfForTournament(long tournamentId,
-            long botId)
+            long botId, long playerId)
         {
             var tournament = await _dataContext.Tournaments.FindAsync(tournamentId);
             if (tournament == null)
@@ -248,13 +304,27 @@ namespace Shared.DataAccess.Repositories
                 };
             }
 
-            var bot = await _dataContext.Bots.FindAsync(botId);
+            var bot = await _dataContext
+                .Bots
+                .Include(b => b.Player)
+                .Where(b => b.Id == botId)
+                .FirstOrDefaultAsync();
+            
             if (bot == null)
             {
                 return new EntityNotFoundErrorResult
                 {
                     Title = "EntityNotFoundErrorResult 404",
                     Message = "No bot with such id has been found"
+                };
+            }
+                        
+            if (bot.Player.Id != playerId)
+            {
+                return new NotBotCreatorError()
+                {
+                    Title = "NotBotCreatorError 400",
+                    Message = $"You cannot register a bot, that you did not create"
                 };
             }
 

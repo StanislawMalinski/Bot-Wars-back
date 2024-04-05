@@ -22,11 +22,11 @@
       "commandName": "Docker",
       "launchBrowser": true,
       "launchUrl": "{Scheme}://{ServiceHost}:{ServicePort}/BotWarsApi",
-        "environmentVariables": {
-            "ASPNETCORE_HTTPS_PORTS": "8081",
-            "ASPNETCORE_HTTP_PORTS": "8080",
-            "ASPNETCORE_ENVIRONMENT": "Development"
-        },
+      "environmentVariables": {
+        "ASPNETCORE_HTTPS_PORTS": "8081",
+        "ASPNETCORE_HTTP_PORTS": "8080",
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      },
       "publishAllPorts": true,
       "useSSL": true
     }
