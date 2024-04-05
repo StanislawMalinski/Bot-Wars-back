@@ -10,23 +10,21 @@ namespace Engine.BusinessLogic.BackgroundWorkers;
 
 public class TScheduler: IInvocable
 {
-    private DataContext _taskDataContext;
-    private IQueue _queue;
     private IScheduler _scheduler;
     private SchedulerRepository _schedulerRepository;
+    private InstanceSettings _instanceSettings;
 
-    public TScheduler(DataContext taskDataContext, IQueue queue, SchedulerRepository schedulerRepository, IScheduler scheduler)
+    public TScheduler(SchedulerRepository schedulerRepository, IScheduler scheduler, InstanceSettings instanceSettings)
     {
-        _taskDataContext = taskDataContext;
-        _queue = queue;
         _schedulerRepository = schedulerRepository;
         _scheduler = scheduler;
+        _instanceSettings = instanceSettings;
     }
 
     public async Task Invoke()
     {
         Console.WriteLine("Pobranie zadń do zrobienia");
-        var tasks = (await _schedulerRepository.TaskToDo()).Match(x=>x.Data,x=>new List<_Task>());
+        var tasks = (await _schedulerRepository.TaskToDo(_instanceSettings.EngineId)).Match(x=>x.Data,x=>new List<_Task>());
         foreach (var t in tasks)
         {
 

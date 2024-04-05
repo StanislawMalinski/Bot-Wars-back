@@ -132,7 +132,7 @@ public class MatchRepository
         _Task task = new _Task();
         task.OperatingOn = result.Id;
         task.ScheduledOn = DateTime.Now;
-        task.Status = TaskStatus.ToDo;
+        task.Status = TaskStatus.Unassigned;
         task.Type = TaskTypes.PlayGame;
         await _dataContext.Tasks.AddAsync(task);
         await _dataContext.SaveChangesAsync();
@@ -148,7 +148,7 @@ public class MatchRepository
         _Task task = new _Task();
         task.OperatingOn = result.Id;
         task.ScheduledOn = DateTime.Now;
-        task.Status = TaskStatus.ToDo;
+        task.Status = TaskStatus.Unassigned;
         task.Type = TaskTypes.PlayGame;
         await _dataContext.Tasks.AddAsync(task);
         await _dataContext.SaveChangesAsync();

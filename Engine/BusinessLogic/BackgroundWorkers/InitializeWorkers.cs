@@ -4,12 +4,12 @@ using Shared.DataAccess.Repositories;
 
 namespace Engine.BusinessLogic.BackgroundWorkers;
 
-public class InicjalizeWorkers: IInvocable
+public class InitializeWorkers: IInvocable
 {
     private IScheduler _scheduler;
     private TaskRepository _taskRepository;
 
-    public InicjalizeWorkers(IScheduler scheduler,TaskRepository taskRepository)
+    public InitializeWorkers(IScheduler scheduler,TaskRepository taskRepository)
     {
         _scheduler = scheduler;
         _taskRepository = taskRepository;
@@ -17,9 +17,10 @@ public class InicjalizeWorkers: IInvocable
 
     public async Task Invoke()
     {
-        Console.WriteLine("inicjalizaca");
+        Console.WriteLine("Inicjalizacja");
         await _taskRepository.RestartTasks();
+        _scheduler.Schedule<TaskClaimer>().EverySeconds(10).PreventOverlapping("Assign");
         _scheduler.Schedule<TScheduler>().EverySeconds(10).PreventOverlapping("Schedule");
-        Console.WriteLine("inicjalizaca zakończona");
+        Console.WriteLine("Inicjalizacja zakończona");
     }
 }
