@@ -11,6 +11,8 @@ using Shared.Results.IResults;
 using Shared.Results.SuccessResults;
 using Shared.DataAccess.DataBaseEntities;
 using System.Net.Http;
+using Microsoft.AspNetCore.Authorization;
+using Shared.DataAccess.AuthorizationRequirements;
 
 namespace Shared.DataAccess.Repositories;
 
@@ -18,20 +20,38 @@ public class GameRepository : IGameRepository
 {
     private readonly DataContext _dataContext;
     private readonly IGameTypeMapper _mapper;
+
     private readonly HttpClient _httpClient;
+
     // move to config
     private readonly string _gathererEndpoint = "http://host.docker.internal:7002/api/Gatherer";
+    private readonly IAuthorizationService _authorizationService;
+    private readonly IUserContextRepository _userContextRepository;
 
-    public GameRepository(DataContext dataContext, IGameTypeMapper gameTypeMapper, HttpClient httpClient)
+    public GameRepository(DataContext dataContext,
+        IGameTypeMapper gameTypeMapper,
+        HttpClient httpClient,
+        IAuthorizationService authorizationService,
+        IUserContextRepository userContextRepository)
     {
+        _userContextRepository = userContextRepository;
+        _authorizationService = authorizationService;
         _mapper = gameTypeMapper;
         _dataContext = dataContext;
         _httpClient = httpClient;
     }
 
-    public async Task<HandlerResult<Success, IErrorResult>> CreateGameType(long userId,GameRequest gameRequest)
+    public async Task<HandlerResult<Success, IErrorResult>> CreateGameType(long? userId, GameRequest gameRequest)
     {
-    
+        if (userId is null)
+        {
+            return new EntityNotFoundErrorResult()
+            {
+                Title = "EntityNotFoundErrorResult 404",
+                Message = "Player not found"
+            };
+        }
+
         var content = new MultipartFormDataContent();
         var streamContent = new StreamContent(gameRequest.GameFile.OpenReadStream());
         content.Add(streamContent, "file", gameRequest.GameFile.FileName);
@@ -50,9 +70,10 @@ public class GameRepository : IGameRepository
                 Message = "Faild to upload file to FileGatherer"
             };
         }
+
         Game game = _mapper.MapRequestToGame(gameRequest);
         game.FileId = gameFileId;
-        game.CreatorId = userId;
+        game.CreatorId = (long)userId;
         await _dataContext
             .Games
             .AddAsync(game);
@@ -82,6 +103,42 @@ public class GameRepository : IGameRepository
         };
     }
 
+    public async Task<HandlerResult<SuccessData<List<GameResponse>>, IErrorResult>> GetGamesByPlayer(string? name)
+    {
+        if (name == null)
+        {
+            return new EntityNotFoundErrorResult()
+            {
+                Title = "EntityNotFoundErrorResult 404",
+                Message = "No such element could have been found"
+            };
+        }
+
+        var player = await _dataContext
+            .Players
+            .FirstOrDefaultAsync(p => p.Login.Equals(name));
+        
+        if (player == null)
+        {
+            return new EntityNotFoundErrorResult()
+            {
+                Title = "EntityNotFoundErrorResult 404",
+                Message = "No such element could have been found"
+            };
+        }
+        
+        var res = await _dataContext
+            .Games
+            .Where(x => x.GameFile != null && x.CreatorId == player.Id)
+            .Select(x => _mapper.MapGameToResponse(x))
+            .ToListAsync();
+
+        return new SuccessData<List<GameResponse>>()
+        {
+            Data = res
+        };
+    }
+
     public async Task<HandlerResult<SuccessData<List<GameResponse>>, IErrorResult>> GetGames()
     {
         var resGame = await _dataContext
@@ -96,17 +153,15 @@ public class GameRepository : IGameRepository
         {
             Data = resGame
         };
-
     }
 
     public async Task<HandlerResult<Success, IErrorResult>> DeleteGame(long id)
     {
-        
         var gameToRemove = await _dataContext
             .Games
             .Include(g => g.Tournaments)
             .FirstOrDefaultAsync(g => g.Id == id);
-        
+
         if (gameToRemove == null)
         {
             return new EntityNotFoundErrorResult()
@@ -116,26 +171,35 @@ public class GameRepository : IGameRepository
             };
         }
 
-        if (gameToRemove.Tournaments != null) _dataContext
-            .Tournaments
-            .RemoveRange(gameToRemove.Tournaments);
+        var authorizationResult = _authorizationService.AuthorizeAsync(_userContextRepository.GetUser(),
+            gameToRemove,
+            new ResourceOperationRequirement(ResourceOperation.Delete)).Result;
+
+        if (!authorizationResult.Succeeded)
+        {
+            return new UnauthorizedError();
+        }
+
+        if (gameToRemove.Tournaments != null)
+            _dataContext
+                .Tournaments
+                .RemoveRange(gameToRemove.Tournaments);
         _dataContext.Games.Remove(gameToRemove);
         await _dataContext.SaveChangesAsync();
-        
+
         return new Success();
     }
 
     public async Task<HandlerResult<SuccessData<GameResponse>, IErrorResult>> GetGame(long id)
     {
-
         var resGame = await _dataContext
             .Games
-            .Where(game => game.Id==id)
+            .Where(game => game.Id == id)
             .Include(game => game.Bot)
             .Include(game => game.Matches)
             .Include(game => game.Tournaments)
             .FirstOrDefaultAsync();
-        
+
         if (resGame == null)
         {
             return new EntityNotFoundErrorResult()
@@ -149,7 +213,6 @@ public class GameRepository : IGameRepository
         {
             Data = _mapper.MapGameToResponse(resGame)
         };
-
     }
 
     public async Task<HandlerResult<Success, IErrorResult>> ModifyGameType(long id, GameRequest gameRequest)
@@ -163,6 +226,16 @@ public class GameRepository : IGameRepository
                 Message = "No such element could have been found"
             };
         }
+
+        var authorizationResult = _authorizationService.AuthorizeAsync(_userContextRepository.GetUser(),
+            resGame,
+            new ResourceOperationRequirement(ResourceOperation.Update)).Result;
+
+        if (!authorizationResult.Succeeded)
+        {
+            return new UnauthorizedError();
+        }
+
         resGame.InterfaceDefinition = gameRequest.InterfaceDefinition;
         resGame.GameInstructions = gameRequest.GameInstructions;
         resGame.GameFile = gameRequest.GameFile?.FileName;
@@ -183,7 +256,7 @@ public class GameRepository : IGameRepository
             .Where(game => game.IsAvailableForPlay)
             .Select(game => _mapper.MapGameToResponse(game))
             .ToListAsync();
-        
+
 
         return new SuccessData<List<GameResponse>>()
         {

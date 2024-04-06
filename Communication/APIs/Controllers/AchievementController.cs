@@ -29,4 +29,10 @@ public class AchievementController : Controller
         return (await _achievementService.GetAchievementTypes()).Match(Ok, this.ErrorResult);
     }
     
+    [HttpGet("getAchivmentIcon")]
+    public async Task<IActionResult> getAchivmentIcon()
+    {
+        return null;
+    }
+    
 }

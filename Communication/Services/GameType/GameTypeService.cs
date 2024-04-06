@@ -35,7 +35,7 @@ public class GameTypeService : IGameService
         return await _gameRepository.DeleteGame(id);
     }
 
-    public async Task<HandlerResult<Success, IErrorResult>> CreateGameType(long userId,GameRequest gameRequest)
+    public async Task<HandlerResult<Success, IErrorResult>> CreateGameType(long? userId,GameRequest gameRequest)
     {
         return await _gameRepository.CreateGameType(userId,gameRequest);
     }
@@ -48,5 +48,10 @@ public class GameTypeService : IGameService
     public async Task<HandlerResult<SuccessData<List<GameResponse>>,IErrorResult>> GetListOfTypesOfAvailableGames()
     {
         return await _gameRepository.GetAvailableGames();
+    }
+    
+    public async Task<HandlerResult<SuccessData<List<GameResponse>>,IErrorResult>> GetGamesByPlayer(string? name)
+    {
+        return await _gameRepository.GetGamesByPlayer(name);
     }
 }

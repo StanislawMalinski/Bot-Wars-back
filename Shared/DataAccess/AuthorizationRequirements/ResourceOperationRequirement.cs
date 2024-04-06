@@ -7,7 +7,8 @@ public enum ResourceOperation
     Create,
     Read,
     Update,
-    Delete
+    Delete,
+    ReadRestricted
 }
 
 public class ResourceOperationRequirement : IAuthorizationRequirement
