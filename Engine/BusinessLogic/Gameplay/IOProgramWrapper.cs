@@ -10,11 +10,21 @@ public class IOProgramWrapper : ICorespondable
     private string _path;
     private StreamWriter sw;
     private StreamReader sr;
-
+    private string BotFilePath =  "FileSystem/Bots";
+    private string GameFilePath = "FileSystem/Games";
+    private int memorylimit;
+    private int timelimit;
+    private string cgroupPath;
+    private long timemax = 0 ;
+    private int memorymax = 0;
+    //bash -c "ps -p 65 -o vsz= | grep -o '[0-9]\+'"
+    //apt-get install procps
     // Program Configuration parameter should be added
-    public IOProgramWrapper(string path)
+    public IOProgramWrapper(string path,int memorylimit,int timelimit)
     {
         _path = path;
+        this.memorylimit = memorylimit;
+        this.timelimit = timelimit;
     }
 
     // Not safe at all, maybe could be run as user without any privilages
@@ -26,69 +36,84 @@ public class IOProgramWrapper : ICorespondable
         }
         isRunning = true;
         _process = new Process();
-        Console.WriteLine("-c ./"+_path);
-        ProcessStartInfo startInfo = new ProcessStartInfo
+       
+        
+        
+        ProcessStartInfo startInfo;
+        startInfo = new ProcessStartInfo
         {
+            //ulimit -v "+memorylimit+";
             FileName = "bash",
-            Arguments = "-c ./"+_path,
+            
+            Arguments = "-c \"(ulimit -v 15000  ; ./"+_path+")\" ",
             RedirectStandardInput = true,
             RedirectStandardOutput = true,
             UseShellExecute = false,
             CreateNoWindow = true,
             RedirectStandardError = true,
             UserName = "userexe"
-            
+
         };
-        
+
 
         _process.StartInfo = startInfo;
-        _process.Start();
-        sw = _process.StandardInput;
-        sr = _process.StandardOutput;
-        
-        
-        /*
         try
         {
-            
+            _process.Start();
         }
-        catch (Exception ex)
+        catch (Exception e)
         {
-            throw new Exception($"Program cannot be started: {ex.Message}");
-        }*/
+            return false;
+        }
 
+        sw = _process.StandardInput;
+        sr = _process.StandardOutput;
+       
+        
         return true;
     }
 
     public async Task<string?> Get()
     {
-        
-        Task<string> readLineTask = sr.ReadLineAsync();
-        Task timeoutTask = Task.Delay(2000); 
-        Task completedTask = await Task.WhenAny(readLineTask, timeoutTask);
-        if (completedTask == readLineTask)
+        try
         {
+            long milliseconds = DateTimeOffset.Now.ToUnixTimeMilliseconds();
+            Task<string> readLineTask = sr.ReadLineAsync();
+            Task timeoutTask = Task.Delay( timelimit); 
+            Task completedTask = await Task.WhenAny(readLineTask, timeoutTask);
+            milliseconds -= DateTimeOffset.Now.ToUnixTimeMilliseconds();
+            if (completedTask != readLineTask) return null;
+            milliseconds *= -1;
+            timemax = Math.Max(milliseconds, timemax);
+            memorymax = Math.Max(memorymax, GetMemory());
+            if (memorymax > memorylimit) return null;
             // Line was read within the timeout period
             var cos = await readLineTask;
+            
             return cos;
         }
-        else
+        catch (Exception e)
         {
-            // Timeout occurred
-            Console.WriteLine("Timeout occurred while waiting for a line to be read.");
+
+            return null;
         }
 
-        throw new Exception("czs się skonczył");
-        return String.Empty;
     }
 
     public async Task Interrupt()
     {
         if (isRunning)
         {
-            _process.Kill();
+            try
+            {
+                _process.Kill();
+            }
+            catch (Exception e)
+            {
+                // ignored
+            }
         }
-
+     
         isRunning = false;
 
     }
@@ -99,17 +124,98 @@ public class IOProgramWrapper : ICorespondable
         {
             return false;
         }
-        await sw.WriteLineAsync(data);
+
+        try
+        {
+            await sw.WriteLineAsync(data);
+        }
+        catch (Exception e)
+        {
+            return false;
+        }
+
         return true;
     }
 
     public async Task<string?> SendAndGet(string data)
     {
-        await Send(data);
+        bool res =await Send(data);
+        if (res == false) return null;
         return await Get();
+    }
+
+    public async Task<string?> getError()
+    {
+        try
+        {
+            return await _process.StandardError.ReadToEndAsync();
+        }
+        catch (Exception e)
+        {
+            return string.Empty;
+        }
+       
     }
     private void HandleExit(object? sender, EventArgs e)
     {
         throw new Exception("Program exited");
+    }
+
+    private void SetMemory(string memory)
+    {
+        Process process = new Process();
+        
+        ProcessStartInfo startInfo;
+        startInfo = new ProcessStartInfo
+        {
+            FileName = "bash",
+            Arguments = "-c ulimit -v "+memory,
+            RedirectStandardInput = true,
+            RedirectStandardOutput = true,
+            UseShellExecute = false,
+            CreateNoWindow = true,
+            RedirectStandardError = true,
+            UserName = "userexe"
+
+        };
+
+
+        process.StartInfo = startInfo;
+      
+        process.Start();
+        process.WaitForExit();
+        
+    }
+    
+    public int GetMemory()
+    {
+        Console.WriteLine("funkcja na pamięć");
+        Process process = new Process();
+        int pid = _process.Id;
+        ProcessStartInfo startInfo;
+        startInfo = new ProcessStartInfo
+        {
+            FileName = "bash",
+            Arguments = "-c \"ps -p "+pid+" -o vsz= | grep -o '[0-9]\\+'\"",
+            RedirectStandardInput = true,
+            RedirectStandardOutput = true,
+            UseShellExecute = false,
+            CreateNoWindow = true,
+            RedirectStandardError = true,
+            UserName = "userexe"
+        };
+        
+
+        process.StartInfo = startInfo;
+      
+        process.Start();
+        string memory = process.StandardOutput.ReadToEnd();
+        process.WaitForExit();
+        Console.WriteLine("Pobranie pamięci " + memory);
+        if (memory == null || string.Empty.Equals(memory))
+        {
+            return 0;
+        }
+        return int.Parse(memory);
     }
 }
