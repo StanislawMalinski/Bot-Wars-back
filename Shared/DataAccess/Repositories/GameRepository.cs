@@ -123,7 +123,7 @@ public class GameRepository : IGameRepository
             return new EntityNotFoundErrorResult()
             {
                 Title = "EntityNotFoundErrorResult 404",
-                Message = "No such element could have been found"
+                Message = "Player not found"
             };
         }
         
@@ -132,7 +132,14 @@ public class GameRepository : IGameRepository
             .Where(x => x.GameFile != null && x.CreatorId == player.Id)
             .Select(x => _mapper.MapGameToResponse(x))
             .ToListAsync();
-
+        if (res is null || !res.Any())
+        {
+            return new EntityNotFoundErrorResult()
+            {
+                Title = "EntityNotFoundErrorResult 404",
+                Message = "Player didn't create any games"
+            };
+        }
         return new SuccessData<List<GameResponse>>()
         {
             Data = res
