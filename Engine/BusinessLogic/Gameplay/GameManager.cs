@@ -8,38 +8,55 @@ namespace Engine.BusinessLogic.Gameplay;
 
 public class GameManager : IGameManager
 {
-    public async Task<GameResult> PlayGame(Game gameData, List<Bot> botsData)
+    private IOProgramWrapper[] bots;
+    private Bot[] botsArray;
+    public async Task<GameResult> PlayGame(Game gameData, List<Bot> botsData,int memoryLimit = 1073741824, int timeLimit=2000)
     {
         
-        
-        /*return new SuccessfullGameResult()
-        {
-            BotWinner = botsData[0],
-            BotLoser = botsData[1],
-        };*/
-        var botsArray = botsData.ToArray();
+        botsArray = botsData.ToArray();
         FileManager manager = new FileManager(new HttpClient()); //???
-        IOProgramWrapper[] bots = new IOProgramWrapper[botsData.Count()];
-        IOProgramWrapper game = new IOProgramWrapper(await manager.GetGameFilepath(gameData),1073741824,2000);
+        bots = new IOProgramWrapper[botsData.Count()];
+        IOProgramWrapper game = new IOProgramWrapper(await manager.GetGameFilepath(gameData),memoryLimit,timeLimit);
         int ind = 0;
-        Console.WriteLine("gry gotowe");
         
         foreach (var bot in botsArray)
         {
-            
-            bots[ind] = new IOProgramWrapper( await manager.GetBotFilepath(bot),1073741824,2000);
+            bots[ind] = new IOProgramWrapper( await manager.GetBotFilepath(bot),memoryLimit,timeLimit);
             await bots[ind].Run();
-            bots[ind].GetMemory();
             ind++;
         }
 
+        ind = 0;
+        foreach (var bot in botsArray)
+        {
+            if (bots[ind].wasErros())
+            {
+                await InterruptAllBots();
+                return new ErrorGameResult()
+                {
+                    BotError = true,
+                    BotErrorId = bot.Id,
+                    ErrorGameStatus = bots[ind].GetErrorType()
+                };
+            }
+            ind++;
+        }
         
+        
+        bool ok = true;
         await game.Run();
         Console.WriteLine("ropoczęcie ");
-        string curr = await game.Get();
-        Console.WriteLine("pierwsza opercja" +
-                          " ");
-        int nextBot;
+        string? curr = await game.Get();
+        if (game.wasErros())
+        {
+            return new ErrorGameResult
+            {
+                BotError = false,
+                GameError = true,
+                ErrorGameStatus = game.GetErrorType()
+            };
+        }
+        int nextBot = 0;
         int counter = 0;
         int counterMax = 100000;
         string gamelog = string.Empty;
@@ -48,58 +65,115 @@ public class GameManager : IGameManager
         {
             nextBot = Int32.Parse(curr);
             curr = await game.Get();
+            if (curr == null) {ok = false;break;}
             gamelog += curr;
-            await bots[nextBot].Send(curr);
-            curr = await bots[nextBot].Get();
+            curr = await bots[nextBot].SendAndGet(curr);
+            if(curr == null) {ok = false;break;}
             gamelog += curr;
-            await game.Send(curr);
-            curr = await game.Get();
+            curr = await game.SendAndGet(curr);
+            if(curr == null) {ok = false;break;}
             gamelog += curr;
             counter++;
 
         }
 
-        if (counter < counterMax)
+        if (ok)
         {
-            curr = await game.Get();
-            gamelog += curr;
-            nextBot = Int32.Parse(curr);
-            Console.WriteLine(curr + " to jest zwyczezca");
-            //winner
+            if (counter < counterMax)
+            {
+                curr = await game.Get();
+                if (curr == null)
+                {
+                    await game.Interrupt();
+                    await InterruptAllBots();
+                    return new ErrorGameResult
+                    {
+                        BotError = false,
+                        GameError = true,
+                        ErrorGameStatus = game.GetErrorType()
+                    };
+                }
 
-        }
-        else
-        {
-            nextBot = 0;
+                gamelog += curr;
+                nextBot = Int32.Parse(curr);
+                Console.WriteLine(curr + " to jest zwyczezca");
+                //winner
+
+            }
+            else
+            {
+                nextBot = 0;
+            }
+
+            Console.WriteLine(gamelog);
+            Console.WriteLine(nextBot);
+            Console.WriteLine("jest zwyciezca");
+            var cos = botsArray[nextBot];
+            await game.Interrupt();
+            await InterruptAllBots();
+
+            return new SuccessfullGameResult()
+            {
+                BotWinner = cos
+            };
         }
 
-        Console.WriteLine(gamelog);
-        Console.WriteLine(nextBot);
-        Console.WriteLine("jest zwyciezca");
-        var cos = botsArray[nextBot];
         await game.Interrupt();
-        foreach (var bot in bots)
+        await InterruptAllBots();
+        if (game.wasErros())
         {
-            await bot.Interrupt();
+            return new ErrorGameResult()
+            {
+                GameError = true,
+                BotError = true,
+                BotErrorId = botsArray[nextBot].Id,
+                ErrorGameStatus = game.GetErrorType()
+            };
         }
-        return new SuccessfullGameResult()
+        foreach (var bot in botsArray)
         {
-            BotWinner = cos
-        };
-   
-        Console.WriteLine("game errror "+ game.getError());
-        await game.Interrupt();
-        foreach (var bot in bots)
-        {
-            Console.WriteLine("bot error"+ bot.getError());
-            await bot.Interrupt();
+            if (bots[ind].wasErros())
+            {
+                return new ErrorGameResult()
+                {
+                    BotError = true,
+                    BotErrorId = bot.Id,
+                    ErrorGameStatus = bots[ind].GetErrorType()
+                };
+            }
+            ind++;
         }
-        Console.WriteLine("errrors");
-        return new SuccessfullGameResult()
+        
+        return new ErrorGameResult()
         {
-         BotWinner = botsData[0]
-        };
-    
             
+        };
+        
     }
+    private async Task InterruptAllBots()
+    {
+        foreach (var bot in bots)
+        {
+            await bot.Interrupt();
+        }
+    }
+
+    public BotsPerformers[] GetBotsPerformers()
+    {
+        BotsPerformers[] result = new BotsPerformers[bots.Length];
+        int ind = 0;
+        foreach (var bot in botsArray)
+        {
+            result[ind] = new BotsPerformers
+            {
+                MemoryUse = bots[ind].GetMaxMemory(),
+                TimeUse = bots[ind].GetMaxTime(),
+                BotId = bot.Id
+            };
+            ind++;
+        }
+
+        return result;
+    }
+   
 }

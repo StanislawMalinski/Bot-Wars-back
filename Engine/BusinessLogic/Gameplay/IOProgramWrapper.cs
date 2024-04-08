@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using System.Runtime.InteropServices;
 using Engine.BusinessLogic.Gameplay.Interface;
 
 namespace Engine.BusinessLogic.Gameplay;
@@ -15,9 +16,12 @@ public class IOProgramWrapper : ICorespondable
     private int memorylimit;
     private int timelimit;
     private string cgroupPath;
-    private long timemax = 0 ;
+    private int timemax = 0 ;
     private int memorymax = 0;
-    //bash -c "ps -p 65 -o vsz= | grep -o '[0-9]\+'"
+    private bool isError = false;
+
+    private ErrorGameStatus _errorType= ErrorGameStatus.InternalError;
+    //bash -c "ps -p 119 -o vsz= | grep -o '[0-9]\+'"
     //apt-get install procps
     // Program Configuration parameter should be added
     public IOProgramWrapper(string path,int memorylimit,int timelimit)
@@ -44,8 +48,8 @@ public class IOProgramWrapper : ICorespondable
         {
             //ulimit -v "+memorylimit+";
             FileName = "bash",
-            
-            Arguments = "-c \"(ulimit -v 15000  ; ./"+_path+")\" ",
+            Arguments = "-c ./"+_path,
+            //Arguments = "-c \"(ulimit -v 15000  ; ./"+_path+")\" ",
             RedirectStandardInput = true,
             RedirectStandardOutput = true,
             UseShellExecute = false,
@@ -63,6 +67,7 @@ public class IOProgramWrapper : ICorespondable
         }
         catch (Exception e)
         {
+            isError = true;
             return false;
         }
 
@@ -82,11 +87,23 @@ public class IOProgramWrapper : ICorespondable
             Task timeoutTask = Task.Delay( timelimit); 
             Task completedTask = await Task.WhenAny(readLineTask, timeoutTask);
             milliseconds -= DateTimeOffset.Now.ToUnixTimeMilliseconds();
-            if (completedTask != readLineTask) return null;
+            if (completedTask != readLineTask)
+            {
+                milliseconds *= -1;
+                timemax = Math.Max((int) milliseconds, timemax);
+                memorymax = Math.Max(memorymax, GetMemory());
+                isError = true;
+                _errorType = ErrorGameStatus.TimeLimit;
+                return null;
+            }
             milliseconds *= -1;
-            timemax = Math.Max(milliseconds, timemax);
+            timemax = Math.Max((int) milliseconds, timemax);
             memorymax = Math.Max(memorymax, GetMemory());
-            if (memorymax > memorylimit) return null;
+            if (memorymax > memorylimit)
+            {
+                _errorType = ErrorGameStatus.MemoryLimit;
+                return null;
+            }
             // Line was read within the timeout period
             var cos = await readLineTask;
             
@@ -94,7 +111,7 @@ public class IOProgramWrapper : ICorespondable
         }
         catch (Exception e)
         {
-
+            isError = true;
             return null;
         }
 
@@ -107,9 +124,11 @@ public class IOProgramWrapper : ICorespondable
             try
             {
                 _process.Kill();
+                Console.WriteLine("killed "+_process.Id);
             }
             catch (Exception e)
             {
+                Console.WriteLine("not killed "+_process.Id);
                 // ignored
             }
         }
@@ -131,6 +150,8 @@ public class IOProgramWrapper : ICorespondable
         }
         catch (Exception e)
         {
+            isError = true;
+            _errorType = ErrorGameStatus.InternalError;
             return false;
         }
 
@@ -156,40 +177,15 @@ public class IOProgramWrapper : ICorespondable
         }
        
     }
-    private void HandleExit(object? sender, EventArgs e)
+
+    public bool wasErros()
     {
-        throw new Exception("Program exited");
+        return isError;
     }
 
-    private void SetMemory(string memory)
-    {
-        Process process = new Process();
-        
-        ProcessStartInfo startInfo;
-        startInfo = new ProcessStartInfo
-        {
-            FileName = "bash",
-            Arguments = "-c ulimit -v "+memory,
-            RedirectStandardInput = true,
-            RedirectStandardOutput = true,
-            UseShellExecute = false,
-            CreateNoWindow = true,
-            RedirectStandardError = true,
-            UserName = "userexe"
-
-        };
-
-
-        process.StartInfo = startInfo;
-      
-        process.Start();
-        process.WaitForExit();
-        
-    }
     
     public int GetMemory()
     {
-        Console.WriteLine("funkcja na pamięć");
         Process process = new Process();
         int pid = _process.Id;
         ProcessStartInfo startInfo;
@@ -205,17 +201,30 @@ public class IOProgramWrapper : ICorespondable
             UserName = "userexe"
         };
         
-
         process.StartInfo = startInfo;
       
         process.Start();
-        string memory = process.StandardOutput.ReadToEnd();
+        string? memory = process.StandardOutput.ReadToEnd();
         process.WaitForExit();
-        Console.WriteLine("Pobranie pamięci " + memory);
         if (memory == null || string.Empty.Equals(memory))
         {
             return 0;
         }
         return int.Parse(memory);
+    }
+
+    public int GetMaxTime()
+    {
+        return timemax;
+    }
+
+    public int GetMaxMemory()
+    {
+        return memorymax;
+    }
+
+    public ErrorGameStatus GetErrorType()
+    {
+        return _errorType;
     }
 }

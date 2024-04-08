@@ -28,11 +28,35 @@ public class GameWorker: IInvocable
         GameManager gameManager = new GameManager();
         _Task task = (await _resolver.GetTask(TaskId)).Match(x=>x.Data,x=>null);
         if (task.Status == TaskStatus.Done) return;
+        var tour = (await _resolver.GetTournament(task.OperatingOn)).Match(x=>x.Data,null);
         var botlist = (await _resolver.GetBotsInMatch(task.OperatingOn)).Match(x=>x.Data,x=>new List<Bot>());
         var game = (await _resolver.GetMatchGame(task.OperatingOn)).Match(x=>x.Data,x=>null);
-        GameResult result = await gameManager.PlayGame(game, botlist);
-        SuccessfullGameResult sr = (SuccessfullGameResult) result;
-        await _resolver.MatchWinner(task.OperatingOn, sr.BotWinner.Id, TaskId);
+        GameResult result = await gameManager.PlayGame(game, botlist,tour.MemoryLimit,tour.TimeLimit);
+        if (result is SuccessfullGameResult)
+        {
+            SuccessfullGameResult sr = (SuccessfullGameResult) result;
+            await _resolver.MatchWinner(task.OperatingOn, sr.BotWinner.Id, TaskId);
+        }
+        else
+        {
+            ErrorGameResult er = (ErrorGameResult) result;
+            if (er.GameError && er.BotError)
+            {
+                
+            }else if (!er.GameError && er.BotError)
+            {
+                
+            }else if (er.GameError && !er.BotError)
+            {
+                
+            }
+            else
+            {
+                //imposible
+            }
+        }
+       
+      
         Console.WriteLine("zakonczenie game " +TaskId);
     }
 }

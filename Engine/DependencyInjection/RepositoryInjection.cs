@@ -16,7 +16,7 @@ public static class RepositoryInjection
         serviceCollection.AddScoped<IPointsRepository, PointRepository>();
         serviceCollection.AddScoped<TournamentRepository>();
         serviceCollection.AddScoped<IUserSettingsRepository, UserSettingsRepository>();
-        serviceCollection.AddScoped<BotRepository>();
+        serviceCollection.AddScoped<IBotRepository,BotRepository>();
         serviceCollection.AddScoped<MatchRepository>();
         serviceCollection.AddScoped<TaskRepository>();
         serviceCollection.AddScoped<AchievementHandlerService>();

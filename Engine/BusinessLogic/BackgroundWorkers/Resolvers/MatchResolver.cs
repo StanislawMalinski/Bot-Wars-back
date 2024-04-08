@@ -37,4 +37,9 @@ public class MatchResolver : Resolver
     {
         return await _achievementHandlerService.MatchWinner(matchId, winner, taskId);
     }
+
+    public async Task<HandlerResult<SuccessData<Tournament>, IErrorResult>> GetTournament(long matchId)
+    {
+        return await _matchRepository.GetTournament(matchId);
+    }
 }

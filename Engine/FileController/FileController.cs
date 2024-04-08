@@ -35,6 +35,14 @@ public class FileController : Controller
         
     }
 
+    
+    [HttpPost("validationBot")]
+    public async Task<IActionResult> dosomthing2(long botId)
+    {
+        
+        return (await  _taskRepository.CreateTask(TaskTypes.ValidateBot, botId, DateTime.Now)).Match(Ok,Ok);
+        
+    }
     // TEST - if there is file with id 5 in FileGatherer it should be obtained & saved in FileSystem
     [HttpPost("test/storage")]
     public async Task<IActionResult> TestGatherer()
