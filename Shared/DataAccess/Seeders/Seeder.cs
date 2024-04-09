@@ -168,7 +168,7 @@ public class Seeder
                 Status = TournamentStatus.PLAYED,
                 Constraints = "Participants must have a minimum skill level of intermediate.",
                 Image = Convert.FromBase64String("iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAAXNSR0IArs4c6QAAADpJREFUKFPt0KERADAIBMF/j0JB/wXRCS08M/EkDeT0qqO7q7vxigAk6epI4sN10dkTEcpMVNUKzQwDWXAoJWfFnuMAAAAASUVORK5CYII="), // You can replace this with the actual image file or URL,
-                CreatorId = 1
+                CreatorId = 1, MemoryLimit = 15000,TimeLimit = 2000
             },
             new Tournament()
             {
@@ -181,7 +181,7 @@ public class Seeder
                 TournamentsDate = new DateTime(2023, 2, 15),
                 Status = TournamentStatus.PLAYED,
                 Constraints = "Participants must complete the game on a specific difficulty level.",
-                CreatorId = 2,
+                CreatorId = 2, MemoryLimit = 15000,TimeLimit = 2000,
                 Image = Convert.FromBase64String("iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAAXNSR0IArs4c6QAAADpJREFUKFPt0KERADAIBMF/j0JB/wXRCS08M/EkDeT0qqO7q7vxigAk6epI4sN10dkTEcpMVNUKzQwDWXAoJWfFnuMAAAAASUVORK5CYII=") // You can replace this with the actual image file or URL
             },
             new Tournament()
@@ -195,7 +195,7 @@ public class Seeder
                 TournamentsDate = new DateTime(2023, 3, 10),
                 Status = TournamentStatus.PLAYED,
                 Constraints = "Teams must consist of real-world players.",
-                CreatorId = 3,
+                CreatorId = 3,MemoryLimit = 15000,TimeLimit = 2000,
                 Image = Convert.FromBase64String("iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAAXNSR0IArs4c6QAAADpJREFUKFPt0KERADAIBMF/j0JB/wXRCS08M/EkDeT0qqO7q7vxigAk6epI4sN10dkTEcpMVNUKzQwDWXAoJWfFnuMAAAAASUVORK5CYII=") // You can replace this with the actual image file or URL
             },
             new Tournament()
@@ -209,7 +209,7 @@ public class Seeder
                 TournamentsDate = new DateTime(2022, 4, 5),
                 Status = TournamentStatus.PLAYED,
                 Constraints = "Players must use voice communication during the game.",
-                CreatorId = 1,
+                CreatorId = 1,MemoryLimit = 15000,TimeLimit = 2000,
                 Image = Convert.FromBase64String("iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAAXNSR0IArs4c6QAAADpJREFUKFPt0KERADAIBMF/j0JB/wXRCS08M/EkDeT0qqO7q7vxigAk6epI4sN10dkTEcpMVNUKzQwDWXAoJWfFnuMAAAAASUVORK5CYII=")
             },
             new Tournament()
@@ -223,7 +223,7 @@ public class Seeder
                 TournamentsDate = new DateTime(2023, 5, 20),
                 Status = TournamentStatus.PLAYED,
                 Constraints = "Builds must adhere to a specific theme.",
-                CreatorId = 1,
+                CreatorId = 1,MemoryLimit = 15000,TimeLimit = 2000,
                 Image = Convert.FromBase64String("iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAAXNSR0IArs4c6QAAADpJREFUKFPt0KERADAIBMF/j0JB/wXRCS08M/EkDeT0qqO7q7vxigAk6epI4sN10dkTEcpMVNUKzQwDWXAoJWfFnuMAAAAASUVORK5CYII=")
             },
             new Tournament()
@@ -237,7 +237,7 @@ public class Seeder
                 TournamentsDate = new DateTime(2022, 6, 15),
                 Status = TournamentStatus.PLAYED,
                 Constraints = "Participants must customize their character's appearance.",
-                CreatorId = 3,
+                CreatorId = 3,MemoryLimit = 15000,TimeLimit = 2000,
                 Image = Convert.FromBase64String("iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAAXNSR0IArs4c6QAAADpJREFUKFPt0KERADAIBMF/j0JB/wXRCS08M/EkDeT0qqO7q7vxigAk6epI4sN10dkTEcpMVNUKzQwDWXAoJWfFnuMAAAAASUVORK5CYII=")
             },
             new Tournament()
@@ -251,7 +251,7 @@ public class Seeder
                 TournamentsDate = new DateTime(2023, 7, 1),
                 Status = TournamentStatus.PLAYED,
                 Constraints = "Teams must consist of three players.",
-                CreatorId = 2,
+                CreatorId = 2,MemoryLimit = 15000,TimeLimit = 2000,
                 Image = Convert.FromBase64String("iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAAXNSR0IArs4c6QAAADpJREFUKFPt0KERADAIBMF/j0JB/wXRCS08M/EkDeT0qqO7q7vxigAk6epI4sN10dkTEcpMVNUKzQwDWXAoJWfFnuMAAAAASUVORK5CYII=")
             },
             new Tournament()
@@ -265,7 +265,7 @@ public class Seeder
                 TournamentsDate = new DateTime(2023, 8, 10),
                 Status = TournamentStatus.PLAYED,
                 Constraints = "Players must adhere to the battle royale ruleset.",
-                CreatorId = 2,
+                CreatorId = 2,MemoryLimit = 15000,TimeLimit = 2000,
                 Image = Convert.FromBase64String("iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAAXNSR0IArs4c6QAAADpJREFUKFPt0KERADAIBMF/j0JB/wXRCS08M/EkDeT0qqO7q7vxigAk6epI4sN10dkTEcpMVNUKzQwDWXAoJWfFnuMAAAAASUVORK5CYII=")
             },
             new Tournament()
@@ -279,7 +279,7 @@ public class Seeder
                 TournamentsDate = new DateTime(2023, 9, 5),
                 Status = TournamentStatus.PLAYED,
                 Constraints = "Islands must be designed within a specific theme.",
-                CreatorId = 3,
+                CreatorId = 3,MemoryLimit = 15000,TimeLimit = 2000,
                 Image = Convert.FromBase64String("iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAAXNSR0IArs4c6QAAADpJREFUKFPt0KERADAIBMF/j0JB/wXRCS08M/EkDeT0qqO7q7vxigAk6epI4sN10dkTEcpMVNUKzQwDWXAoJWfFnuMAAAAASUVORK5CYII=")
             },
             new Tournament()
@@ -293,7 +293,7 @@ public class Seeder
                 TournamentsDate = new DateTime(2023, 10, 20),
                 Status = TournamentStatus.PLAYED,
                 Constraints = "Teams must adhere to the standard Dota 2 competitive rules.",
-                CreatorId = 1,
+                CreatorId = 1,MemoryLimit = 15000,TimeLimit = 2000,
                 Image = Convert.FromBase64String("iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAAXNSR0IArs4c6QAAADpJREFUKFPt0KERADAIBMF/j0JB/wXRCS08M/EkDeT0qqO7q7vxigAk6epI4sN10dkTEcpMVNUKzQwDWXAoJWfFnuMAAAAASUVORK5CYII=")
             }
         };
@@ -303,16 +303,16 @@ public class Seeder
     {
         return new List<Bot>()
         {
-            new Bot() { Id = 1, GameId = 1, PlayerId = 1, BotFile = "quake3_bot_1", FileId = 2 },
-            new Bot() { Id = 2, GameId = 1, PlayerId = 2, BotFile = "quake3_bot_2", FileId = 3 },
-            new Bot() { Id = 3, GameId = 2, PlayerId = 3, BotFile = "zelda_bot_1", FileId = 2 },
-            new Bot() { Id = 4, GameId = 2, PlayerId = 4, BotFile = "zelda_bot_2", FileId = 2 },
-            new Bot() { Id = 5, GameId = 3, PlayerId = 5, BotFile = "fifa22_bot_1", FileId = 4 },
-            new Bot() { Id = 6, GameId = 3, PlayerId = 6, BotFile = "fifa22_bot_2", FileId = 2 },
-            new Bot() { Id = 7, GameId = 4, PlayerId = 7, BotFile = "amongus_bot_1", FileId = 3 },
-            new Bot() { Id = 8, GameId = 4, PlayerId = 8, BotFile = "amongus_bot_2", FileId = 4 },
-            new Bot() { Id = 9, GameId = 5, PlayerId = 9, BotFile = "minecraft_bot_1", FileId = 2 },
-            new Bot() { Id = 10, GameId = 5, PlayerId = 10, BotFile = "minecraft_bot_2", FileId = 4 }
+            new Bot() { Id = 1, GameId = 1, PlayerId = 1, BotFile = "quake3_bot_1", FileId = 2,MemoryUsed = 8000 ,TimeUsed = 100},
+            new Bot() { Id = 2, GameId = 1, PlayerId = 2, BotFile = "quake3_bot_2", FileId = 3 ,MemoryUsed = 8000 ,TimeUsed = 100},
+            new Bot() { Id = 3, GameId = 2, PlayerId = 3, BotFile = "zelda_bot_1", FileId = 2 ,MemoryUsed = 8000 ,TimeUsed = 100},
+            new Bot() { Id = 4, GameId = 2, PlayerId = 4, BotFile = "zelda_bot_2", FileId = 2 ,MemoryUsed = 8000 ,TimeUsed = 100},
+            new Bot() { Id = 5, GameId = 3, PlayerId = 5, BotFile = "fifa22_bot_1", FileId = 4,MemoryUsed = 8000 ,TimeUsed = 100 },
+            new Bot() { Id = 6, GameId = 3, PlayerId = 6, BotFile = "fifa22_bot_2", FileId = 2,MemoryUsed = 8000 ,TimeUsed = 100 },
+            new Bot() { Id = 7, GameId = 4, PlayerId = 7, BotFile = "amongus_bot_1", FileId = 3 ,MemoryUsed = 8000 ,TimeUsed = 100},
+            new Bot() { Id = 8, GameId = 4, PlayerId = 8, BotFile = "amongus_bot_2", FileId = 4 ,MemoryUsed = 8000 ,TimeUsed = 100},
+            new Bot() { Id = 9, GameId = 5, PlayerId = 9, BotFile = "minecraft_bot_1", FileId = 2 ,MemoryUsed = 8000 ,TimeUsed = 100},
+            new Bot() { Id = 10, GameId = 5, PlayerId = 10, BotFile = "minecraft_bot_2", FileId = 4 ,MemoryUsed = 8000 ,TimeUsed = 100}
         };
     }
 
