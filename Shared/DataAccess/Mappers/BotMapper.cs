@@ -22,7 +22,10 @@ public class BotMapper : IBotMapper
             Id = bot.Id,
             PlayerId = bot.PlayerId,
             GameId = bot.GameId,
-            FileId = bot.FileId
+            FileId = bot.FileId,
+            Validation = bot.Validation.ToString(),
+            MemoryUsed = bot.MemoryUsed,
+            TimeUsed = bot.TimeUsed
         };
     }
 }

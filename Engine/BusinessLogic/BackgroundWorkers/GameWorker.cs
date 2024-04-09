@@ -42,17 +42,17 @@ public class GameWorker: IInvocable
             ErrorGameResult er = (ErrorGameResult) result;
             if (er.GameError && er.BotError)
             {
-                
+                await _resolver.GameAndBotFiled(task.OperatingOn, er.BotErrorId, TaskId, game.Id);
             }else if (!er.GameError && er.BotError)
             {
-                
+                await _resolver.BotFiled(task.OperatingOn, er.BotErrorId, TaskId);
             }else if (er.GameError && !er.BotError)
             {
-                
+                await _resolver.GameFiled(task.OperatingOn,TaskId,game.Id);
             }
             else
             {
-                //imposible
+                //impossible
             }
         }
        

@@ -190,4 +190,11 @@ public class GameRepository : IGameRepository
             Data = resGame
         };
     }
+    
+    public async Task<HandlerResult<Success, IErrorResult>> GameNotAvailableForPlay(long gameId)
+    {
+        var res = await _dataContext.Games.FindAsync(gameId);
+        res.IsAvailableForPlay = false;
+        return new Success();
+    }
 }
