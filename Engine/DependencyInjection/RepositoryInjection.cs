@@ -1,4 +1,6 @@
 ﻿using Engine.BusinessLogic.BackgroundWorkers.Resolvers;
+using Microsoft.AspNetCore.Authorization;
+using Shared.DataAccess.AuthorizationRequirements;
 using Shared.DataAccess.Repositories;
 using Shared.DataAccess.RepositoryInterfaces;
 
@@ -20,6 +22,9 @@ public static class RepositoryInjection
         serviceCollection.AddScoped<MatchRepository>();
         serviceCollection.AddScoped<TaskRepository>();
         serviceCollection.AddScoped<AchievementHandlerService>();
+        
+        
+        
         return serviceCollection;
     }
 }
