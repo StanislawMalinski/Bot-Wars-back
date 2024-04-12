@@ -1,3 +1,5 @@
+using Microsoft.AspNetCore.Http;
+using Shared.DataAccess.DAO;
 using Shared.DataAccess.DataBaseEntities;
 using Shared.DataAccess.DTO.Requests;
 using Shared.DataAccess.DTO.Responses;
@@ -14,4 +16,5 @@ public interface IBotService
     Task<HandlerResult<Success, IErrorResult>> AddBot(BotRequest botRequest,long playerId);
     Task<HandlerResult<Success, IErrorResult>> DeleteBot(long botId);
     Task<HandlerResult<SuccessData<List<BotResponse>>, IErrorResult>> GetBotsForPlayer(long playerId);
+    Task<HandlerResult<SuccessData<IFormFile>, IErrorResult>>GetBotFileForPlayer(long playerId, long botId);
 }

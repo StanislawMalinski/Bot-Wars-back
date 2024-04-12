@@ -52,4 +52,9 @@ public class BotController : Controller
     {
         return (await _botService.GetBotsForPlayer(playerId)).Match(Ok, this.ErrorResult);
     }
+    [HttpGet("getBotFileForPlayer")]
+    public async Task<IActionResult> GetBotFileForPlayer([FromQuery] long playerId, [FromQuery] long botId)
+    {
+        return (await _botService.GetBotFileForPlayer(playerId, botId)).Match(Ok, this.ErrorResult);
+    }
 }

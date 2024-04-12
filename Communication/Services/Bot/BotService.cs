@@ -1,4 +1,6 @@
-﻿using Shared.DataAccess.DTO.Requests;
+﻿using Microsoft.AspNetCore.Http;
+using Shared.DataAccess.DAO;
+using Shared.DataAccess.DTO.Requests;
 using Shared.DataAccess.DTO.Responses;
 using Shared.DataAccess.RepositoryInterfaces;
 using Shared.Results;
@@ -39,5 +41,10 @@ public class BotService : IBotService
     public async Task<HandlerResult<SuccessData<List<BotResponse>>, IErrorResult>> GetBotsForPlayer(long playerId)
     {
         return await _botRepository.GetBotsForPlayer(playerId);
+    }
+
+    public async Task<HandlerResult<SuccessData<IFormFile>, IErrorResult>> GetBotFileForPlayer(long playerId, long botId)
+    {
+        return await _botRepository.GetBotFileForPlayer(playerId, botId);
     }
 }

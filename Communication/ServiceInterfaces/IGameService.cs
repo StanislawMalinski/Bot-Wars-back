@@ -17,8 +17,10 @@ namespace Shared.DataAccess.RepositoryInterfaces
 
         Task<HandlerResult<Success,IErrorResult>> DeleteGame(long id);
 
-        Task<HandlerResult<Success,IErrorResult>> CreateGameType(long userId,GameRequest gameRequest);
+        Task<HandlerResult<Success,IErrorResult>> CreateGameType(long? userId,GameRequest gameRequest);
         Task<HandlerResult<SuccessData<List<GameResponse>>, IErrorResult>> GetListOfTypesOfAvailableGames();
         Task<HandlerResult<SuccessData<List<GameResponse>>, IErrorResult>> Search(string? name);
+        Task<HandlerResult<SuccessData<List<GameResponse>>, IErrorResult>> GetGamesByPlayer(string? name);
+        
     }
 }
