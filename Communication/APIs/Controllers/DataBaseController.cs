@@ -20,10 +20,10 @@ public class DataBaseController : Controller
     [HttpGet("reset")]
     public async Task<IActionResult> reset()
     {
-        if (!_env.IsDevelopment())
-        {
-            return NotFound();
-        }
+        // if (!_env.IsDevelopment())
+        // {
+        //     return NotFound();
+        // }
         
         var pendingMigrations = await _dataContext.Database.GetPendingMigrationsAsync();
         if (pendingMigrations.Any())
@@ -42,10 +42,10 @@ public class DataBaseController : Controller
     [HttpDelete("delete")]
     public async Task<IActionResult> delete()
     {
-        if (!_env.IsDevelopment())
-        {
-            return NotFound();
-        }
+        // if (!_env.IsDevelopment())
+        // {
+        //     return NotFound();
+        // }
         await _dataContext.Database.EnsureDeletedAsync();
         
         return Ok();
