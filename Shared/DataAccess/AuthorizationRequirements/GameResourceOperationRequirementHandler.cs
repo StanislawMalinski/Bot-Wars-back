@@ -4,10 +4,10 @@ using Shared.DataAccess.DataBaseEntities;
 
 namespace Shared.DataAccess.AuthorizationRequirements;
 
-public class BotResourceOperationRequirementHandler: AuthorizationHandler<ResourceOperationRequirement, Bot>
+public class GameResourceOperationRequirementHandler : AuthorizationHandler<ResourceOperationRequirement, Game>
 {
     protected override Task HandleRequirementAsync(AuthorizationHandlerContext context, ResourceOperationRequirement requirement,
-        Bot resource)
+        Game resource)
     {
         if (requirement.ResourceOperation == ResourceOperation.Read ||
             requirement.ResourceOperation == ResourceOperation.Create)
@@ -24,7 +24,7 @@ public class BotResourceOperationRequirementHandler: AuthorizationHandler<Resour
             return Task.CompletedTask;
         }
         
-        if (resource.PlayerId == int.Parse(userId) || userRoleName.Equals("Admin"))
+        if (resource.CreatorId == int.Parse(userId) || userRoleName.Equals("Admin"))
         {
             context.Succeed(requirement);
         }

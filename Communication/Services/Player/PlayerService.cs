@@ -78,7 +78,6 @@ public class PlayerService : IPlayerService
 
     public async Task<HandlerResult<Success, IErrorResult>> ChangePassword(ChangePasswordRequest request, long ?playerId)
     {
-        long id = 5;
         return await _playerRepository.ChangePassword(request, playerId);
     }
 
@@ -160,6 +159,11 @@ public class PlayerService : IPlayerService
     public async Task<HandlerResult<SuccessData<PlayerInfo>, IErrorResult>> GetPlayerInfoAsync(long ?playerId)
     {
         return await _playerRepository.GetPlayerInfoAsync(playerId);
+    }
+
+    public async Task<HandlerResult<SuccessData<PlayerInfo>, IErrorResult>> GetPlayerInfoAsync(string? playerName)
+    {
+        return await _playerRepository.GetPlayerInfoAsync(playerName);
     }
 
     public async Task<HandlerResult<SuccessData<List<GameSimpleResponse>>, IErrorResult>> GetGamesForPlayer(long playerId)

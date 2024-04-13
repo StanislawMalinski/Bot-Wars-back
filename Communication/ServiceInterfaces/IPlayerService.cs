@@ -17,8 +17,9 @@ public interface IPlayerService
     Task<HandlerResult<Success, IErrorResult>> ChangePassword(ChangePasswordRequest request, long? playerId);
     Task<HandlerResult<Success, IErrorResult>> ChangeLogin(ChangeLoginRequest request, long? playerId);
     Task<HandlerResult<SuccessData<string>, IErrorResult>> GenerateJwt(LoginDto dto);
-    Task<HandlerResult<SuccessData<PlayerInfo>, IErrorResult>> GetPlayerInfoAsync(long? playerId);
     Task<HandlerResult<SuccessData<List<GameSimpleResponse>>, IErrorResult>> GetGamesForPlayer(long playerId);
+    Task<HandlerResult<SuccessData<PlayerInfo>, IErrorResult>> GetPlayerInfoAsync(long ?playerId);
+    Task<HandlerResult<SuccessData<PlayerInfo>, IErrorResult>> GetPlayerInfoAsync(string ?playerName);
     Task<HandlerResult<Success, IErrorResult>> ChangePlayerImage(PlayerImageRequest imageRequest, long playerId);
     Task<HandlerResult<SuccessData<string>, IErrorResult>> GetPlayerImage(long playerId);
     Task<HandlerResult<Success, IErrorResult>> DeletePlayerAsync(long id);

@@ -43,7 +43,14 @@ namespace Communication.APIs.Controllers
         {
             return (await _playerService.GetPlayerInfoAsync(playerId)).Match(Ok, this.ErrorResult);
         }
-
+        
+        [HttpGet("GetPlayerInfoByName")]
+        [Authorize(Roles = "User,Admin")]
+        public async Task<IActionResult> GetPlayerInfoByName(string playerName)
+        {
+            return (await _playerService.GetPlayerInfoAsync(playerName)).Match(Ok, this.ErrorResult);
+        }
+        
         [HttpPost("changePassword")]
         [Authorize(Roles = "User,Admin")]
         public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordRequest changePasswordRequest)

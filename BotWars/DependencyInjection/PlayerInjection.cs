@@ -22,6 +22,7 @@ public static class PlayerInjection
         serviceCollection.AddScoped<IUserContextRepository, UserContextRepository>();
         serviceCollection.AddScoped<IAuthorizationHandler, RoleNameToCreateAdminReqirementHandler>();
         serviceCollection.AddScoped<IAuthorizationHandler, BotResourceOperationRequirementHandler>();
+        serviceCollection.AddScoped<IAuthorizationHandler, GameResourceOperationRequirementHandler>();
         return serviceCollection;
     }
 }

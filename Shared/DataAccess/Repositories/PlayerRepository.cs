@@ -330,6 +330,35 @@ namespace Shared.DataAccess.Repositories
             };
         }
 
+        public async Task<HandlerResult<SuccessData<PlayerInfo>, IErrorResult>> GetPlayerInfoAsync(string? playerName)
+        {
+            if (playerName is null)
+            {
+                return new EntityNotFoundErrorResult();
+            }
+
+            var player = await _dataContext.Players.FirstOrDefaultAsync(p => p.Login.Equals(playerName));
+
+            if (player is null)
+            {
+                return new EntityNotFoundErrorResult();
+            }
+
+            PlayerInfo playerInfo = new PlayerInfo
+            {
+                Login = player.Login,
+                Registered = player.Registered,
+                Point = player.Points,
+                Id = player.Id
+            };
+            playerInfo.BotsNumber = _dataContext.Bots.Count(x => x.PlayerId == player.Id);
+            playerInfo.TournamentNumber = _dataContext.Tournaments.Count(x => x.CreatorId == player.Id);
+            return new SuccessData<PlayerInfo>()
+            {
+                Data = playerInfo
+            };
+        }
+
         public async Task<HandlerResult<SuccessData<List<GameSimpleResponse>>, IErrorResult>> GetMyGames(long playerId)
         {
             

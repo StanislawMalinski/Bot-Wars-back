@@ -48,7 +48,7 @@ public class AchievementsRepository : IAchievementsRepository
         {
             result.AddRange((await _dataContext.AchievementThresholds.Where(x=>x.Threshold<=var.Value&& x.AchievementTypeId == var.AchievementTypeId).ToListAsync()).ConvertAll(x=>_recordMapper.ToDto(var,x)));
         }
-
+        result.Sort((x,y) => y.Value.CompareTo(x.Value));
         return new SuccessData<List<AchievementRecordDto>>
         {
             Data = result
