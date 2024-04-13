@@ -10,9 +10,8 @@ namespace Shared.DataAccess.RepositoryInterfaces;
 public interface IPointsRepository
 {
     Task<HandlerResult<SuccessData<List<PointHistoryDto>>, IErrorResult>> GetHistoryForPlayer(long playerId);
-    //Task<HandlerResult<Success,IErrorResult>> SetPointsForPlayer(long playerId, long points);
     Task<HandlerResult<SuccessData<long>,IErrorResult>> GetCurrentPointsForPlayer(long playerId);
-    Task<HandlerResult<SuccessData<List<PlayerResponse>>,IErrorResult>> GetLeaderboards();
+    Task<HandlerResult<SuccessData<List<PlayerResponse>>,IErrorResult>> GetLeaderboards(int page, int pagesize);
     Task<HandlerResult<SuccessData<long>, IErrorResult>> GetPlayerPoint(long playerId);
     Task<HandlerResult<Success, IErrorResult>> UpdatePointsForPlayerNoSave(long playerId, long points,long tourId);
 }

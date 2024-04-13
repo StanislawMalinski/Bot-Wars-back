@@ -12,7 +12,7 @@ namespace Shared.DataAccess.RepositoryInterfaces
         public Task<HandlerResult<SuccessData<List<TournamentResponse>>, IErrorResult>> GetListOfTournaments();
 
         public Task<HandlerResult<SuccessData<List<TournamentResponse>>, IErrorResult>> GetListOfTournamentsFiltered(
-            TournamentFilterRequest tournamentFilterRequest);
+            TournamentFilterRequest tournamentFilterRequest, int page, int pagesize);
 
         public Task<HandlerResult<SuccessData<TournamentResponse>, IErrorResult>> GetTournament(long id);
 

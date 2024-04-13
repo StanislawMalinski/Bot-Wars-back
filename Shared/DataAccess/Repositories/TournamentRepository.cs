@@ -431,7 +431,7 @@ namespace Shared.DataAccess.Repositories
         }
 
         public async Task<HandlerResult<SuccessData<List<TournamentResponse>>, IErrorResult>>
-            GetFilteredTournamentsAsync(TournamentFilterRequest tournamentFilterRequest)
+            GetFilteredTournamentsAsync(TournamentFilterRequest tournamentFilterRequest, int page, int pagesize)
         {
             var unfilteredTournaments = _dataContext
                 .Tournaments.Include(tournament => tournament.Creator)
@@ -462,23 +462,33 @@ namespace Shared.DataAccess.Repositories
                     tournament.TournamentTitle.Contains(tournamentFilterRequest.TournamentTitle));
             }
 
-            var filteredTournaments = await unfilteredTournaments
-                .Select(tournament => _mapper.TournamentToTournamentResponse(tournament))
-                .ToListAsync();
-
             if (tournamentFilterRequest.UserParticipation == null)
             {
+                var tournaments = await unfilteredTournaments
+                   .Select(tournament => _mapper.TournamentToTournamentResponse(tournament))
+                   .Skip(page * pagesize)
+                   .Take(pagesize)
+                   .ToListAsync();
                 return new SuccessData<List<TournamentResponse>>()
                 {
-                    Data = filteredTournaments
+                    Data = tournaments
                 };
             }
 
+            var filteredTournaments = await unfilteredTournaments
+                   .Select(tournament => _mapper.TournamentToTournamentResponse(tournament))
+                   .ToListAsync();
             var filteredTournamentList = new List<TournamentResponse>();
+            int skipped = 0;
             foreach (var tournamentResponse in filteredTournaments)
             {
                 if ((await PlayerParticipate(tournamentResponse.Id, tournamentFilterRequest.UserParticipation))
-                    .IsSuccess) filteredTournamentList.Add(tournamentResponse);
+                    .IsSuccess)
+                {
+                    if (skipped++ < page * pagesize) { continue; }
+                    filteredTournamentList.Add(tournamentResponse);
+                    if (filteredTournamentList.Count >= pagesize) { break; }
+                }
             }
 
             return new SuccessData<List<TournamentResponse>>()

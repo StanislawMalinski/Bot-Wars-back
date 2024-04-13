@@ -10,7 +10,6 @@ using Shared.Results.SuccessResults;
 
 namespace Communication.Services.Tournament
 {
-    // created to test state pattern implementation in TournamentService
     public class TournamentService : ITournamentService
     {
         private readonly TournamentRepository _tournamentRepository;
@@ -49,9 +48,9 @@ namespace Communication.Services.Tournament
 
         public async Task<HandlerResult<SuccessData<List<TournamentResponse>>, IErrorResult>>
             GetListOfTournamentsFiltered(
-                TournamentFilterRequest tournamentFilterRequest)
+                TournamentFilterRequest tournamentFilterRequest, int page, int pagesize)
         {
-            return await _tournamentRepository.GetFilteredTournamentsAsync(tournamentFilterRequest);
+            return await _tournamentRepository.GetFilteredTournamentsAsync(tournamentFilterRequest, page, pagesize);
         }
 
         public async Task<HandlerResult<SuccessData<TournamentResponse>, IErrorResult>> GetTournament(long id)
