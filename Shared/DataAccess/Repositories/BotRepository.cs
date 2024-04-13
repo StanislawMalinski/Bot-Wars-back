@@ -28,17 +28,18 @@ public class BotRepository : IBotRepository
 
     // move to config
     private readonly string _gathererEndpoint = "http://host.docker.internal:7002/api/Gatherer";
-    private readonly IAuthorizationService _authorizationService;
-    private readonly IUserContextRepository _userContextRepository;
+    //private readonly IAuthorizationService _authorizationService;
+    //private readonly IUserContextRepository _userContextRepository;
 
     public BotRepository(DataContext dataContext,
         IBotMapper botMapper,
-        HttpClient httpClient,
-        IAuthorizationService authorizationService,
-        IUserContextRepository userContextRepository)
+        HttpClient httpClient
+        //IAuthorizationService authorizationService,
+        //IUserContextRepository userContextRepository
+        )
     {
-        _userContextRepository = userContextRepository;
-        _authorizationService = authorizationService;
+        //_userContextRepository = userContextRepository;
+        //_authorizationService = authorizationService;
         _dataContext = dataContext;
         _botMapper = botMapper;
         _httpClient = httpClient;
@@ -134,7 +135,7 @@ public class BotRepository : IBotRepository
         var bot = await _dataContext
             .Bots
             .FirstOrDefaultAsync(bot => bot.PlayerId == playerId && bot.Id == botId);
-
+        /*
         var authorizationResult = _authorizationService.AuthorizeAsync(_userContextRepository.GetUser(),
             bot,
             new ResourceOperationRequirement(ResourceOperation.ReadRestricted)).Result;
@@ -142,7 +143,7 @@ public class BotRepository : IBotRepository
         if (!authorizationResult.Succeeded)
         {
             return new UnauthorizedError();
-        }
+        }*/
         
         if (bot == null)
         {
@@ -237,14 +238,14 @@ public class BotRepository : IBotRepository
     public async Task<HandlerResult<Success, IErrorResult>> DeleteBot(long botId)
     {
         var bot = await _dataContext.Bots.FindAsync(botId);
-        var authorizationResult = _authorizationService.AuthorizeAsync(_userContextRepository.GetUser(),
+        /*var authorizationResult = _authorizationService.AuthorizeAsync(_userContextRepository.GetUser(),
             bot,
             new ResourceOperationRequirement(ResourceOperation.Delete)).Result;
         
         if (!authorizationResult.Succeeded)
         {
             return new UnauthorizedError();
-        }
+        }*/
         if (bot == null) return new EntityNotFoundErrorResult();
         _dataContext.Bots.Remove(bot);
         await _dataContext.SaveChangesAsync();
