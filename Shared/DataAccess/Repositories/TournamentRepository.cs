@@ -22,16 +22,12 @@ namespace Shared.DataAccess.Repositories
         private readonly DataContext _dataContext;
         private readonly ITournamentMapper _mapper;
         private readonly IAchievementsRepository _achievementsRepository;
-        private readonly IAuthorizationService _authorizationService;
-        private readonly IUserContextRepository _userContextRepository;
         public TournamentRepository(DataContext dataContext, ITournamentMapper mapper,
-            IAchievementsRepository achievementsRepository, IAuthorizationService authorizationService, IUserContextRepository userContextRepository)
+            IAchievementsRepository achievementsRepository)
         {
             _dataContext = dataContext;
             _mapper = mapper;
             _achievementsRepository = achievementsRepository;
-            _authorizationService = authorizationService;
-            _userContextRepository = userContextRepository;
         }
 
         public async Task<HandlerResult<Success, IErrorResult>> CreateTournamentAsync(long userId,
@@ -75,12 +71,10 @@ namespace Shared.DataAccess.Repositories
                     Message = $"Tournament of id {id} does not exist"
                 };
 
-            var authorizationResult = _authorizationService.AuthorizeAsync(_userContextRepository.GetUser(),
-                2,
-                new RoleNameToCreateAdminRequirement("Admin")).Result;
+            var authorizationResult = await _dataContext.Players.FindAsync(playerId);
             
             Console.WriteLine("tutaj wchodz, więc problem z creatorem");
-            if (tournament.Creator.Id != playerId && !authorizationResult.Succeeded)
+            if (tournament.Creator.Id != playerId && authorizationResult.RoleId != 2)
             {
                 return new NotTournamentCreatorError()
                 {
@@ -172,12 +166,10 @@ namespace Shared.DataAccess.Repositories
                     Title = "EntityNotFoundErrorResult 404",
                     Message = $"Tournament of id {id} does not exist"
                 };
+
+            var authorizationResult = await _dataContext.Players.FindAsync(playerId);
             
-            var authorizationResult = _authorizationService.AuthorizeAsync(_userContextRepository.GetUser(),
-                2,
-                new RoleNameToCreateAdminRequirement("Admin")).Result;
-            
-            if (tournamentToEdit.Creator.Id != playerId && !authorizationResult.Succeeded)
+            if (tournamentToEdit.Creator.Id != playerId && authorizationResult.RoleId != 2)
             {
                 return new NotTournamentCreatorError()
                 {

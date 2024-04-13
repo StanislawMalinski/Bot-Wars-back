@@ -159,16 +159,56 @@ public class MatchRepository
     public async Task<HandlerResult<Success, IErrorResult>> Winner(long matchId, long winner, long taskId)
     {
         var result = await _dataContext.Matches.FirstOrDefaultAsync(x => x.Id == matchId);
-        var TaskDone = await _dataContext.Tasks.FirstOrDefaultAsync(x => x.Id == taskId);
-        if (result == null || TaskDone == null) return new EntityNotFoundErrorResult();
+        var taskDone = await _dataContext.Tasks.FirstOrDefaultAsync(x => x.Id == taskId);
+        if (result == null || taskDone == null) return new EntityNotFoundErrorResult();
         //await _dataContext.SaveChangesAsync();
-        TaskDone.Status = TaskStatus.Done;
+        taskDone.Status = TaskStatus.Done;
         result.Played = DateTime.Now;
         result.Status = GameStatus.Played;
         result.Winner = winner;
         await _achievementsRepository.UpDateProgressNoSave(AchievementsTypes.GamePlayed, winner);
         await _achievementsRepository.UpDateProgressNoSave(AchievementsTypes.WinGames, winner);
         var bots = await _dataContext.MatchPlayers.Where(x => x.MatchId == matchId && x.BotId != winner).ToListAsync();
+        foreach (var bot in bots)
+        {
+            await _achievementsRepository.UpDateProgressNoSave(AchievementsTypes.GamePlayed, bot.Id);
+        }
+        
+        await _dataContext.SaveChangesAsync();
+        return new Success();
+    }
+    
+    public async Task<HandlerResult<Success, IErrorResult>> GameFiled(long matchId, long taskId)
+    {
+        var result = await _dataContext.Matches.FirstOrDefaultAsync(x => x.Id == matchId);
+        var taskDone = await _dataContext.Tasks.FirstOrDefaultAsync(x => x.Id == taskId);
+        if (result == null || taskDone == null) return new EntityNotFoundErrorResult();
+        //await _dataContext.SaveChangesAsync();
+        var random = await _dataContext.MatchPlayers.FirstOrDefaultAsync(x => x.MatchId == matchId);
+        taskDone.Status = TaskStatus.Done;
+        result.Played = DateTime.Now;
+        result.Status = GameStatus.Played;
+        result.Winner = random!.Id;
+        
+        
+        await _dataContext.SaveChangesAsync();
+        return new Success();
+    }
+    
+    public async Task<HandlerResult<Success, IErrorResult>> Loser(long matchId, long loser, long taskId)
+    {
+        var result = await _dataContext.Matches.FirstOrDefaultAsync(x => x.Id == matchId);
+        var taskDone = await _dataContext.Tasks.FirstOrDefaultAsync(x => x.Id == taskId);
+        if (result == null || taskDone == null) return new EntityNotFoundErrorResult();
+        var winner = await _dataContext.MatchPlayers.FirstOrDefaultAsync(x => x.MatchId == matchId && x.BotId != loser);
+        //await _dataContext.SaveChangesAsync();
+        taskDone.Status = TaskStatus.Done;
+        result.Played = DateTime.Now;
+        result.Status = GameStatus.Played;
+        result.Winner = winner.Id;
+        await _achievementsRepository.UpDateProgressNoSave(AchievementsTypes.GamePlayed, winner.Id);
+        await _achievementsRepository.UpDateProgressNoSave(AchievementsTypes.WinGames, winner.Id);
+        var bots = await _dataContext.MatchPlayers.Where(x => x.MatchId == matchId && x.BotId != winner.Id).ToListAsync();
         foreach (var bot in bots)
         {
             await _achievementsRepository.UpDateProgressNoSave(AchievementsTypes.GamePlayed, bot.Id);
@@ -326,6 +366,7 @@ public class MatchRepository
             Data = result.PlayerId
         };
     } 
+    
     
   
     

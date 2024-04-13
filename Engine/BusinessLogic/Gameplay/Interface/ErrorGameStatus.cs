@@ -7,5 +7,7 @@ public enum ErrorGameStatus
     GameExited,
     InvalidGameOutput,
     GameTimedOut,
-    InternalError
+    InternalError,
+    MemoryLimit,
+    TimeLimit
 }

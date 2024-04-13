@@ -14,6 +14,8 @@ public class TournamentResponse
     public string? Constraints { get; set; }
     public string Image { get; set; }
     public bool WasPlayedOut { get; set; }
+    public int MemoryLimit { get; set; }
+    public int TimeLimit { get; set; }
     
     public List<long>? MatchIds { get; set; }
     public List<long>? BotIds { get; set; }

@@ -18,4 +18,6 @@ public interface IGameRepository
     public Task<HandlerResult<Success, IErrorResult>> ModifyGameType(long id, GameRequest gameRequest);
     public Task<HandlerResult<SuccessData<List<GameResponse>>, IErrorResult>> GetAvailableGames(int page, int pagesize);
     public Task<HandlerResult<SuccessData<List<GameResponse>>, IErrorResult>> Search(string? name, int page, int pagesize);
+    public Task<HandlerResult<Success, IErrorResult>> GameNotAvailableForPlay(long gameId);
+    public Task<HandlerResult<SuccessData<List<GameResponse>>, IErrorResult>> GetGamesByPlayer(string? name);
 }

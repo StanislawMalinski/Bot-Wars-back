@@ -21,7 +21,9 @@ namespace Shared.DataAccess.Mappers
                 TournamentsDate = dto.TournamentsDate,
                 //Status = dto.WasPlayedOut,
                 Constraints = dto.Constrains,
-                Image = Convert.FromBase64String(dto.Image)
+                Image = Convert.FromBase64String(dto.Image),
+                MemoryLimit = dto.MemoryLimit,
+                TimeLimit = dto.TimeLimit
             };
         }
 
@@ -38,6 +40,8 @@ namespace Shared.DataAccess.Mappers
                 PostedDate = tournament.PostedDate,
                 TournamentsDate = tournament.TournamentsDate,
                 Constrains = tournament.Constraints,
+                MemoryLimit = tournament.MemoryLimit,
+                TimeLimit = tournament.TimeLimit
             };
             if (tournament.Image != null)
             {
@@ -59,6 +63,8 @@ namespace Shared.DataAccess.Mappers
                 PostedDate = tournament.PostedDate,
                 RankingType = tournament.RankingType,
                 Constraints = tournament.Constraints,
+                MemoryLimit = tournament.MemoryLimit,
+                TimeLimit = tournament.TimeLimit,
                 MatchIds = tournament.Matches?
                     .Select(match => match.Id)
                     .ToList(),
@@ -87,6 +93,8 @@ namespace Shared.DataAccess.Mappers
                 PostedDate = DateTime.Now,
                 TournamentsDate = tournamentRequest.TournamentsDate,
                 Status = TournamentStatus.SCHEDULED,
+                MemoryLimit = tournamentRequest.MemoryLimit,
+                TimeLimit = tournamentRequest.TimeLimit,
                 Constraints = tournamentRequest.Constraints,
             };
 

@@ -41,13 +41,16 @@ public class TScheduler: IInvocable
                     if ((await _schedulerRepository.Taskdoing(t.Id)).IsSuccess)
                     {
                         Console.WriteLine("Shceduled "+t.Id);
-                        _scheduler.ScheduleWithParams<GameWorker>(t.Id).EverySecond().Once().PreventOverlapping("game worker " + t.Id);    
+                        _scheduler.ScheduleWithParams<GameWorker>(t.Id).EverySecond().Once().PreventOverlapping("game worker " + t.Id); 
                     }
                     break;
                 case TaskTypes.ValidateBot:
                     if ((await _schedulerRepository.Taskdoing(t.Id)).IsSuccess)
                     {
-                        _scheduler.ScheduleWithParams<ValidationWorker>(t.Id).EverySecond().Once().PreventOverlapping("Validation worker " + t.Id);
+                        Console.WriteLine("Shceduled "+t.Id);
+                        _scheduler.ScheduleWithParams<ValidationWorker>(t.Id)
+                            .EverySecond().Once().PreventOverlapping("Validation worker " + t.Id);
+                        Console.WriteLine("zaskejulowyny validator");
                     }
                     break;
             }
