@@ -260,7 +260,7 @@ public class BotRepository : IBotRepository
         return new SuccessData<Game>() { Data = resGame };
     }
 
-    public async Task<HandlerResult<Success, IErrorResult>> ValidationResult(long taskId, bool result)
+    public async Task<HandlerResult<Success, IErrorResult>> ValidationResult(long taskId, bool result,int memoryUsed,int timeUsed)
     {
         var resTask = await _dataContext.Tasks.FindAsync(taskId);
         if (resTask == null) return new EntityNotFoundErrorResult();
@@ -268,6 +268,8 @@ public class BotRepository : IBotRepository
         if (resBot == null) return new EntityNotFoundErrorResult();
         resTask.Status = TaskStatus.Done;
         resBot.Validation = result ? BotStatus.ValidationSucceed : BotStatus.ValidationFailed;
+        resBot.MemoryUsed = memoryUsed;
+        resBot.TimeUsed = timeUsed;
         await _dataContext.SaveChangesAsync();
         return new Success();
     }

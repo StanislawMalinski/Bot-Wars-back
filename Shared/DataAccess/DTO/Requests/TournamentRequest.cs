@@ -19,4 +19,6 @@ public class TournamentRequest
     [NotNull]
     public string? Constraints { get; set; }
     public string? Image { get; set; }
+    public int MemoryLimit { get; set; }
+    public int TimeLimit { get; set; }
 }
