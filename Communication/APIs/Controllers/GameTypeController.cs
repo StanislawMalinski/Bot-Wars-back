@@ -3,8 +3,10 @@ using Communication.APIs.Controllers.Helper;
 using Communication.Services.GameType;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Shared.DataAccess.DTO.Requests;
 using Shared.DataAccess.RepositoryInterfaces;
+using System.ComponentModel.DataAnnotations;
 
 namespace Communication.APIs.Controllers
 {
@@ -30,15 +32,15 @@ namespace Communication.APIs.Controllers
         }
 
         [HttpGet("getAll")]
-        public async Task<IActionResult> GetGames()
+        public async Task<IActionResult> GetGames([FromQuery] int page = 0, [FromQuery] int pagesize = 10)
         {
-            return (await _gameTypeService.GetGames()).Match(Ok, this.ErrorResult);
+            return (await _gameTypeService.GetGames(page, pagesize)).Match(Ok, this.ErrorResult);
         }
 
         [HttpGet("getAvailable")]
-        public async Task<IActionResult> GetAvailableGames()
+        public async Task<IActionResult> GetAvailableGames([FromQuery] int page = 0, [FromQuery] int pagesize = 10)
         {
-            return (await _gameTypeService.GetListOfTypesOfAvailableGames()).Match(Ok, this.ErrorResult);
+            return (await _gameTypeService.GetListOfTypesOfAvailableGames(page, pagesize)).Match(Ok, this.ErrorResult);
         }
 
         [HttpGet("getOne")]
@@ -48,9 +50,9 @@ namespace Communication.APIs.Controllers
         }
 
         [HttpGet("getByName")]
-        public async Task<IActionResult> GetByName([FromQuery] string name)
+        public async Task<IActionResult> GetByName([FromQuery] string name, [FromQuery] int page = 0, [FromQuery] int pagesize = 10)
         {
-            return (await _gameTypeService.Search(name)).Match(Ok, this.ErrorResult);
+            return (await _gameTypeService.Search(name, page, pagesize)).Match(Ok, this.ErrorResult);
         }
         
         [HttpGet("getAllForPlayer")]

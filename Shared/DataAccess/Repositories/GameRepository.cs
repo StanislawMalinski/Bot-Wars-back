@@ -25,17 +25,18 @@ public class GameRepository : IGameRepository
 
     // move to config
     private readonly string _gathererEndpoint = "http://host.docker.internal:7002/api/Gatherer";
-    private readonly IAuthorizationService _authorizationService;
-    private readonly IUserContextRepository _userContextRepository;
+    //private readonly IAuthorizationService _authorizationService;
+    //private readonly IUserContextRepository _userContextRepository;
 
     public GameRepository(DataContext dataContext,
         IGameTypeMapper gameTypeMapper,
-        HttpClient httpClient,
-        IAuthorizationService authorizationService,
-        IUserContextRepository userContextRepository)
+        HttpClient httpClient
+        //IAuthorizationService authorizationService,
+        //IUserContextRepository userContextRepository
+        )
     {
-        _userContextRepository = userContextRepository;
-        _authorizationService = authorizationService;
+        //_userContextRepository = userContextRepository;
+        //_authorizationService = authorizationService;
         _mapper = gameTypeMapper;
         _dataContext = dataContext;
         _httpClient = httpClient;
@@ -81,7 +82,7 @@ public class GameRepository : IGameRepository
         return new Success();
     }
 
-    public async Task<HandlerResult<SuccessData<List<GameResponse>>, IErrorResult>> Search(string? name)
+    public async Task<HandlerResult<SuccessData<List<GameResponse>>, IErrorResult>> Search(string? name, int page, int pagesize)
     {
         if (name == null)
         {
@@ -95,6 +96,8 @@ public class GameRepository : IGameRepository
             .Games
             .Where(x => x.GameFile != null && x.GameFile.Contains(name))
             .Select(x => _mapper.MapGameToResponse(x))
+            .Skip(page * pagesize)
+            .Take(pagesize)
             .ToListAsync();
 
         return new SuccessData<List<GameResponse>>()
@@ -146,7 +149,7 @@ public class GameRepository : IGameRepository
         };
     }
 
-    public async Task<HandlerResult<SuccessData<List<GameResponse>>, IErrorResult>> GetGames()
+    public async Task<HandlerResult<SuccessData<List<GameResponse>>, IErrorResult>> GetGames(int page, int pagesize)
     {
         var resGame = await _dataContext
             .Games
@@ -154,6 +157,8 @@ public class GameRepository : IGameRepository
             .Include(game => game.Matches)
             .Include(game => game.Tournaments)
             .Select(x => _mapper.MapGameToResponse(x))
+            .Skip(page * pagesize)
+            .Take(pagesize)
             .ToListAsync();
 
         return new SuccessData<List<GameResponse>>()
@@ -177,7 +182,7 @@ public class GameRepository : IGameRepository
                 Message = "No such element could have been found"
             };
         }
-
+        /*
         var authorizationResult = _authorizationService.AuthorizeAsync(_userContextRepository.GetUser(),
             gameToRemove,
             new ResourceOperationRequirement(ResourceOperation.Delete)).Result;
@@ -185,7 +190,7 @@ public class GameRepository : IGameRepository
         if (!authorizationResult.Succeeded)
         {
             return new UnauthorizedError();
-        }
+        }*/
 
         if (gameToRemove.Tournaments != null)
             _dataContext
@@ -233,7 +238,7 @@ public class GameRepository : IGameRepository
                 Message = "No such element could have been found"
             };
         }
-
+        /*
         var authorizationResult = _authorizationService.AuthorizeAsync(_userContextRepository.GetUser(),
             resGame,
             new ResourceOperationRequirement(ResourceOperation.Update)).Result;
@@ -241,7 +246,7 @@ public class GameRepository : IGameRepository
         if (!authorizationResult.Succeeded)
         {
             return new UnauthorizedError();
-        }
+        }*/
 
         resGame.InterfaceDefinition = gameRequest.InterfaceDefinition;
         resGame.GameInstructions = gameRequest.GameInstructions;
@@ -253,7 +258,7 @@ public class GameRepository : IGameRepository
         return new Success();
     }
 
-    public async Task<HandlerResult<SuccessData<List<GameResponse>>, IErrorResult>> GetAvailableGames()
+    public async Task<HandlerResult<SuccessData<List<GameResponse>>, IErrorResult>> GetAvailableGames(int page, int pagesize)
     {
         var resGame = await _dataContext
             .Games
@@ -262,6 +267,8 @@ public class GameRepository : IGameRepository
             .Include(game => game.Tournaments)
             .Where(game => game.IsAvailableForPlay)
             .Select(game => _mapper.MapGameToResponse(game))
+            .Skip(page * pagesize)
+            .Take(pagesize)
             .ToListAsync();
 
 

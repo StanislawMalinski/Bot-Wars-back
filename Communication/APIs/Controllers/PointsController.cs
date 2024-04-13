@@ -23,15 +23,15 @@ public class PointsController : Controller
     }
 
     [HttpGet("getPointsForPlayer")]
-    public async Task<IActionResult> GetPointsForPlayer([FromQuery]long playerId)
+    public async Task<IActionResult> GetPointsForPlayer([FromQuery] long playerId)
     {
 		return (await _pointsService.GetPointsForPlayer(playerId)).Match(Ok, this.ErrorResult);
 	}
 
     [HttpGet("getLeaderboards")]
-    public async Task<IActionResult> GetLeaderboards()
+    public async Task<IActionResult> GetLeaderboards([FromQuery] int page = 0, [FromQuery] int pagesize = 10)
     {
-        return (await _pointsService.GetLeaderboards()).Match(Ok, this.ErrorResult);
+        return (await _pointsService.GetLeaderboards(page, pagesize)).Match(Ok, this.ErrorResult);
     }
 
 	[HttpGet("getPointsHistoryForPlayer")]
