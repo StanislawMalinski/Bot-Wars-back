@@ -77,13 +77,14 @@ public class BotRepository : IBotRepository
         return new SuccessData<BotResponse>() { Data = _botMapper.MapBotToResponse(bot) };
     }
 
-    public async Task<HandlerResult<SuccessData<List<BotResponse>>, IErrorResult>> GetBotsForPlayer(long playerId,
+    public async Task<HandlerResult<SuccessData<List<BotResponse>>, IErrorResult>> GetBotsForPlayer(string? playerName,
         PageParameters pageParameters)
     {
         var player = await _dataContext
             .Players
-            .FindAsync(playerId);
-
+            .FirstOrDefaultAsync(p => p.Login.Equals(playerName));
+        
+        
         if (player == null)
         {
             return new EntityNotFoundErrorResult()
@@ -95,7 +96,7 @@ public class BotRepository : IBotRepository
 
         var bots = await _dataContext
             .Bots
-            .Where(bot => bot.PlayerId == playerId)
+            .Where(bot => bot.Player == player)
             .Skip(pageParameters.PageNumber * pageParameters.PageSize)
             .Take(pageParameters.PageSize)
             .Select(bot => _botMapper.MapBotToResponse(bot))

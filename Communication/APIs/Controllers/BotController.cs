@@ -19,13 +19,13 @@ public class BotController : Controller
     {
         _botService = botService;
     }
-    
+
     [Authorize(Roles = "User,Admin")]
     [HttpPost("add")]
     public async Task<IActionResult> AddBot(BotRequest botRequest)
     {
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-        return (await _botService.AddBot(botRequest,long.Parse(userId!))).Match(Ok, this.ErrorResult);
+        return (await _botService.AddBot(botRequest, long.Parse(userId!))).Match(Ok, this.ErrorResult);
     }
 
     [Authorize(Roles = "User,Admin")]
@@ -42,20 +42,23 @@ public class BotController : Controller
     }
 
     [HttpGet("getForPlayer")]
-    public async Task<IActionResult> GetBotsForPlayer([FromQuery] long playerId, [FromQuery] PageParameters pageParameters)
+    public async Task<IActionResult> GetBotsForPlayer([FromQuery] string playerName,
+        [FromQuery] PageParameters pageParameters)
     {
-        return (await _botService.GetBotsForPlayer(playerId, pageParameters)).Match(Ok, this.ErrorResult);
+        return (await _botService.GetBotsForPlayer(playerName, pageParameters)).Match(Ok, this.ErrorResult);
     }
+
     [Authorize(Roles = "User,Admin")]
     [HttpGet("getBotFileForPlayer")]
-    public async Task<IActionResult> GetBotFileForPlayer( [FromQuery] long botId)
+    public async Task<IActionResult> GetBotFileForPlayer([FromQuery] long botId)
     {
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
         return (await _botService.GetBotFileForPlayer(long.Parse(userId!), botId)).Match(Ok, this.ErrorResult);
     }
 
     [HttpGet("getBotsForTournament")]
-    public async Task<IActionResult> GetBotsForTournament([FromQuery] long tournamentId, [FromQuery] PageParameters pageParameters)
+    public async Task<IActionResult> GetBotsForTournament([FromQuery] long tournamentId,
+        [FromQuery] PageParameters pageParameters)
     {
         return (await _botService.GetBotsForTournament(tournamentId, pageParameters)).Match(Ok, this.ErrorResult);
     }
