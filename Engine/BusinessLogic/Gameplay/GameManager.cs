@@ -50,6 +50,7 @@ public class GameManager : IGameManager
         string? curr = await game.Get();
         if (game.wasErros())
         {
+           
             return new ErrorGameResult
             {
                 BotError = false,
@@ -59,25 +60,26 @@ public class GameManager : IGameManager
         }
         int nextBot = 0;
         int counter = 0;
-        int counterMax = 100000;
+        int counterMax = 1000;
         string gamelog = string.Empty;
         gamelog += curr;
+        
         while (Int32.Parse(curr) != -1 && counter < counterMax)
         {
             nextBot = Int32.Parse(curr);
             curr = await game.Get();
-            if (curr == null) {ok = false;break;}
+            if (curr == null) {ok = false;  Console.WriteLine(" to eror 1 "+bots[nextBot].wasErros()); break;}
             gamelog += curr;
             curr = await bots[nextBot].SendAndGet(curr);
-            if(curr == null) {ok = false;break;}
+            if(curr == null) {ok = false;  Console.WriteLine(" to eror 2 "+bots[nextBot].wasErros()); break;}
             gamelog += curr;
             curr = await game.SendAndGet(curr);
-            if(curr == null) {ok = false;break;}
+            if(curr == null) {ok = false;  Console.WriteLine(" to eror 3 "+bots[nextBot].wasErros()); break;}
             gamelog += curr;
             counter++;
-
+          
         }
-
+        
         if (ok)
         {
             if (counter < counterMax)
@@ -118,11 +120,12 @@ public class GameManager : IGameManager
                 BotWinner = cos
             };
         }
-
+        Console.WriteLine("game in eerrror game manegar");
         await game.Interrupt();
         await InterruptAllBots();
         if (game.wasErros())
         {
+            Console.WriteLine("game was eeror");
             return new ErrorGameResult()
             {
                 GameError = true,
@@ -130,11 +133,16 @@ public class GameManager : IGameManager
                 BotErrorId = botsArray[nextBot].Id,
                 ErrorGameStatus = game.GetErrorType()
             };
+        
         }
+
+        ind = 0;
         foreach (var bot in botsArray)
         {
+            Console.WriteLine("bot was eeroe");
             if (bots[ind].wasErros())
             {
+                Console.WriteLine("bot was znaleziony "+ind);
                 return new ErrorGameResult()
                 {
                     BotError = true,
@@ -144,7 +152,7 @@ public class GameManager : IGameManager
             }
             ind++;
         }
-        
+        Console.WriteLine("niemozliwey was eeroe");
         return new ErrorGameResult()
         {
             

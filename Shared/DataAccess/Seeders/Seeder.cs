@@ -99,65 +99,65 @@ public class Seeder
             {
                 Id = 1, NumbersOfPlayer = 10, LastModification = DateTime.Now, GameFile = "Quake III Arena",
                 GameInstructions = "Eliminate the enemy players in fast-paced multiplayer battles.",
-                InterfaceDefinition = "First-Person Shooter (FPS)", IsAvailableForPlay = true, FileId = 5, CreatorId = 1
+                InterfaceDefinition = "First-Person Shooter (FPS)", IsAvailableForPlay = true, FileId = 5, CreatorId = 1,Language = Language.C
             },
             new Game()
             {
                 Id = 2, NumbersOfPlayer = 1, LastModification = DateTime.Now,
                 GameFile = "The Legend of Zelda: Breath of the Wild",
                 GameInstructions = "Embark on an epic adventure to defeat the Calamity Ganon and save Hyrule.",
-                InterfaceDefinition = "Action-Adventure", IsAvailableForPlay = true, FileId = 12, CreatorId = 1
+                InterfaceDefinition = "Action-Adventure", IsAvailableForPlay = true, FileId = 12, CreatorId = 1,Language = Language.PYTHON
             },
             new Game()
             {
                 Id = 3, NumbersOfPlayer = 2, LastModification = DateTime.Now, GameFile = "FIFA 22",
                 GameInstructions = "Experience realistic football simulation with updated teams and gameplay.",
-                InterfaceDefinition = "Sports Simulation", IsAvailableForPlay = true, FileId = 1, CreatorId = 1
+                InterfaceDefinition = "Sports Simulation", IsAvailableForPlay = true, FileId = 1, CreatorId = 1,Language = Language.C
             },
             new Game()
             {
                 Id = 4, NumbersOfPlayer = 7, LastModification = DateTime.Now, GameFile = "Among Us",
                 GameInstructions = "Work together to complete tasks while identifying the impostors among the crew.",
-                InterfaceDefinition = "Social Deduction", IsAvailableForPlay = true, FileId = 1, CreatorId = 1
+                InterfaceDefinition = "Social Deduction", IsAvailableForPlay = true, FileId = 1, CreatorId = 1,Language = Language.C
             },
             new Game()
             {
                 Id = 5, NumbersOfPlayer = 16, LastModification = DateTime.Now, GameFile = "Minecraft",
                 GameInstructions = "Build and explore a blocky world, mine resources, and survive.",
-                InterfaceDefinition = "Sandbox", IsAvailableForPlay = false, FileId = 1, CreatorId = 1
+                InterfaceDefinition = "Sandbox", IsAvailableForPlay = false, FileId = 1, CreatorId = 1,Language = Language.C
             },
             new Game()
             {
                 Id = 6, NumbersOfPlayer = 1, LastModification = DateTime.Now, GameFile = "Cyberpunk 2077",
                 GameInstructions = "Navigate the futuristic open world of Night City as the mercenary V.",
-                InterfaceDefinition = "Action RPG", IsAvailableForPlay = true, FileId = 1, CreatorId = 1
+                InterfaceDefinition = "Action RPG", IsAvailableForPlay = true, FileId = 1, CreatorId = 1,Language = Language.C
             },
             new Game()
             {
                 Id = 7, NumbersOfPlayer = 14, LastModification = DateTime.Now, GameFile = "Rocket League",
                 GameInstructions = "Play soccer with rocket-powered cars in this unique sports game.",
-                InterfaceDefinition = "Vehicular Soccer", IsAvailableForPlay = true, FileId = 1, CreatorId = 1
+                InterfaceDefinition = "Vehicular Soccer", IsAvailableForPlay = true, FileId = 1, CreatorId = 1,Language = Language.C
             },
             new Game()
             {
                 Id = 8, NumbersOfPlayer = 8, LastModification = DateTime.Now, GameFile = "Call of Duty: Warzone",
                 GameInstructions = "Engage in intense battle royale action in the Call of Duty universe.",
                 InterfaceDefinition = "First-Person Shooter (Battle Royale)", IsAvailableForPlay = false, FileId = 1,
-                CreatorId = 1
+                CreatorId = 1,Language = Language.C
             },
             new Game()
             {
                 Id = 9, NumbersOfPlayer = 5, LastModification = DateTime.Now,
                 GameFile = "Animal Crossing: New Horizons",
                 GameInstructions = "Create and customize your own island paradise in a relaxing simulation.",
-                InterfaceDefinition = "Life Simulation", IsAvailableForPlay = true, FileId = 1, CreatorId = 1
+                InterfaceDefinition = "Life Simulation", IsAvailableForPlay = true, FileId = 1, CreatorId = 1,Language = Language.C
             },
             new Game()
             {
                 Id = 10, NumbersOfPlayer = 10, LastModification = DateTime.Now, GameFile = "Dota 2",
                 GameInstructions =
                     "Compete in strategic team-based battles in this multiplayer online battle arena (MOBA).",
-                InterfaceDefinition = "MOBA", IsAvailableForPlay = true, FileId = 1, CreatorId = 1
+                InterfaceDefinition = "MOBA", IsAvailableForPlay = true, FileId = 1, CreatorId = 1,Language = Language.C
             }
         };
     }
@@ -421,9 +421,9 @@ public class Seeder
         {
             new TournamentReference() { Id = 1, tournamentId = 1, botId = 1 },
             new TournamentReference() { Id = 2, tournamentId = 1, botId = 2 },
-            new TournamentReference() { Id = 3, tournamentId = 2, botId = 3 },
-            new TournamentReference() { Id = 4, tournamentId = 2, botId = 4 },
-            new TournamentReference() { Id = 5, tournamentId = 2, botId = 10 },
+            new TournamentReference() { Id = 3, tournamentId = 3, botId = 3 },
+            new TournamentReference() { Id = 4, tournamentId = 3, botId = 4 },
+            new TournamentReference() { Id = 5, tournamentId = 3, botId = 10 },
             new TournamentReference() { Id = 6, tournamentId = 1, botId = 5 },
             new TournamentReference() { Id = 7, tournamentId = 1, botId = 6 },
             new TournamentReference() { Id = 8, tournamentId = 1, botId = 7 },

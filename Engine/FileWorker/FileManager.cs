@@ -154,6 +154,10 @@ public class FileManager
             {
                 return s;
             }
+            if (Path.GetExtension(s) == ".py")
+            {
+                return s;
+            }
         }
         await getBotFile(bot.Id,bot.FileId,bot.Language);
         switch (bot.Language)
@@ -173,6 +177,10 @@ public class FileManager
         foreach(string s in dirs)
         {
             if (Path.GetExtension(s) == ".out")
+            {
+                return s;
+            }
+            if (Path.GetExtension(s) == ".py")
             {
                 return s;
             }
@@ -204,17 +212,20 @@ public class FileManager
 
     private async Task<bool> Compile(long id, Language language,string where)
     {
-       
+        string filepath;
+        string compileCommand;
         switch (language)
         {
             case (Language.C):
-                string filepath = where + "/"+  id + ".cpp";
-                string compileCommand = "g++ -o "+ where + "/"+id+".out "+filepath;
+                filepath = where + "/"+  id + ".cpp";
+                compileCommand = "g++ -o "+ where + "/"+id+".out "+filepath;
                 
                 //string compileCommand = "-c g++ -o "+ id+".out "+filepath;
                 return await ExecuteCommand(compileCommand);
             case (Language.PYTHON):
-                return true;
+                filepath = where + "/"+  id + ".py";
+                compileCommand = "chmod +x "+filepath;
+                return await ExecuteCommand(compileCommand);
         }
 
         return false;

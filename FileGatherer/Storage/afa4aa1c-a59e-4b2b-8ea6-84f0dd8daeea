@@ -6,14 +6,15 @@
 int main() {
     std::string tekst;
 
-    std::getline(std::cin, tekst);
+    while(true){
+        std::getline(std::cin, tekst);
 
-    std::srand(std::time(nullptr));
+        std::srand(std::time(nullptr));
 
-    int losowa1 = std::rand() % 9;
-    int losowa2 = std::rand() % 5;
+        int losowa1 = std::rand() % 9;
+        int losowa2 = std::rand() % 5;
 
-    std::cout << losowa1 << " " << losowa2 << std::endl;
-
+        std::cout << losowa1 << " " << losowa2 << std::endl;
+    }
     return 0;
 }
