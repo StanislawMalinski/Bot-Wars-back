@@ -1,6 +1,7 @@
 ﻿using System.Diagnostics;
 using System.Runtime.InteropServices;
 using Engine.BusinessLogic.Gameplay.Interface;
+using Shared.DataAccess.Enumerations;
 
 namespace Engine.BusinessLogic.Gameplay;
 
@@ -19,16 +20,18 @@ public class IOProgramWrapper : ICorespondable
     private int timemax = 0 ;
     private int memorymax = 0;
     private bool isError = false;
+    private Language _language;
 
     private ErrorGameStatus _errorType= ErrorGameStatus.InternalError;
     //bash -c "ps -p 119 -o vsz= | grep -o '[0-9]\+'"
     //apt-get install procps
     // Program Configuration parameter should be added
-    public IOProgramWrapper(string path,int memorylimit,int timelimit)
+    public IOProgramWrapper(string path,int memorylimit,int timelimit,Language language)
     {
         _path = path;
         this.memorylimit = memorylimit;
         this.timelimit = timelimit;
+        _language = language;
     }
 
     // Not safe at all, maybe could be run as user without any privilages
@@ -44,20 +47,44 @@ public class IOProgramWrapper : ICorespondable
         
         
         ProcessStartInfo startInfo;
-        startInfo = new ProcessStartInfo
+        switch (_language)
         {
-            //ulimit -v "+memorylimit+";
-            FileName = "bash",
-            Arguments = "-c ./"+_path,
-            //Arguments = "-c \"(ulimit -v 15000  ; ./"+_path+")\" ",
-            RedirectStandardInput = true,
-            RedirectStandardOutput = true,
-            UseShellExecute = false,
-            CreateNoWindow = true,
-            RedirectStandardError = true,
-            UserName = "userexe"
+            case Language.C:
+                startInfo = new ProcessStartInfo
+                {
+                    //ulimit -v "+memorylimit+";
+                    FileName = "bash",
+                    Arguments = "-c ./"+_path,
+                    //Arguments = "-c \"(ulimit -v 15000  ; ./"+_path+")\" ",
+                    RedirectStandardInput = true,
+                    RedirectStandardOutput = true,
+                    UseShellExecute = false,
+                    CreateNoWindow = true,
+                    RedirectStandardError = true,
+                    UserName = "userexe"
 
-        };
+                };
+                break;
+            case Language.PYTHON:
+                startInfo = new ProcessStartInfo
+                {
+                    //ulimit -v "+memorylimit+";
+                    FileName = "bash",
+                    Arguments = "python3 "+_path,
+                    //Arguments = "-c \"(ulimit -v 15000  ; ./"+_path+")\" ",
+                    RedirectStandardInput = true,
+                    RedirectStandardOutput = true,
+                    UseShellExecute = false,
+                    CreateNoWindow = true,
+                    RedirectStandardError = true,
+                    UserName = "userexe"
+
+                };
+                break;
+            default:
+                throw new ArgumentOutOfRangeException();
+        }
+       
 
 
         _process.StartInfo = startInfo;

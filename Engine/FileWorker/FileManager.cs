@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Http.HttpResults;
 using Shared.DataAccess.DAO;
 using Shared.DataAccess.DataBaseEntities;
 using Shared.DataAccess.DTO;
+using Shared.DataAccess.Enumerations;
 using Shared.Results;
 using Shared.Results.ErrorResults;
 using Shared.Results.IResults;
@@ -64,7 +65,7 @@ public class FileManager
     public async Task<HandlerResult<Success,IErrorResult>> addbot(BotFileDto botFileDto)
     {
         long id = botFileDto.BotId;
-        var fres = await SaveFile(botFileDto.file,id , BotFilePath);
+        var fres = await SaveFile(botFileDto.file,id , BotFilePath,Language.C);
         if (!fres)
         {
             return new NotImplementedError()
@@ -87,7 +88,7 @@ public class FileManager
     public async Task<HandlerResult<Success,IErrorResult>> addGame(GameFileDto gameFileDto){
         
         long id = gameFileDto.GameId;
-        var fres = await SaveFile(gameFileDto.file,id , GameFilePath);
+        var fres = await SaveFile(gameFileDto.file,id , GameFilePath, Language.C);
         if (!fres)
         {
             return new NotImplementedError()
@@ -108,18 +109,17 @@ public class FileManager
         return new Success();
     }
 
-    private async Task getBotFile(long id, long fileId)
+    private async Task getBotFile(long id, long fileId,Language language)
     {
         var file = await GetFileFromStorage(fileId);
         
-        
-        SaveFileAs(BotFilePath,id,file);
+        SaveFileAs(BotFilePath,id,file,language);
         await Compile(id, Language.C, BotFilePath);
     }
-    private async Task getGameFile(long id, long fileId)
+    private async Task getGameFile(long id, long fileId,Language language)
     {
         var file = await GetFileFromStorage(fileId);
-        SaveFileAs(GameFilePath,id,file);
+        SaveFileAs(GameFilePath,id,file,language);
         bool res = await Compile(id, Language.C, GameFilePath);
     }
     private async Task<string> GetFileFromStorage(long fileId)
@@ -131,9 +131,19 @@ public class FileManager
         }
         return await res.Content.ReadAsStringAsync();
     }
-    private void SaveFileAs( string where,long id, string fileContent)
+    private void SaveFileAs( string where,long id, string fileContent,Language language)
     {
-        System.IO.File.WriteAllText($"{where}/{id}.cpp", fileContent);
+        switch (language)
+        {
+            case Language.C:
+                System.IO.File.WriteAllText($"{where}/{id}.cpp", fileContent);
+                break;
+            case Language.PYTHON:
+                System.IO.File.WriteAllText($"{where}/{id}.py", fileContent);
+                break;
+            
+        }
+        
     }
     public async Task<string> GetBotFilepath(Bot bot)
     {
@@ -145,8 +155,16 @@ public class FileManager
                 return s;
             }
         }
-        await getBotFile(bot.Id,bot.FileId);
-        return $"{BotFilePath}/{bot.Id}.out";
+        await getBotFile(bot.Id,bot.FileId,bot.Language);
+        switch (bot.Language)
+        {
+            case Language.C:
+                return $"{BotFilePath}/{bot.Id}.out";
+            case Language.PYTHON:
+                return $"{BotFilePath}/{bot.Id}.py";
+        }
+        
+        return string.Empty;
     }
     
     public async Task<string> GetGameFilepath(Game game)
@@ -159,16 +177,22 @@ public class FileManager
                 return s;
             }
         }
-        await getGameFile(game.Id,game.FileId);
+        await getGameFile(game.Id,game.FileId,Language.C);
+        /*switch ()
+        {
+            
+        }*/ ;
+       
+
         return $"{GameFilePath}/{game.Id}.out";
     }
 
     public async Task<bool> TestSaveFile(IFormFile file, long id, string where)
     {
-        return await SaveFile(file, id, where);
+        return await SaveFile(file, id, where,Language.C);
     }
 
-    private async Task<bool> SaveFile(IFormFile file,long id,string where)
+    private async Task<bool> SaveFile(IFormFile file,long id,string where,Language language)
     {
         string filePath = where + "/"+ id + Path.GetExtension(file.FileName);
         using (Stream fileStream = new FileStream(filePath, FileMode.Create)) {
@@ -189,6 +213,8 @@ public class FileManager
                 
                 //string compileCommand = "-c g++ -o "+ id+".out "+filepath;
                 return await ExecuteCommand(compileCommand);
+            case (Language.PYTHON):
+                return true;
         }
 
         return false;
