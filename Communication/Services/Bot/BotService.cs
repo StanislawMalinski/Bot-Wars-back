@@ -47,4 +47,9 @@ public class BotService : IBotService
     {
         return await _botRepository.GetBotFileForPlayer(playerId, botId);
     }
+
+    public async Task<HandlerResult<SuccessData<List<BotResponse>>, IErrorResult>> GetBotsForTournament(long tournamentId)
+    {
+        return await _botRepository.GetBotsForTournament(tournamentId) ;
+    }
 }

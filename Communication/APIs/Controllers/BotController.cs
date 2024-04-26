@@ -20,20 +20,19 @@ public class BotController : Controller
     }
 
     [HttpGet("getAll")]
-    
     public async Task<IActionResult> GetAllBots(long playerId)
     {
         return (await _botService.GetAllBots()).Match(Ok, this.ErrorResult);
     }
-    
+
     [Authorize(Roles = "User,Admin")]
     [HttpPost("add")]
     public async Task<IActionResult> AddBot(BotRequest botRequest)
-    {  
+    {
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-        return (await _botService.AddBot(botRequest,long.Parse(userId))).Match(Ok, this.ErrorResult);
+        return (await _botService.AddBot(botRequest, long.Parse(userId))).Match(Ok, this.ErrorResult);
     }
-    
+
     [Authorize(Roles = "User,Admin")]
     [HttpDelete("delete")]
     public async Task<IActionResult> DeleteBot([FromQuery] long botId)
@@ -52,9 +51,16 @@ public class BotController : Controller
     {
         return (await _botService.GetBotsForPlayer(playerId)).Match(Ok, this.ErrorResult);
     }
+
     [HttpGet("getBotFileForPlayer")]
     public async Task<IActionResult> GetBotFileForPlayer([FromQuery] long playerId, [FromQuery] long botId)
     {
         return (await _botService.GetBotFileForPlayer(playerId, botId)).Match(Ok, this.ErrorResult);
+    }
+
+    [HttpGet("getBotsForTournament")]
+    public async Task<IActionResult> GetBotsForTournament([FromQuery] long tournamentId)
+    {
+        return (await _botService.GetBotsForTournament(tournamentId)).Match(Ok, this.ErrorResult);
     }
 }
