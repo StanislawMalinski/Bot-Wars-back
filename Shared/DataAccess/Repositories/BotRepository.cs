@@ -36,7 +36,7 @@ public class BotRepository : IBotRepository
         HttpClient httpClient
         //IAuthorizationService authorizationService,
         //IUserContextRepository userContextRepository
-        )
+    )
     {
         //_userContextRepository = userContextRepository;
         //_authorizationService = authorizationService;
@@ -80,7 +80,7 @@ public class BotRepository : IBotRepository
         var res = await _dataContext
             .Bots
             .FindAsync(botId);
-        
+
         if (res == null) return new EntityNotFoundErrorResult();
         return new SuccessData<Bot>() { Data = res };
     }
@@ -142,12 +142,12 @@ public class BotRepository : IBotRepository
         var authorizationResult = _authorizationService.AuthorizeAsync(_userContextRepository.GetUser(),
             bot,
             new ResourceOperationRequirement(ResourceOperation.ReadRestricted)).Result;
-        
+
         if (!authorizationResult.Succeeded)
         {
             return new UnauthorizedError();
         }*/
-        
+
         if (bot == null)
         {
             return new EntityNotFoundErrorResult()
@@ -187,6 +187,39 @@ public class BotRepository : IBotRepository
                 Message = ex.Message
             };
         }
+    }
+
+    public async Task<HandlerResult<SuccessData<List<BotResponse>>, IErrorResult>> GetBotsForTournament(
+        long tournamentId)
+    {
+        var tournament = await _dataContext
+            .Tournaments
+            .FindAsync(tournamentId);
+
+        if (tournament == null)
+        {
+            return new EntityNotFoundErrorResult()
+            {
+                Message = "Tournament could not have been found",
+                Title = "EntityNotFoundErrorResult 404"
+            };
+        }
+
+        var references = await _dataContext.TournamentReferences
+            .Where(tr => tr.Tournament == tournament)
+            .ToListAsync();
+
+        var responses = new List<BotResponse>();
+        foreach (var reference in references)
+        {
+            var returnedBot = await _dataContext.Bots.FindAsync(reference.botId);
+            responses.Add(_botMapper.MapBotToResponse(returnedBot));
+        }
+
+        return new SuccessData<List<BotResponse>>
+        {
+            Data = responses
+        };
     }
 
     public async Task<HandlerResult<Success, IErrorResult>> AddBot(BotRequest botRequest, long playerId)
@@ -244,7 +277,7 @@ public class BotRepository : IBotRepository
         /*var authorizationResult = _authorizationService.AuthorizeAsync(_userContextRepository.GetUser(),
             bot,
             new ResourceOperationRequirement(ResourceOperation.Delete)).Result;
-        
+
         if (!authorizationResult.Succeeded)
         {
             return new UnauthorizedError();
@@ -264,7 +297,8 @@ public class BotRepository : IBotRepository
         return new SuccessData<Game>() { Data = resGame };
     }
 
-    public async Task<HandlerResult<Success, IErrorResult>> ValidationResult(long taskId, bool result,int memoryUsed,int timeUsed)
+    public async Task<HandlerResult<Success, IErrorResult>> ValidationResult(long taskId, bool result, int memoryUsed,
+        int timeUsed)
     {
         var resTask = await _dataContext.Tasks.FindAsync(taskId);
         if (resTask == null) return new EntityNotFoundErrorResult();
