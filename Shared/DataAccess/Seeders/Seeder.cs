@@ -1,12 +1,12 @@
 ﻿using Shared.DataAccess.DataBaseEntities;
 using Shared.DataAccess.Enumerations;
-using Shared.DataAccess.RepositoryInterfaces;
 
 namespace Shared.DataAccess.Seeders;
 
 public class Seeder
 {
-    private static readonly int workFacktor = 12;
+    private const int workFactor = 12;
+
     public static IEnumerable<Player> GeneratePlayers()
     {
         return new List<Player>
@@ -14,53 +14,62 @@ public class Seeder
             new Player()
             {
                 Id = 1, Email = "john.doe@example.com", Login = "john_doe", Points = 1000,
-                HashedPassword = BCrypt.Net.BCrypt.HashPassword("1234", workFacktor),Registered = DateTime.Now,
+                HashedPassword = BCrypt.Net.BCrypt.HashPassword("1234", workFactor), Registered = DateTime.Now,
                 isBanned = false, RoleId = 1
             },
             new Player()
             {
-                Id = 2, Email = "jane.smith@example.com", Login = "jane_smith", Points = 1000,Registered = DateTime.Now,
-                HashedPassword = BCrypt.Net.BCrypt.HashPassword("1234", workFacktor), isBanned = false, RoleId = 1
+                Id = 2, Email = "jane.smith@example.com", Login = "jane_smith", Points = 1000,
+                Registered = DateTime.Now,
+                HashedPassword = BCrypt.Net.BCrypt.HashPassword("1234", workFactor), isBanned = false, RoleId = 1
             },
             new Player()
             {
-                Id = 3, Email = "alex.jones@example.com", Login = "alex_jones", Points = 1000,Registered = DateTime.Now,
-                HashedPassword = BCrypt.Net.BCrypt.HashPassword("1234", workFacktor), isBanned = false, RoleId = 1
+                Id = 3, Email = "alex.jones@example.com", Login = "alex_jones", Points = 1000,
+                Registered = DateTime.Now,
+                HashedPassword = BCrypt.Net.BCrypt.HashPassword("1234", workFactor), isBanned = false, RoleId = 1
             },
             new Player()
             {
-                Id = 4, Email = "emily.white@example.com", Login = "emily_white", Points = 1000,Registered = DateTime.Now,
-                HashedPassword = BCrypt.Net.BCrypt.HashPassword("1234", workFacktor), isBanned = false, RoleId = 1
+                Id = 4, Email = "emily.white@example.com", Login = "emily_white", Points = 1000,
+                Registered = DateTime.Now,
+                HashedPassword = BCrypt.Net.BCrypt.HashPassword("1234", workFactor), isBanned = false, RoleId = 1
             },
             new Player()
             {
-                Id = 5, Email = "sam.wilson@example.com", Login = "sam_wilson", Points = 1000,Registered = DateTime.Now,
-                HashedPassword = BCrypt.Net.BCrypt.HashPassword("1234", workFacktor), isBanned = false, RoleId = 1
+                Id = 5, Email = "sam.wilson@example.com", Login = "sam_wilson", Points = 1000,
+                Registered = DateTime.Now,
+                HashedPassword = BCrypt.Net.BCrypt.HashPassword("1234", workFactor), isBanned = false, RoleId = 1
             },
             new Player()
             {
-                Id = 6, Email = "olivia.brown@example.com", Login = "olivia_brown", Points = 1000,Registered = DateTime.Now,
-                HashedPassword = BCrypt.Net.BCrypt.HashPassword("1234", workFacktor), isBanned = false, RoleId = 1
+                Id = 6, Email = "olivia.brown@example.com", Login = "olivia_brown", Points = 1000,
+                Registered = DateTime.Now,
+                HashedPassword = BCrypt.Net.BCrypt.HashPassword("1234", workFactor), isBanned = false, RoleId = 1
             },
             new Player()
             {
-                Id = 7, Email = "david.miller@example.com", Login = "david_miller", Points = 1000,Registered = DateTime.Now,
-                HashedPassword = BCrypt.Net.BCrypt.HashPassword("1234", workFacktor), isBanned = false, RoleId = 1
+                Id = 7, Email = "david.miller@example.com", Login = "david_miller", Points = 1000,
+                Registered = DateTime.Now,
+                HashedPassword = BCrypt.Net.BCrypt.HashPassword("1234", workFactor), isBanned = false, RoleId = 1
             },
             new Player()
             {
-                Id = 8, Email = "emma.jenkins@example.com", Login = "emma_jenkins", Points = 1000,Registered = DateTime.Now,
-                HashedPassword = BCrypt.Net.BCrypt.HashPassword("1234", workFacktor), isBanned = false, RoleId = 1
+                Id = 8, Email = "emma.jenkins@example.com", Login = "emma_jenkins", Points = 1000,
+                Registered = DateTime.Now,
+                HashedPassword = BCrypt.Net.BCrypt.HashPassword("1234", workFactor), isBanned = false, RoleId = 1
             },
             new Player()
             {
-                Id = 9, Email = "ryan.clark@example.com", Login = "ryan_clark", Points = 1000,Registered = DateTime.Now,
-                HashedPassword = BCrypt.Net.BCrypt.HashPassword("1234", workFacktor), isBanned = true, RoleId = 1
+                Id = 9, Email = "ryan.clark@example.com", Login = "ryan_clark", Points = 1000,
+                Registered = DateTime.Now,
+                HashedPassword = BCrypt.Net.BCrypt.HashPassword("1234", workFactor), isBanned = true, RoleId = 1
             },
             new Player()
             {
-                Id = 10, Email = "sara.taylor@example.com", Login = "sara_taylor", Points = 1000,Registered = DateTime.Now,
-                HashedPassword = BCrypt.Net.BCrypt.HashPassword("1234", workFacktor), isBanned = false, RoleId = 2
+                Id = 10, Email = "sara.taylor@example.com", Login = "sara_taylor", Points = 1000,
+                Registered = DateTime.Now,
+                HashedPassword = BCrypt.Net.BCrypt.HashPassword("1234", workFactor), isBanned = false, RoleId = 2
             }
         };
     }
@@ -97,57 +106,58 @@ public class Seeder
                 Id = 2, NumbersOfPlayer = 1, LastModification = DateTime.Now,
                 GameFile = "The Legend of Zelda: Breath of the Wild",
                 GameInstructions = "Embark on an epic adventure to defeat the Calamity Ganon and save Hyrule.",
-                InterfaceDefinition = "Action-Adventure", IsAvailableForPlay = true, FileId = 1,CreatorId = 1
+                InterfaceDefinition = "Action-Adventure", IsAvailableForPlay = true, FileId = 1, CreatorId = 1
             },
             new Game()
             {
                 Id = 3, NumbersOfPlayer = 2, LastModification = DateTime.Now, GameFile = "FIFA 22",
                 GameInstructions = "Experience realistic football simulation with updated teams and gameplay.",
-                InterfaceDefinition = "Sports Simulation", IsAvailableForPlay = true, FileId = 1,CreatorId = 1
+                InterfaceDefinition = "Sports Simulation", IsAvailableForPlay = true, FileId = 1, CreatorId = 1
             },
             new Game()
             {
                 Id = 4, NumbersOfPlayer = 7, LastModification = DateTime.Now, GameFile = "Among Us",
                 GameInstructions = "Work together to complete tasks while identifying the impostors among the crew.",
-                InterfaceDefinition = "Social Deduction", IsAvailableForPlay = true, FileId = 1,CreatorId = 1
+                InterfaceDefinition = "Social Deduction", IsAvailableForPlay = true, FileId = 1, CreatorId = 1
             },
             new Game()
             {
                 Id = 5, NumbersOfPlayer = 16, LastModification = DateTime.Now, GameFile = "Minecraft",
                 GameInstructions = "Build and explore a blocky world, mine resources, and survive.",
-                InterfaceDefinition = "Sandbox", IsAvailableForPlay = false, FileId = 1,CreatorId = 1
+                InterfaceDefinition = "Sandbox", IsAvailableForPlay = false, FileId = 1, CreatorId = 1
             },
             new Game()
             {
                 Id = 6, NumbersOfPlayer = 1, LastModification = DateTime.Now, GameFile = "Cyberpunk 2077",
                 GameInstructions = "Navigate the futuristic open world of Night City as the mercenary V.",
-                InterfaceDefinition = "Action RPG", IsAvailableForPlay = true, FileId = 1,CreatorId = 1
+                InterfaceDefinition = "Action RPG", IsAvailableForPlay = true, FileId = 1, CreatorId = 1
             },
             new Game()
             {
                 Id = 7, NumbersOfPlayer = 14, LastModification = DateTime.Now, GameFile = "Rocket League",
                 GameInstructions = "Play soccer with rocket-powered cars in this unique sports game.",
-                InterfaceDefinition = "Vehicular Soccer", IsAvailableForPlay = true, FileId = 1,CreatorId = 1
+                InterfaceDefinition = "Vehicular Soccer", IsAvailableForPlay = true, FileId = 1, CreatorId = 1
             },
             new Game()
             {
                 Id = 8, NumbersOfPlayer = 8, LastModification = DateTime.Now, GameFile = "Call of Duty: Warzone",
                 GameInstructions = "Engage in intense battle royale action in the Call of Duty universe.",
-                InterfaceDefinition = "First-Person Shooter (Battle Royale)", IsAvailableForPlay = false, FileId = 1,CreatorId = 1
+                InterfaceDefinition = "First-Person Shooter (Battle Royale)", IsAvailableForPlay = false, FileId = 1,
+                CreatorId = 1
             },
             new Game()
             {
                 Id = 9, NumbersOfPlayer = 5, LastModification = DateTime.Now,
                 GameFile = "Animal Crossing: New Horizons",
                 GameInstructions = "Create and customize your own island paradise in a relaxing simulation.",
-                InterfaceDefinition = "Life Simulation", IsAvailableForPlay = true, FileId = 1,CreatorId = 1
+                InterfaceDefinition = "Life Simulation", IsAvailableForPlay = true, FileId = 1, CreatorId = 1
             },
             new Game()
             {
                 Id = 10, NumbersOfPlayer = 10, LastModification = DateTime.Now, GameFile = "Dota 2",
                 GameInstructions =
                     "Compete in strategic team-based battles in this multiplayer online battle arena (MOBA).",
-                InterfaceDefinition = "MOBA", IsAvailableForPlay = true, FileId = 1,CreatorId = 1
+                InterfaceDefinition = "MOBA", IsAvailableForPlay = true, FileId = 1, CreatorId = 1
             }
         };
     }
@@ -167,8 +177,9 @@ public class Seeder
                 TournamentsDate = new DateTime(2023, 1, 20),
                 Status = TournamentStatus.PLAYED,
                 Constraints = "Participants must have a minimum skill level of intermediate.",
-                Image = Convert.FromBase64String("iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAAXNSR0IArs4c6QAAADpJREFUKFPt0KERADAIBMF/j0JB/wXRCS08M/EkDeT0qqO7q7vxigAk6epI4sN10dkTEcpMVNUKzQwDWXAoJWfFnuMAAAAASUVORK5CYII="), // You can replace this with the actual image file or URL,
-                CreatorId = 1
+                Image = Convert.FromBase64String(
+                    "iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAAXNSR0IArs4c6QAAADpJREFUKFPt0KERADAIBMF/j0JB/wXRCS08M/EkDeT0qqO7q7vxigAk6epI4sN10dkTEcpMVNUKzQwDWXAoJWfFnuMAAAAASUVORK5CYII="), // You can replace this with the actual image file or URL,
+                CreatorId = 1, MemoryLimit = 15000, TimeLimit = 2000
             },
             new Tournament()
             {
@@ -181,8 +192,9 @@ public class Seeder
                 TournamentsDate = new DateTime(2023, 2, 15),
                 Status = TournamentStatus.PLAYED,
                 Constraints = "Participants must complete the game on a specific difficulty level.",
-                CreatorId = 2,
-                Image = Convert.FromBase64String("iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAAXNSR0IArs4c6QAAADpJREFUKFPt0KERADAIBMF/j0JB/wXRCS08M/EkDeT0qqO7q7vxigAk6epI4sN10dkTEcpMVNUKzQwDWXAoJWfFnuMAAAAASUVORK5CYII=") // You can replace this with the actual image file or URL
+                CreatorId = 2, MemoryLimit = 15000, TimeLimit = 2000,
+                Image = Convert.FromBase64String(
+                    "iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAAXNSR0IArs4c6QAAADpJREFUKFPt0KERADAIBMF/j0JB/wXRCS08M/EkDeT0qqO7q7vxigAk6epI4sN10dkTEcpMVNUKzQwDWXAoJWfFnuMAAAAASUVORK5CYII=") // You can replace this with the actual image file or URL
             },
             new Tournament()
             {
@@ -195,8 +207,9 @@ public class Seeder
                 TournamentsDate = new DateTime(2023, 3, 10),
                 Status = TournamentStatus.PLAYED,
                 Constraints = "Teams must consist of real-world players.",
-                CreatorId = 3,
-                Image = Convert.FromBase64String("iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAAXNSR0IArs4c6QAAADpJREFUKFPt0KERADAIBMF/j0JB/wXRCS08M/EkDeT0qqO7q7vxigAk6epI4sN10dkTEcpMVNUKzQwDWXAoJWfFnuMAAAAASUVORK5CYII=") // You can replace this with the actual image file or URL
+                CreatorId = 3, MemoryLimit = 15000, TimeLimit = 2000,
+                Image = Convert.FromBase64String(
+                    "iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAAXNSR0IArs4c6QAAADpJREFUKFPt0KERADAIBMF/j0JB/wXRCS08M/EkDeT0qqO7q7vxigAk6epI4sN10dkTEcpMVNUKzQwDWXAoJWfFnuMAAAAASUVORK5CYII=") // You can replace this with the actual image file or URL
             },
             new Tournament()
             {
@@ -209,8 +222,9 @@ public class Seeder
                 TournamentsDate = new DateTime(2022, 4, 5),
                 Status = TournamentStatus.PLAYED,
                 Constraints = "Players must use voice communication during the game.",
-                CreatorId = 1,
-                Image = Convert.FromBase64String("iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAAXNSR0IArs4c6QAAADpJREFUKFPt0KERADAIBMF/j0JB/wXRCS08M/EkDeT0qqO7q7vxigAk6epI4sN10dkTEcpMVNUKzQwDWXAoJWfFnuMAAAAASUVORK5CYII=")
+                CreatorId = 1, MemoryLimit = 15000, TimeLimit = 2000,
+                Image = Convert.FromBase64String(
+                    "iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAAXNSR0IArs4c6QAAADpJREFUKFPt0KERADAIBMF/j0JB/wXRCS08M/EkDeT0qqO7q7vxigAk6epI4sN10dkTEcpMVNUKzQwDWXAoJWfFnuMAAAAASUVORK5CYII=")
             },
             new Tournament()
             {
@@ -223,8 +237,9 @@ public class Seeder
                 TournamentsDate = new DateTime(2023, 5, 20),
                 Status = TournamentStatus.PLAYED,
                 Constraints = "Builds must adhere to a specific theme.",
-                CreatorId = 1,
-                Image = Convert.FromBase64String("iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAAXNSR0IArs4c6QAAADpJREFUKFPt0KERADAIBMF/j0JB/wXRCS08M/EkDeT0qqO7q7vxigAk6epI4sN10dkTEcpMVNUKzQwDWXAoJWfFnuMAAAAASUVORK5CYII=")
+                CreatorId = 1, MemoryLimit = 15000, TimeLimit = 2000,
+                Image = Convert.FromBase64String(
+                    "iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAAXNSR0IArs4c6QAAADpJREFUKFPt0KERADAIBMF/j0JB/wXRCS08M/EkDeT0qqO7q7vxigAk6epI4sN10dkTEcpMVNUKzQwDWXAoJWfFnuMAAAAASUVORK5CYII=")
             },
             new Tournament()
             {
@@ -237,8 +252,9 @@ public class Seeder
                 TournamentsDate = new DateTime(2022, 6, 15),
                 Status = TournamentStatus.PLAYED,
                 Constraints = "Participants must customize their character's appearance.",
-                CreatorId = 3,
-                Image = Convert.FromBase64String("iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAAXNSR0IArs4c6QAAADpJREFUKFPt0KERADAIBMF/j0JB/wXRCS08M/EkDeT0qqO7q7vxigAk6epI4sN10dkTEcpMVNUKzQwDWXAoJWfFnuMAAAAASUVORK5CYII=")
+                CreatorId = 3, MemoryLimit = 15000, TimeLimit = 2000,
+                Image = Convert.FromBase64String(
+                    "iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAAXNSR0IArs4c6QAAADpJREFUKFPt0KERADAIBMF/j0JB/wXRCS08M/EkDeT0qqO7q7vxigAk6epI4sN10dkTEcpMVNUKzQwDWXAoJWfFnuMAAAAASUVORK5CYII=")
             },
             new Tournament()
             {
@@ -251,8 +267,9 @@ public class Seeder
                 TournamentsDate = new DateTime(2023, 7, 1),
                 Status = TournamentStatus.PLAYED,
                 Constraints = "Teams must consist of three players.",
-                CreatorId = 2,
-                Image = Convert.FromBase64String("iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAAXNSR0IArs4c6QAAADpJREFUKFPt0KERADAIBMF/j0JB/wXRCS08M/EkDeT0qqO7q7vxigAk6epI4sN10dkTEcpMVNUKzQwDWXAoJWfFnuMAAAAASUVORK5CYII=")
+                CreatorId = 2, MemoryLimit = 15000, TimeLimit = 2000,
+                Image = Convert.FromBase64String(
+                    "iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAAXNSR0IArs4c6QAAADpJREFUKFPt0KERADAIBMF/j0JB/wXRCS08M/EkDeT0qqO7q7vxigAk6epI4sN10dkTEcpMVNUKzQwDWXAoJWfFnuMAAAAASUVORK5CYII=")
             },
             new Tournament()
             {
@@ -265,8 +282,9 @@ public class Seeder
                 TournamentsDate = new DateTime(2023, 8, 10),
                 Status = TournamentStatus.PLAYED,
                 Constraints = "Players must adhere to the battle royale ruleset.",
-                CreatorId = 2,
-                Image = Convert.FromBase64String("iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAAXNSR0IArs4c6QAAADpJREFUKFPt0KERADAIBMF/j0JB/wXRCS08M/EkDeT0qqO7q7vxigAk6epI4sN10dkTEcpMVNUKzQwDWXAoJWfFnuMAAAAASUVORK5CYII=")
+                CreatorId = 2, MemoryLimit = 15000, TimeLimit = 2000,
+                Image = Convert.FromBase64String(
+                    "iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAAXNSR0IArs4c6QAAADpJREFUKFPt0KERADAIBMF/j0JB/wXRCS08M/EkDeT0qqO7q7vxigAk6epI4sN10dkTEcpMVNUKzQwDWXAoJWfFnuMAAAAASUVORK5CYII=")
             },
             new Tournament()
             {
@@ -279,8 +297,9 @@ public class Seeder
                 TournamentsDate = new DateTime(2023, 9, 5),
                 Status = TournamentStatus.PLAYED,
                 Constraints = "Islands must be designed within a specific theme.",
-                CreatorId = 3,
-                Image = Convert.FromBase64String("iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAAXNSR0IArs4c6QAAADpJREFUKFPt0KERADAIBMF/j0JB/wXRCS08M/EkDeT0qqO7q7vxigAk6epI4sN10dkTEcpMVNUKzQwDWXAoJWfFnuMAAAAASUVORK5CYII=")
+                CreatorId = 3, MemoryLimit = 15000, TimeLimit = 2000,
+                Image = Convert.FromBase64String(
+                    "iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAAXNSR0IArs4c6QAAADpJREFUKFPt0KERADAIBMF/j0JB/wXRCS08M/EkDeT0qqO7q7vxigAk6epI4sN10dkTEcpMVNUKzQwDWXAoJWfFnuMAAAAASUVORK5CYII=")
             },
             new Tournament()
             {
@@ -293,8 +312,9 @@ public class Seeder
                 TournamentsDate = new DateTime(2023, 10, 20),
                 Status = TournamentStatus.PLAYED,
                 Constraints = "Teams must adhere to the standard Dota 2 competitive rules.",
-                CreatorId = 1,
-                Image = Convert.FromBase64String("iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAAXNSR0IArs4c6QAAADpJREFUKFPt0KERADAIBMF/j0JB/wXRCS08M/EkDeT0qqO7q7vxigAk6epI4sN10dkTEcpMVNUKzQwDWXAoJWfFnuMAAAAASUVORK5CYII=")
+                CreatorId = 1, MemoryLimit = 15000, TimeLimit = 2000,
+                Image = Convert.FromBase64String(
+                    "iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAAXNSR0IArs4c6QAAADpJREFUKFPt0KERADAIBMF/j0JB/wXRCS08M/EkDeT0qqO7q7vxigAk6epI4sN10dkTEcpMVNUKzQwDWXAoJWfFnuMAAAAASUVORK5CYII=")
             }
         };
     }
@@ -303,16 +323,56 @@ public class Seeder
     {
         return new List<Bot>()
         {
-            new Bot() { Id = 1, GameId = 1, PlayerId = 1, BotFile = "quake3_bot_1", FileId = 2 },
-            new Bot() { Id = 2, GameId = 1, PlayerId = 2, BotFile = "quake3_bot_2", FileId = 3 },
-            new Bot() { Id = 3, GameId = 2, PlayerId = 3, BotFile = "zelda_bot_1", FileId = 2 },
-            new Bot() { Id = 4, GameId = 2, PlayerId = 4, BotFile = "zelda_bot_2", FileId = 2 },
-            new Bot() { Id = 5, GameId = 3, PlayerId = 5, BotFile = "fifa22_bot_1", FileId = 4 },
-            new Bot() { Id = 6, GameId = 3, PlayerId = 6, BotFile = "fifa22_bot_2", FileId = 2 },
-            new Bot() { Id = 7, GameId = 4, PlayerId = 7, BotFile = "amongus_bot_1", FileId = 3 },
-            new Bot() { Id = 8, GameId = 4, PlayerId = 8, BotFile = "amongus_bot_2", FileId = 4 },
-            new Bot() { Id = 9, GameId = 5, PlayerId = 9, BotFile = "minecraft_bot_1", FileId = 2 },
-            new Bot() { Id = 10, GameId = 5, PlayerId = 10, BotFile = "minecraft_bot_2", FileId = 4 }
+            new Bot()
+            {
+                Id = 1, GameId = 1, PlayerId = 1, BotFile = "quake3_bot_1", FileId = 2, MemoryUsed = 8000,
+                TimeUsed = 100, Language = Language.C
+            },
+            new Bot()
+            {
+                Id = 2, GameId = 1, PlayerId = 2, BotFile = "quake3_bot_2", FileId = 3, MemoryUsed = 8000,
+                TimeUsed = 100, Language = Language.C
+            },
+            new Bot()
+            {
+                Id = 3, GameId = 2, PlayerId = 3, BotFile = "zelda_bot_1", FileId = 2, MemoryUsed = 8000,
+                TimeUsed = 100, Language = Language.C
+            },
+            new Bot()
+            {
+                Id = 4, GameId = 2, PlayerId = 4, BotFile = "zelda_bot_2", FileId = 2, MemoryUsed = 8000,
+                TimeUsed = 100, Language = Language.C
+            },
+            new Bot()
+            {
+                Id = 5, GameId = 3, PlayerId = 5, BotFile = "fifa22_bot_1", FileId = 4, MemoryUsed = 8000,
+                TimeUsed = 100, Language = Language.C
+            },
+            new Bot()
+            {
+                Id = 6, GameId = 3, PlayerId = 6, BotFile = "fifa22_bot_2", FileId = 2, MemoryUsed = 8000,
+                TimeUsed = 100, Language = Language.C
+            },
+            new Bot()
+            {
+                Id = 7, GameId = 4, PlayerId = 7, BotFile = "amongus_bot_1", FileId = 3, MemoryUsed = 8000,
+                TimeUsed = 100, Language = Language.C
+            },
+            new Bot()
+            {
+                Id = 8, GameId = 4, PlayerId = 8, BotFile = "amongus_bot_2", FileId = 4, MemoryUsed = 8000,
+                TimeUsed = 100, Language = Language.C
+            },
+            new Bot()
+            {
+                Id = 9, GameId = 5, PlayerId = 9, BotFile = "minecraft_bot_1", FileId = 2, MemoryUsed = 8000,
+                TimeUsed = 100, Language = Language.C
+            },
+            new Bot()
+            {
+                Id = 10, GameId = 5, PlayerId = 10, BotFile = "minecraft_bot_2", FileId = 4, MemoryUsed = 8000,
+                TimeUsed = 100, Language = Language.C
+            }
         };
     }
 
@@ -337,10 +397,16 @@ public class Seeder
     {
         return new List<AchievementType>()
         {
-            new AchievementType() { Id = (int)AchievementsTypes.GamePlayed, Description = "You need to play this amount of games" },
-            new AchievementType() { Id = (int)AchievementsTypes.BotsUploads, Description = "You need to upload this amount of bots" },
-            new AchievementType() { Id = (int)AchievementsTypes.WinGames, Description = "You need to win this amount of games" },
-            new AchievementType() { Id = (int)AchievementsTypes.TournamentsWon, Description = "You need to win this amount of tournaments" },
+            new AchievementType()
+                { Id = (int)AchievementsTypes.GamePlayed, Description = "You need to play this amount of games" },
+            new AchievementType()
+                { Id = (int)AchievementsTypes.BotsUploads, Description = "You need to upload this amount of bots" },
+            new AchievementType()
+                { Id = (int)AchievementsTypes.WinGames, Description = "You need to win this amount of games" },
+            new AchievementType()
+            {
+                Id = (int)AchievementsTypes.TournamentsWon, Description = "You need to win this amount of tournaments"
+            },
         };
     }
 
@@ -348,26 +414,33 @@ public class Seeder
     {
         return new List<AchievementThresholds>()
         {
-            new AchievementThresholds() { Id = 1, AchievementTypeId = (int)AchievementsTypes.GamePlayed, Threshold = 10 },
-            new AchievementThresholds() { Id = 2, AchievementTypeId = (int)AchievementsTypes.BotsUploads, Threshold = 4 },
+            new AchievementThresholds()
+                { Id = 1, AchievementTypeId = (int)AchievementsTypes.GamePlayed, Threshold = 10 },
+            new AchievementThresholds()
+                { Id = 2, AchievementTypeId = (int)AchievementsTypes.BotsUploads, Threshold = 4 },
             new AchievementThresholds() { Id = 3, AchievementTypeId = (int)AchievementsTypes.WinGames, Threshold = 5 },
-            new AchievementThresholds() { Id = 4, AchievementTypeId = (int)AchievementsTypes.TournamentsWon, Threshold = 1 },
-            new AchievementThresholds() { Id = 5, AchievementTypeId = (int)AchievementsTypes.GamePlayed, Threshold = 20 },
-            new AchievementThresholds() { Id = 6, AchievementTypeId = (int)AchievementsTypes.BotsUploads, Threshold = 8 },
+            new AchievementThresholds()
+                { Id = 4, AchievementTypeId = (int)AchievementsTypes.TournamentsWon, Threshold = 1 },
+            new AchievementThresholds()
+                { Id = 5, AchievementTypeId = (int)AchievementsTypes.GamePlayed, Threshold = 20 },
+            new AchievementThresholds()
+                { Id = 6, AchievementTypeId = (int)AchievementsTypes.BotsUploads, Threshold = 8 },
             new AchievementThresholds() { Id = 7, AchievementTypeId = (int)AchievementsTypes.WinGames, Threshold = 10 },
-            new AchievementThresholds() { Id = 8, AchievementTypeId = (int)AchievementsTypes.TournamentsWon, Threshold = 5 },
-            new AchievementThresholds() { Id = 9, AchievementTypeId = (int)AchievementsTypes.GamePlayed, Threshold = 5 },
+            new AchievementThresholds()
+                { Id = 8, AchievementTypeId = (int)AchievementsTypes.TournamentsWon, Threshold = 5 },
+            new AchievementThresholds()
+                { Id = 9, AchievementTypeId = (int)AchievementsTypes.GamePlayed, Threshold = 5 },
         };
     }
-    
+
     public static IEnumerable<AchievementRecord> GenerateAchievementRecords()
     {
         return new List<AchievementRecord>()
         {
-            new AchievementRecord() { Id = 1, AchievementTypeId = 1, PlayerId = 1, Value = 20},
-            new AchievementRecord() { Id = 2, AchievementTypeId = 2, PlayerId = 1, Value = 15},
-            new AchievementRecord() { Id = 3, AchievementTypeId = 1, PlayerId = 2, Value = 10},
-            new AchievementRecord() { Id = 4, AchievementTypeId = 2, PlayerId = 2, Value = 15},
+            new AchievementRecord() { Id = 1, AchievementTypeId = 1, PlayerId = 1, Value = 20 },
+            new AchievementRecord() { Id = 2, AchievementTypeId = 2, PlayerId = 1, Value = 15 },
+            new AchievementRecord() { Id = 3, AchievementTypeId = 1, PlayerId = 2, Value = 10 },
+            new AchievementRecord() { Id = 4, AchievementTypeId = 2, PlayerId = 2, Value = 15 },
         };
     }
 }

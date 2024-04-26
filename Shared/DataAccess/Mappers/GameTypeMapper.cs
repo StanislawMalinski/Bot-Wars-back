@@ -6,7 +6,6 @@ namespace Shared.DataAccess.Mappers
 {
     public class GameTypeMapper : IGameTypeMapper
     {
-
         public Game MapRequestToGame(GameRequest gameRequest)
         {
             return new Game
@@ -20,6 +19,7 @@ namespace Shared.DataAccess.Mappers
                 Bot = new List<Bot>(),
                 Tournaments = new List<Tournament>(),
                 Matches = new List<Matches>(),
+                Language = gameRequest.Language
             };
         }
 
@@ -38,6 +38,20 @@ namespace Shared.DataAccess.Mappers
                 MatchesIds = game.Matches?.Select(match => match.Id).ToList(),
                 TournamentsIds = game.Tournaments?.Select(tournament => tournament.Id).ToList(),
                 FileId = game.FileId,
+            };
+        }
+
+        public GameSimpleResponse MapGameToSimpleResponse(Game game)
+        {
+            return new GameSimpleResponse
+            {
+                Id = game.Id,
+                NumbersOfPlayer = game.NumbersOfPlayer,
+                GameFileName = game.GameFile,
+                GameInstructions = game.GameInstructions,
+                InterfaceDefinition = game.InterfaceDefinition,
+                IsAvailableForPlay = game.IsAvailableForPlay,
+                LastModification = game.LastModification,
             };
         }
     }

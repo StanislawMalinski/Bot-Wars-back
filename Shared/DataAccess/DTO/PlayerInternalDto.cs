@@ -15,4 +15,5 @@ public class PlayerInternalDto
     public bool isBanned {get; init;}
     public long Points { get; init; } 
     public Role Role { get; init; } 
+    public bool Deleted {  get; init; }
 }

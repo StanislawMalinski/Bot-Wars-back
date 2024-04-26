@@ -9,10 +9,11 @@
         public long Points { get; set; }
         public string? HashedPassword { get; set; }
         public int RoleId { get; set; }
+        public byte[]? Image { get; set; }
         public DateTime Registered { get; set; }
         public DateTime LastLogin { get; set; }
         public  Role Role { get; set; }
-        
+        public bool Deleted { get; set; }
         public List<Bot>? Bot { get; set; }
         public UserSettings UserSettings { get; set; }
         //public List<MatchPlayers>? MatchPlayers { get; set; }

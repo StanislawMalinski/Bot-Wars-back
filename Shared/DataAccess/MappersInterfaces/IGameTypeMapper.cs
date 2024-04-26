@@ -9,5 +9,6 @@ namespace Shared.DataAccess.Mappers
     {
         Game MapRequestToGame(GameRequest gameRequest);
         GameResponse MapGameToResponse(Game game);
+        GameSimpleResponse MapGameToSimpleResponse(Game game);
     }
 }

@@ -4,6 +4,8 @@ using Shared.DataAccess.AuthorizationRequirements;
 using Shared.DataAccess.Context;
 using Shared.DataAccess.DTO;
 using Shared.DataAccess.DTO.Requests;
+using Shared.DataAccess.DTO.Responses;
+using Shared.DataAccess.Mappers;
 using Shared.DataAccess.MappersInterfaces;
 using Shared.DataAccess.RepositoryInterfaces;
 using Shared.Results;
@@ -20,19 +22,23 @@ namespace Shared.DataAccess.Repositories
         private readonly IPasswordHasher _passwordHasher;
         private readonly IAuthorizationService _authorizationService;
         private readonly IUserContextRepository _userContextRepository;
-
+        private readonly IGameTypeMapper _gameTypeMapper;
+        private readonly IBotMapper _botMapper;
 
         public PlayerRepository(DataContext dataContext,
             IPlayerMapper playerMapper,
             IPasswordHasher passwordHasher,
             IAuthorizationService authorizationService,
-            IUserContextRepository userContextRepository)
+            IUserContextRepository userContextRepository,
+            IGameTypeMapper gameTypeMapper, IBotMapper botMapper)
         {
             _userContextRepository = userContextRepository;
             _authorizationService = authorizationService;
             _passwordHasher = passwordHasher;
             _dataContext = dataContext;
             _playerMapper = playerMapper;
+            _gameTypeMapper = gameTypeMapper;
+            _botMapper = botMapper;
         }
 
         public async Task<HandlerResult<Success, IErrorResult>> CreateAdminAsync(
@@ -196,13 +202,14 @@ namespace Shared.DataAccess.Repositories
 
         public async Task<HandlerResult<Success, IErrorResult>> DeletePlayerAsync(long id)
         {
-            var resPlayer = await _dataContext.Players.FindAsync(id);
-            if (resPlayer is null)
+            var player = await _dataContext.Players.FindAsync(id);
+            if (player is null)
             {
                 return new EntityNotFoundErrorResult();
             }
-
-            _dataContext.Remove(resPlayer);
+            player.Email = "";
+            player.Login = "deleted_" + player.Id.ToString();
+            player.Deleted = true;
             await _dataContext.SaveChangesAsync();
             return new Success();
         }
@@ -266,6 +273,33 @@ namespace Shared.DataAccess.Repositories
                 Data = playerDtos
             };
         }
+        
+        public async Task<HandlerResult<SuccessData<List<BotResponse>>, IErrorResult>> GetBotsForPlayer(long playerId)
+        {
+            var player = await _dataContext
+                .Players
+                .FindAsync(playerId);
+
+            if (player == null)
+            {
+                return new EntityNotFoundErrorResult()
+                {
+                    Message = "EntityNotFound 404",
+                    Title = "Player with given id does not exist"
+                };
+            }
+
+            var bots = await _dataContext
+                .Bots
+                .Where(bot => bot.PlayerId == playerId)
+                .Select(bot => _botMapper.MapBotToResponse(bot))
+                .ToListAsync();
+
+            return new SuccessData<List<BotResponse>>
+            {
+                Data = bots
+            };
+        }
 
         public async Task<HandlerResult<SuccessData<PlayerInfo>, IErrorResult>> GetPlayerInfoAsync(long? playerId)
         {
@@ -285,13 +319,76 @@ namespace Shared.DataAccess.Repositories
             {
                 Login = player.Login,
                 Registered = player.Registered,
-                Point = player.Points
+                Point = player.Points,
+                Id = player.Id
             };
             playerInfo.BotsNumber = _dataContext.Bots.Count(x => x.PlayerId == playerId);
             playerInfo.TournamentNumber = _dataContext.Tournaments.Count(x => x.CreatorId == playerId);
             return new SuccessData<PlayerInfo>()
             {
                 Data = playerInfo
+            };
+        }
+
+        public async Task<HandlerResult<SuccessData<PlayerInfo>, IErrorResult>> GetPlayerInfoAsync(string? playerName)
+        {
+            if (playerName is null)
+            {
+                return new EntityNotFoundErrorResult();
+            }
+
+            var player = await _dataContext.Players.FirstOrDefaultAsync(p => p.Login.Equals(playerName));
+
+            if (player is null)
+            {
+                return new EntityNotFoundErrorResult();
+            }
+
+            PlayerInfo playerInfo = new PlayerInfo
+            {
+                Login = player.Login,
+                Registered = player.Registered,
+                Point = player.Points,
+                Id = player.Id
+            };
+            playerInfo.BotsNumber = _dataContext.Bots.Count(x => x.PlayerId == player.Id);
+            playerInfo.TournamentNumber = _dataContext.Tournaments.Count(x => x.CreatorId == player.Id);
+            return new SuccessData<PlayerInfo>()
+            {
+                Data = playerInfo
+            };
+        }
+
+        public async Task<HandlerResult<SuccessData<List<GameSimpleResponse>>, IErrorResult>> GetMyGames(long playerId)
+        {
+            
+            var res = await _dataContext.Games.Where(x => x.CreatorId == playerId).Select(x=> _gameTypeMapper.MapGameToSimpleResponse(x)).ToListAsync();
+            return new SuccessData<List<GameSimpleResponse>>()
+            {
+                Data = res
+            };
+        }
+
+        public async Task<HandlerResult<Success, IErrorResult>> ChangeImage(PlayerImageRequest imageRequest, long playerId)
+        {
+            var res = await _dataContext.Players.FindAsync(playerId);
+            if (res == null) return new EntityNotFoundErrorResult();
+            res.Image = Convert.FromBase64String(imageRequest.Image!);
+            await _dataContext.SaveChangesAsync();
+            return new Success();
+        }
+
+        public async Task<HandlerResult<SuccessData<string>, IErrorResult>> GetImage(long playerId)
+        {
+            var res = await _dataContext.Players.FindAsync(playerId);
+            if (res == null) return new EntityNotFoundErrorResult();
+            if (res.Image == null)  return new SuccessData<string>
+            {
+                Data = string.Empty
+            };
+            return new SuccessData<string>
+            {
+                Data = Convert.ToBase64String(res.Image)
             };
         }
     }

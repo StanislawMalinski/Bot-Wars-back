@@ -18,6 +18,7 @@ public class TournamentRequest
     public DateTime TournamentsDate { get; set; }
     [NotNull]
     public string? Constraints { get; set; }
-    [NotNull]
-    public string Image { get; set; }
+    public string? Image { get; set; }
+    public int MemoryLimit { get; set; }
+    public int TimeLimit { get; set; }
 }

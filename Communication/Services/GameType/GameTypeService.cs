@@ -4,6 +4,7 @@ using Shared.DataAccess.RepositoryInterfaces;
 using Shared.Results;
 using Shared.Results.IResults;
 using Shared.Results.SuccessResults;
+using System.Drawing.Printing;
 
 namespace Communication.Services.GameType;
 
@@ -14,13 +15,15 @@ public class GameTypeService : IGameService
     {
         _gameRepository = gameRepository;
     }
-    
-
-  
 
     public async Task<HandlerResult<SuccessData<GameResponse>,IErrorResult>> GetGame(long id)
     {
         return await _gameRepository.GetGame(id);
+    }
+
+    public async Task<HandlerResult<SuccessData<List<GameResponse>>, IErrorResult>> Search(string? name, int page, int pagesize)
+    {
+        return await _gameRepository.Search(name, page, pagesize);
     }
 
     public async Task<HandlerResult<Success, IErrorResult>> ModifyGameType(long id, GameRequest gameRequest)
@@ -33,18 +36,23 @@ public class GameTypeService : IGameService
         return await _gameRepository.DeleteGame(id);
     }
 
-    public async Task<HandlerResult<Success, IErrorResult>> CreateGameType(long userId,GameRequest gameRequest)
+    public async Task<HandlerResult<Success, IErrorResult>> CreateGameType(long? userId,GameRequest gameRequest)
     {
         return await _gameRepository.CreateGameType(userId,gameRequest);
     }
 
-    public async Task<HandlerResult<SuccessData<List<GameResponse>>,IErrorResult>> GetGames()
+    public async Task<HandlerResult<SuccessData<List<GameResponse>>,IErrorResult>> GetGames(int page, int pagesize)
     {
-        return await _gameRepository.GetGames();
+        return await _gameRepository.GetGames(page, pagesize);
     }
 
-    public async Task<HandlerResult<SuccessData<List<GameResponse>>,IErrorResult>> GetListOfTypesOfAvailableGames()
+    public async Task<HandlerResult<SuccessData<List<GameResponse>>,IErrorResult>> GetListOfTypesOfAvailableGames(int page, int pagesize)
     {
-        return await _gameRepository.GetAvailableGames();
+        return await _gameRepository.GetAvailableGames(page, pagesize);
+    }
+    
+    public async Task<HandlerResult<SuccessData<List<GameResponse>>,IErrorResult>> GetGamesByPlayer(string? name)
+    {
+        return await _gameRepository.GetGamesByPlayer(name);
     }
 }

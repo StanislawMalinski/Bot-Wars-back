@@ -10,9 +10,9 @@ public class BotMapper : IBotMapper
     {
         return new Bot
         {
-            PlayerId = botRequest.PlayerId,
             GameId = botRequest.GameId,
-            BotFile = botRequest.BotFile.FileName
+            BotFile = botRequest.BotFile.FileName,
+            Language = botRequest.Language,
         };
     }
 
@@ -23,7 +23,10 @@ public class BotMapper : IBotMapper
             Id = bot.Id,
             PlayerId = bot.PlayerId,
             GameId = bot.GameId,
-            FileId = bot.FileId
+            FileId = bot.FileId,
+            Validation = bot.Validation.ToString(),
+            MemoryUsed = bot.MemoryUsed,
+            TimeUsed = bot.TimeUsed
         };
     }
 }

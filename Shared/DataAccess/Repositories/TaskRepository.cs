@@ -20,7 +20,7 @@ public class TaskRepository
         _taskDataContext = taskDataContext;
     }
 
-    public async Task<HandlerResult<SuccessData<long>, IErrorResult>> CreateTask(TaskTypes type, long operatingOn,DateTime scheduledOn , TaskStatus status = TaskStatus.ToDo)
+    public async Task<HandlerResult<SuccessData<long>, IErrorResult>> CreateTask(TaskTypes type, long operatingOn,DateTime scheduledOn , TaskStatus status = TaskStatus.Unassigned)
     {
         _Task task = new _Task
         {
@@ -36,6 +36,7 @@ public class TaskRepository
             Data = res.Entity.Id
         };
     }
+
     public async Task<HandlerResult<SuccessData<_Task>, IErrorResult>> GetTask(long taskId)
     {
         var res = await _taskDataContext.Tasks.FirstOrDefaultAsync(x => x.Id == taskId);
@@ -46,8 +47,6 @@ public class TaskRepository
         };
     }
     
-    
-    
     public async Task<HandlerResult<SuccessData<TaskStatus>, IErrorResult>> CheckStatus(TaskTypes type, long operatingOn)
     {
         var res = await _taskDataContext.Tasks.FirstOrDefaultAsync(x => x.Type == type && x.OperatingOn == operatingOn);
@@ -57,8 +56,6 @@ public class TaskRepository
             Data = res.Status
         };
     }
-    
-   
     
     public async Task<HandlerResult<Success, IErrorResult>> TaskComplete(long taskId)
     {
@@ -74,7 +71,7 @@ public class TaskRepository
         var res = await _taskDataContext.Tasks.Where(x => x.Status == TaskStatus.Doing).ToListAsync();
         foreach (var task in res)
         {
-            task.Status = TaskStatus.ToDo;
+            task.Status = TaskStatus.Unassigned;
         }
         await _taskDataContext.SaveChangesAsync();
         return new Success();

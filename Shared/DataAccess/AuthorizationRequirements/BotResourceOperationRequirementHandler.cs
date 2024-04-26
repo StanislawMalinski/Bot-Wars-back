@@ -15,9 +15,16 @@ public class BotResourceOperationRequirementHandler: AuthorizationHandler<Resour
             context.Succeed(requirement);
         }
         
-        var userId = context.User.FindFirst(c => c.Type == ClaimTypes.NameIdentifier)!.Value;
+        var userId = context.User.FindFirst(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
+        var userRoleName = context.User.FindFirst(c => c.Type == ClaimTypes.Role)?.Value;
+
+        if (userId is null || userRoleName is null)
+        {
+            context.Fail();
+            return Task.CompletedTask;
+        }
         
-        if (resource.PlayerId == int.Parse(userId))
+        if (resource.PlayerId == int.Parse(userId) || userRoleName.Equals("Admin"))
         {
             context.Succeed(requirement);
         }

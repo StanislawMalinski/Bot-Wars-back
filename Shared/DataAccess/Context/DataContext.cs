@@ -20,7 +20,6 @@ namespace Shared.DataAccess.Context
         public DbSet<Role> Roles { get; set; }
         public DbSet<TournamentReference> TournamentReferences { get; set; }
         public DbSet<PointHistory> PointHistories { get; set; }
-        public DbSet<FileEntity> Files { get; set; }
         public DbSet<UserSettings> UserSettings { get; set; }
         public DbSet<AchievementRecord> AchievementRecord { get; set; }
         public DbSet<AchievementType> AchievementType { get; set; }
@@ -41,7 +40,6 @@ namespace Shared.DataAccess.Context
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(GameConfigurations).Assembly);
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(TournamentReferenceConfigurations).Assembly);
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(PointHistoryConfigurations).Assembly);
-            modelBuilder.ApplyConfigurationsFromAssembly(typeof(FileEntityConfiguration).Assembly);
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(AchievementRecordConfigurations).Assembly);
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(AchievementTypeConfigurations).Assembly);
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(AchievementThresholdConfigurations).Assembly);

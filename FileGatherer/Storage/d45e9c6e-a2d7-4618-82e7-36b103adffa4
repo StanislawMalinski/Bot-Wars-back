@@ -33,7 +33,9 @@ bool isValidCard(const string& faceValue, const string& suit) {
 
 int main() {
     string input;
-
+    
+    vector<long> cossr(1000000);
+    cossr[12] = 232;
     vector<Card> playerHand;
     vector<Card> dealerHand;
 

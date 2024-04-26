@@ -17,15 +17,6 @@ public class AchievementController : Controller
         _achievementService = achievementService;
     }
 
-
-    [HttpPost("unlockAchievement")]
-    public async Task<IActionResult> UnlockAchievement([FromQuery] long playerId,
-        [FromQuery] long achievementTypeId, [FromQuery] long currentPlayerThreshold)
-    {
-        return (await _achievementService.UnlockAchievement(playerId, achievementTypeId, currentPlayerThreshold))
-            .Match(Ok, this.ErrorResult);
-    }
-
     [HttpGet("getAchievementsForPlayer")]
     public async Task<IActionResult> GetAchievementsForPlayer([FromQuery] long playerId)
     {
@@ -36,6 +27,12 @@ public class AchievementController : Controller
     public async Task<IActionResult> GetAchievementTypes()
     {
         return (await _achievementService.GetAchievementTypes()).Match(Ok, this.ErrorResult);
+    }
+    
+    [HttpGet("getAchivmentIcon")]
+    public async Task<IActionResult> getAchivmentIcon()
+    {
+        return null;
     }
     
 }

@@ -7,35 +7,35 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <Folder Include="Exceptions\" />
-      <Folder Include="Migrations\" />
-      <Folder Include="Models\" />
-      <Folder Include="Resources\ArchivedGames\" />
-      <Folder Include="Resources\Bots\" />
-      <Folder Include="Resources\ConstrainFiles\" />
-      <Folder Include="Resources\Games\" />
-      <Folder Include="Resources\GameViewImages\" />
-      <Folder Include="Resources\Instructions\" />
-      <Folder Include="Resources\Logs\" />
-      <Folder Include="TMigrations\" />
+        <Folder Include="Exceptions\"/>
+        <Folder Include="Migrations\"/>
+        <Folder Include="Models\"/>
+        <Folder Include="Resources\ArchivedGames\"/>
+        <Folder Include="Resources\Bots\"/>
+        <Folder Include="Resources\ConstrainFiles\"/>
+        <Folder Include="Resources\Games\"/>
+        <Folder Include="Resources\GameViewImages\"/>
+        <Folder Include="Resources\Instructions\"/>
+        <Folder Include="Resources\Logs\"/>
+        <Folder Include="TMigrations\"/>
     </ItemGroup>
 
     <ItemGroup>
-      <PackageReference Include="BCrypt.Net-Next" Version="4.0.3" />
-      <PackageReference Include="FluentValidation.AspNetCore" Version="11.3.0" />
-      <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="11.9.0" />
-      <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="7.0.9" />
-      <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.2.5" />
-      <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.0" />
-      <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.0">
-        <PrivateAssets>all</PrivateAssets>
-        <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-      </PackageReference>
-      <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.0" />
-      <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.0">
-        <PrivateAssets>all</PrivateAssets>
-        <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-      </PackageReference>
+        <PackageReference Include="BCrypt.Net-Next" Version="4.0.3"/>
+        <PackageReference Include="FluentValidation.AspNetCore" Version="11.3.0"/>
+        <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="11.9.0"/>
+        <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="7.0.9"/>
+        <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.2.5"/>
+        <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.0"/>
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.0">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+        <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.0"/>
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.0">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
     </ItemGroup>
 
     <ItemGroup>

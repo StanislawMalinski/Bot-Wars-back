@@ -31,4 +31,9 @@ public class AchievementService : IAchievementService
     {
         return await _achievementsRepository.GetAchievementTypes();
     }
+
+    public Task GetAchievementIcon()
+    {
+        throw new NotImplementedException();
+    }
 }
