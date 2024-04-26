@@ -1,6 +1,7 @@
 ﻿using Shared.DataAccess.DTO;
 using Shared.DataAccess.DTO.Requests;
 using Shared.DataAccess.DTO.Responses;
+using Shared.DataAccess.Pagination;
 using Shared.Results;
 using Shared.Results.IResults;
 using Shared.Results.SuccessResults;
@@ -9,10 +10,8 @@ namespace Shared.DataAccess.RepositoryInterfaces
 {
     public interface ITournamentService
     {
-        public Task<HandlerResult<SuccessData<List<TournamentResponse>>, IErrorResult>> GetListOfTournaments();
-
         public Task<HandlerResult<SuccessData<List<TournamentResponse>>, IErrorResult>> GetListOfTournamentsFiltered(
-            TournamentFilterRequest tournamentFilterRequest, int page, int pagesize);
+            TournamentFilterRequest tournamentFilterRequest, PageParameters pageParameters);
 
         public Task<HandlerResult<SuccessData<TournamentResponse>, IErrorResult>> GetTournament(long id);
 

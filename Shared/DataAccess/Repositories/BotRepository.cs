@@ -1,15 +1,12 @@
-﻿using System.Diagnostics;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
-using Shared.DataAccess.AuthorizationRequirements;
 using Shared.DataAccess.Context;
-using Shared.DataAccess.DAO;
 using Shared.DataAccess.DataBaseEntities;
 using Shared.DataAccess.DTO.Requests;
 using Shared.DataAccess.DTO.Responses;
 using Shared.DataAccess.Enumerations;
 using Shared.DataAccess.Mappers;
+using Shared.DataAccess.Pagination;
 using Shared.DataAccess.RepositoryInterfaces;
 using Shared.Results;
 using Shared.Results.ErrorResults;
@@ -63,18 +60,6 @@ public class BotRepository : IBotRepository
     //    };
     //}
 
-    public async Task<HandlerResult<SuccessData<List<BotResponse>>, IErrorResult>> GetAllBots()
-    {
-        var bots = await _dataContext
-            .Bots
-            .Select(x => _botMapper.MapBotToResponse(x))
-            .ToListAsync();
-        return new SuccessData<List<BotResponse>>
-        {
-            Data = bots
-        };
-    }
-
     public async Task<HandlerResult<SuccessData<Bot>, IErrorResult>> GetBot(long botId)
     {
         var res = await _dataContext
@@ -92,7 +77,8 @@ public class BotRepository : IBotRepository
         return new SuccessData<BotResponse>() { Data = _botMapper.MapBotToResponse(bot) };
     }
 
-    public async Task<HandlerResult<SuccessData<List<BotResponse>>, IErrorResult>> GetBotsForPlayer(long playerId)
+    public async Task<HandlerResult<SuccessData<List<BotResponse>>, IErrorResult>> GetBotsForPlayer(long playerId,
+        PageParameters pageParameters)
     {
         var player = await _dataContext
             .Players
@@ -110,6 +96,8 @@ public class BotRepository : IBotRepository
         var bots = await _dataContext
             .Bots
             .Where(bot => bot.PlayerId == playerId)
+            .Skip(pageParameters.PageNumber * pageParameters.PageSize)
+            .Take(pageParameters.PageSize)
             .Select(bot => _botMapper.MapBotToResponse(bot))
             .ToListAsync();
 
@@ -121,7 +109,6 @@ public class BotRepository : IBotRepository
 
     public async Task<HandlerResult<SuccessData<IFormFile>, IErrorResult>> GetBotFileForPlayer(long botId)
     {
-
         var bot = await _dataContext
             .Bots
             .FirstOrDefaultAsync(bot => bot.Id == botId);
@@ -168,7 +155,7 @@ public class BotRepository : IBotRepository
     }
 
     public async Task<HandlerResult<SuccessData<List<BotResponse>>, IErrorResult>> GetBotsForTournament(
-        long tournamentId)
+        long tournamentId, PageParameters pageParameters)
     {
         var tournament = await _dataContext
             .Tournaments
@@ -196,7 +183,9 @@ public class BotRepository : IBotRepository
 
         return new SuccessData<List<BotResponse>>
         {
-            Data = responses
+            Data = responses.Skip(pageParameters.PageNumber * pageParameters.PageSize)
+                .Take(pageParameters.PageSize)
+                .ToList()
         };
     }
 
