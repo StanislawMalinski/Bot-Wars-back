@@ -25,18 +25,13 @@ public class GameRepository : IGameRepository
 
     // move to config
     private readonly string _gathererEndpoint = "http://host.docker.internal:7002/api/Gatherer";
-    //private readonly IAuthorizationService _authorizationService;
-    //private readonly IUserContextRepository _userContextRepository;
+
 
     public GameRepository(DataContext dataContext,
         IGameTypeMapper gameTypeMapper,
         HttpClient httpClient
-        //IAuthorizationService authorizationService,
-        //IUserContextRepository userContextRepository
-        )
+    )
     {
-        //_userContextRepository = userContextRepository;
-        //_authorizationService = authorizationService;
         _mapper = gameTypeMapper;
         _dataContext = dataContext;
         _httpClient = httpClient;
@@ -182,15 +177,6 @@ public class GameRepository : IGameRepository
                 Message = "No such element could have been found"
             };
         }
-        /*
-        var authorizationResult = _authorizationService.AuthorizeAsync(_userContextRepository.GetUser(),
-            gameToRemove,
-            new ResourceOperationRequirement(ResourceOperation.Delete)).Result;
-
-        if (!authorizationResult.Succeeded)
-        {
-            return new UnauthorizedError();
-        }*/
 
         if (gameToRemove.Tournaments != null)
             _dataContext
@@ -238,15 +224,6 @@ public class GameRepository : IGameRepository
                 Message = "No such element could have been found"
             };
         }
-        /*
-        var authorizationResult = _authorizationService.AuthorizeAsync(_userContextRepository.GetUser(),
-            resGame,
-            new ResourceOperationRequirement(ResourceOperation.Update)).Result;
-
-        if (!authorizationResult.Succeeded)
-        {
-            return new UnauthorizedError();
-        }*/
 
         resGame.InterfaceDefinition = gameRequest.InterfaceDefinition;
         resGame.GameInstructions = gameRequest.GameInstructions;
@@ -283,5 +260,13 @@ public class GameRepository : IGameRepository
         var res = await _dataContext.Games.FindAsync(gameId);
         res.IsAvailableForPlay = false;
         return new Success();
+    }
+
+    public async Task<long?> GetCreatorId(long gameId)
+    {
+        var resGame = await _dataContext
+            .Games
+            .FirstOrDefaultAsync(game => game.Id == gameId);
+        return resGame?.CreatorId;
     }
 }

@@ -119,35 +119,13 @@ public class BotRepository : IBotRepository
         };
     }
 
-    public async Task<HandlerResult<SuccessData<IFormFile>, IErrorResult>> GetBotFileForPlayer(long playerId,
-        long botId)
+    public async Task<HandlerResult<SuccessData<IFormFile>, IErrorResult>> GetBotFileForPlayer(long botId)
     {
-        var player = await _dataContext
-            .Players
-            .FindAsync(playerId);
-
-        if (player == null)
-        {
-            return new EntityNotFoundErrorResult()
-            {
-                Message = "EntityNotFound 404",
-                Title = "Player with given id does not exist"
-            };
-        }
 
         var bot = await _dataContext
             .Bots
-            .FirstOrDefaultAsync(bot => bot.PlayerId == playerId && bot.Id == botId);
-        /*
-        var authorizationResult = _authorizationService.AuthorizeAsync(_userContextRepository.GetUser(),
-            bot,
-            new ResourceOperationRequirement(ResourceOperation.ReadRestricted)).Result;
-        
-        if (!authorizationResult.Succeeded)
-        {
-            return new UnauthorizedError();
-        }*/
-        
+            .FirstOrDefaultAsync(bot => bot.Id == botId);
+
         if (bot == null)
         {
             return new EntityNotFoundErrorResult()
