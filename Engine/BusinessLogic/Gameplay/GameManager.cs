@@ -3,6 +3,7 @@ using System.Runtime.InteropServices.JavaScript;
 using Engine.BusinessLogic.Gameplay.Interface;
 using Engine.FileWorker;
 using Shared.DataAccess.DataBaseEntities;
+using Shared.DataAccess.Enumerations;
 
 namespace Engine.BusinessLogic.Gameplay;
 
@@ -16,12 +17,12 @@ public class GameManager : IGameManager
         botsArray = botsData.ToArray();
         FileManager manager = new FileManager(new HttpClient()); //???
         bots = new IOProgramWrapper[botsData.Count()];
-        IOProgramWrapper game = new IOProgramWrapper(await manager.GetGameFilepath(gameData),memoryLimit,timeLimit);
+        IOProgramWrapper game = new IOProgramWrapper(await manager.GetGameFilepath(gameData),memoryLimit,timeLimit,gameData.Language);
         int ind = 0;
         
         foreach (var bot in botsArray)
         {
-            bots[ind] = new IOProgramWrapper( await manager.GetBotFilepath(bot),memoryLimit,timeLimit);
+            bots[ind] = new IOProgramWrapper( await manager.GetBotFilepath(bot),memoryLimit,timeLimit,bot.Language);
             await bots[ind].Run();
             ind++;
         }
