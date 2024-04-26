@@ -7,6 +7,7 @@ using Shared.Results.SuccessResults;
 using System.Drawing.Printing;
 using Microsoft.AspNetCore.Authorization;
 using Shared.DataAccess.AuthorizationRequirements;
+using Shared.DataAccess.Pagination;
 using Shared.Results.ErrorResults;
 
 namespace Communication.Services.GameType;
@@ -31,10 +32,9 @@ public class GameTypeService : IGameService
         return await _gameRepository.GetGame(id);
     }
 
-    public async Task<HandlerResult<SuccessData<List<GameResponse>>, IErrorResult>> Search(string? name, int page,
-        int pagesize)
+    public async Task<HandlerResult<SuccessData<List<GameResponse>>, IErrorResult>> Search(string? name, PageParameters pageParameters)
     {
-        return await _gameRepository.Search(name, page, pagesize);
+        return await _gameRepository.Search(name, pageParameters);
     }
 
     public async Task<HandlerResult<Success, IErrorResult>> ModifyGameType(long id, GameRequest gameRequest)
@@ -87,19 +87,19 @@ public class GameTypeService : IGameService
         return await _gameRepository.CreateGameType(userId, gameRequest);
     }
 
-    public async Task<HandlerResult<SuccessData<List<GameResponse>>, IErrorResult>> GetGames(int page, int pagesize)
+    public async Task<HandlerResult<SuccessData<List<GameResponse>>, IErrorResult>> GetGames(PageParameters pageParameters)
     {
-        return await _gameRepository.GetGames(page, pagesize);
+        return await _gameRepository.GetGames(pageParameters);
     }
 
     public async Task<HandlerResult<SuccessData<List<GameResponse>>, IErrorResult>> GetListOfTypesOfAvailableGames(
-        int page, int pagesize)
+        PageParameters pageParameters)
     {
-        return await _gameRepository.GetAvailableGames(page, pagesize);
+        return await _gameRepository.GetAvailableGames(pageParameters);
     }
 
-    public async Task<HandlerResult<SuccessData<List<GameResponse>>, IErrorResult>> GetGamesByPlayer(string? name)
+    public async Task<HandlerResult<SuccessData<List<GameResponse>>, IErrorResult>> GetGamesByPlayer(string? name, PageParameters pageParameters)
     {
-        return await _gameRepository.GetGamesByPlayer(name);
+        return await _gameRepository.GetGamesByPlayer(name, pageParameters);
     }
 }
