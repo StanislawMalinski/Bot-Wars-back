@@ -13,20 +13,23 @@ public class GameManager : IGameManager
     private Bot[] botsArray;
     public async Task<GameResult> PlayGame(Game gameData, List<Bot> botsData,int memoryLimit = 1073741824, int timeLimit=2000)
     {
-        
+        Console.WriteLine("play game ");
         botsArray = botsData.ToArray();
         FileManager manager = new FileManager(new HttpClient()); //???
         bots = new IOProgramWrapper[botsData.Count()];
+        Console.WriteLine("play wrapery ");
         IOProgramWrapper game = new IOProgramWrapper(await manager.GetGameFilepath(gameData),memoryLimit,timeLimit,gameData.Language);
         int ind = 0;
         
         foreach (var bot in botsArray)
         {
+            Console.WriteLine("bots playa");
             bots[ind] = new IOProgramWrapper( await manager.GetBotFilepath(bot),memoryLimit,timeLimit,bot.Language);
+            Console.WriteLine("bot id "+bot.Id);
             await bots[ind].Run();
             ind++;
         }
-
+        Console.WriteLine("bots play");
         ind = 0;
         foreach (var bot in botsArray)
         {
@@ -45,6 +48,7 @@ public class GameManager : IGameManager
         
         
         bool ok = true;
+        Console.WriteLine("play game run ");
         await game.Run();
         Console.WriteLine("ropoczęcie ");
         string? curr = await game.Get();

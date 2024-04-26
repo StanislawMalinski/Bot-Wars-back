@@ -29,6 +29,7 @@ public class IOProgramWrapper : ICorespondable
     public IOProgramWrapper(string path,int memorylimit,int timelimit,Language language)
     {
         _path = path;
+        Console.WriteLine(_path+" siceiszka1");
         this.memorylimit = memorylimit;
         this.timelimit = timelimit;
         _language = language;
@@ -45,7 +46,7 @@ public class IOProgramWrapper : ICorespondable
         _process = new Process();
        
         
-        
+        Console.WriteLine(_path+" siceiszka");
         ProcessStartInfo startInfo;
         switch (_language)
         {
@@ -71,6 +72,22 @@ public class IOProgramWrapper : ICorespondable
                     //ulimit -v "+memorylimit+";
                     FileName = "bash",
                     Arguments = "-c \"python3 "+_path+ "\"",
+                    //Arguments = "-c \"(ulimit -v 15000  ; ./"+_path+")\" ",
+                    RedirectStandardInput = true,
+                    RedirectStandardOutput = true,
+                    UseShellExecute = false,
+                    CreateNoWindow = true,
+                    RedirectStandardError = true,
+                    UserName = "userexe"
+
+                };
+                break;
+            case Language.Java:
+                startInfo = new ProcessStartInfo
+                {
+                    //ulimit -v "+memorylimit+";
+                    FileName = "bash",
+                    Arguments = "-c \"java "+_path+ "\"",
                     //Arguments = "-c \"(ulimit -v 15000  ; ./"+_path+")\" ",
                     RedirectStandardInput = true,
                     RedirectStandardOutput = true,

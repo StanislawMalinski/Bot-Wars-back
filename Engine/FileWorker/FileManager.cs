@@ -61,66 +61,21 @@ public class FileManager
         }
     }
     
-   
-    public async Task<HandlerResult<Success,IErrorResult>> addbot(BotFileDto botFileDto)
-    {
-        long id = botFileDto.BotId;
-        var fres = await SaveFile(botFileDto.file,id , BotFilePath,Language.C);
-        if (!fres)
-        {
-            return new NotImplementedError()
-            {
-                Message = "bląd kopilcji"
-            };
-        }
-
-        var res = await Compile(id, Language.C, BotFilePath);
-        if (!res)
-        {
-            return new NotImplementedError()
-            {
-                Message = "bląd kopilcji"
-            };
-        }
-        return new Success();
-
-    }
-    public async Task<HandlerResult<Success,IErrorResult>> addGame(GameFileDto gameFileDto){
-        
-        long id = gameFileDto.GameId;
-        var fres = await SaveFile(gameFileDto.file,id , GameFilePath, Language.C);
-        if (!fres)
-        {
-            return new NotImplementedError()
-            {
-                Message = "plik się nie zapisał"
-            };
-        }
-
-        var res = await Compile(id, Language.C, GameFilePath);
-       
-        if (!res)
-        {
-            return new NotImplementedError()
-            {
-                Message = "bląd kopilcji"
-            };
-        }
-        return new Success();
-    }
-
-    private async Task getBotFile(long id, long fileId,Language language)
+    private async Task GetBotFile(long id,string fileName, long fileId,Language language)
     {
         var file = await GetFileFromStorage(fileId);
-        
-        SaveFileAs(BotFilePath,id,file,language);
-        await Compile(id, Language.C, BotFilePath);
+        string newBotPath = BotFilePath + "/" + id;
+        Directory.CreateDirectory(newBotPath);
+        SaveFileAs(newBotPath,fileName,file,language);
+        await Compile(fileName, language, newBotPath);
     }
-    private async Task getGameFile(long id, long fileId,Language language)
+    private async Task GetGameFile(long id,string fileName, long fileId,Language language)
     {
         var file = await GetFileFromStorage(fileId);
-        SaveFileAs(GameFilePath,id,file,language);
-        bool res = await Compile(id, Language.C, GameFilePath);
+        string newGamePath =GameFilePath+ "/" + id;
+        Directory.CreateDirectory(newGamePath);
+        SaveFileAs(newGamePath,fileName,file,language);
+        bool res = await Compile(fileName, language, newGamePath);
     }
     private async Task<string> GetFileFromStorage(long fileId)
     {
@@ -131,15 +86,19 @@ public class FileManager
         }
         return await res.Content.ReadAsStringAsync();
     }
-    private void SaveFileAs( string where,long id, string fileContent,Language language)
+    private void SaveFileAs( string where,string filename, string fileContent,Language language)
     {
+       
         switch (language)
         {
             case Language.C:
-                System.IO.File.WriteAllText($"{where}/{id}.cpp", fileContent);
+                System.IO.File.WriteAllText($"{where}/{ Path.GetFileNameWithoutExtension(filename)}.cpp", fileContent);
                 break;
             case Language.PYTHON:
-                System.IO.File.WriteAllText($"{where}/{id}.py", fileContent);
+                System.IO.File.WriteAllText($"{where}/{ Path.GetFileNameWithoutExtension(filename)}.py", fileContent);
+                break;
+            case Language.Java:
+                System.IO.File.WriteAllText($"{where}/{ Path.GetFileNameWithoutExtension(filename)}.java", fileContent);
                 break;
             
         }
@@ -147,25 +106,39 @@ public class FileManager
     }
     public async Task<string> GetBotFilepath(Bot bot)
     {
-        string[] dirs = Directory.GetFiles(BotFilePath, bot.Id + ".*");
-        foreach(string s in dirs)
+        if (Directory.GetDirectories(BotFilePath, bot.Id.ToString()).Length != 0)
         {
-            if (Path.GetExtension(s) == ".out")
+            
+            string[] dirs;
+            switch (bot.Language)
             {
-                return s;
-            }
-            if (Path.GetExtension(s) == ".py")
-            {
-                return s;
+                case Language.C:
+                    dirs = Directory.GetFiles($"{BotFilePath}/{bot.Id}",$"{ Path.GetFileNameWithoutExtension(bot.BotFile)}.out");
+                    if (dirs.Length != 0) return dirs[0];
+                    break;
+                case Language.PYTHON:
+                    dirs = Directory.GetFiles($"{BotFilePath}/{bot.Id}",
+                        $"{Path.GetFileNameWithoutExtension(bot.BotFile)}.py");
+                    if (dirs.Length != 0) return dirs[0];
+                    break;
+                case Language.Java:
+                    dirs = Directory.GetFiles($"{BotFilePath}/{bot.Id}",
+                        $"{Path.GetFileNameWithoutExtension(bot.BotFile)}.class");
+                    if (dirs.Length != 0) return dirs[0];
+                    break;
+                
             }
         }
-        await getBotFile(bot.Id,bot.FileId,bot.Language);
+       
+        await GetBotFile(bot.Id,bot.BotFile, bot.FileId,bot.Language);
         switch (bot.Language)
         {
             case Language.C:
-                return $"{BotFilePath}/{bot.Id}.out";
+                return $"{BotFilePath}/{bot.Id}/{ Path.GetFileNameWithoutExtension(bot.BotFile)}.out";
             case Language.PYTHON:
-                return $"{BotFilePath}/{bot.Id}.py";
+                return $"{BotFilePath}/{bot.Id}/{Path.GetFileNameWithoutExtension(bot.BotFile)}.py";
+            case Language.Java:
+                return $"{BotFilePath}/{bot.Id}/{Path.GetFileNameWithoutExtension(bot.BotFile)}.class";
         }
         
         return string.Empty;
@@ -173,26 +146,43 @@ public class FileManager
     
     public async Task<string> GetGameFilepath(Game game)
     {
-        string[] dirs = Directory.GetFiles(GameFilePath, game.Id + ".*");
-        foreach(string s in dirs)
-        {
-            if (Path.GetExtension(s) == ".out")
-            {
-                return s;
-            }
-            if (Path.GetExtension(s) == ".py")
-            {
-                return s;
-            }
-        }
-        await getGameFile(game.Id,game.FileId,game.Language);
-        /*switch ()
+       
+        if (Directory.GetDirectories(GameFilePath, game.Id.ToString()).Length != 0)
         {
             
-        }*/ ;
-       
-
-        return $"{GameFilePath}/{game.Id}.out";
+            string[] dirs;
+            switch (game.Language)
+            {
+                case Language.C:
+                    dirs = Directory.GetFiles($"{GameFilePath}/{game.Id}",$"{ Path.GetFileNameWithoutExtension(game.GameFile)}.out");
+                    if (dirs.Length != 0) return dirs[0];
+             
+                    break;
+                case Language.PYTHON:
+                    dirs = Directory.GetFiles($"{GameFilePath}/{game.Id}/{ Path.GetFileNameWithoutExtension(game.GameFile)}.py");
+                    if (dirs.Length != 0) return dirs[0];
+                    break;
+                case Language.Java:
+                    dirs = Directory.GetFiles($"{GameFilePath}/{game.Id}/{ Path.GetFileNameWithoutExtension(game.GameFile)}.java");
+                    if (dirs.Length != 0) return dirs[0];
+                    break;
+                
+            }
+        }
+     
+        await GetGameFile(game.Id,game.GameFile, game.FileId,game.Language);
+     
+        switch (game.Language)
+        {
+            case Language.C:
+                return $"{GameFilePath}/{game.Id}/{ Path.GetFileNameWithoutExtension(game.GameFile)}.out";
+            case Language.PYTHON:
+                return $"{GameFilePath}/{game.Id}/{Path.GetFileNameWithoutExtension(game.GameFile)}.py";
+            case Language.Java:
+                return $"{GameFilePath}/{game.Id}/{Path.GetFileNameWithoutExtension(game.GameFile)}.class";
+        }
+        
+        return string.Empty;
     }
 
     public async Task<bool> TestSaveFile(IFormFile file, long id, string where)
@@ -210,22 +200,28 @@ public class FileManager
         return true;
     }
 
-    private async Task<bool> Compile(long id, Language language,string where)
+    private async Task<bool> Compile(string fileName, Language language,string where)
     {
         string filepath;
         string compileCommand;
+        
         switch (language)
         {
             case (Language.C):
-                filepath = where + "/"+  id + ".cpp";
-                compileCommand = "g++ -o "+ where + "/"+id+".out "+filepath;
+                filepath =$"{where}/{ Path.GetFileNameWithoutExtension(fileName)}.cpp";
+                compileCommand = $"g++ -o {where}/{Path.GetFileNameWithoutExtension(fileName)}.out {filepath}"; 
                 
                 //string compileCommand = "-c g++ -o "+ id+".out "+filepath;
                 return await ExecuteCommand(compileCommand);
             case (Language.PYTHON):
-                filepath = where + "/"+  id + ".py";
+                filepath =$"{where}/{ Path.GetFileNameWithoutExtension(fileName)}.py";
                 compileCommand = "chmod +x "+filepath;
                 return await ExecuteCommand(compileCommand);
+            case (Language.Java):
+                filepath =$"{where}/{ Path.GetFileNameWithoutExtension(fileName)}.java";
+                compileCommand = "javac "+filepath;
+                return await ExecuteCommand(compileCommand);
+            
         }
 
         return false;
