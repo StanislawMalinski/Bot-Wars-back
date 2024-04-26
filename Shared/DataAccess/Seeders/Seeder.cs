@@ -106,7 +106,7 @@ public class Seeder
                 Id = 2, NumbersOfPlayer = 1, LastModification = DateTime.Now,
                 GameFile = "The Legend of Zelda: Breath of the Wild",
                 GameInstructions = "Embark on an epic adventure to defeat the Calamity Ganon and save Hyrule.",
-                InterfaceDefinition = "Action-Adventure", IsAvailableForPlay = true, FileId = 1, CreatorId = 1
+                InterfaceDefinition = "Action-Adventure", IsAvailableForPlay = true, FileId = 12, CreatorId = 1
             },
             new Game()
             {
@@ -335,44 +335,83 @@ public class Seeder
             },
             new Bot()
             {
-                Id = 3, GameId = 2, PlayerId = 3, BotFile = "zelda_bot_1", FileId = 2, MemoryUsed = 8000,
+                Id = 3, GameId = 1, PlayerId = 3, BotFile = "zelda_bot_1", FileId = 2, MemoryUsed = 8000,
                 TimeUsed = 100, Language = Language.C
             },
             new Bot()
             {
-                Id = 4, GameId = 2, PlayerId = 4, BotFile = "zelda_bot_2", FileId = 2, MemoryUsed = 8000,
+                Id = 4, GameId = 1, PlayerId = 4, BotFile = "zelda_bot_2", FileId = 2, MemoryUsed = 8000,
                 TimeUsed = 100, Language = Language.C
             },
             new Bot()
             {
-                Id = 5, GameId = 3, PlayerId = 5, BotFile = "fifa22_bot_1", FileId = 4, MemoryUsed = 8000,
+                Id = 5, GameId = 1, PlayerId = 5, BotFile = "fifa22_bot_1", FileId = 4, MemoryUsed = 8000,
                 TimeUsed = 100, Language = Language.C
             },
             new Bot()
             {
-                Id = 6, GameId = 3, PlayerId = 6, BotFile = "fifa22_bot_2", FileId = 2, MemoryUsed = 8000,
+                Id = 6, GameId = 1, PlayerId = 6, BotFile = "fifa22_bot_2", FileId = 2, MemoryUsed = 8000,
                 TimeUsed = 100, Language = Language.C
             },
             new Bot()
             {
-                Id = 7, GameId = 4, PlayerId = 7, BotFile = "amongus_bot_1", FileId = 3, MemoryUsed = 8000,
+                Id = 7, GameId = 1, PlayerId = 7, BotFile = "amongus_bot_1", FileId = 3, MemoryUsed = 8000,
                 TimeUsed = 100, Language = Language.C
             },
             new Bot()
             {
-                Id = 8, GameId = 4, PlayerId = 8, BotFile = "amongus_bot_2", FileId = 4, MemoryUsed = 8000,
+                Id = 8, GameId = 1, PlayerId = 8, BotFile = "amongus_bot_2", FileId = 4, MemoryUsed = 8000,
                 TimeUsed = 100, Language = Language.C
             },
             new Bot()
             {
-                Id = 9, GameId = 5, PlayerId = 9, BotFile = "minecraft_bot_1", FileId = 2, MemoryUsed = 8000,
+                Id = 9, GameId = 1, PlayerId = 9, BotFile = "minecra", FileId = 2, MemoryUsed = 8000,
                 TimeUsed = 100, Language = Language.C
             },
             new Bot()
             {
-                Id = 10, GameId = 5, PlayerId = 10, BotFile = "minecraft_bot_2", FileId = 4, MemoryUsed = 8000,
+                Id = 10, GameId = 1, PlayerId = 10, BotFile = "minecr", FileId = 4, MemoryUsed = 8000,
                 TimeUsed = 100, Language = Language.C
+            },
+            new Bot()
+            {
+                Id = 11, GameId = 2, PlayerId = 2, BotFile = "minecraft_bot_2", FileId = 9, MemoryUsed = 8000,
+                TimeUsed = 100, Language = Language.PYTHON
             }
+            ,
+            new Bot()
+            {
+                Id = 12, GameId = 2, PlayerId = 3, BotFile = "minecraft_bot_2", FileId = 10, MemoryUsed = 8000,
+                TimeUsed = 100, Language = Language.PYTHON
+            }
+            ,
+            new Bot()
+            {
+                Id = 13, GameId = 2, PlayerId = 4, BotFile = "minecraft_bot_2", FileId = 11, MemoryUsed = 8000,
+                TimeUsed = 100, Language = Language.C
+            },
+            new Bot()
+            {
+                Id = 14, GameId = 2, PlayerId = 5, BotFile = "minecraft_bot_2", FileId = 9, MemoryUsed = 8000,
+                TimeUsed = 100, Language = Language.PYTHON
+            },
+            new Bot()
+            {
+                Id = 15, GameId = 2, PlayerId = 6, BotFile = "minecraft_bot_2", FileId = 10, MemoryUsed = 8000,
+                TimeUsed = 100, Language = Language.PYTHON
+            },
+            new Bot()
+            {
+                Id = 16, GameId = 2, PlayerId = 7, BotFile = "minecraft_bot_2", FileId = 11, MemoryUsed = 8000,
+                TimeUsed = 100, Language = Language.C
+            },
+            new Bot()
+            {
+                Id = 17, GameId = 2, PlayerId = 8, BotFile = "minecraft_bot_2", FileId = 9, MemoryUsed = 8000,
+                TimeUsed = 100, Language = Language.PYTHON
+            }
+            
+            
         };
     }
 
@@ -384,12 +423,19 @@ public class Seeder
             new TournamentReference() { Id = 2, tournamentId = 1, botId = 2 },
             new TournamentReference() { Id = 3, tournamentId = 2, botId = 3 },
             new TournamentReference() { Id = 4, tournamentId = 2, botId = 4 },
-            new TournamentReference() { Id = 5, tournamentId = 5, botId = 10 },
+            new TournamentReference() { Id = 5, tournamentId = 2, botId = 10 },
             new TournamentReference() { Id = 6, tournamentId = 1, botId = 5 },
             new TournamentReference() { Id = 7, tournamentId = 1, botId = 6 },
             new TournamentReference() { Id = 8, tournamentId = 1, botId = 7 },
             new TournamentReference() { Id = 9, tournamentId = 1, botId = 8 },
             new TournamentReference() { Id = 10, tournamentId = 1, botId = 9 },
+            new TournamentReference() { Id = 11, tournamentId = 2, botId = 11 },
+            new TournamentReference() { Id = 12, tournamentId = 2, botId = 12 },
+            new TournamentReference() { Id = 13, tournamentId = 2, botId = 13 },
+            new TournamentReference() { Id = 14, tournamentId = 2, botId = 14 },
+            new TournamentReference() { Id = 15, tournamentId = 2, botId = 15 },
+            new TournamentReference() { Id = 16, tournamentId = 2, botId = 16 },
+            new TournamentReference() { Id = 17, tournamentId = 2, botId = 17 },
         };
     }
 
