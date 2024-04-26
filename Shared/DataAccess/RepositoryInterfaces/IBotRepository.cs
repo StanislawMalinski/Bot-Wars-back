@@ -3,6 +3,7 @@ using Shared.DataAccess.DAO;
 using Shared.DataAccess.DataBaseEntities;
 using Shared.DataAccess.DTO.Requests;
 using Shared.DataAccess.DTO.Responses;
+using Shared.DataAccess.Pagination;
 using Shared.Results;
 using Shared.Results.IResults;
 using Shared.Results.SuccessResults;
@@ -21,6 +22,6 @@ public interface IBotRepository
     Task<HandlerResult<Success, IErrorResult>> ValidationResult(long taskId, bool result, int memoryUsed,
         int timeUsed);
     Task<HandlerResult<SuccessData<IFormFile>, IErrorResult>> GetBotFileForPlayer(long botId);
-    Task<HandlerResult<SuccessData<List<BotResponse>>, IErrorResult>> GetBotsForTournament(long tournamentId);
+    Task<HandlerResult<SuccessData<List<BotResponse>>, IErrorResult>> GetBotsForTournament(long tournamentId, PageParameters pageParameters);
 
 }

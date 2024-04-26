@@ -4,6 +4,7 @@ using Communication.Services.Bot;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Shared.DataAccess.DTO.Requests;
+using Shared.DataAccess.Pagination;
 using Shared.DataAccess.RepositoryInterfaces;
 
 namespace Communication.APIs.Controllers;
@@ -60,8 +61,8 @@ public class BotController : Controller
     }
 
     [HttpGet("getBotsForTournament")]
-    public async Task<IActionResult> GetBotsForTournament([FromQuery] long tournamentId)
+    public async Task<IActionResult> GetBotsForTournament([FromQuery] long tournamentId, [FromQuery] PageParameters pageParameters)
     {
-        return (await _botService.GetBotsForTournament(tournamentId)).Match(Ok, this.ErrorResult);
+        return (await _botService.GetBotsForTournament(tournamentId, pageParameters)).Match(Ok, this.ErrorResult);
     }
 }

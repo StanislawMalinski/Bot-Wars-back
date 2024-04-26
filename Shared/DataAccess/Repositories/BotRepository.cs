@@ -10,6 +10,7 @@ using Shared.DataAccess.DTO.Requests;
 using Shared.DataAccess.DTO.Responses;
 using Shared.DataAccess.Enumerations;
 using Shared.DataAccess.Mappers;
+using Shared.DataAccess.Pagination;
 using Shared.DataAccess.RepositoryInterfaces;
 using Shared.Results;
 using Shared.Results.ErrorResults;
@@ -121,7 +122,6 @@ public class BotRepository : IBotRepository
 
     public async Task<HandlerResult<SuccessData<IFormFile>, IErrorResult>> GetBotFileForPlayer(long botId)
     {
-
         var bot = await _dataContext
             .Bots
             .FirstOrDefaultAsync(bot => bot.Id == botId);
@@ -168,7 +168,7 @@ public class BotRepository : IBotRepository
     }
 
     public async Task<HandlerResult<SuccessData<List<BotResponse>>, IErrorResult>> GetBotsForTournament(
-        long tournamentId)
+        long tournamentId, PageParameters pageParameters)
     {
         var tournament = await _dataContext
             .Tournaments
@@ -196,7 +196,9 @@ public class BotRepository : IBotRepository
 
         return new SuccessData<List<BotResponse>>
         {
-            Data = responses
+            Data = responses.Skip(pageParameters.PageNumber * pageParameters.PageSize)
+                .Take(pageParameters.PageSize)
+                .ToList()
         };
     }
 

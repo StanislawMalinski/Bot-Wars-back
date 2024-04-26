@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Shared.DataAccess.AuthorizationRequirements;
 using Shared.DataAccess.DTO.Requests;
 using Shared.DataAccess.DTO.Responses;
+using Shared.DataAccess.Pagination;
 using Shared.DataAccess.RepositoryInterfaces;
 using Shared.Results;
 using Shared.Results.ErrorResults;
@@ -93,8 +94,8 @@ public class BotService : IBotService
         return await _botRepository.GetBotFileForPlayer(botId);
     }
 
-    public async Task<HandlerResult<SuccessData<List<BotResponse>>, IErrorResult>> GetBotsForTournament(long tournamentId)
+    public async Task<HandlerResult<SuccessData<List<BotResponse>>, IErrorResult>> GetBotsForTournament(long tournamentId, PageParameters pageParameters)
     {
-        return await _botRepository.GetBotsForTournament(tournamentId) ;
+        return await _botRepository.GetBotsForTournament(tournamentId, pageParameters) ;
     }
 }
