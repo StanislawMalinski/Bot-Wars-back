@@ -20,6 +20,7 @@ public interface IBotRepository
     Task<HandlerResult<SuccessData<Bot>, IErrorResult>> GetBot(long botId);
     Task<HandlerResult<Success, IErrorResult>> ValidationResult(long taskId, bool result, int memoryUsed,
         int timeUsed);
-    Task<HandlerResult<SuccessData<IFormFile>, IErrorResult>> GetBotFileForPlayer(long playerId, long botId);
+    Task<HandlerResult<SuccessData<IFormFile>, IErrorResult>> GetBotFileForPlayer(long botId);
     Task<HandlerResult<SuccessData<List<BotResponse>>, IErrorResult>> GetBotsForTournament(long tournamentId);
+
 }

@@ -30,7 +30,7 @@ public class BotController : Controller
     public async Task<IActionResult> AddBot(BotRequest botRequest)
     {
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-        return (await _botService.AddBot(botRequest, long.Parse(userId))).Match(Ok, this.ErrorResult);
+        return (await _botService.AddBot(botRequest,long.Parse(userId!))).Match(Ok, this.ErrorResult);
     }
 
     [Authorize(Roles = "User,Admin")]
@@ -51,11 +51,12 @@ public class BotController : Controller
     {
         return (await _botService.GetBotsForPlayer(playerId)).Match(Ok, this.ErrorResult);
     }
-
+    [Authorize(Roles = "User,Admin")]
     [HttpGet("getBotFileForPlayer")]
-    public async Task<IActionResult> GetBotFileForPlayer([FromQuery] long playerId, [FromQuery] long botId)
+    public async Task<IActionResult> GetBotFileForPlayer( [FromQuery] long botId)
     {
-        return (await _botService.GetBotFileForPlayer(playerId, botId)).Match(Ok, this.ErrorResult);
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        return (await _botService.GetBotFileForPlayer(long.Parse(userId!), botId)).Match(Ok, this.ErrorResult);
     }
 
     [HttpGet("getBotsForTournament")]
