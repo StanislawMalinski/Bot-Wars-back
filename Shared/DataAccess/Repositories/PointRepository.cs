@@ -6,6 +6,7 @@ using Shared.DataAccess.DataBaseEntities;
 using Shared.DataAccess.DTO.Responses;
 using Shared.DataAccess.Mappers;
 using Shared.DataAccess.MappersInterfaces;
+using Shared.DataAccess.Pagination;
 using Shared.DataAccess.RepositoryInterfaces;
 using Shared.Results;
 using Shared.Results.ErrorResults;
@@ -69,12 +70,12 @@ public class PointRepository : IPointsRepository
         };
     }
 
-    public async Task<HandlerResult<SuccessData<List<PlayerResponse>>, IErrorResult>> GetLeaderboards(int page, int pagesize)
+    public async Task<HandlerResult<SuccessData<List<PlayerResponse>>, IErrorResult>> GetLeaderboards(PageParameters pageParameters)
     {
         var players = await _dataContext.Players
             .OrderByDescending(player => player.Points).Select(x=> _playerMapper.ToPlayerResponse(x))
-            .Skip(page * pagesize)
-            .Take(pagesize)
+            .Skip(pageParameters.PageNumber * pageParameters.PageSize)
+            .Take(pageParameters.PageSize)
             .ToListAsync();
 
         return new SuccessData<List<PlayerResponse>>
