@@ -26,11 +26,7 @@ public class BotService : IBotService
         _authorizationService = authorizationService;
         _botRepository = botRepository;
     }
-
-    public async Task<HandlerResult<SuccessData<List<BotResponse>>, IErrorResult>> GetAllBots()
-    {
-        return await _botRepository.GetAllBots();
-    }
+    
 
     public async Task<HandlerResult<SuccessData<BotResponse>, IErrorResult>> GetBotResponse(long botId)
     {
@@ -65,9 +61,9 @@ public class BotService : IBotService
         return await _botRepository.DeleteBot(botId);
     }
 
-    public async Task<HandlerResult<SuccessData<List<BotResponse>>, IErrorResult>> GetBotsForPlayer(long playerId)
+    public async Task<HandlerResult<SuccessData<List<BotResponse>>, IErrorResult>> GetBotsForPlayer(long playerId, PageParameters pageParameters)
     {
-        return await _botRepository.GetBotsForPlayer(playerId);
+        return await _botRepository.GetBotsForPlayer(playerId, pageParameters);
     }
 
     public async Task<HandlerResult<SuccessData<IFormFile>, IErrorResult>> GetBotFileForPlayer(long playerId,

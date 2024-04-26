@@ -19,13 +19,7 @@ public class BotController : Controller
     {
         _botService = botService;
     }
-
-    [HttpGet("getAll")]
-    public async Task<IActionResult> GetAllBots(long playerId)
-    {
-        return (await _botService.GetAllBots()).Match(Ok, this.ErrorResult);
-    }
-
+    
     [Authorize(Roles = "User,Admin")]
     [HttpPost("add")]
     public async Task<IActionResult> AddBot(BotRequest botRequest)
@@ -48,9 +42,9 @@ public class BotController : Controller
     }
 
     [HttpGet("getForPlayer")]
-    public async Task<IActionResult> GetBotsForPlayer([FromQuery] long playerId)
+    public async Task<IActionResult> GetBotsForPlayer([FromQuery] long playerId, [FromQuery] PageParameters pageParameters)
     {
-        return (await _botService.GetBotsForPlayer(playerId)).Match(Ok, this.ErrorResult);
+        return (await _botService.GetBotsForPlayer(playerId, pageParameters)).Match(Ok, this.ErrorResult);
     }
     [Authorize(Roles = "User,Admin")]
     [HttpGet("getBotFileForPlayer")]
