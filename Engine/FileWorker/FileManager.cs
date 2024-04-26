@@ -177,7 +177,7 @@ public class FileManager
                 return s;
             }
         }
-        await getGameFile(game.Id,game.FileId,Language.C);
+        await getGameFile(game.Id,game.FileId,game.Language);
         /*switch ()
         {
             

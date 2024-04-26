@@ -17,7 +17,7 @@ public class GameManager : IGameManager
         botsArray = botsData.ToArray();
         FileManager manager = new FileManager(new HttpClient()); //???
         bots = new IOProgramWrapper[botsData.Count()];
-        IOProgramWrapper game = new IOProgramWrapper(await manager.GetGameFilepath(gameData),memoryLimit,timeLimit,Language.C);
+        IOProgramWrapper game = new IOProgramWrapper(await manager.GetGameFilepath(gameData),memoryLimit,timeLimit,gameData.Language);
         int ind = 0;
         
         foreach (var bot in botsArray)
