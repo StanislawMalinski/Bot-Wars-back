@@ -4,6 +4,7 @@ using Communication.Services.Bot;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Shared.DataAccess.DTO.Requests;
+using Shared.DataAccess.Pagination;
 using Shared.DataAccess.RepositoryInterfaces;
 
 namespace Communication.APIs.Controllers;
@@ -19,21 +20,14 @@ public class BotController : Controller
         _botService = botService;
     }
 
-    [HttpGet("getAll")]
-    
-    public async Task<IActionResult> GetAllBots(long playerId)
-    {
-        return (await _botService.GetAllBots()).Match(Ok, this.ErrorResult);
-    }
-    
     [Authorize(Roles = "User,Admin")]
     [HttpPost("add")]
     public async Task<IActionResult> AddBot(BotRequest botRequest)
-    {  
+    {
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-        return (await _botService.AddBot(botRequest,long.Parse(userId))).Match(Ok, this.ErrorResult);
+        return (await _botService.AddBot(botRequest, long.Parse(userId!))).Match(Ok, this.ErrorResult);
     }
-    
+
     [Authorize(Roles = "User,Admin")]
     [HttpDelete("delete")]
     public async Task<IActionResult> DeleteBot([FromQuery] long botId)
@@ -48,13 +42,24 @@ public class BotController : Controller
     }
 
     [HttpGet("getForPlayer")]
-    public async Task<IActionResult> GetBotsForPlayer([FromQuery] long playerId)
+    public async Task<IActionResult> GetBotsForPlayer([FromQuery] string playerName,
+        [FromQuery] PageParameters pageParameters)
     {
-        return (await _botService.GetBotsForPlayer(playerId)).Match(Ok, this.ErrorResult);
+        return (await _botService.GetBotsForPlayer(playerName, pageParameters)).Match(Ok, this.ErrorResult);
     }
+
+    [Authorize(Roles = "User,Admin")]
     [HttpGet("getBotFileForPlayer")]
-    public async Task<IActionResult> GetBotFileForPlayer([FromQuery] long playerId, [FromQuery] long botId)
+    public async Task<IActionResult> GetBotFileForPlayer([FromQuery] long botId)
     {
-        return (await _botService.GetBotFileForPlayer(playerId, botId)).Match(Ok, this.ErrorResult);
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        return (await _botService.GetBotFileForPlayer(long.Parse(userId!), botId)).Match(Ok, this.ErrorResult);
+    }
+
+    [HttpGet("getBotsForTournament")]
+    public async Task<IActionResult> GetBotsForTournament([FromQuery] long tournamentId,
+        [FromQuery] PageParameters pageParameters)
+    {
+        return (await _botService.GetBotsForTournament(tournamentId, pageParameters)).Match(Ok, this.ErrorResult);
     }
 }

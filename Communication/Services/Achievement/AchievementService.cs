@@ -17,6 +17,11 @@ public class AchievementService : IAchievementService
         _achievementsRepository = achievementsRepository;
     }
 
+    public async Task<HandlerResult<SuccessData<List<AchievementRecordDto>>, IErrorResult>> GetAllAchievementsForPlayer(long playerId)
+    {
+        return await _achievementsRepository.GetAllAchievementsForPlayer(playerId);
+    }
+    
     public async Task<HandlerResult<SuccessData<List<AchievementRecordDto>>, IErrorResult>> GetAchievementsForPlayer(long playerId)
     {
         return await _achievementsRepository.GetAchievementsForPlayer(playerId);

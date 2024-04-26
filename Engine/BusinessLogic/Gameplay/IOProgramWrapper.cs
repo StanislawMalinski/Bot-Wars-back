@@ -70,7 +70,7 @@ public class IOProgramWrapper : ICorespondable
                 {
                     //ulimit -v "+memorylimit+";
                     FileName = "bash",
-                    Arguments = "python3 "+_path,
+                    Arguments = "-c \"python3 "+_path+ "\"",
                     //Arguments = "-c \"(ulimit -v 15000  ; ./"+_path+")\" ",
                     RedirectStandardInput = true,
                     RedirectStandardOutput = true,
@@ -94,6 +94,7 @@ public class IOProgramWrapper : ICorespondable
         }
         catch (Exception e)
         {
+            Console.WriteLine("game worker innit start  err");
             isError = true;
             return false;
         }
@@ -121,6 +122,7 @@ public class IOProgramWrapper : ICorespondable
                 memorymax = Math.Max(memorymax, GetMemory());
                 isError = true;
                 _errorType = ErrorGameStatus.TimeLimit;
+                Console.WriteLine("hej??? e1 ");
                 return null;
             }
             milliseconds *= -1;
@@ -128,16 +130,23 @@ public class IOProgramWrapper : ICorespondable
             memorymax = Math.Max(memorymax, GetMemory());
             if (memorymax > memorylimit)
             {
+                Console.WriteLine("hej??? e2 ");
                 _errorType = ErrorGameStatus.MemoryLimit;
+                isError = true;
                 return null;
             }
-            // Line was read within the timeout period
+           
             var cos = await readLineTask;
-            
+            if (cos == null)
+            {
+                Console.WriteLine("hej??? ");
+                isError = true;
+            }
             return cos;
         }
         catch (Exception e)
         {
+            Console.WriteLine("game worker innit get eeror " );
             isError = true;
             return null;
         }
@@ -155,6 +164,7 @@ public class IOProgramWrapper : ICorespondable
             }
             catch (Exception e)
             {
+                isError = true;
                 Console.WriteLine("not killed "+_process.Id);
                 // ignored
             }
@@ -168,6 +178,7 @@ public class IOProgramWrapper : ICorespondable
     {
         if (!isRunning)
         {
+            isError = true;
             return false;
         }
 
@@ -177,6 +188,7 @@ public class IOProgramWrapper : ICorespondable
         }
         catch (Exception e)
         {
+            Console.WriteLine("game worker innit asdas" );
             isError = true;
             _errorType = ErrorGameStatus.InternalError;
             return false;
@@ -200,6 +212,8 @@ public class IOProgramWrapper : ICorespondable
         }
         catch (Exception e)
         {
+            isError = true;
+            Console.WriteLine("game worker i geteerror reerro ");
             return string.Empty;
         }
        

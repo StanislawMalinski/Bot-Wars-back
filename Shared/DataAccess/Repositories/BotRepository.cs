@@ -1,15 +1,12 @@
-﻿using System.Diagnostics;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
-using Shared.DataAccess.AuthorizationRequirements;
 using Shared.DataAccess.Context;
-using Shared.DataAccess.DAO;
 using Shared.DataAccess.DataBaseEntities;
 using Shared.DataAccess.DTO.Requests;
 using Shared.DataAccess.DTO.Responses;
 using Shared.DataAccess.Enumerations;
 using Shared.DataAccess.Mappers;
+using Shared.DataAccess.Pagination;
 using Shared.DataAccess.RepositoryInterfaces;
 using Shared.Results;
 using Shared.Results.ErrorResults;
@@ -36,7 +33,7 @@ public class BotRepository : IBotRepository
         HttpClient httpClient
         //IAuthorizationService authorizationService,
         //IUserContextRepository userContextRepository
-        )
+    )
     {
         //_userContextRepository = userContextRepository;
         //_authorizationService = authorizationService;
@@ -63,24 +60,12 @@ public class BotRepository : IBotRepository
     //    };
     //}
 
-    public async Task<HandlerResult<SuccessData<List<BotResponse>>, IErrorResult>> GetAllBots()
-    {
-        var bots = await _dataContext
-            .Bots
-            .Select(x => _botMapper.MapBotToResponse(x))
-            .ToListAsync();
-        return new SuccessData<List<BotResponse>>
-        {
-            Data = bots
-        };
-    }
-
     public async Task<HandlerResult<SuccessData<Bot>, IErrorResult>> GetBot(long botId)
     {
         var res = await _dataContext
             .Bots
             .FindAsync(botId);
-        
+
         if (res == null) return new EntityNotFoundErrorResult();
         return new SuccessData<Bot>() { Data = res };
     }
@@ -92,12 +77,14 @@ public class BotRepository : IBotRepository
         return new SuccessData<BotResponse>() { Data = _botMapper.MapBotToResponse(bot) };
     }
 
-    public async Task<HandlerResult<SuccessData<List<BotResponse>>, IErrorResult>> GetBotsForPlayer(long playerId)
+    public async Task<HandlerResult<SuccessData<List<BotResponse>>, IErrorResult>> GetBotsForPlayer(string? playerName,
+        PageParameters pageParameters)
     {
         var player = await _dataContext
             .Players
-            .FindAsync(playerId);
-
+            .FirstOrDefaultAsync(p => p.Login.Equals(playerName));
+        
+        
         if (player == null)
         {
             return new EntityNotFoundErrorResult()
@@ -109,7 +96,9 @@ public class BotRepository : IBotRepository
 
         var bots = await _dataContext
             .Bots
-            .Where(bot => bot.PlayerId == playerId)
+            .Where(bot => bot.Player == player)
+            .Skip(pageParameters.PageNumber * pageParameters.PageSize)
+            .Take(pageParameters.PageSize)
             .Select(bot => _botMapper.MapBotToResponse(bot))
             .ToListAsync();
 
@@ -119,35 +108,12 @@ public class BotRepository : IBotRepository
         };
     }
 
-    public async Task<HandlerResult<SuccessData<IFormFile>, IErrorResult>> GetBotFileForPlayer(long playerId,
-        long botId)
+    public async Task<HandlerResult<SuccessData<IFormFile>, IErrorResult>> GetBotFileForPlayer(long botId)
     {
-        var player = await _dataContext
-            .Players
-            .FindAsync(playerId);
-
-        if (player == null)
-        {
-            return new EntityNotFoundErrorResult()
-            {
-                Message = "EntityNotFound 404",
-                Title = "Player with given id does not exist"
-            };
-        }
-
         var bot = await _dataContext
             .Bots
-            .FirstOrDefaultAsync(bot => bot.PlayerId == playerId && bot.Id == botId);
-        /*
-        var authorizationResult = _authorizationService.AuthorizeAsync(_userContextRepository.GetUser(),
-            bot,
-            new ResourceOperationRequirement(ResourceOperation.ReadRestricted)).Result;
-        
-        if (!authorizationResult.Succeeded)
-        {
-            return new UnauthorizedError();
-        }*/
-        
+            .FirstOrDefaultAsync(bot => bot.Id == botId);
+
         if (bot == null)
         {
             return new EntityNotFoundErrorResult()
@@ -187,6 +153,41 @@ public class BotRepository : IBotRepository
                 Message = ex.Message
             };
         }
+    }
+
+    public async Task<HandlerResult<SuccessData<List<BotResponse>>, IErrorResult>> GetBotsForTournament(
+        long tournamentId, PageParameters pageParameters)
+    {
+        var tournament = await _dataContext
+            .Tournaments
+            .FindAsync(tournamentId);
+
+        if (tournament == null)
+        {
+            return new EntityNotFoundErrorResult()
+            {
+                Message = "Tournament could not have been found",
+                Title = "EntityNotFoundErrorResult 404"
+            };
+        }
+
+        var references = await _dataContext.TournamentReferences
+            .Where(tr => tr.Tournament == tournament)
+            .ToListAsync();
+
+        var responses = new List<BotResponse>();
+        foreach (var reference in references)
+        {
+            var returnedBot = await _dataContext.Bots.FindAsync(reference.botId);
+            responses.Add(_botMapper.MapBotToResponse(returnedBot));
+        }
+
+        return new SuccessData<List<BotResponse>>
+        {
+            Data = responses.Skip(pageParameters.PageNumber * pageParameters.PageSize)
+                .Take(pageParameters.PageSize)
+                .ToList()
+        };
     }
 
     public async Task<HandlerResult<Success, IErrorResult>> AddBot(BotRequest botRequest, long playerId)
@@ -244,7 +245,7 @@ public class BotRepository : IBotRepository
         /*var authorizationResult = _authorizationService.AuthorizeAsync(_userContextRepository.GetUser(),
             bot,
             new ResourceOperationRequirement(ResourceOperation.Delete)).Result;
-        
+
         if (!authorizationResult.Succeeded)
         {
             return new UnauthorizedError();
@@ -264,7 +265,8 @@ public class BotRepository : IBotRepository
         return new SuccessData<Game>() { Data = resGame };
     }
 
-    public async Task<HandlerResult<Success, IErrorResult>> ValidationResult(long taskId, bool result,int memoryUsed,int timeUsed)
+    public async Task<HandlerResult<Success, IErrorResult>> ValidationResult(long taskId, bool result, int memoryUsed,
+        int timeUsed)
     {
         var resTask = await _dataContext.Tasks.FindAsync(taskId);
         if (resTask == null) return new EntityNotFoundErrorResult();

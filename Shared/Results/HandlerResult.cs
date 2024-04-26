@@ -2,8 +2,7 @@
 
 namespace Shared.Results;
 
-public class HandlerResult<TSuccessResult, TErrorResult>
-    where TSuccessResult : ISuccessResult
+public class HandlerResult<TSuccessResult, TErrorResult> : Exception where TSuccessResult : ISuccessResult
     where TErrorResult : IErrorResult
 {
     private readonly TSuccessResult? _successResult;

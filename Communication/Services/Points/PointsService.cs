@@ -2,6 +2,7 @@
 using Shared.DataAccess.DTO;
 using Shared.DataAccess.DataBaseEntities;
 using Shared.DataAccess.DTO.Responses;
+using Shared.DataAccess.Pagination;
 using Shared.Results;
 using Shared.Results.ErrorResults;
 using Shared.Results.IResults;
@@ -28,9 +29,9 @@ public class PointsService : IPointsService
         return await _pointsRepository.GetHistoryForPlayer(playerId);
     }
 
-    public async Task<HandlerResult<SuccessData<List<PlayerResponse>>,IErrorResult>> GetLeaderboards(int page, int pagesize)
+    public async Task<HandlerResult<SuccessData<List<PlayerResponse>>,IErrorResult>> GetLeaderboards(PageParameters pageParameters)
     {
-        return await _pointsRepository.GetLeaderboards(page, pagesize);
+        return await _pointsRepository.GetLeaderboards(pageParameters);
     }
 
     public async Task<HandlerResult<SuccessData<long>, IErrorResult>> GetPointsForPlayer(long playerId)

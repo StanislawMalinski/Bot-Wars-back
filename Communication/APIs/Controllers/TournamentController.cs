@@ -7,6 +7,7 @@ using Shared.DataAccess.DTO;
 using Shared.DataAccess.DTO.Requests;
 using Shared.DataAccess.RepositoryInterfaces;
 using System.Security.Claims;
+using Shared.DataAccess.Pagination;
 
 namespace Communication.APIs.Controllers
 {
@@ -38,11 +39,10 @@ namespace Communication.APIs.Controllers
             return (await _tournamentService.DeleteTournament(id, long.Parse(userId))).Match(Ok, this.ErrorResult);
         }
 
-        [HttpPost("getFiltered")]
-
-        public async Task<IActionResult> GetListOfTournamentsFiltered(TournamentFilterRequest tournamentFilterRequest, [FromQuery] int page = 0, [FromQuery] int pagesize = 10)
+        [HttpGet("getFiltered")]
+        public async Task<IActionResult> GetListOfTournamentsFiltered([FromBody] TournamentFilterRequest tournamentFilterRequest, [FromQuery] PageParameters pageParameters)
         {
-            return (await _tournamentService.GetListOfTournamentsFiltered(tournamentFilterRequest, page, pagesize)).Match(Ok,this.ErrorResult);
+            return (await _tournamentService.GetListOfTournamentsFiltered(tournamentFilterRequest, pageParameters)).Match(Ok,this.ErrorResult);
         }
 
         [HttpGet("getOne")]

@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.EntityFrameworkCore;
-using Shared.DataAccess.AuthorizationRequirements;
+﻿using Microsoft.EntityFrameworkCore;
 using Shared.DataAccess.Context;
 using Shared.DataAccess.DataBaseEntities;
 using Shared.DataAccess.DTO;
@@ -8,6 +6,7 @@ using Shared.DataAccess.DTO.Requests;
 using Shared.DataAccess.DTO.Responses;
 using Shared.DataAccess.Enumerations;
 using Shared.DataAccess.Mappers;
+using Shared.DataAccess.Pagination;
 using Shared.DataAccess.RepositoryInterfaces;
 using Shared.Results;
 using Shared.Results.ErrorResults;
@@ -22,6 +21,7 @@ namespace Shared.DataAccess.Repositories
         private readonly DataContext _dataContext;
         private readonly ITournamentMapper _mapper;
         private readonly IAchievementsRepository _achievementsRepository;
+
         public TournamentRepository(DataContext dataContext, ITournamentMapper mapper,
             IAchievementsRepository achievementsRepository)
         {
@@ -63,7 +63,7 @@ namespace Shared.DataAccess.Repositories
                 .Include(t => t.Creator)
                 .Where(t => t.Id == id)
                 .FirstOrDefaultAsync();
-            
+
             if (tournament == null)
                 return new EntityNotFoundErrorResult()
                 {
@@ -72,7 +72,7 @@ namespace Shared.DataAccess.Repositories
                 };
 
             var authorizationResult = await _dataContext.Players.FindAsync(playerId);
-            
+
             Console.WriteLine("tutaj wchodz, więc problem z creatorem");
             if (tournament.Creator.Id != playerId && authorizationResult.RoleId != 2)
             {
@@ -144,7 +144,7 @@ namespace Shared.DataAccess.Repositories
             var game = await _dataContext
                 .Games
                 .FindAsync(tournamentRequest.GameId);
-            
+
             if (game is null)
             {
                 return new EntityNotFoundErrorResult
@@ -159,7 +159,7 @@ namespace Shared.DataAccess.Repositories
                 .Include(t => t.Creator)
                 .Where(t => t.Id == id)
                 .FirstOrDefaultAsync();
-            
+
             if (tournamentToEdit == null)
                 return new EntityNotFoundErrorResult()
                 {
@@ -168,7 +168,7 @@ namespace Shared.DataAccess.Repositories
                 };
 
             var authorizationResult = await _dataContext.Players.FindAsync(playerId);
-            
+
             if (tournamentToEdit.Creator.Id != playerId && authorizationResult.RoleId != 2)
             {
                 return new NotTournamentCreatorError()
@@ -177,7 +177,7 @@ namespace Shared.DataAccess.Repositories
                     Message = $"You cannot update tournament, that you did not create and while you are not an admin"
                 };
             }
-            
+
             var tournament = _mapper
                 .TournamentRequestToTournament(tournamentRequest);
 
@@ -194,27 +194,13 @@ namespace Shared.DataAccess.Repositories
             return new Success();
         }
 
-        public async Task<HandlerResult<SuccessData<List<TournamentResponse>>, IErrorResult>> GetTournamentsAsync()
-        {
-            var tournamentResponses = await _dataContext
-                .Tournaments
-                .Include(tournament => tournament.Matches)
-                .Include(tournament => tournament.TournamentReference)
-                .Select(tournament => _mapper.TournamentToTournamentResponse(tournament))
-                .ToListAsync();
-
-            return new SuccessData<List<TournamentResponse>>()
-            {
-                Data = tournamentResponses
-            };
-        }
-
-        public async Task<HandlerResult<Success, IErrorResult>> RegisterSelfForTournament(long tournamentId, long botId, long playerId)
+        public async Task<HandlerResult<Success, IErrorResult>> RegisterSelfForTournament(long tournamentId, long botId,
+            long playerId)
         {
             var tournament = await _dataContext
                 .Tournaments
                 .FindAsync(tournamentId);
-            
+
             if (tournament == null)
             {
                 return new EntityNotFoundErrorResult
@@ -229,7 +215,7 @@ namespace Shared.DataAccess.Repositories
                 .Include(b => b.Player)
                 .Where(b => b.Id == botId)
                 .FirstOrDefaultAsync();
-            
+
             if (bot == null)
             {
                 return new EntityNotFoundErrorResult
@@ -238,7 +224,7 @@ namespace Shared.DataAccess.Repositories
                     Message = "No bot with such id has been found"
                 };
             }
-            
+
             if (bot.Player.Id != playerId)
             {
                 return new NotBotCreatorError()
@@ -247,6 +233,7 @@ namespace Shared.DataAccess.Repositories
                     Message = $"You cannot register a bot, that you did not create"
                 };
             }
+
             var result = await _dataContext
                 .TournamentReferences
                 .FirstOrDefaultAsync(x => x.tournamentId == tournamentId && x.botId == botId);
@@ -302,7 +289,7 @@ namespace Shared.DataAccess.Repositories
                 .Include(b => b.Player)
                 .Where(b => b.Id == botId)
                 .FirstOrDefaultAsync();
-            
+
             if (bot == null)
             {
                 return new EntityNotFoundErrorResult
@@ -311,7 +298,7 @@ namespace Shared.DataAccess.Repositories
                     Message = "No bot with such id has been found"
                 };
             }
-                        
+
             if (bot.Player.Id != playerId)
             {
                 return new NotBotCreatorError()
@@ -423,7 +410,7 @@ namespace Shared.DataAccess.Repositories
         }
 
         public async Task<HandlerResult<SuccessData<List<TournamentResponse>>, IErrorResult>>
-            GetFilteredTournamentsAsync(TournamentFilterRequest tournamentFilterRequest, int page, int pagesize)
+            GetFilteredTournamentsAsync(TournamentFilterRequest tournamentFilterRequest, PageParameters pageParameters)
         {
             var unfilteredTournaments = _dataContext
                 .Tournaments.Include(tournament => tournament.Creator)
@@ -457,10 +444,10 @@ namespace Shared.DataAccess.Repositories
             if (tournamentFilterRequest.UserParticipation == null)
             {
                 var tournaments = await unfilteredTournaments
-                   .Select(tournament => _mapper.TournamentToTournamentResponse(tournament))
-                   .Skip(page * pagesize)
-                   .Take(pagesize)
-                   .ToListAsync();
+                    .Select(tournament => _mapper.TournamentToTournamentResponse(tournament))
+                    .Skip(pageParameters.PageNumber * pageParameters.PageSize)
+                    .Take(pageParameters.PageSize)
+                    .ToListAsync();
                 return new SuccessData<List<TournamentResponse>>()
                 {
                     Data = tournaments
@@ -468,8 +455,8 @@ namespace Shared.DataAccess.Repositories
             }
 
             var filteredTournaments = await unfilteredTournaments
-                   .Select(tournament => _mapper.TournamentToTournamentResponse(tournament))
-                   .ToListAsync();
+                .Select(tournament => _mapper.TournamentToTournamentResponse(tournament))
+                .ToListAsync();
             var filteredTournamentList = new List<TournamentResponse>();
             int skipped = 0;
             foreach (var tournamentResponse in filteredTournaments)
@@ -477,9 +464,16 @@ namespace Shared.DataAccess.Repositories
                 if ((await PlayerParticipate(tournamentResponse.Id, tournamentFilterRequest.UserParticipation))
                     .IsSuccess)
                 {
-                    if (skipped++ < page * pagesize) { continue; }
+                    if (skipped++ < pageParameters.PageNumber * pageParameters.PageSize)
+                    {
+                        continue;
+                    }
+
                     filteredTournamentList.Add(tournamentResponse);
-                    if (filteredTournamentList.Count >= pagesize) { break; }
+                    if (filteredTournamentList.Count >= pageParameters.PageSize)
+                    {
+                        break;
+                    }
                 }
             }
 
