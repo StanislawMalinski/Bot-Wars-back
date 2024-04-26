@@ -1,6 +1,7 @@
 ﻿using Shared.DataAccess.DTO;
 using Shared.DataAccess.DTO.Requests;
 using Shared.DataAccess.DTO.Responses;
+using Shared.DataAccess.Pagination;
 using Shared.DataAccess.Repositories;
 using Shared.DataAccess.RepositoryInterfaces;
 using Shared.Results;
@@ -41,16 +42,12 @@ namespace Communication.Services.Tournament
             return await _tournamentRepository.DeleteUserTournamentsAsync(userId);
         }
 
-        public async Task<HandlerResult<SuccessData<List<TournamentResponse>>, IErrorResult>> GetListOfTournaments()
-        {
-            return await _tournamentRepository.GetTournamentsAsync();
-        }
 
         public async Task<HandlerResult<SuccessData<List<TournamentResponse>>, IErrorResult>>
             GetListOfTournamentsFiltered(
-                TournamentFilterRequest tournamentFilterRequest, int page, int pagesize)
+                TournamentFilterRequest tournamentFilterRequest, PageParameters pageParameters)
         {
-            return await _tournamentRepository.GetFilteredTournamentsAsync(tournamentFilterRequest, page, pagesize);
+            return await _tournamentRepository.GetFilteredTournamentsAsync(tournamentFilterRequest, pageParameters);
         }
 
         public async Task<HandlerResult<SuccessData<TournamentResponse>, IErrorResult>> GetTournament(long id)
