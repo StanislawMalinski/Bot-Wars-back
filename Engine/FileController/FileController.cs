@@ -28,10 +28,10 @@ public class FileController : Controller
     
      
     [HttpPost("test")]
-    public async Task<IActionResult> dosomthing()
+    public async Task<IActionResult> dosomthing(long tourId)
     {
         
-        return (await  _taskRepository.CreateTask(TaskTypes.PlayTournament, 1L, DateTime.Now)).Match(Ok,Ok);
+        return (await  _taskRepository.CreateTask(TaskTypes.PlayTournament, tourId, DateTime.Now)).Match(Ok,Ok);
         
     }
 
