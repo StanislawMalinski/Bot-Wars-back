@@ -77,7 +77,10 @@ public class BotRepository : IBotRepository
 
     public async Task<HandlerResult<SuccessData<Bot>, IErrorResult>> GetBot(long botId)
     {
-        var res = await _dataContext.Bots.FindAsync(botId);
+        var res = await _dataContext
+            .Bots
+            .FindAsync(botId);
+        
         if (res == null) return new EntityNotFoundErrorResult();
         return new SuccessData<Bot>() { Data = res };
     }

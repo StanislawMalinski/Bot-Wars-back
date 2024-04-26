@@ -14,6 +14,7 @@ namespace Shared.DataAccess.DataBaseEntities
         public long FileId { get; set; }
         public int MemoryUsed { get; set; }
         public int TimeUsed { get; set; }
+        public Language Language { get; set; }
         public List<TournamentReference>? TournamentReference { get; set; }
         public List<MatchPlayers>? MatchPlayers { get; set; }
     }

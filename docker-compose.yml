@@ -20,6 +20,9 @@ services:
             - "8081:8081"
         depends_on:
             - bot_wars_db
+        restart: 
+            always
+        
     bot_wars_engine:
         build:
             context: .

@@ -11,7 +11,8 @@ public class BotMapper : IBotMapper
         return new Bot
         {
             GameId = botRequest.GameId,
-            BotFile = botRequest.BotFile.FileName
+            BotFile = botRequest.BotFile.FileName,
+            Language = botRequest.Language,
         };
     }
 
