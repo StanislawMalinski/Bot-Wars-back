@@ -159,11 +159,11 @@ public class FileManager
              
                     break;
                 case Language.PYTHON:
-                    dirs = Directory.GetFiles($"{GameFilePath}/{game.Id}/{ Path.GetFileNameWithoutExtension(game.GameFile)}.py");
+                    dirs = Directory.GetFiles($"{GameFilePath}/{game.Id}",$"{ Path.GetFileNameWithoutExtension(game.GameFile)}.py");
                     if (dirs.Length != 0) return dirs[0];
                     break;
                 case Language.Java:
-                    dirs = Directory.GetFiles($"{GameFilePath}/{game.Id}/{ Path.GetFileNameWithoutExtension(game.GameFile)}.java");
+                    dirs = Directory.GetFiles($"{GameFilePath}/{game.Id}",$"{ Path.GetFileNameWithoutExtension(game.GameFile)}.java");
                     if (dirs.Length != 0) return dirs[0];
                     break;
                 
