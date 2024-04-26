@@ -6,7 +6,6 @@ namespace Shared.DataAccess.Mappers
 {
     public class GameTypeMapper : IGameTypeMapper
     {
-
         public Game MapRequestToGame(GameRequest gameRequest)
         {
             return new Game
@@ -20,6 +19,7 @@ namespace Shared.DataAccess.Mappers
                 Bot = new List<Bot>(),
                 Tournaments = new List<Tournament>(),
                 Matches = new List<Matches>(),
+                Language = gameRequest.Language
             };
         }
 
@@ -40,7 +40,7 @@ namespace Shared.DataAccess.Mappers
                 FileId = game.FileId,
             };
         }
-        
+
         public GameSimpleResponse MapGameToSimpleResponse(Game game)
         {
             return new GameSimpleResponse

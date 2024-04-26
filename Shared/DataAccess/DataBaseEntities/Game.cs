@@ -1,4 +1,6 @@
-﻿namespace Shared.DataAccess.DataBaseEntities
+﻿using Shared.DataAccess.Enumerations;
+
+namespace Shared.DataAccess.DataBaseEntities
 {
     public class Game
     {
@@ -12,6 +14,7 @@
         public long FileId { get; set; }
         public Player Creator { get; set; }
         public long CreatorId { get; set; }
+        public Language Language { get; set; }
 
         public List<Bot>? Bot { get; set; }
         public List<Tournament>? Tournaments { get; set; }
