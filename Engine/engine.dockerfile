@@ -6,6 +6,7 @@ RUN apt-get update
 RUN apt-get install -y g++
 RUN apt-get install procps -y
 RUN apt-get install -y python3
+RUN apt-get install -y --no-install-recommends openjdk-17-jdk
 RUN useradd -m userexe
 
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build

@@ -3,5 +3,6 @@
 public enum Language
 {
     C,
-    PYTHON
+    PYTHON,
+    Java
 }

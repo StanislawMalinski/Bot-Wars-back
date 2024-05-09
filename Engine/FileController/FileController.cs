@@ -66,7 +66,7 @@ public class FileController : Controller
     [HttpPost("addGame")]
     public async Task<IActionResult> UploadGame( GameFileDto gameFileDto)
     {
-        return (await _fileManager.addGame(gameFileDto)).Match(Ok, Ok);
+        //return (await _fileManager.addGame(gameFileDto)).Match(Ok, Ok);
         return Ok();
     }
 }
