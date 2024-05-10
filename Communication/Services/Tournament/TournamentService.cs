@@ -1,6 +1,8 @@
-﻿using Shared.DataAccess.DTO;
+﻿using Shared.DataAccess.DataBaseEntities;
+using Shared.DataAccess.DTO;
 using Shared.DataAccess.DTO.Requests;
 using Shared.DataAccess.DTO.Responses;
+using Shared.DataAccess.Mappers;
 using Shared.DataAccess.Pagination;
 using Shared.DataAccess.Repositories;
 using Shared.DataAccess.RepositoryInterfaces;
@@ -14,10 +16,18 @@ namespace Communication.Services.Tournament
     public class TournamentService : ITournamentService
     {
         private readonly TournamentRepository _tournamentRepository;
+        private readonly IGameRepository _gameRepository;
+        private readonly ITournamentMapper _mapper;
+        private readonly IPlayerRepository _playerRepository;
+        private readonly IBotRepository _botRepository;
 
-        public TournamentService(TournamentRepository tournamentRepository)
+        public TournamentService(TournamentRepository tournamentRepository,IGameRepository gameRepository,ITournamentMapper tournamentMapper, IPlayerRepository playerRepository,IBotRepository botRepository)
         {
             _tournamentRepository = tournamentRepository;
+            _gameRepository = gameRepository;
+            _mapper = tournamentMapper;
+            _playerRepository = playerRepository;
+            _botRepository = botRepository;
         }
 
         public async Task<HandlerResult<Success, IErrorResult>> AddTournament(long userId,
@@ -29,17 +39,56 @@ namespace Communication.Services.Tournament
                     { Message = "to nie jest string base 64 musi miec wielkosc podzielna przez 4" };
             }
 
-            return await _tournamentRepository.CreateTournamentAsync(userId, tournamentRequest);
+            var game = await _gameRepository.GetGame1(tournamentRequest.GameId);
+            if (game is null) return new EntityNotFoundErrorResult();
+            
+
+            var tournament = _mapper
+                .TournamentRequestToTournament(tournamentRequest);
+            tournament.CreatorId = userId;
+            await _tournamentRepository.AddTournament(tournament);
+            await _tournamentRepository.SaveChangesAsync();
+            return new Success();
         }
 
         public async Task<HandlerResult<Success, IErrorResult>> DeleteTournament(long id, long playerId)
         {
-            return await _tournamentRepository.DeleteTournamentAsync(id, playerId);
+
+
+            var authorizationResult = await _playerRepository.GetPlayer(playerId);
+            
+            if (authorizationResult == null  || ( ! await _tournamentRepository.TournamentCreator(id,playerId) && authorizationResult.RoleId != 2))
+            {
+                return new NotTournamentCreatorError()
+                {
+                    Title = "NotTournamentCreatorError 400",
+                    Message = $"You cannot delete tournament, that you did not create while you are not an admin"
+                };
+            }
+
+            await _tournamentRepository.DeleteTournamentAsync(id);
+            await _tournamentRepository.SaveChangesAsync();
+            return new Success();
+           
         }
 
         public async Task<HandlerResult<Success, IErrorResult>> DeleteUserScheduledTournaments(long userId)
         {
-            return await _tournamentRepository.DeleteUserTournamentsAsync(userId);
+            var tournaments = await _tournamentRepository.GetPlayerScheduledTournaments(userId);
+            foreach (Shared.DataAccess.DataBaseEntities.Tournament tournament in tournaments)
+            {
+                var tasks = await _tournamentRepository.GetScheduledTournamentTask(tournament.Id);
+                foreach (var task in tasks)
+                {
+                    await _tournamentRepository.DeleteTask(task);
+                }
+
+                await _tournamentRepository.DeleteTournamentAsync(tournament.Id);
+            }
+
+            await _tournamentRepository.SaveChangesAsync();
+            return new Success();
+            
         }
 
 
@@ -47,18 +96,87 @@ namespace Communication.Services.Tournament
             GetListOfTournamentsFiltered(
                 TournamentFilterRequest tournamentFilterRequest, PageParameters pageParameters)
         {
-            return await _tournamentRepository.GetFilteredTournamentsAsync(tournamentFilterRequest, pageParameters);
+            
+            return new SuccessData<List<TournamentResponse>>()
+            {
+                Data = await _tournamentRepository.GetFilteredTournamentsAsync(tournamentFilterRequest, pageParameters)
+            };
         }
 
         public async Task<HandlerResult<SuccessData<TournamentResponse>, IErrorResult>> GetTournament(long id)
         {
-            return await _tournamentRepository.GetTournamentAsync(id);
+            var tournament = await _tournamentRepository.GetTournamentExtended(id);
+
+            if (tournament == null) return new EntityNotFoundErrorResult();
+            return new SuccessData<TournamentResponse>()
+            {
+                Data = _mapper.TournamentToTournamentResponse(tournament)
+            };
         }
 
         public async Task<HandlerResult<Success, IErrorResult>> RegisterSelfForTournament(long tournamentId, long botId,
             long playerId)
         {
-            return await _tournamentRepository.RegisterSelfForTournament(tournamentId, botId, playerId);
+            var tournament = await _tournamentRepository.GetTournament(tournamentId);
+
+            if (tournament == null)
+            {
+                return new EntityNotFoundErrorResult
+                {
+                    Title = "EntityNotFoundErrorResult 404",
+                    Message = "No tournament with such id has been found"
+                };
+            }
+
+            var bot = await _botRepository.GetBotAndCreator(botId);
+
+            if (bot == null)
+            {
+                return new EntityNotFoundErrorResult
+                {
+                    Title = "EntityNotFoundErrorResult 404",
+                    Message = "No bot with such id has been found"
+                };
+            }
+
+            if (bot.Player!.Id != playerId)
+            {
+                return new NotBotCreatorError()
+                {
+                    Title = "NotBotCreatorError 400",
+                    Message = $"You cannot register a bot, that you did not create"
+                };
+            }
+
+            
+            if (await _tournamentRepository.IsRegisteredForTournament(botId,tournamentId))
+            {
+                return new AlreadyRegisterForTournamentError()
+                {
+                    Title = "AlreadyRegisterForTournamentError 400",
+                    Message = "You are already registered for tournament"
+                };
+            }
+
+            var tournamentReference = new TournamentReference
+            {
+                tournamentId = tournamentId,
+                botId = botId,
+                LastModification = new DateTime()
+            };
+
+            if (!await _tournamentRepository.TournamentStarted(tournamentId))
+            {
+                return new TournamentIsBeingPlayedError()
+                {
+                    Title = "TournamentIsBeingPlayedError 400",
+                    Message = "You cannot register a bot while the tournament is being played or has been finished"
+                };
+            }
+
+            await _tournamentRepository.AddTournamentReference(tournamentReference);
+            await _tournamentRepository.SaveChangesAsync();
+            return new Success();
         }
 
         public async Task<HandlerResult<Success, IErrorResult>> UnregisterSelfForTournament(long tournamentId,

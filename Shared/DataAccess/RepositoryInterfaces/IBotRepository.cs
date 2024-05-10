@@ -15,7 +15,7 @@ public interface IBotRepository
     Task<HandlerResult<SuccessData<BotResponse>, IErrorResult>> GetBotResponse(long botId);
     Task<HandlerResult<Success, IErrorResult>> AddBot(BotRequest botRequest, long playerId);
     Task<HandlerResult<Success, IErrorResult>> DeleteBot(long botId);
-
+    
     Task<HandlerResult<SuccessData<List<BotResponse>>, IErrorResult>> GetBotsForPlayer(string? playerName,
         PageParameters pageParameters);
 
@@ -29,4 +29,7 @@ public interface IBotRepository
 
     Task<HandlerResult<SuccessData<List<BotResponse>>, IErrorResult>> GetBotsForTournament(long tournamentId,
         PageParameters pageParameters);
+
+
+    Task<Bot?> GetBotAndCreator(long botId);
 }

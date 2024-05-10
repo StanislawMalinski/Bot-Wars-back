@@ -60,7 +60,7 @@ namespace Shared.DataAccess.Repositories
 
         public async Task<EntityEntry<Player>> AddPlayer(Player player)
         {
-            return await _dataContext.AddAsync(player);
+            return await _dataContext.Players.AddAsync(player);
         }
         
 
@@ -95,38 +95,6 @@ namespace Shared.DataAccess.Repositories
             await _dataContext.SaveChangesAsync();
             return true;
         }
-
-        public async Task<HandlerResult<SuccessData<PlayerInternalDto>, IErrorResult>> GetPlayerAsync(string email)
-        {
-            var resPlayer = await _dataContext.Players
-                .Include(p => p.Role)
-                .FirstOrDefaultAsync(u => u.Email.Equals(email));
-            if (resPlayer is null)
-            {
-                return new EntityNotFoundErrorResult();
-            }
-
-            return new SuccessData<PlayerInternalDto>()
-            {
-                Data = _playerMapper.ToInternalDto(resPlayer)
-            };
-        }
-
-      
-
-        public async Task<HandlerResult<SuccessData<List<PlayerDto>>, IErrorResult>> GetPlayersAsync()
-        {
-            var resPlayers = await _dataContext.Players
-                .ToListAsync();
-
-            var playerDtos = resPlayers.Select(player => _playerMapper.ToDto(player)).ToList();
-
-            return new SuccessData<List<PlayerDto>>()
-            {
-                Data = playerDtos
-            };
-        }
-        
 
         public async Task<Player?> GetPlayer(long playerId)
         {

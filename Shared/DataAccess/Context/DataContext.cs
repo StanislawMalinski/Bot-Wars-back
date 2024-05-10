@@ -13,7 +13,7 @@ namespace Shared.DataAccess.Context
 
         public DbSet<Game> Games { get; set; }
         public DbSet<Player> Players { get; set; }
-        public DbSet<Bot> Bots { get; set; }
+        public DbSet<Bot?> Bots { get; set; }
         public DbSet<Tournament> Tournaments { get; set; }
         public DbSet<Matches> Matches { get; set; }
         public DbSet<MatchPlayers> MatchPlayers { get; set; }

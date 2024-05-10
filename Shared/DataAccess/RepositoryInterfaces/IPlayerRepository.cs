@@ -12,7 +12,7 @@ namespace Shared.DataAccess.RepositoryInterfaces;
 public interface IPlayerRepository
 {
     
-    Task<HandlerResult<SuccessData<List<PlayerDto>>, IErrorResult>> GetPlayersAsync();
+    
    
     Task<List<GameSimpleResponse>> GetMyGames(long playerId);
     Task<bool> DeletePlayerAsync(long id);
