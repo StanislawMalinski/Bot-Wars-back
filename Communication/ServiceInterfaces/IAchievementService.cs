@@ -7,7 +7,6 @@ namespace Communication.ServiceInterfaces;
 
 public interface IAchievementService
 {
-    Task<HandlerResult<SuccessData<List<AchievementRecordDto>>, IErrorResult>> GetAllAchievementsForPlayer(long playerId);
     Task<HandlerResult<SuccessData<List<AchievementRecordDto>>, IErrorResult>> GetAchievementsForPlayer(long playerId);
     Task<HandlerResult<Success, IErrorResult>> UnlockAchievement(long playerId, long achievementTypeId, long currentPlayerThreshold);
     Task<HandlerResult<SuccessData<List<AchievementTypeDto>>, IErrorResult>> GetAchievementTypes();

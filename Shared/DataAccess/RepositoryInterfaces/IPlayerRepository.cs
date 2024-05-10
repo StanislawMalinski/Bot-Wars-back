@@ -25,4 +25,5 @@ public interface IPlayerRepository
     Task SaveChangesAsync();
     Task<EntityEntry<Player>> AddPlayer(Player player);
     Task<List<BotResponse>> GetPlayerBots(long playerId);
+    
 }
