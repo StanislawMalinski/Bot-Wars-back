@@ -1,4 +1,6 @@
-﻿using Shared.DataAccess.DTO;
+﻿using Microsoft.EntityFrameworkCore.ChangeTracking;
+using Shared.DataAccess.DataBaseEntities;
+using Shared.DataAccess.DTO;
 using Shared.DataAccess.DTO.Requests;
 using Shared.DataAccess.DTO.Responses;
 using Shared.Results;
@@ -9,21 +11,18 @@ namespace Shared.DataAccess.RepositoryInterfaces;
 
 public interface IPlayerRepository
 {
-    Task<HandlerResult<Success, IErrorResult>> CreateAdminAsync(RegistrationRequest registrationRequest);
-    Task<HandlerResult<Success, IErrorResult>> CreatePlayerAsync(RegistrationRequest registrationRequest);
-    Task<HandlerResult<Success, IErrorResult>> ChangePassword(ChangePasswordRequest password, long? playerId);
-    Task<HandlerResult<Success, IErrorResult>> ChangeLogin(ChangeLoginRequest changeLoginRequest, long? playerId);
-    Task<HandlerResult<Success, IErrorResult>> DeletePlayerAsync(long id);
-    Task<HandlerResult<SuccessData<PlayerDto>, IErrorResult>> GetPlayerAsync(long id);
-    Task<HandlerResult<Success, IErrorResult>> SetPlayerLastLogin(string email, DateTime lastLogin);
-    Task<HandlerResult<SuccessData<PlayerInternalDto>, IErrorResult>> GetPlayerAsync(string email);
+    
     Task<HandlerResult<SuccessData<List<PlayerDto>>, IErrorResult>> GetPlayersAsync();
-    Task<HandlerResult<SuccessData<PlayerInfo>, IErrorResult>> GetPlayerInfoAsync(long ?playerId);
-    Task<HandlerResult<SuccessData<PlayerInfo>, IErrorResult>> GetPlayerInfoAsync(string ?playerName);
-    Task<HandlerResult<SuccessData<List<GameSimpleResponse>>, IErrorResult>> GetMyGames(long playerId);
-    Task<HandlerResult<Success, IErrorResult>> ChangeImage(PlayerImageRequest imageRequest, long playerId);
-    Task<HandlerResult<SuccessData<string>, IErrorResult>> GetImage( long playerId);
-    Task<HandlerResult<SuccessData<List<BotResponse>>, IErrorResult>> GetBotsForPlayer(long playerId);
-
-
+   
+    Task<List<GameSimpleResponse>> GetMyGames(long playerId);
+    Task<bool> DeletePlayerAsync(long id);
+    Task<bool> SetPlayerLastLogin(string email, DateTime lastLogin);
+    Task<Player?> GetPlayer(long playerId);
+    Task<Player?> GetPlayer(string playerEmail);
+    Task<Player?> GetPlayerByLogin(string login);
+    Task<int> PlayerBotCount(long playerId);
+    Task<int> PlayerTournamentCount(long playerId);
+    Task SaveChangesAsync();
+    Task<EntityEntry<Player>> AddPlayer(Player player);
+    Task<List<BotResponse>> GetPlayerBots(long playerId);
 }
