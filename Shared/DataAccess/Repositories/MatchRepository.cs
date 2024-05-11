@@ -379,6 +379,7 @@ public class MatchRepository
     
     public async Task<Matches?> GetMatchById(long id)
     {
-        return await _dataContext.Matches.FindAsync(id);
+        return await _dataContext.Matches.Include(matches => matches.Tournament)
+            .Include(matches => matches.Game).Where(match => match.Id == id).FirstOrDefaultAsync();
     }
  }

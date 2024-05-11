@@ -53,14 +53,14 @@ public class MatchService : IMatchService
                 match.Tournament != null && match.Tournament.TournamentTitle == matchFilterRequest.TournamentName);
         }
         //XDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD
-        if (matchFilterRequest.Username != null)
+        /*if (matchFilterRequest.Username != null)
         {
             unfilteredMatches = unfilteredMatches.Where(match => match
                 .MatchPlayers != null && !match
                 .MatchPlayers.Where(matchPlayers => matchPlayers.Bot != null && matchPlayers.Bot.Player != null 
                                                                              && matchPlayers.Bot != null && matchPlayers.Bot.Player.Login
                                                                              ==matchFilterRequest.Username).ToList().IsNullOrEmpty());
-        }
+        }*/
 
         var matches = await unfilteredMatches
             .Skip(pageParameters.PageNumber * pageParameters.PageSize)
