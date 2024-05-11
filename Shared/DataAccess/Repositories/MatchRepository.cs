@@ -365,9 +365,20 @@ public class MatchRepository
         {
             Data = result.PlayerId
         };
-    } 
+    }
+
+
+    public IQueryable<Matches> GetListOfUnfilteredMatches()
+    {
+        return _dataContext.Matches
+            .Include(matches => matches.MatchPlayers)
+            .Include(matches => matches.Tournament)
+            .Include(matches => matches.Game)
+            .Where(match => true);
+    }
     
-    
-  
-    
-}
+    public async Task<Matches?> GetMatchById(long id)
+    {
+        return await _dataContext.Matches.FindAsync(id);
+    }
+ }
