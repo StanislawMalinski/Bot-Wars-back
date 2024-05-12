@@ -16,7 +16,7 @@ public interface IBotRepository
     Task<HandlerResult<Success, IErrorResult>> AddBot(BotRequest botRequest, long playerId);
     Task<HandlerResult<Success, IErrorResult>> DeleteBot(long botId);
 
-    Task<HandlerResult<SuccessData<List<BotResponse>>, IErrorResult>> GetBotsForPlayer(string? playerName,
+    Task<HandlerResult<SuccessData<PageResponse<BotResponse>>, IErrorResult>> GetBotsForPlayer(string? playerName,
         PageParameters pageParameters);
 
     Task<HandlerResult<SuccessData<Game>, IErrorResult>> GetGame(long botId);
@@ -27,6 +27,6 @@ public interface IBotRepository
 
     Task<HandlerResult<SuccessData<IFormFile>, IErrorResult>> GetBotFileForPlayer(long botId);
 
-    Task<HandlerResult<SuccessData<List<BotResponse>>, IErrorResult>> GetBotsForTournament(long tournamentId,
+    Task<HandlerResult<SuccessData<PageResponse<BotResponse>>, IErrorResult>> GetBotsForTournament(long tournamentId,
         PageParameters pageParameters);
 }

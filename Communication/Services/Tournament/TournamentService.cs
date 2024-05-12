@@ -43,7 +43,7 @@ namespace Communication.Services.Tournament
         }
 
 
-        public async Task<HandlerResult<SuccessData<List<TournamentResponse>>, IErrorResult>>
+        public async Task<HandlerResult<SuccessData<PageResponse<TournamentResponse>>, IErrorResult>>
             GetListOfTournamentsFiltered(
                 TournamentFilterRequest tournamentFilterRequest, PageParameters pageParameters)
         {

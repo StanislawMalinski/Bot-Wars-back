@@ -78,17 +78,21 @@ public class GameRepository : IGameRepository
         return new Success();
     }
 
-    public async Task<HandlerResult<SuccessData<List<GameResponse>>, IErrorResult>> Search(string? name,
+    public async Task<HandlerResult<SuccessData<PageResponse<GameResponse>>, IErrorResult>> Search(string? name,
         PageParameters pageParameters)
     {
         if (name == null)
         {
-            return new SuccessData<List<GameResponse>>()
+            return new SuccessData<PageResponse<GameResponse>>()
             {
-                Data = new List<GameResponse>()
+                Data = new PageResponse<GameResponse>(new List<GameResponse>(), 0)
             };
         }
 
+        var count = _dataContext
+            .Games
+            .Count(x => x.GameFile != null && x.GameFile.Contains(name));
+        
         var res = await _dataContext
             .Games
             .Where(x => x.GameFile != null && x.GameFile.Contains(name))
@@ -97,13 +101,13 @@ public class GameRepository : IGameRepository
             .Select(x => _mapper.MapGameToResponse(x))
             .ToListAsync();
 
-        return new SuccessData<List<GameResponse>>()
+        return new SuccessData<PageResponse<GameResponse>>()
         {
-            Data = res
+            Data = new PageResponse<GameResponse>(res, count)
         };
     }
 
-    public async Task<HandlerResult<SuccessData<List<GameResponse>>, IErrorResult>> GetGamesByPlayer(string? name,
+    public async Task<HandlerResult<SuccessData<PageResponse<GameResponse>>, IErrorResult>> GetGamesByPlayer(string? name,
         PageParameters pageParameters)
     {
         if (name == null)
@@ -142,17 +146,21 @@ public class GameRepository : IGameRepository
             };
         }
 
-        return new SuccessData<List<GameResponse>>()
+        return new SuccessData<PageResponse<GameResponse>>()
         {
-            Data = res.Skip(pageParameters.PageNumber * pageParameters.PageSize)
+            Data = new PageResponse<GameResponse>(res.Skip(pageParameters.PageNumber * pageParameters.PageSize)
                 .Take(pageParameters.PageSize)
-                .ToList()
+                .ToList(), res.Count)
         };
     }
 
-    public async Task<HandlerResult<SuccessData<List<GameResponse>>, IErrorResult>> GetGames(
+    public async Task<HandlerResult<SuccessData<PageResponse<GameResponse>>, IErrorResult>> GetGames(
         PageParameters pageParameters)
     {
+
+        var count = _dataContext
+            .Games.Count();
+        
         var resGame = await _dataContext
             .Games
             .Include(game => game.Bot)
@@ -163,9 +171,9 @@ public class GameRepository : IGameRepository
             .Select(x => _mapper.MapGameToResponse(x))
             .ToListAsync();
 
-        return new SuccessData<List<GameResponse>>()
+        return new SuccessData<PageResponse<GameResponse>>()
         {
-            Data = resGame
+            Data = new PageResponse<GameResponse>(resGame, count)
         };
     }
 
@@ -242,9 +250,12 @@ public class GameRepository : IGameRepository
         return new Success();
     }
 
-    public async Task<HandlerResult<SuccessData<List<GameResponse>>, IErrorResult>> GetAvailableGames(
+    public async Task<HandlerResult<SuccessData<PageResponse<GameResponse>>, IErrorResult>> GetAvailableGames(
         PageParameters pageParameters)
     {
+        var count = _dataContext
+            .Games.Count(game => game.IsAvailableForPlay);
+        
         var resGame = await _dataContext
             .Games
             .Include(game => game.Bot)
@@ -257,9 +268,9 @@ public class GameRepository : IGameRepository
             .ToListAsync();
 
 
-        return new SuccessData<List<GameResponse>>()
+        return new SuccessData<PageResponse<GameResponse>>()
         {
-            Data = resGame
+            Data = new PageResponse<GameResponse>(resGame, count)
         };
     }
 

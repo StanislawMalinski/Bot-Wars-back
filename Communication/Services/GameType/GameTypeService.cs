@@ -32,7 +32,7 @@ public class GameTypeService : IGameService
         return await _gameRepository.GetGame(id);
     }
 
-    public async Task<HandlerResult<SuccessData<List<GameResponse>>, IErrorResult>> Search(string? name, PageParameters pageParameters)
+    public async Task<HandlerResult<SuccessData<PageResponse<GameResponse>>, IErrorResult>> Search(string? name, PageParameters pageParameters)
     {
         return await _gameRepository.Search(name, pageParameters);
     }
@@ -87,18 +87,18 @@ public class GameTypeService : IGameService
         return await _gameRepository.CreateGameType(userId, gameRequest);
     }
 
-    public async Task<HandlerResult<SuccessData<List<GameResponse>>, IErrorResult>> GetGames(PageParameters pageParameters)
+    public async Task<HandlerResult<SuccessData<PageResponse<GameResponse>>, IErrorResult>> GetGames(PageParameters pageParameters)
     {
         return await _gameRepository.GetGames(pageParameters);
     }
 
-    public async Task<HandlerResult<SuccessData<List<GameResponse>>, IErrorResult>> GetListOfTypesOfAvailableGames(
+    public async Task<HandlerResult<SuccessData<PageResponse<GameResponse>>, IErrorResult>> GetListOfTypesOfAvailableGames(
         PageParameters pageParameters)
     {
         return await _gameRepository.GetAvailableGames(pageParameters);
     }
 
-    public async Task<HandlerResult<SuccessData<List<GameResponse>>, IErrorResult>> GetGamesByPlayer(string? name, PageParameters pageParameters)
+    public async Task<HandlerResult<SuccessData<PageResponse<GameResponse>>, IErrorResult>> GetGamesByPlayer(string? name, PageParameters pageParameters)
     {
         return await _gameRepository.GetGamesByPlayer(name, pageParameters);
     }

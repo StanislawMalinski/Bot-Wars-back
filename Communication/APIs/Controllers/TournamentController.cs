@@ -39,7 +39,7 @@ namespace Communication.APIs.Controllers
             return (await _tournamentService.DeleteTournament(id, long.Parse(userId))).Match(Ok, this.ErrorResult);
         }
 
-        [HttpGet("getFiltered")]
+        [HttpPost("getFiltered")]
         public async Task<IActionResult> GetListOfTournamentsFiltered([FromBody] TournamentFilterRequest tournamentFilterRequest, [FromQuery] PageParameters pageParameters)
         {
             return (await _tournamentService.GetListOfTournamentsFiltered(tournamentFilterRequest, pageParameters)).Match(Ok,this.ErrorResult);

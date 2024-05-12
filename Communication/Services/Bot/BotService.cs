@@ -61,7 +61,7 @@ public class BotService : IBotService
         return await _botRepository.DeleteBot(botId);
     }
 
-    public async Task<HandlerResult<SuccessData<List<BotResponse>>, IErrorResult>> GetBotsForPlayer(string? playerName, PageParameters pageParameters)
+    public async Task<HandlerResult<SuccessData<PageResponse<BotResponse>>, IErrorResult>> GetBotsForPlayer(string? playerName, PageParameters pageParameters)
     {
         return await _botRepository.GetBotsForPlayer(playerName, pageParameters);
     }
@@ -90,7 +90,7 @@ public class BotService : IBotService
         return await _botRepository.GetBotFileForPlayer(botId);
     }
 
-    public async Task<HandlerResult<SuccessData<List<BotResponse>>, IErrorResult>> GetBotsForTournament(long tournamentId, PageParameters pageParameters)
+    public async Task<HandlerResult<SuccessData<PageResponse<BotResponse>>, IErrorResult>> GetBotsForTournament(long tournamentId, PageParameters pageParameters)
     {
         return await _botRepository.GetBotsForTournament(tournamentId, pageParameters) ;
     }
