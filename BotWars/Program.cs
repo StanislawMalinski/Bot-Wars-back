@@ -40,11 +40,11 @@ builder.Services.AddSwaggerGen(option =>
             {
                 Reference = new OpenApiReference
                 {
-                    Type=ReferenceType.SecurityScheme,
-                    Id="Bearer"
+                    Type = ReferenceType.SecurityScheme,
+                    Id = "Bearer"
                 }
             },
-            new string[]{}
+            new string[] { }
         }
     });
 });
@@ -93,7 +93,8 @@ builder.Services
     .AddUserSettings()
     .AddPointsSettings()
     .AddAchievements()
-    .AddBot();
+    .AddBot()
+    .AddMatch();
 
 builder.Services.AddControllers().AddFluentValidation();
 builder.Services.AddHttpContextAccessor();
@@ -120,18 +121,16 @@ using (var serviceScope = builder.Services.BuildServiceProvider().CreateScope())
         Console.WriteLine("No pending migrations.");
     }
 }
-app.UseCors(options => {
+
+app.UseCors(options =>
+{
     options.AllowAnyMethod();
     options.AllowAnyHeader();
 
     options.AllowAnyOrigin();
 });
 app.UseSwagger();
-app.UseSwaggerUI(c =>
-{
-    c.SwaggerEndpoint("/swagger/v1/swagger.json","BotWars API");
-
-});
+app.UseSwaggerUI(c => { c.SwaggerEndpoint("/swagger/v1/swagger.json", "BotWars API"); });
 
 app.UseAuthentication();
 
