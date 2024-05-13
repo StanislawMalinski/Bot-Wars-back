@@ -409,7 +409,7 @@ namespace Shared.DataAccess.Repositories
             return new Success();
         }
 
-        public async Task<HandlerResult<SuccessData<List<TournamentResponse>>, IErrorResult>>
+        public async Task<HandlerResult<SuccessData<PageResponse<TournamentResponse>>, IErrorResult>>
             GetFilteredTournamentsAsync(TournamentFilterRequest tournamentFilterRequest, PageParameters pageParameters)
         {
             var unfilteredTournaments = _dataContext
@@ -443,14 +443,16 @@ namespace Shared.DataAccess.Repositories
 
             if (tournamentFilterRequest.UserParticipation == null)
             {
+                var count = unfilteredTournaments.Count();
+                
                 var tournaments = await unfilteredTournaments
                     .Select(tournament => _mapper.TournamentToTournamentResponse(tournament))
                     .Skip(pageParameters.PageNumber * pageParameters.PageSize)
                     .Take(pageParameters.PageSize)
                     .ToListAsync();
-                return new SuccessData<List<TournamentResponse>>()
+                return new SuccessData<PageResponse<TournamentResponse>>()
                 {
-                    Data = tournaments
+                    Data = new PageResponse<TournamentResponse>(tournaments, count)
                 };
             }
 
@@ -477,9 +479,9 @@ namespace Shared.DataAccess.Repositories
                 }
             }
 
-            return new SuccessData<List<TournamentResponse>>()
+            return new SuccessData<PageResponse<TournamentResponse>>()
             {
-                Data = filteredTournamentList
+                Data = new PageResponse<TournamentResponse>(filteredTournamentList, filteredTournaments.Count)
             };
         }
 

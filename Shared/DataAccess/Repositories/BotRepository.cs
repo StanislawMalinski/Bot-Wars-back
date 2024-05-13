@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using Shared.DataAccess.Context;
 using Shared.DataAccess.DataBaseEntities;
@@ -77,7 +78,7 @@ public class BotRepository : IBotRepository
         return new SuccessData<BotResponse>() { Data = _botMapper.MapBotToResponse(bot) };
     }
 
-    public async Task<HandlerResult<SuccessData<List<BotResponse>>, IErrorResult>> GetBotsForPlayer(string? playerName,
+    public async Task<HandlerResult<SuccessData<PageResponse<BotResponse>>, IErrorResult>> GetBotsForPlayer(string? playerName,
         PageParameters pageParameters)
     {
         var player = await _dataContext
@@ -94,6 +95,10 @@ public class BotRepository : IBotRepository
             };
         }
 
+        var count = _dataContext
+            .Bots
+            .Count(bot => bot.Player == player);
+        
         var bots = await _dataContext
             .Bots
             .Where(bot => bot.Player == player)
@@ -102,9 +107,9 @@ public class BotRepository : IBotRepository
             .Select(bot => _botMapper.MapBotToResponse(bot))
             .ToListAsync();
 
-        return new SuccessData<List<BotResponse>>
+        return new SuccessData<PageResponse<BotResponse>>
         {
-            Data = bots
+            Data = new PageResponse<BotResponse>(bots, count)
         };
     }
 
@@ -155,7 +160,7 @@ public class BotRepository : IBotRepository
         }
     }
 
-    public async Task<HandlerResult<SuccessData<List<BotResponse>>, IErrorResult>> GetBotsForTournament(
+    public async Task<HandlerResult<SuccessData<PageResponse<BotResponse>>, IErrorResult>> GetBotsForTournament(
         long tournamentId, PageParameters pageParameters)
     {
         var tournament = await _dataContext
@@ -182,11 +187,11 @@ public class BotRepository : IBotRepository
             responses.Add(_botMapper.MapBotToResponse(returnedBot));
         }
 
-        return new SuccessData<List<BotResponse>>
+        return new SuccessData<PageResponse<BotResponse>>
         {
-            Data = responses.Skip(pageParameters.PageNumber * pageParameters.PageSize)
+            Data = new PageResponse<BotResponse>(responses.Skip(pageParameters.PageNumber * pageParameters.PageSize)
                 .Take(pageParameters.PageSize)
-                .ToList()
+                .ToList(), responses.Count)
         };
     }
 
