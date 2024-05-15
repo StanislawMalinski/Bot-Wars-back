@@ -8,7 +8,6 @@ public static class AdministrativeInjection
 {
     public static IServiceCollection AddAdministrative(this IServiceCollection serviceCollection)
     {
-        serviceCollection.AddScoped<IAdministrativeRepository, AdministrativeRepository>();
         serviceCollection.AddScoped<IAdministrativeService, AdministrativeService>();
         return serviceCollection;
     }

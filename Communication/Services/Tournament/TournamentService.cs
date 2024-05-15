@@ -39,7 +39,7 @@ namespace Communication.Services.Tournament
                     { Message = "to nie jest string base 64 musi miec wielkosc podzielna przez 4" };
             }
 
-            var game = await _gameRepository.GetGame1(tournamentRequest.GameId);
+            var game = await _gameRepository.GetGame(tournamentRequest.GameId);
             if (game is null) return new EntityNotFoundErrorResult();
             
 
@@ -96,11 +96,12 @@ namespace Communication.Services.Tournament
             GetListOfTournamentsFiltered(
                 TournamentFilterRequest tournamentFilterRequest, PageParameters pageParameters)
         {
-            
-            return new SuccessData<List<TournamentResponse>>()
+
+            return await _tournamentRepository.GetFilteredTournamentsAsync(tournamentFilterRequest, pageParameters);
+            /*return new SuccessData<PageResponse<TournamentResponse>>()
             {
-                Data = await _tournamentRepository.GetFilteredTournamentsAsync(tournamentFilterRequest, pageParameters)
-            };
+                Data = await _tournamentRepository.g .GetFilteredTournamentsAsync(tournamentFilterRequest, pageParameters)
+            };*/
         }
 
         public async Task<HandlerResult<SuccessData<TournamentResponse>, IErrorResult>> GetTournament(long id)

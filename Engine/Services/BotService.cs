@@ -1,9 +1,15 @@
-﻿namespace Engine.Services;
+﻿using Shared.DataAccess.RepositoryInterfaces;
+
+namespace Engine.Services;
 
 public class BotService
 {
-    public BotService()
+    private readonly IBotRepository _botRepository;
+
+    public BotService(IBotRepository botRepository)
     {
-        
+        _botRepository = botRepository;
     }
+
+    
 }

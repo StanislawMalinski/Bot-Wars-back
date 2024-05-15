@@ -396,5 +396,10 @@ namespace Shared.DataAccess.Repositories
 
             return new EntityNotFoundErrorResult();
         }
+
+        private async Task SaveChangeAsync()
+        {
+            await _dataContext.SaveChangesAsync();
+        }
     }
 }

@@ -39,16 +39,10 @@ public class GameRepository : IGameRepository
         _httpClient = httpClient;
     }
 
-    public async Task<HandlerResult<Success, IErrorResult>> CreateGameType(long? userId, GameRequest gameRequest)
+    
+    public async Task<bool> CreateGameType(long? userId, GameRequest gameRequest)
     {
-        if (userId is null)
-        {
-            return new EntityNotFoundErrorResult()
-            {
-                Title = "EntityNotFoundErrorResult 404",
-                Message = "Player not found"
-            };
-        }
+        if (userId is null) return false;
 
         var content = new MultipartFormDataContent();
         var streamContent = new StreamContent(gameRequest.GameFile.OpenReadStream());
@@ -62,11 +56,7 @@ public class GameRepository : IGameRepository
         }
         else
         {
-            return new IncorrectOperation
-            {
-                Title = "IncorrectOperation 404",
-                Message = "Faild to upload file to FileGatherer"
-            };
+            return false;
         }
 
         Game game = _mapper.MapRequestToGame(gameRequest);
@@ -76,93 +66,37 @@ public class GameRepository : IGameRepository
             .Games
             .AddAsync(game);
         await _dataContext.SaveChangesAsync();
-        return new Success();
+        return true;
     }
 
-    public async Task<HandlerResult<SuccessData<PageResponse<GameResponse>>, IErrorResult>> Search(string? name,
+    public async Task<List<GameResponse>> Search(string? name,
         PageParameters pageParameters)
     {
-        if (name == null)
-        {
-            return new SuccessData<PageResponse<GameResponse>>()
-            {
-                Data = new PageResponse<GameResponse>(new List<GameResponse>(), 0)
-            };
-        }
-
-        var count = _dataContext
-            .Games
-            .Count(x => x.GameFile != null && x.GameFile.Contains(name));
         
-        var res = await _dataContext
+        return await _dataContext
             .Games
             .Where(x => x.GameFile != null && x.GameFile.Contains(name))
             .Skip(pageParameters.PageNumber * pageParameters.PageSize)
             .Take(pageParameters.PageSize)
-            .Select(x => _mapper.MapGameToResponse(x))
+            .Select(x=>_mapper.MapGameToResponse(x))
             .ToListAsync();
-
-        return new SuccessData<PageResponse<GameResponse>>()
-        {
-            Data = new PageResponse<GameResponse>(res, count)
-        };
-    }
-
-    public async Task<HandlerResult<SuccessData<PageResponse<GameResponse>>, IErrorResult>> GetGamesByPlayer(string? name,
-        PageParameters pageParameters)
-    {
-        if (name == null)
-        {
-            return new EntityNotFoundErrorResult()
-            {
-                Title = "EntityNotFoundErrorResult 404",
-                Message = "No such element could have been found"
-            };
-        }
-
-        var player = await _dataContext
-            .Players
-            .FirstOrDefaultAsync(p => p.Login.Equals(name));
-
-        if (player == null)
-        {
-            return new EntityNotFoundErrorResult()
-            {
-                Title = "EntityNotFoundErrorResult 404",
-                Message = "Player not found"
-            };
-        }
-
-        var res = await _dataContext
-            .Games
-            .Where(x => x.GameFile != null && x.CreatorId == player.Id)
-            .Select(x => _mapper.MapGameToResponse(x))
-            .ToListAsync();
-        if (res is null || !res.Any())
-        {
-            return new EntityNotFoundErrorResult()
-            {
-                Title = "EntityNotFoundErrorResult 404",
-                Message = "Player didn't create any games"
-            };
-        }
-
-        return new SuccessData<PageResponse<GameResponse>>()
-        {
-            Data = new PageResponse<GameResponse>(res.Skip(pageParameters.PageNumber * pageParameters.PageSize)
-                .Take(pageParameters.PageSize)
-                .ToList(), res.Count)
-        };
-    }
-
-    public async Task<HandlerResult<SuccessData<PageResponse<GameResponse>>, IErrorResult>> GetGames(
-        PageParameters pageParameters)
-    {
-
-        var count = _dataContext
-            .Games.Count();
         
-        var resGame = await _dataContext
+    }
+
+    public async Task<List<GameResponse>> GetGamesByPlayer(long playerId, PageParameters pageParameters)
+    {
+        return await _dataContext
+            .Games
+            .Where(x => x.GameFile != null && x.CreatorId == playerId)
+            .Skip(pageParameters.PageNumber * pageParameters.PageSize)
+            .Take(pageParameters.PageSize)
+            .Select(x=>_mapper.MapGameToResponse(x))
+            .ToListAsync();
+    }
+
+    public async Task<List<GameResponse>> GetGames(PageParameters pageParameters)
+    {
+        return await _dataContext
             .Games
             .Include(game => game.Bot)
             .Include(game => game.Matches)
@@ -171,93 +105,44 @@ public class GameRepository : IGameRepository
             .Take(pageParameters.PageSize)
             .Select(x => _mapper.MapGameToResponse(x))
             .ToListAsync();
-
-        return new SuccessData<PageResponse<GameResponse>>()
-        {
-            Data = new PageResponse<GameResponse>(resGame, count)
-        };
     }
 
-    public async Task<HandlerResult<Success, IErrorResult>> DeleteGame(long id)
+    public async Task<bool> DeleteGame(long id)
     {
         var gameToRemove = await _dataContext
             .Games
             .Include(g => g.Tournaments)
             .FirstOrDefaultAsync(g => g.Id == id);
-
-        if (gameToRemove == null)
-        {
-            return new EntityNotFoundErrorResult()
-            {
-                Title = "EntityNotFoundErrorResult 404",
-                Message = "No such element could have been found"
-            };
-        }
+        
+        if (gameToRemove == null) return false;
 
         if (gameToRemove.Tournaments != null)
             _dataContext
                 .Tournaments
                 .RemoveRange(gameToRemove.Tournaments);
         _dataContext.Games.Remove(gameToRemove);
-        await _dataContext.SaveChangesAsync();
-
-        return new Success();
+        return true;
     }
+    
 
-    public async Task<HandlerResult<SuccessData<GameResponse>, IErrorResult>> GetGame(long id)
-    {
-        var resGame = await _dataContext
-            .Games
-            .Where(game => game.Id == id)
-            .Include(game => game.Bot)
-            .Include(game => game.Matches)
-            .Include(game => game.Tournaments)
-            .FirstOrDefaultAsync();
-
-        if (resGame == null)
-        {
-            return new EntityNotFoundErrorResult()
-            {
-                Title = "EntityNotFoundErrorResult 404",
-                Message = "No such element could have been found"
-            };
-        }
-
-        return new SuccessData<GameResponse>()
-        {
-            Data = _mapper.MapGameToResponse(resGame)
-        };
-    }
-
-    public async Task<HandlerResult<Success, IErrorResult>> ModifyGameType(long id, GameRequest gameRequest)
+    public async Task<bool> ModifyGameType(long id, GameRequest gameRequest)
     {
         var resGame = await _dataContext.Games.FindAsync(id);
-        if (resGame == null)
-        {
-            return new EntityNotFoundErrorResult()
-            {
-                Title = "EntityNotFoundErrorResult 404",
-                Message = "No such element could have been found"
-            };
-        }
-
+        if (resGame == null) return false;
         resGame.InterfaceDefinition = gameRequest.InterfaceDefinition;
         resGame.GameInstructions = gameRequest.GameInstructions;
         resGame.GameFile = gameRequest.GameFile?.FileName;
         resGame.NumbersOfPlayer = gameRequest.NumberOfPlayer;
         resGame.LastModification = DateTime.Now;
         resGame.IsAvailableForPlay = gameRequest.IsAvailableForPlay;
-        await _dataContext.SaveChangesAsync();
-        return new Success();
+        return true;
     }
 
-    public async Task<HandlerResult<SuccessData<PageResponse<GameResponse>>, IErrorResult>> GetAvailableGames(
+    public async Task<List<GameResponse>> GetAvailableGames(
         PageParameters pageParameters)
     {
-        var count = _dataContext
-            .Games.Count(game => game.IsAvailableForPlay);
         
-        var resGame = await _dataContext
+        return await _dataContext
             .Games
             .Include(game => game.Bot)
             .Include(game => game.Matches)
@@ -267,19 +152,15 @@ public class GameRepository : IGameRepository
             .Take(pageParameters.PageSize)
             .Select(game => _mapper.MapGameToResponse(game))
             .ToListAsync();
-
-
-        return new SuccessData<PageResponse<GameResponse>>()
-        {
-            Data = new PageResponse<GameResponse>(resGame, count)
-        };
+        
     }
 
-    public async Task<HandlerResult<Success, IErrorResult>> GameNotAvailableForPlay(long gameId)
+    public async Task<bool> GameNotAvailableForPlay(long gameId)
     {
         var res = await _dataContext.Games.FindAsync(gameId);
+        if (res == null) return false;
         res.IsAvailableForPlay = false;
-        return new Success();
+        return true;
     }
 
     public async Task<long?> GetCreatorId(long gameId)
@@ -296,10 +177,21 @@ public class GameRepository : IGameRepository
         return false;
     }
 
-    public async Task<Game?> GetGame1(long gameId)
+    public async Task<Game?> GetGame(long gameId)
     {
         return await _dataContext.Games.FindAsync(gameId);
     }
+    
+    public async Task<Game?> GetGameIncluded(long gameId)
+    {
+        return await _dataContext.Games.Where(game => game.Id == gameId)
+            .Include(game => game.Bot)
+            .Include(game => game.Matches)
+            .Include(game => game.Tournaments)
+            .FirstOrDefaultAsync();;
+    }
+    
+   
 
     public async Task SaveChangesAsync()
     {
