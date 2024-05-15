@@ -31,8 +31,8 @@ public class AchievementHandlerService
 
     public async  Task<HandlerResult<Success,IErrorResult>> MatchWinner(long matchId, long winner, long taskId)
     {
-        var losers = (await _matchRepository.GetAllLosers(matchId, winner)).Match(x=>x.Data,x=>new List<long>());
-        var playerWinner = (await _matchRepository.GetPlayerFromBot(winner)).Match(x => x.Data, x => 0);
+        var losers = await _matchRepository.GetAllLosers(matchId, winner);
+        var playerWinner = ((await _matchRepository.GetPlayerFromBot(winner))!).Id;
         var tour = await _matchRepository.GetTournament(matchId);
         foreach (var loser in losers!)
         {

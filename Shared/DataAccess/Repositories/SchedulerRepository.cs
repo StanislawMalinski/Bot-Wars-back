@@ -18,65 +18,46 @@ public class SchedulerRepository
         _dataContext = dataContext;
     }
 
-    public async Task<HandlerResult<SuccessData<List<_Task>>, IErrorResult>> TaskToDo()
+    public async Task<List<_Task>> TaskToDo()
     {
 
         DateTime data = DateTime.Now;
-        var result = await _dataContext.Tasks.Where(x => x.ScheduledOn <= data && x.Status == TaskStatus.ToDo).ToListAsync();
-        //var result = await _dataContext.Tasks.Where(x => x.ScheduledOn < data && x.Status == false).ToListAsync();
-        Console.WriteLine(result.Count() + " tle zadan");
-        return new SuccessData<List<_Task>>()
-        {
-            Data = result
-        };
+        return await _dataContext.Tasks.Where(x => x.ScheduledOn <= data && x.Status == TaskStatus.ToDo).ToListAsync();
+        
     }
 
-    public async Task<HandlerResult<SuccessData<List<_Task>>, IErrorResult>> TaskToDo(int engineId)
+    public async Task<List<_Task>> TaskToDo(int engineId)
     {
 
         DateTime data = DateTime.Now;
-        var result = await _dataContext.Tasks.Where(x => x.ScheduledOn <= data && x.Status == TaskStatus.ToDo && x.EngineId == engineId).ToListAsync();
-        Console.WriteLine(result.Count() + " tasks to do");
-        return new SuccessData<List<_Task>>()
-        {
-            Data = result
-        };
+        return await _dataContext.Tasks.Where(x => x.ScheduledOn <= data && x.Status == TaskStatus.ToDo && x.EngineId == engineId).ToListAsync();
+        
     }
 
-    public async Task<HandlerResult<SuccessData<List<_Task>>, IErrorResult>> UnassignedTasks()
+    public async Task<List<_Task>> UnassignedTasks()
     {
 
         DateTime data = DateTime.Now;
-        var result = await _dataContext.Tasks.Where(x => x.ScheduledOn <= data && x.Status == TaskStatus.Unassigned).ToListAsync();
-        Console.WriteLine(result.Count() + " unassigned tasks");
-        return new SuccessData<List<_Task>>()
-        {
-            Data = result
-        };
+        return await _dataContext.Tasks.Where(x => x.ScheduledOn <= data && x.Status == TaskStatus.Unassigned).ToListAsync();
+       
     }
 
-    public async Task<HandlerResult<Success, IErrorResult>> AssignTask(long taskId, int engineId)
+    public async Task<bool> AssignTask(long taskId, int engineId)
     {
         var res = await _dataContext.Tasks.FirstOrDefaultAsync(x => x.Id == taskId);
-        if (res == null || res.Status != TaskStatus.Unassigned)
-        {
-            return new EntityNotFoundErrorResult();
-        }
+        if (res == null || res.Status != TaskStatus.Unassigned) return false;
         res.Status = TaskStatus.ToDo;
         res.EngineId = engineId;
         await _dataContext.SaveChangesAsync();
-        return new Success();
+        return true;
     }
 
-    public async Task<HandlerResult<Success, IErrorResult>> Taskdoing(long taskId)
+    public async Task<bool> Taskdoing(long taskId)
     {
         var res = await _dataContext.Tasks.FirstOrDefaultAsync(x => x.Id == taskId);
-        if (res == null)
-        {
-            return new EntityNotFoundErrorResult();
-        }
+        if (res == null) return false;
         res.Status = TaskStatus.Doing;
         await _dataContext.SaveChangesAsync();
-        return new Success();
+        return true;
     }
 }

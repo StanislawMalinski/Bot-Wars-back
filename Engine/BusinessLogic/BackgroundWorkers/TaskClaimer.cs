@@ -20,7 +20,7 @@ namespace Engine.BusinessLogic.BackgroundWorkers
 
         public async Task Invoke()
         {
-            var tasks = (await _schedulerRepository.UnassignedTasks()).Match(x => x.Data, x => new List<_Task>());
+            var tasks = await _schedulerRepository.UnassignedTasks();
             foreach (var t in tasks)
             {
                 await _schedulerRepository.AssignTask(t.Id, _instanceSettings.EngineId);

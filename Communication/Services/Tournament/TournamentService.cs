@@ -1,4 +1,5 @@
-﻿using Shared.DataAccess.DataBaseEntities;
+﻿using Microsoft.EntityFrameworkCore;
+using Shared.DataAccess.DataBaseEntities;
 using Shared.DataAccess.DTO;
 using Shared.DataAccess.DTO.Requests;
 using Shared.DataAccess.DTO.Responses;
@@ -96,14 +97,98 @@ namespace Communication.Services.Tournament
             GetListOfTournamentsFiltered(
                 TournamentFilterRequest tournamentFilterRequest, PageParameters pageParameters)
         {
+            
+            var unfilteredTournaments = _tournamentRepository.GetTournamentsQuery();
 
-            return await _tournamentRepository.GetFilteredTournamentsAsync(tournamentFilterRequest, pageParameters);
+            if (tournamentFilterRequest.MaxPlayOutDate != null)
+            {
+                unfilteredTournaments = unfilteredTournaments.Where(tournament =>
+                    tournament.TournamentsDate <= tournamentFilterRequest.MaxPlayOutDate);
+            }
+
+            if (tournamentFilterRequest.MinPlayOutDate != null)
+            {
+                unfilteredTournaments = unfilteredTournaments.Where(tournament =>
+                    tournament.TournamentsDate >= tournamentFilterRequest.MinPlayOutDate);
+            }
+
+            if (tournamentFilterRequest.Creator != null)
+            {
+                unfilteredTournaments = unfilteredTournaments.Where(tournament =>
+                    tournamentFilterRequest.Creator == null
+                    || tournamentFilterRequest.Creator.Equals(tournament.Creator.Login));
+            }
+
+            if (tournamentFilterRequest.TournamentTitle != null)
+            {
+                unfilteredTournaments = unfilteredTournaments.Where(tournament =>
+                    tournament.TournamentTitle.Contains(tournamentFilterRequest.TournamentTitle));
+            }
+
+            if (tournamentFilterRequest.UserParticipation == null)
+            {
+                var count = unfilteredTournaments.Count();
+                
+                var tournaments = await unfilteredTournaments
+                    .Select(tournament => _mapper.TournamentToTournamentResponse(tournament))
+                    .Skip(pageParameters.PageNumber * pageParameters.PageSize)
+                    .Take(pageParameters.PageSize)
+                    .ToListAsync();
+                return new SuccessData<PageResponse<TournamentResponse>>()
+                {
+                    Data = new PageResponse<TournamentResponse>(tournaments, count)
+                };
+            }
+
+            var filteredTournaments = await unfilteredTournaments
+                .Select(tournament => _mapper.TournamentToTournamentResponse(tournament))
+                .ToListAsync();
+            var filteredTournamentList = new List<TournamentResponse>();
+            int skipped = 0;
+            foreach (var tournamentResponse in filteredTournaments)
+            {
+                if ((await PlayerParticipate(tournamentResponse.Id, tournamentFilterRequest.UserParticipation))
+                    .IsSuccess)
+                {
+                    if (skipped++ < pageParameters.PageNumber * pageParameters.PageSize)
+                    {
+                        continue;
+                    }
+
+                    filteredTournamentList.Add(tournamentResponse);
+                    if (filteredTournamentList.Count >= pageParameters.PageSize)
+                    {
+                        break;
+                    }
+                }
+            }
+
+            return new SuccessData<PageResponse<TournamentResponse>>()
+            {
+                Data = new PageResponse<TournamentResponse>(filteredTournamentList, filteredTournaments.Count)
+            };
+        
+
+        
+            
+            
+            
             /*return new SuccessData<PageResponse<TournamentResponse>>()
             {
                 Data = await _tournamentRepository.g .GetFilteredTournamentsAsync(tournamentFilterRequest, pageParameters)
             };*/
         }
+        private async Task<HandlerResult<Success, IErrorResult>> PlayerParticipate(long tourId, string? playerUsername)
+        {
+            if (playerUsername == null) return new Success();
+            var res = await _tournamentRepository.GetParticipantName(tourId);
+            foreach (var p in res)
+            {
+                if (playerUsername.Equals(p)) return new Success();
+            }
 
+            return new EntityNotFoundErrorResult();
+        }
         public async Task<HandlerResult<SuccessData<TournamentResponse>, IErrorResult>> GetTournament(long id)
         {
             var tournament = await _tournamentRepository.GetTournamentExtended(id);

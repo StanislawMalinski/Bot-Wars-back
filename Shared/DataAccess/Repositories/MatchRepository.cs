@@ -2,14 +2,8 @@
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Shared.DataAccess.Context;
 using Shared.DataAccess.DataBaseEntities;
-using Shared.DataAccess.DTO;
 using Shared.DataAccess.Enumerations;
-using Shared.DataAccess.RepositoryInterfaces;
-using Shared.Results;
-using Shared.Results.ErrorResults;
-using Shared.Results.IResults;
-using Shared.Results.SuccessResults;
-using TaskStatus = Shared.DataAccess.Enumerations.TaskStatus;
+
 
 namespace Shared.DataAccess.Repositories;
 
@@ -79,53 +73,31 @@ public class MatchRepository
             x.TournamentsId == tournamentId && x.Data.Equals(parsPkey));
     }
  
-    public async Task<HandlerResult<SuccessData<List<long>>, IErrorResult>> GetAllReadyToPlay(long tourId)
+    public async Task<List<long>> GetAllReadyToPlay(long tourId)
     {
-        return new SuccessData<List<long>>()
-        {
-            Data = await _dataContext.Matches.Where(x => x.TournamentsId == tourId && x.Status == GameStatus.ReadyToPlay).Select(x => x.Id).ToListAsync()
-        };
+        return await _dataContext.Matches.Where(x => x.TournamentsId == tourId && x.Status == GameStatus.ReadyToPlay)
+            .Select(x => x.Id).ToListAsync();
     }
-    public async Task<HandlerResult<SuccessData<List<long>>, IErrorResult>> GetAllPlayed(long tourId)
+    public async Task<List<long>> GetAllPlayed(long tourId)
     {
-        return new SuccessData<List<long>>()
-        {
-            Data = await _dataContext.Matches.Where(x => x.TournamentsId == tourId && x.Status==GameStatus.Played).Select(x => x.Id).ToListAsync()
-        };
+        return await _dataContext.Matches.Where(x => x.TournamentsId == tourId && x.Status==GameStatus.Played).Select(x => x.Id).ToListAsync();
     }
-    public async Task<HandlerResult<SuccessData<long>, IErrorResult>> IsResolve(long tourId,string key)
+    public async Task<Matches?> IsResolve(long tourId,string key)
     {
-        var res = await _dataContext.Matches.FirstOrDefaultAsync(x =>
+        return await _dataContext.Matches.FirstOrDefaultAsync(x =>
             x.TournamentsId == tourId && x.Data.Equals(key) && x.Status == GameStatus.Resolve);
-        if (res == null) return new EntityNotFoundErrorResult();
-        return new SuccessData<long>()
-        {
-            Data = res.Winner
-        };
+       
     }
 
-    public async Task<HandlerResult<SuccessData<List<long>>, IErrorResult>> GetAllLosers(long matchId,long winner)
+    public async Task<List<long>> GetAllLosers(long matchId,long winner)
     {
-        var result = await _dataContext.Matches.FirstOrDefaultAsync(x => x.Id == matchId);
-     
-        if (result == null) return new EntityNotFoundErrorResult();
-        var losers = await _dataContext.MatchPlayers.Where(x => x.MatchId == matchId && x.BotId != winner).Include(x=>x.Bot).Select(x=>x.Bot.PlayerId).ToListAsync();
-        return new SuccessData<List<long>>()
-        {
-            Data = losers
-        };
+         return await _dataContext.MatchPlayers.Where(x => x.MatchId == matchId && x.BotId != winner).Include(x=>x.Bot).Select(x=>x.Bot.PlayerId).ToListAsync();
     }
 
-    public async Task<HandlerResult<SuccessData<long>, IErrorResult>> GetPlayerFromBot(long botId)
+    public async Task<Bot?> GetPlayerFromBot(long botId)
     {
-        var result = await _dataContext.Bots.FindAsync(botId);
-        if(result == null) return new EntityNotFoundErrorResult();
-        return new SuccessData<long>()
-        {
-            Data = result.PlayerId
-        };
+        return await _dataContext.Bots.FindAsync(botId);
     }
-
 
     public IQueryable<Matches> GetListOfUnfilteredMatches()
     {

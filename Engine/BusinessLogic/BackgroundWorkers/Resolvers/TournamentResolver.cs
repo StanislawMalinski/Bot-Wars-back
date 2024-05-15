@@ -28,9 +28,19 @@ public class TournamentResolver : Resolver
     
     
 
-    public async Task<HandlerResult<Success,IErrorResult>> EndTournament(long tourId,long taskId)
+    public async Task<HandlerResult<Success,IErrorResult>> EndTournament(long tournamentId, long taskId)
     {
-        return await _tournamentRepository.TournamentEnded(tourId,taskId);
+
+        var res = await _tournamentRepository.GetTournament(tournamentId);
+        var taskRes = await _taskService.GetTask(taskId);
+        if (res == null || taskRes.IsError) return new EntityNotFoundErrorResult();
+        var task = taskRes.Match(x => x.Data, null!);
+        res.Status = TournamentStatus.PLAYED;
+        task!.Status = TaskStatus.Done;
+        await _tournamentRepository.SaveChangesAsync();
+        return new Success();
+        
+        
     }
     
     public async Task<HandlerResult<Success,IErrorResult>> EndTournament(long tourId,long botId, long taskId)
@@ -44,7 +54,12 @@ public class TournamentResolver : Resolver
 
     public async  Task<HandlerResult<SuccessData<Game>,IErrorResult>> GetGame(long tourId)
     {
-        return await _tournamentRepository.TournamentGame(tourId);
+        var res = await _tournamentRepository.TournamentGame(tourId);
+        if (res == null) return new EntityNotFoundErrorResult();
+        return new SuccessData<Game>()
+        {
+            Data = res
+        };
     }
 
     public async Task<HandlerResult<Success,IErrorResult>> AreAnyMatchesPlayed(long tourId)
@@ -55,13 +70,18 @@ public class TournamentResolver : Resolver
 
     public async Task<HandlerResult<Success,IErrorResult>> StartPlaying(long tourId)
     {
-        return await _tournamentRepository.TournamentPlaying(tourId);
+        if (await _tournamentRepository.TournamentPlaying(tourId)) return new Success();
+        return new IncorrectOperation();
     }
     
     
     public async Task<HandlerResult<SuccessData<List<Bot>>,IErrorResult>> GetRegisterBots (long tourId)
     {
-        return await _tournamentRepository.TournamentBotsToPlay(tourId);
+        return new SuccessData<List<Bot>>()
+        {
+            Data = await _tournamentRepository.TournamentBotsToPlay(tourId)
+        };
+
     }
     
     public async Task<HandlerResult<Success,IErrorResult>> CreateLadder(List<GameInfo> matches, long tourId)
@@ -91,7 +111,10 @@ public class TournamentResolver : Resolver
     
     public async Task<HandlerResult<SuccessData<List<long>>,IErrorResult>> GetMatchesReadyToPlay(long tourId)
     {
-        return await _matchRepository.GetAllReadyToPlay(tourId);
+        return new SuccessData<List<long>>()
+        {
+            Data = await _matchRepository.GetAllReadyToPlay(tourId)
+        };
     }
    
     public async Task<HandlerResult<Success,IErrorResult>> PlayMatch(long matchId)
@@ -115,7 +138,7 @@ public class TournamentResolver : Resolver
     
     public async Task<HandlerResult<SuccessData<List<long>>,IErrorResult>> GetPlayedMatches(long tourId)
     {
-        return await _matchRepository.GetAllPlayed(tourId);
+        return new SuccessData<List<long>>() { Data = await _matchRepository.GetAllPlayed(tourId) };
     }
     
     public async Task<HandlerResult<Success,IErrorResult>> ResolveMatch(long matchId)
@@ -158,7 +181,13 @@ public class TournamentResolver : Resolver
     
     public async Task<HandlerResult<SuccessData<long>,IErrorResult>> IsMatchResolved(long tourId,string key)
     {
-        return await _matchRepository.IsResolve(tourId,key);
+        
+        var res = await _matchRepository.IsResolve(tourId,key);
+        if (res == null) return new EntityNotFoundErrorResult();
+        return new SuccessData<long>()
+        {
+            Data = res.Winner
+        };
     }
     
 }
