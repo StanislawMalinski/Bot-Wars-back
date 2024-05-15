@@ -1,4 +1,5 @@
-﻿using Shared.DataAccess.Context;
+﻿using Microsoft.EntityFrameworkCore;
+using Shared.DataAccess.Context;
 using Shared.DataAccess.DataBaseEntities;
 using Shared.DataAccess.RepositoryInterfaces;
 using Shared.Results;
@@ -16,18 +17,8 @@ public class PointHistoryRepository : IPointHistoryRepository
     {
         _dataContext = dataContext;
     }
-    public async Task<HandlerResult<SuccessData<List<PointHistory>>, IErrorResult>> GetHistoryForPlayer(long playerId)
+    public async Task<List<PointHistory>> GetHistoryForPlayer(long playerId)
     {
-        
-        var result = from entity in _dataContext.PointHistories
-            where entity.PlayerId == playerId
-            select entity;
-        
-        List<PointHistory> pointHistories = result.ToList();
-        return new  SuccessData<List<PointHistory>>()
-        {
-            Data = pointHistories
-        };
-        
+        return await _dataContext.PointHistories.Where(x => x.PlayerId == playerId).ToListAsync();
     }
 }

@@ -6,6 +6,7 @@ using Shared.DataAccess.DataBaseEntities;
 using Shared.DataAccess.DTO;
 using Shared.DataAccess.Repositories;
 using System.IO;
+using Engine.Services;
 using Shared.DataAccess.Enumerations;
 
 namespace Engine.FileController;
@@ -17,21 +18,21 @@ public class FileController : Controller
 
     private FileManager _fileManager;
     private MatchRepository _matchRepository;
-    private TaskRepository _taskRepository;
+    private TaskService _taskService;
 
-    public FileController(FileManager fileManager,MatchRepository matchRepository, TaskRepository taskRepository)
+
+    public FileController(FileManager fileManager, MatchRepository matchRepository, TaskService taskService)
     {
         _fileManager = fileManager;
         _matchRepository = matchRepository;
-        _taskRepository = taskRepository;
+        _taskService = taskService;
     }
-    
-     
+
     [HttpPost("test")]
     public async Task<IActionResult> dosomthing(long tourId)
     {
         
-        return (await  _taskRepository.CreateTask(TaskTypes.PlayTournament, tourId, DateTime.Now)).Match(Ok,Ok);
+        return (await  _taskService.CreateTask(TaskTypes.PlayTournament, tourId, DateTime.Now)).Match(Ok,Ok);
         
     }
 
@@ -40,7 +41,7 @@ public class FileController : Controller
     public async Task<IActionResult> dosomthing2(long botId)
     {
         
-        return (await  _taskRepository.CreateTask(TaskTypes.ValidateBot, botId, DateTime.Now)).Match(Ok,Ok);
+        return (await  _taskService.CreateTask(TaskTypes.ValidateBot, botId, DateTime.Now)).Match(Ok,Ok);
         
     }
     // TEST - if there is file with id 5 in FileGatherer it should be obtained & saved in FileSystem

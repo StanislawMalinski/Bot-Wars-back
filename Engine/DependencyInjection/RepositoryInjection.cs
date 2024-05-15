@@ -11,7 +11,6 @@ public static class RepositoryInjection
     public static IServiceCollection AddRepositories(this IServiceCollection serviceCollection)
     {
         serviceCollection.AddScoped<IAchievementsRepository, AchievementsRepository>();
-        serviceCollection.AddScoped<IAdministrativeRepository, AdministrativeRepository>();
         serviceCollection.AddScoped<IGameRepository, GameRepository>();
         //serviceCollection.AddScoped<IPlayerRepository, PlayerRepository>();
         serviceCollection.AddScoped<IPointHistoryRepository, PointHistoryRepository>();

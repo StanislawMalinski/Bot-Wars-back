@@ -1,4 +1,5 @@
-﻿using Shared.DataAccess.DAO;
+﻿using Microsoft.EntityFrameworkCore.ChangeTracking;
+using Shared.DataAccess.DAO;
 using Shared.DataAccess.DataBaseEntities;
 using Shared.DataAccess.DTO;
 using Shared.DataAccess.DTO.Requests;
@@ -12,15 +13,21 @@ namespace Shared.DataAccess.RepositoryInterfaces;
 
 public interface IGameRepository
 {
-    public Task<HandlerResult<SuccessData<PageResponse<GameResponse>>, IErrorResult>> GetGamesByPlayer(string? name, PageParameters pageParameters);
-    public Task<HandlerResult<Success, IErrorResult>> CreateGameType(long? userId,GameRequest gameRequest);
-    public Task<HandlerResult<SuccessData<PageResponse<GameResponse>>, IErrorResult>> GetGames(PageParameters pageParameters);
-    public Task<HandlerResult<Success, IErrorResult>> DeleteGame(long id);
-    public Task<HandlerResult<SuccessData<GameResponse>, IErrorResult>> GetGame(long id);
-    public Task<HandlerResult<Success, IErrorResult>> ModifyGameType(long id, GameRequest gameRequest);
-    public Task<HandlerResult<SuccessData<PageResponse<GameResponse>>, IErrorResult>> GetAvailableGames(PageParameters pageParameters);
-    public Task<HandlerResult<SuccessData<PageResponse<GameResponse>>, IErrorResult>> Search(string? name, PageParameters pageParameters);
-    public Task<HandlerResult<Success, IErrorResult>> GameNotAvailableForPlay(long gameId);
+    public Task<List<GameResponse>> GetGamesByPlayer(long playerId, PageParameters pageParameters);
+    public Task<bool> CreateGameType(long? userId,GameRequest gameRequest);
+    public Task<List<GameResponse>> GetGames(PageParameters pageParameters);
+    public Task<bool> DeleteGame(long id);
+ 
+    public Task<bool> ModifyGameType(long id, GameRequest gameRequest);
+    public Task<List<GameResponse>> GetAvailableGames(PageParameters pageParameters);
+    public Task<List<GameResponse>> Search(string? name, PageParameters pageParameters);
+    public Task<bool> GameNotAvailableForPlay(long gameId);
     public Task<long?> GetCreatorId(long gameId);
+    
+    Task<bool> DeleteGameAsync(long id);
+    Task<Game?> GetGame(long gameId);
+    Task<Game?> GetGameIncluded(long gameId);
+    Task SaveChangesAsync();
+    Task<EntityEntry<Game>> AddPGame(Game game);
 
 }

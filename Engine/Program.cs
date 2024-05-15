@@ -13,7 +13,8 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddRepositories()
     .AddMappers()
-    .AddBackGroundTask();
+    .AddBackGroundTask()
+    .AddServices();
 
 InstanceSettings instanceSettings = new InstanceSettings();
 builder.Configuration.Bind("InstanceSettings", instanceSettings);

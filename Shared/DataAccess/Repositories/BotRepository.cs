@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Shared.DataAccess.Context;
 using Shared.DataAccess.DataBaseEntities;
 using Shared.DataAccess.DTO.Requests;
@@ -26,120 +27,53 @@ public class BotRepository : IBotRepository
 
     // move to config
     private readonly string _gathererEndpoint = "http://host.docker.internal:7002/api/Gatherer";
-    //private readonly IAuthorizationService _authorizationService;
-    //private readonly IUserContextRepository _userContextRepository;
+
 
     public BotRepository(DataContext dataContext,
         IBotMapper botMapper,
         HttpClient httpClient
-        //IAuthorizationService authorizationService,
-        //IUserContextRepository userContextRepository
+    
     )
     {
-        //_userContextRepository = userContextRepository;
-        //_authorizationService = authorizationService;
+      
         _dataContext = dataContext;
         _botMapper = botMapper;
         _httpClient = httpClient;
     }
 
-    //public async Task<HandlerResult<SuccessData<long>, IErrorResult>> AddBot(BotFileDto bot)
-    //{
-    //    Bot newbot = new Bot()
-    //    {
-    //        PlayerId = bot.PlayerId,
-    //        GameId = bot.GameId,
-    //        BotFile = bot.BotName
-    //    };
-
-    //    var res =  await _dataContext.Bots.AddAsync(newbot);
-    //    await _dataContext.SaveChangesAsync();
-
-    //    return new SuccessData<long>()
-    //    {
-    //        Data = res.Entity.Id
-    //    };
-    //}
-
-    public async Task<HandlerResult<SuccessData<Bot>, IErrorResult>> GetBot(long botId)
+    public async Task<Bot?> GetBotAndCreator(long botId)
     {
-        var res = await _dataContext
-            .Bots
-            .FindAsync(botId);
-
-        if (res == null) return new EntityNotFoundErrorResult();
-        return new SuccessData<Bot>() { Data = res };
+        return await _dataContext.Bots.Include(b => b.Player)
+            .Where(b => b.Id == botId)
+            .FirstOrDefaultAsync();
     }
+    
 
-    public async Task<HandlerResult<SuccessData<BotResponse>, IErrorResult>> GetBotResponse(long botId)
-    {
-        var bot = await _dataContext.Bots.FindAsync(botId);
-        if (bot == null) return new EntityNotFoundErrorResult();
-        return new SuccessData<BotResponse>() { Data = _botMapper.MapBotToResponse(bot) };
-    }
-
-    public async Task<HandlerResult<SuccessData<PageResponse<BotResponse>>, IErrorResult>> GetBotsForPlayer(string? playerName,
+    public async Task<List<BotResponse>> GetPlayerBots(long playerId,
         PageParameters pageParameters)
     {
-        var player = await _dataContext
-            .Players
-            .FirstOrDefaultAsync(p => p.Login.Equals(playerName));
-        
-        
-        if (player == null)
-        {
-            return new EntityNotFoundErrorResult()
-            {
-                Message = "EntityNotFound 404",
-                Title = "Player with given id does not exist"
-            };
-        }
-
-        var count = _dataContext
+        return await _dataContext
             .Bots
-            .Count(bot => bot.Player == player);
-        
-        var bots = await _dataContext
-            .Bots
-            .Where(bot => bot.Player == player)
+            .Where(bot => bot.PlayerId == playerId)
             .Skip(pageParameters.PageNumber * pageParameters.PageSize)
             .Take(pageParameters.PageSize)
             .Select(bot => _botMapper.MapBotToResponse(bot))
             .ToListAsync();
+    } 
 
-        return new SuccessData<PageResponse<BotResponse>>
-        {
-            Data = new PageResponse<BotResponse>(bots, count)
-        };
-    }
-
-    public async Task<HandlerResult<SuccessData<IFormFile>, IErrorResult>> GetBotFileForPlayer(long botId)
+    public async Task<IFormFile?> GetBotFileForPlayer(long botId)
     {
         var bot = await _dataContext
             .Bots
             .FirstOrDefaultAsync(bot => bot.Id == botId);
 
-        if (bot == null)
-        {
-            return new EntityNotFoundErrorResult()
-            {
-                Message = "EntityNotFound 404",
-                Title = "Bot with given id does not exist"
-            };
-        }
+        if (bot == null) return null;
 
         try
         {
             HttpResponseMessage res = await _httpClient.GetAsync(string.Format(_gathererEndpoint, bot.FileId));
-            if (!res.IsSuccessStatusCode)
-            {
-                return new EntityNotFoundErrorResult
-                {
-                    Title = "EntityNotFoundErrorResult",
-                    Message = $"File {bot.FileId} not found in Gatherer"
-                };
-            }
-
+            if (!res.IsSuccessStatusCode) return null;
+            
             Stream cont = await res.Content.ReadAsStreamAsync();
 
             IFormFile resBotFile = new FormFile(cont, 0, cont.Length, "botFile", bot.BotFile)
@@ -148,54 +82,29 @@ public class BotRepository : IBotRepository
                 ContentType = "text/plain"
             };
 
-            return new SuccessData<IFormFile>() { Data = resBotFile };
+            return resBotFile;
         }
         catch (Exception ex)
         {
-            return new EntityNotFoundErrorResult
-            {
-                Title = "Exception",
-                Message = ex.Message
-            };
+            return null;
         }
     }
 
-    public async Task<HandlerResult<SuccessData<PageResponse<BotResponse>>, IErrorResult>> GetBotsForTournament(
+    public async Task<List<BotResponse>> GetBotsForTournament(
         long tournamentId, PageParameters pageParameters)
     {
-        var tournament = await _dataContext
-            .Tournaments
-            .FindAsync(tournamentId);
-
-        if (tournament == null)
-        {
-            return new EntityNotFoundErrorResult()
-            {
-                Message = "Tournament could not have been found",
-                Title = "EntityNotFoundErrorResult 404"
-            };
-        }
-
-        var references = await _dataContext.TournamentReferences
-            .Where(tr => tr.Tournament == tournament)
+        
+        return  await _dataContext.TournamentReferences
+            .Where(tr => tr.Id == tournamentId)
+            .Skip(pageParameters.PageNumber * pageParameters.PageSize)
+            .Take(pageParameters.PageSize)
+            .Include(x => x.Bot)
+            .Select(x=> _botMapper.MapBotToResponse(x.Bot))
             .ToListAsync();
-
-        var responses = new List<BotResponse>();
-        foreach (var reference in references)
-        {
-            var returnedBot = await _dataContext.Bots.FindAsync(reference.botId);
-            responses.Add(_botMapper.MapBotToResponse(returnedBot));
-        }
-
-        return new SuccessData<PageResponse<BotResponse>>
-        {
-            Data = new PageResponse<BotResponse>(responses.Skip(pageParameters.PageNumber * pageParameters.PageSize)
-                .Take(pageParameters.PageSize)
-                .ToList(), responses.Count)
-        };
+        
     }
 
-    public async Task<HandlerResult<Success, IErrorResult>> AddBot(BotRequest botRequest, long playerId)
+    public async Task<bool> AddBot(BotRequest botRequest, long playerId)
 
     {
         try
@@ -212,76 +121,54 @@ public class BotRepository : IBotRepository
             }
             else
             {
-                return new IncorrectOperation
-                {
-                    Title = "IncorrectOperation 404",
-                    Message = "Faild to upload file to FileGatherer"
-                };
+                return false;
             }
 
             var game = await _dataContext.Games.FindAsync(botRequest.GameId);
             if (game == null)
-                return new EntityNotFoundErrorResult
-                {
-                    Title = "EntityNotFoundErrorResult 404",
-                    Message = "No game with given id exists"
-                };
+                return false;
 
             var bot = _botMapper.MapRequestToBot(botRequest);
             bot.FileId = botFileId;
             bot.PlayerId = playerId;
             await _dataContext.AddAsync(bot);
             await _dataContext.SaveChangesAsync();
-            return new Success();
+            return true;
         }
         catch (Exception ex)
         {
-            return new IncorrectOperation
-            {
-                Title = "IncorrectOperation 505",
-                Message = ex.Message
-            };
+            return false;
         }
     }
 
-    public async Task<HandlerResult<Success, IErrorResult>> DeleteBot(long botId)
+    public async Task<bool> DeleteBot(long botId)
     {
         var bot = await _dataContext.Bots.FindAsync(botId);
-        /*var authorizationResult = _authorizationService.AuthorizeAsync(_userContextRepository.GetUser(),
-            bot,
-            new ResourceOperationRequirement(ResourceOperation.Delete)).Result;
-
-        if (!authorizationResult.Succeeded)
-        {
-            return new UnauthorizedError();
-        }*/
-        if (bot == null) return new EntityNotFoundErrorResult();
+        if (bot == null) return false;
         _dataContext.Bots.Remove(bot);
-        await _dataContext.SaveChangesAsync();
-        return new Success();
+        return true;
     }
 
-    public async Task<HandlerResult<SuccessData<Game>, IErrorResult>> GetGame(long botId)
+   
+    public async Task<Game?> GetGame(long botId)
     {
-        var res = await _dataContext.Bots.FindAsync(botId);
-        if (res == null) return new EntityNotFoundErrorResult();
-        var resGame = await _dataContext.Games.FindAsync(res.GameId);
-        if (resGame == null) return new EntityNotFoundErrorResult();
-        return new SuccessData<Game>() { Data = resGame };
+        return await _dataContext.Bots.Where(x => x.Id == botId)
+            .Include(x => x.Games)
+            .Select(x => x.Games).FirstAsync();
     }
 
-    public async Task<HandlerResult<Success, IErrorResult>> ValidationResult(long taskId, bool result, int memoryUsed,
-        int timeUsed)
+    public async Task<Bot?> GetBot(long botId)
     {
-        var resTask = await _dataContext.Tasks.FindAsync(taskId);
-        if (resTask == null) return new EntityNotFoundErrorResult();
-        var resBot = await _dataContext.Bots.FindAsync(resTask.OperatingOn);
-        if (resBot == null) return new EntityNotFoundErrorResult();
-        resTask.Status = TaskStatus.Done;
-        resBot.Validation = result ? BotStatus.ValidationSucceed : BotStatus.ValidationFailed;
-        resBot.MemoryUsed = memoryUsed;
-        resBot.TimeUsed = timeUsed;
+        return await _dataContext.Bots.FindAsync(botId);
+    }
+
+    public async Task<EntityEntry<Bot>> AddBot(Bot bot)
+    {
+        return (await _dataContext.Bots.AddAsync(bot))!;
+    }
+
+    public async Task SaveChangeAsync()
+    {
         await _dataContext.SaveChangesAsync();
-        return new Success();
     }
 }
