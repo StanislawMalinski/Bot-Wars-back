@@ -1,4 +1,5 @@
-﻿using Shared.DataAccess.DAO;
+﻿using Microsoft.EntityFrameworkCore.ChangeTracking;
+using Shared.DataAccess.DAO;
 using Shared.DataAccess.DataBaseEntities;
 using Shared.DataAccess.DTO;
 using Shared.DataAccess.DTO.Requests;
@@ -22,5 +23,10 @@ public interface IGameRepository
     public Task<HandlerResult<SuccessData<PageResponse<GameResponse>>, IErrorResult>> Search(string? name, PageParameters pageParameters);
     public Task<HandlerResult<Success, IErrorResult>> GameNotAvailableForPlay(long gameId);
     public Task<long?> GetCreatorId(long gameId);
+    
+    Task<bool> DeleteGameAsync(long id);
+    Task<Game?> GetGame1(long gameId);
+    Task SaveChangesAsync();
+    Task<EntityEntry<Game>> AddPGame(Game game);
 
 }

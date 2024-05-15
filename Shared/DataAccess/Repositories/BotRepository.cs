@@ -60,6 +60,13 @@ public class BotRepository : IBotRepository
     //        Data = res.Entity.Id
     //    };
     //}
+    public async Task<Bot?> GetBotAndCreator(long botId)
+    {
+        return await _dataContext.Bots.Include(b => b.Player)
+            .Where(b => b.Id == botId)
+            .FirstOrDefaultAsync();
+    }
+        
 
     public async Task<HandlerResult<SuccessData<Bot>, IErrorResult>> GetBot(long botId)
     {

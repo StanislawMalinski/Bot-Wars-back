@@ -29,4 +29,7 @@ public interface IBotRepository
 
     Task<HandlerResult<SuccessData<PageResponse<BotResponse>>, IErrorResult>> GetBotsForTournament(long tournamentId,
         PageParameters pageParameters);
+
+
+    Task<Bot?> GetBotAndCreator(long botId);
 }

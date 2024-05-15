@@ -1,4 +1,5 @@
-﻿using Shared.DataAccess.DTO;
+﻿using Microsoft.EntityFrameworkCore.ChangeTracking;
+using Shared.DataAccess.DTO;
 using Shared.DataAccess.DataBaseEntities;
 using Shared.Results;
 using Shared.Results.IResults;
@@ -8,7 +9,8 @@ namespace Shared.DataAccess.RepositoryInterfaces;
 
 public interface IUserSettingsRepository
 {
-    public Task<HandlerResult<Success,IErrorResult>> CreateUserSettingsForPlayer(long playerId);
-    public Task<HandlerResult<SuccessData<UserSettingsDto>,IErrorResult>> GetUserSettingsForPlayer(long playerId);
-    public Task<HandlerResult<Success,IErrorResult>> UpdateUserSettingsForPlayer(long playerId, UserSettingsDto dto);
+    Task<UserSettings?> GetUserSetting(long playerId);
+    Task<EntityEntry<UserSettings>> AddUserSetting(UserSettings userSettings);
+    Task SaveChangesAsync();
+   
 }

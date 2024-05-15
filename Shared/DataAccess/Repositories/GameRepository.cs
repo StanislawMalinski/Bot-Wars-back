@@ -12,6 +12,7 @@ using Shared.Results.SuccessResults;
 using Shared.DataAccess.DataBaseEntities;
 using System.Net.Http;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Shared.DataAccess.AuthorizationRequirements;
 using Shared.DataAccess.Pagination;
 
@@ -287,5 +288,26 @@ public class GameRepository : IGameRepository
             .Games
             .FirstOrDefaultAsync(game => game.Id == gameId);
         return resGame?.CreatorId;
+    }
+
+    public async Task<bool> DeleteGameAsync(long id)
+    {
+        //_dataContext.Games.re
+        return false;
+    }
+
+    public async Task<Game?> GetGame1(long gameId)
+    {
+        return await _dataContext.Games.FindAsync(gameId);
+    }
+
+    public async Task SaveChangesAsync()
+    {
+        await _dataContext.SaveChangesAsync();
+    }
+
+    public async Task<EntityEntry<Game>> AddPGame(Game game)
+    {
+        return await _dataContext.Games.AddAsync(game);
     }
 }
