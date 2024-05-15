@@ -63,6 +63,7 @@ public class MatchRepository
     public async Task<bool> AreAny(long tourId)
     {
         var res = await _dataContext.Matches.FirstOrDefaultAsync(x => x.TournamentsId == tourId);
+        Console.WriteLine(res == null);
         if (res == null) return false;
         return true;
     }

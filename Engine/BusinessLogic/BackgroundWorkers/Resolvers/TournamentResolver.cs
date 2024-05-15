@@ -65,6 +65,7 @@ public class TournamentResolver : Resolver
     public async Task<HandlerResult<Success,IErrorResult>> AreAnyMatchesPlayed(long tourId)
     {
         if (await _matchRepository.AreAny(tourId)) return new Success();
+        Console.WriteLine("hejo2");
         return new EntityNotFoundErrorResult();
     }
 
@@ -132,6 +133,7 @@ public class TournamentResolver : Resolver
         task.Type = TaskTypes.PlayGame;
         await _taskService.CreateTask(task);
         await _taskService.CreateTask(task);
+        await _matchRepository.SaveChangesAsync();
         return new Success();
         
     }

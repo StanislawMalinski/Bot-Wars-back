@@ -24,6 +24,7 @@ public class TaskRepository
     
     public async Task<EntityEntry<_Task>> AddTask(TaskTypes type, long operatingOn,DateTime scheduledOn , TaskStatus status = TaskStatus.Unassigned)
     {
+        Console.WriteLine("dodano zdanie w repozytoruim");
         _Task task = new _Task
         {
             Type = type,

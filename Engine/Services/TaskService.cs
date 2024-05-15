@@ -1,4 +1,5 @@
-﻿using Shared.DataAccess.DataBaseEntities;
+﻿using System.Runtime.InteropServices.ComTypes;
+using Shared.DataAccess.DataBaseEntities;
 using Shared.DataAccess.Enumerations;
 using Shared.DataAccess.Repositories;
 using Shared.Results;
@@ -19,12 +20,15 @@ public class TaskService
     }
     public async Task<HandlerResult<Success, IErrorResult>> RestartTasks()
     {
-        var res = await _taskRepository.GetTasks(Shared.DataAccess.Enumerations.TaskStatus.Doing);
+        var res = await _taskRepository.GetTasks(TaskStatus.Doing);
         foreach (var task in res)
         {
             task.Status = TaskStatus.Unassigned ;
+            Console.WriteLine("co z tym zdaniem ");
         }
         await _taskRepository.SaveChangesAsync();
+        Console.WriteLine("resoetownaie zadań");
+        
         return new Success();
     }
 
@@ -33,19 +37,16 @@ public class TaskService
     {
         var res = await _taskRepository.AddTask(type, operatingOn, scheduledOn, status);
         await _taskRepository.SaveChangesAsync();
+        Console.WriteLine("dodano zadanie");
         return new SuccessData<long>()
         {
             Data = res.Entity.Id
         };
     }
-    public async Task<HandlerResult<SuccessData<long>, IErrorResult>> CreateTask(_Task task)
+    public async Task<HandlerResult<Success, IErrorResult>> CreateTask(_Task task)
     {
         var res = await _taskRepository.AddTask(task);
-        await _taskRepository.SaveChangesAsync();
-        return new SuccessData<long>()
-        {
-            Data = res.Entity.Id
-        };
+        return new Success();
     }
 
     public async Task<HandlerResult<SuccessData<_Task>, IErrorResult>> GetTask(long taskId)
