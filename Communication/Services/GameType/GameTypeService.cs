@@ -7,6 +7,7 @@ using Shared.Results.SuccessResults;
 using System.Drawing.Printing;
 using Microsoft.AspNetCore.Authorization;
 using Shared.DataAccess.AuthorizationRequirements;
+using Shared.DataAccess.Mappers;
 using Shared.DataAccess.Pagination;
 using Shared.Results.ErrorResults;
 
@@ -17,24 +18,37 @@ public class GameTypeService : IGameService
     private readonly IGameRepository _gameRepository;
     private readonly IAuthorizationService _authorizationService;
     private readonly IUserContextRepository _userContextRepository;
+    private readonly IGameTypeMapper _gameTypeMapper;
+    private readonly IPlayerRepository _playerRepository;
 
     public GameTypeService(IGameRepository gameRepository,
         IAuthorizationService authorizationService,
-        IUserContextRepository userContextRepository)
+        IUserContextRepository userContextRepository, IGameTypeMapper gameTypeMapper, IPlayerRepository playerRepository)
     {
         _userContextRepository = userContextRepository;
+        _gameTypeMapper = gameTypeMapper;
+        _playerRepository = playerRepository;
         _authorizationService = authorizationService;
         _gameRepository = gameRepository;
     }
 
     public async Task<HandlerResult<SuccessData<GameResponse>, IErrorResult>> GetGame(long id)
     {
-        return await _gameRepository.GetGame(id);
+        var res = await _gameRepository.GetGameIncluded(id);
+        if (res == null) return new EntityNotFoundErrorResult();
+        return new SuccessData<GameResponse>()
+        {
+            Data = _gameTypeMapper.MapGameToResponse(res)
+        };
     }
 
-    public async Task<HandlerResult<SuccessData<List<GameResponse>>, IErrorResult>> Search(string? name, PageParameters pageParameters)
+    public async Task<HandlerResult<SuccessData<PageResponse<GameResponse>>, IErrorResult>> Search(string? name, PageParameters pageParameters)
     {
-        return await _gameRepository.Search(name, pageParameters);
+        var res = await _gameRepository.Search(name, pageParameters);
+        return new SuccessData<PageResponse<GameResponse>>()
+        {
+            Data = new PageResponse<GameResponse>(res, res.Count)
+        };
     }
 
     public async Task<HandlerResult<Success, IErrorResult>> ModifyGameType(long id, GameRequest gameRequest)
@@ -56,7 +70,10 @@ public class GameTypeService : IGameService
         {
             return new UnauthorizedError();
         }
-        return await _gameRepository.ModifyGameType(id, gameRequest);
+        var res = await _gameRepository.ModifyGameType(id, gameRequest);
+        if (!res) return new EntityNotFoundErrorResult();
+        await _gameRepository.SaveChangesAsync();
+        return new Success();
     }
 
     public async Task<HandlerResult<Success, IErrorResult>> DeleteGame(long id)
@@ -78,28 +95,47 @@ public class GameTypeService : IGameService
         {
             return new UnauthorizedError();
         }
-
-        return await _gameRepository.DeleteGame(id);
+        
+        await _gameRepository.DeleteGame(id);
+        await _gameRepository.SaveChangesAsync();
+        return new Success();
     }
 
     public async Task<HandlerResult<Success, IErrorResult>> CreateGameType(long? userId, GameRequest gameRequest)
     {
-        return await _gameRepository.CreateGameType(userId, gameRequest);
+        var res = await _gameRepository.CreateGameType(userId, gameRequest);
+        if (res) return new Success();
+        return new IncorrectOperation();
     }
 
-    public async Task<HandlerResult<SuccessData<List<GameResponse>>, IErrorResult>> GetGames(PageParameters pageParameters)
+    public async Task<HandlerResult<SuccessData<PageResponse<GameResponse>>, IErrorResult>> GetGames(PageParameters pageParameters)
     {
-        return await _gameRepository.GetGames(pageParameters);
+        var res = await _gameRepository.GetGames(pageParameters);
+        return new SuccessData<PageResponse<GameResponse>>()
+        {
+            Data = new PageResponse<GameResponse>(res, res.Count)
+        };
     }
 
-    public async Task<HandlerResult<SuccessData<List<GameResponse>>, IErrorResult>> GetListOfTypesOfAvailableGames(
+    public async Task<HandlerResult<SuccessData<PageResponse<GameResponse>>, IErrorResult>> GetListOfTypesOfAvailableGames(
         PageParameters pageParameters)
     {
-        return await _gameRepository.GetAvailableGames(pageParameters);
+        
+        var res = await _gameRepository.GetAvailableGames(pageParameters);
+        return new SuccessData<PageResponse<GameResponse>>()
+        {
+            Data = new PageResponse<GameResponse>(res, res.Count)
+        };
     }
 
-    public async Task<HandlerResult<SuccessData<List<GameResponse>>, IErrorResult>> GetGamesByPlayer(string? name, PageParameters pageParameters)
+    public async Task<HandlerResult<SuccessData<PageResponse<GameResponse>>, IErrorResult>> GetGamesByPlayer(string? name, PageParameters pageParameters)
     {
-        return await _gameRepository.GetGamesByPlayer(name, pageParameters);
+        var res=  await _playerRepository.GetPlayer(name);
+        if (res == null) return new EntityNotFoundErrorResult();
+        var botList = await _gameRepository.GetGamesByPlayer(res.Id, pageParameters);
+        return new SuccessData<PageResponse<GameResponse>>()
+        {
+            Data = new PageResponse<GameResponse>(botList, botList.Count)
+        };
     }
 }

@@ -24,28 +24,28 @@ public class TScheduler: IInvocable
     public async Task Invoke()
     {
         Console.WriteLine("Pobranie zadń do zrobienia");
-        var tasks = (await _schedulerRepository.TaskToDo(_instanceSettings.EngineId)).Match(x=>x.Data,x=>new List<_Task>());
+        var tasks = await _schedulerRepository.TaskToDo(_instanceSettings.EngineId);
         foreach (var t in tasks)
         {
 
             switch (t.Type)
             {
                 case TaskTypes.PlayTournament:
-                    if ((await _schedulerRepository.Taskdoing(t.Id)).IsSuccess)
+                    if (await _schedulerRepository.Taskdoing(t.Id))
                     {
                         _scheduler.ScheduleWithParams<TournamentWorker>(t.Id)
                             .EverySecond().Once().PreventOverlapping("TournamentWorker"+ DateTime.Now+" "+ t.Id);
                     }
                     break;
                 case TaskTypes.PlayGame:
-                    if ((await _schedulerRepository.Taskdoing(t.Id)).IsSuccess)
+                    if (await _schedulerRepository.Taskdoing(t.Id))
                     {
                         Console.WriteLine("Shceduled "+t.Id);
                         _scheduler.ScheduleWithParams<GameWorker>(t.Id).EverySecond().Once().PreventOverlapping("game worker " + t.Id); 
                     }
                     break;
                 case TaskTypes.ValidateBot:
-                    if ((await _schedulerRepository.Taskdoing(t.Id)).IsSuccess)
+                    if (await _schedulerRepository.Taskdoing(t.Id))
                     {
                         Console.WriteLine("Shceduled "+t.Id);
                         _scheduler.ScheduleWithParams<ValidationWorker>(t.Id)

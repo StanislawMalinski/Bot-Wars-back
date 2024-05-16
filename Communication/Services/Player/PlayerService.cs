@@ -3,8 +3,10 @@ using System.Security.Claims;
 using System.Text;
 using BotWars;
 using Communication.ServiceInterfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
+using Shared.DataAccess.AuthorizationRequirements;
 using Shared.DataAccess.DTO;
 using Shared.DataAccess.DTO.Requests;
 using Shared.DataAccess.DTO.Responses;
@@ -26,44 +28,157 @@ public class PlayerService : IPlayerService
     private readonly AuthenticationSettings _settings;
     private readonly IPasswordHasher _passwordHasher;
     private readonly ITournamentService _tournamentService;
+    
+    private readonly IAuthorizationService _authorizationService;
+    private readonly IUserContextRepository _userContextRepository;
+    private readonly IGameTypeMapper _gameTypeMapper;
+    private readonly IBotMapper _botMapper;
 
     public PlayerService(IPlayerRepository playerRepository,
         AuthenticationSettings settings,
         IPlayerMapper playerMapper,
         IPasswordHasher passwordHasher,
-        ITournamentService tournamentService)
+        ITournamentService tournamentService,
+        IAuthorizationService authorizationService,
+        IUserContextRepository userContextRepository,
+        IGameTypeMapper gameTypeMapper, IBotMapper botMapper)
     {
         _passwordHasher = passwordHasher;
         _settings = settings;
         _playerMapper = playerMapper;
         _playerRepository = playerRepository;
         _tournamentService = tournamentService;
+        _gameTypeMapper = gameTypeMapper;
+        _botMapper = botMapper;
+        _userContextRepository = userContextRepository;
+        _authorizationService = authorizationService;
     }
 
-    public async Task<HandlerResult<SuccessData<PlayerDto>, IErrorResult>> getPlayerInfo(long PlayerId)
+    public async Task<HandlerResult<SuccessData<PlayerDto>, IErrorResult>> getPlayerInfo(long playerId)
     {
-        return await _playerRepository.GetPlayerAsync(PlayerId);
+        var resPlayer = await _playerRepository.GetPlayer(playerId);
+        if (resPlayer is null)
+        {
+            return new EntityNotFoundErrorResult();
+        }
+
+        return new SuccessData<PlayerDto>()
+        {
+            Data = _playerMapper.ToDto(resPlayer)
+        };
     }
     
     public async Task<HandlerResult<Success, IErrorResult>> RegisterNewPlayer(RegistrationRequest registrationRequest)
     {
-        return await _playerRepository.CreatePlayerAsync(registrationRequest);
+        var newPlayer = _playerMapper.ToPlayerFromRegistrationRequest(registrationRequest);
+
+        if (newPlayer is null)
+        {
+            return new EntityNotFoundErrorResult();
+        }
+
+        var emailPlayer = await _playerRepository.GetPlayer(registrationRequest.Email);
+
+        if (emailPlayer != null)
+        {
+            return new PlayerAlreadyExistsError
+            {
+                Title = "PlayerAlreadyExistsError 400",
+                Message = "Player with given email already exists"
+            };
+        }
+
+        var loginPlayer = await _playerRepository.GetPlayerByLogin(registrationRequest.Login);
+
+        if (loginPlayer != null)
+        {
+            return new PlayerAlreadyExistsError
+            {
+                Title = "PlayerAlreadyExistsError 400",
+                Message = "Player with given login already exists"
+            };
+        }
+
+        newPlayer.RoleId = 1;
+        var hashedPassword =
+            (await _passwordHasher.HashPassword(registrationRequest.Password)).Match(x => x.Data, x => null);
+        newPlayer.HashedPassword = hashedPassword;
+        await _playerRepository.AddPlayer(newPlayer);
+        await _playerRepository.SaveChangesAsync();
+        return new Success();
     }
 
     public async Task<HandlerResult<Success, IErrorResult>> RegisterNewAdmin(RegistrationRequest registrationRequest)
     {
-        return await _playerRepository.CreateAdminAsync(registrationRequest);
+        var authorizationResult = _authorizationService.AuthorizeAsync(_userContextRepository.GetUser(),
+            2,
+            new RoleNameToCreateAdminRequirement("Admin")).Result;
+        if (!authorizationResult.Succeeded)
+        {
+            return new UnauthorizedError();
+        }
+
+
+        var emailPlayer = await _playerRepository.GetPlayer(registrationRequest.Email);
+
+        if (emailPlayer != null)
+        {
+            return new PlayerAlreadyExistsError
+            {
+                Title = "PlayerAlreadyExistsError 400",
+                Message = "Player with given email already exists"
+            };
+        }
+
+        var loginPlayer = await _playerRepository.GetPlayerByLogin(registrationRequest.Login);
+
+        if (loginPlayer != null)
+        {
+            return new PlayerAlreadyExistsError
+            {
+                Title = "PlayerAlreadyExistsError 400",
+                Message = "Player with given login already exists"
+            };
+        }
+
+        var newAdmin = _playerMapper.ToPlayerFromRegistrationRequest(registrationRequest);
+
+        if (newAdmin is null)
+        {
+            return new EntityNotFoundErrorResult();
+        }
+
+        newAdmin.RoleId = 2;
+        var hashedPassword =
+            (await _passwordHasher.HashPassword(registrationRequest.Password)).Match(x => x.Data, x => null);
+        newAdmin.HashedPassword = hashedPassword;
+        await _playerRepository.AddPlayer(newAdmin);
+        await _playerRepository.SaveChangesAsync();
+        return new Success();
     }
 
     public async Task<HandlerResult<Success, IErrorResult>> DeletePlayerAsync(long id)
     {
         await _tournamentService.DeleteUserScheduledTournaments(id);
-        return await _playerRepository.DeletePlayerAsync(id);
+        if (!await _playerRepository.DeletePlayerAsync(id))
+        {
+            return new EntityNotFoundErrorResult();
+        }
+        await _playerRepository.SaveChangesAsync();
+        return new Success();
+       
     }
 
     public async Task<HandlerResult<SuccessData<List<BotResponse>>, IErrorResult>> GetPlayerBots(long id)
     {
-        return await _playerRepository.GetBotsForPlayer(id);
+        var player = await _playerRepository.GetPlayer(id);
+        
+        if (player == null) return new EntityNotFoundErrorResult();
+        
+        return new SuccessData<List<BotResponse>>
+        {
+            Data = await _playerRepository.GetPlayerBots(id)
+        };
     }
 
     public async Task<HandlerResult<Success, IErrorResult>> resetPassWordByLogin(String Login)
@@ -76,20 +191,61 @@ public class PlayerService : IPlayerService
         return new NotImplementedError();
     }
 
-    public async Task<HandlerResult<Success, IErrorResult>> ChangePassword(ChangePasswordRequest request, long ?playerId)
+    public async Task<HandlerResult<Success, IErrorResult>> ChangePassword(ChangePasswordRequest request, long playerId)
     {
-        return await _playerRepository.ChangePassword(request, playerId);
+
+
+        var player = await _playerRepository.GetPlayer(playerId);
+        if (player is null)
+        {
+            return new EntityNotFoundErrorResult();
+        }
+
+        var passwordMatchResult =
+            await _passwordHasher.VerifyPasswordHash(request.Password, player.HashedPassword);
+        if (!passwordMatchResult.IsError)
+        {
+            var hashedPassword = (await _passwordHasher.HashPassword(request.ChangePassword))
+                .Match(x => x.Data, x => null);
+            player.HashedPassword = hashedPassword;
+            await _playerRepository.SaveChangesAsync();
+            return new Success();
+        }
+
+        return new BadAccountInformationError()
+        {
+            Title = "Return null",
+            Message = "Hasło nie poprawne"
+        };
     }
 
-    public async Task<HandlerResult<Success, IErrorResult>> ChangeLogin(ChangeLoginRequest request, long? playerId)
+    public async Task<HandlerResult<Success, IErrorResult>> ChangeLogin(ChangeLoginRequest request, long playerId)
     {
-        return await _playerRepository.ChangeLogin(request, playerId);
+        
+        var player = await _playerRepository.GetPlayer(playerId);
+
+        if (player is null)
+        {
+            return new EntityNotFoundErrorResult();
+        }
+
+        if (player.Login != request.Login)
+            return new BadAccountInformationError
+            {
+                Title = "BadAccountInformationError 400",
+                Message = "Given login does not match"
+            };
+
+        player.Login = request.NewLogin;
+        await _playerRepository.SaveChangesAsync();
+        return new Success();
     }
 
     public async Task<HandlerResult<SuccessData<string>, IErrorResult>> GenerateJwt(LoginDto dto)
     {
-        var playerResult = await _playerRepository.GetPlayerAsync(dto.Email);
-        if (playerResult.IsError)
+        var player = await _playerRepository.GetPlayer(dto.Email);
+        
+        if (player is null)
         {
             return new BadAccountInformationError()
             {
@@ -97,19 +253,6 @@ public class PlayerService : IPlayerService
                 Message = "Niepoprawny email lub haslo"
             };
         }
-        
-        var playerResponse = playerResult.Match(x=>x.Data,x => null);
-        
-        if (playerResponse is null)
-        {
-            return new BadAccountInformationError()
-            {
-                Title = "Return null",
-                Message = "Niepoprawny email lub haslo"
-            };
-        }
-        
-        var player = _playerMapper.ToPlayerInternalEntity(playerResponse);
         
         var passwordMatchResult = await _passwordHasher.VerifyPasswordHash(dto.Password, player.HashedPassword);
 
@@ -124,7 +267,7 @@ public class PlayerService : IPlayerService
 
         var claims = new List<Claim>()
         {
-            new Claim(ClaimTypes.NameIdentifier, playerResponse.Id.ToString()),
+            new Claim(ClaimTypes.NameIdentifier, player.Id.ToString()),
             new Claim(ClaimTypes.Email, $"{player.Email}"),
             new Claim(ClaimTypes.Role, $"{player.Role.Name}")
         };
@@ -142,7 +285,7 @@ public class PlayerService : IPlayerService
         var tokenHandler = new JwtSecurityTokenHandler();
         var completeToken = tokenHandler.WriteToken(token);
         var saveLastResult = await _playerRepository.SetPlayerLastLogin(dto.Email, DateTime.Now);
-        if (saveLastResult.IsError)
+        if (!saveLastResult)
         {
             return new BadAccountInformationError()
             {
@@ -156,30 +299,89 @@ public class PlayerService : IPlayerService
         };
     }
 
-    public async Task<HandlerResult<SuccessData<PlayerInfo>, IErrorResult>> GetPlayerInfoAsync(long ?playerId)
+    public async Task<HandlerResult<SuccessData<PlayerInfo>, IErrorResult>> GetPlayerInfoAsync(long playerId)
     {
-        return await _playerRepository.GetPlayerInfoAsync(playerId);
+        var player = await _playerRepository.GetPlayer(playerId);
+
+        if (player is null)
+        {
+            return new EntityNotFoundErrorResult();
+        }
+
+        PlayerInfo playerInfo = new PlayerInfo
+        {
+            Login = player.Login,
+            Registered = player.Registered,
+            Point = player.Points,
+            Id = player.Id
+        };
+        playerInfo.BotsNumber = await _playerRepository.PlayerBotCount(playerId);
+        playerInfo.TournamentNumber = await _playerRepository.PlayerTournamentCount(playerId);
+        return new SuccessData<PlayerInfo>()
+        {
+            Data = playerInfo
+        };
     }
 
     public async Task<HandlerResult<SuccessData<PlayerInfo>, IErrorResult>> GetPlayerInfoAsync(string? playerName)
     {
-        return await _playerRepository.GetPlayerInfoAsync(playerName);
+        if (playerName is null)
+        {
+            return new EntityNotFoundErrorResult();
+        }
+
+        var player = await _playerRepository.GetPlayerByLogin(playerName);
+
+        if (player is null)
+        {
+            return new EntityNotFoundErrorResult();
+        }
+
+        PlayerInfo playerInfo = new PlayerInfo
+        {
+            Login = player.Login,
+            Registered = player.Registered,
+            Point = player.Points,
+            Id = player.Id
+        };
+        playerInfo.BotsNumber = await _playerRepository.PlayerBotCount(player.Id);
+        playerInfo.TournamentNumber = await _playerRepository.PlayerTournamentCount(player.Id);
+        return new SuccessData<PlayerInfo>()
+        {
+            Data = playerInfo
+        };
     }
 
     public async Task<HandlerResult<SuccessData<List<GameSimpleResponse>>, IErrorResult>> GetGamesForPlayer(long playerId)
     {
-        return await _playerRepository.GetMyGames(playerId);
+        return new SuccessData<List<GameSimpleResponse>>()
+        {
+            Data = await _playerRepository.GetMyGames(playerId)
+        };
     }
 
     public async Task<HandlerResult<Success, IErrorResult>> ChangePlayerImage(PlayerImageRequest imageRequest, long playerId)
     {
         if (imageRequest.Image == null) return new IncorrectOperation();
         if (imageRequest.Image.Length % 4 != 0) return new IncorrectOperation(){Message = "to nie jest string base 64 musi miec wielkosc podzielna przez 4"};
-        return await _playerRepository.ChangeImage(imageRequest, playerId);
+        var res = await _playerRepository.GetPlayer(playerId);
+        if (res == null) return new EntityNotFoundErrorResult();
+        res.Image = Convert.FromBase64String(imageRequest.Image!);
+        await _playerRepository.SaveChangesAsync();
+        return new Success();
     }
 
     public async Task<HandlerResult<SuccessData<string>, IErrorResult>> GetPlayerImage(long playerId)
     {
-        return await _playerRepository.GetImage(playerId);
+        var res = await _playerRepository.GetPlayer(playerId);
+        if (res == null) return new EntityNotFoundErrorResult();
+        if (res.Image == null)  return new SuccessData<string>
+        {
+            Data = string.Empty
+        };
+        return new SuccessData<string>
+        {
+            Data = Convert.ToBase64String(res.Image)
+        };
     }
 }

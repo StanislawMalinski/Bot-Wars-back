@@ -5,6 +5,7 @@ namespace Shared.DataAccess.DTO.Responses;
 public class TournamentResponse
 {
     public long Id { get; set; }
+    public long CreatorId { get; set; }
     public string TournamentTitle { get; set; }
     public string Description { get; set; }
     public int PlayersLimit { get; set; }
@@ -16,7 +17,15 @@ public class TournamentResponse
     public bool WasPlayedOut { get; set; }
     public int MemoryLimit { get; set; }
     public int TimeLimit { get; set; }
+    public string Status { get; set; }
     
     public List<long>? MatchIds { get; set; }
+
+    public struct BotPlayer(long botId,long playerId)
+    {
+        public long BotId = botId;
+        public long PlayerId = playerId;
+    }
+    public List<BotPlayer>? PlayersBots  { get; set; }
     public List<long>? BotIds { get; set; }
 }

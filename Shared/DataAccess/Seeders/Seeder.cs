@@ -97,14 +97,14 @@ public class Seeder
         {
             new Game()
             {
-                Id = 1, NumbersOfPlayer = 10, LastModification = DateTime.Now, GameFile = "Quake III Arena",
+                Id = 1, NumbersOfPlayer = 10, LastModification = DateTime.Now, GameFile = "QuakeIIIArena",
                 GameInstructions = "Eliminate the enemy players in fast-paced multiplayer battles.",
                 InterfaceDefinition = "First-Person Shooter (FPS)", IsAvailableForPlay = true, FileId = 5, CreatorId = 1,Language = Language.C
             },
             new Game()
             {
                 Id = 2, NumbersOfPlayer = 1, LastModification = DateTime.Now,
-                GameFile = "The Legend of Zelda: Breath of the Wild",
+                GameFile = "TheLegendofZelda",
                 GameInstructions = "Embark on an epic adventure to defeat the Calamity Ganon and save Hyrule.",
                 InterfaceDefinition = "Action-Adventure", IsAvailableForPlay = true, FileId = 12, CreatorId = 1,Language = Language.PYTHON
             },

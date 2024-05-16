@@ -10,7 +10,7 @@ namespace Shared.DataAccess.RepositoryInterfaces
 {
     public interface ITournamentService
     {
-        public Task<HandlerResult<SuccessData<List<TournamentResponse>>, IErrorResult>> GetListOfTournamentsFiltered(
+        public Task<HandlerResult<SuccessData<PageResponse<TournamentResponse>>, IErrorResult>> GetListOfTournamentsFiltered(
             TournamentFilterRequest tournamentFilterRequest, PageParameters pageParameters);
 
         public Task<HandlerResult<SuccessData<TournamentResponse>, IErrorResult>> GetTournament(long id);

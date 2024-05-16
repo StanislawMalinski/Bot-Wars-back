@@ -33,13 +33,15 @@ public class TournamentWorker: IInvocable
         if(task == null) return;
         TourId = task.OperatingOn;
         Game? gameBot = (await _resolver.GetGame(TourId)).Match(x=>x.Data,x=>null);
+        
         if ((await _resolver.AreAnyMatchesPlayed(TourId)).IsError)
         {
+            Console.WriteLine("gry dla tunieju");
             await _resolver.StartPlaying(TourId);
             var botList = await _resolver.GetRegisterBots(TourId);
             //var tournament = (await _tournamentRepository.GetTournamentAsync(TourId)).Match(x=>x.Data,x=>null);
             List<Bot?> bots = botList.Match(x => x.Data, x => new List<Bot>());
-        
+            Console.WriteLine($"LIE BOTÓW {bots.Count}");
             if (bots.Count() < 2)
             {
                 if (bots.Count == 1)

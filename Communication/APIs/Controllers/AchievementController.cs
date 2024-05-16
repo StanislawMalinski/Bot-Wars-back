@@ -23,11 +23,12 @@ public class AchievementController : Controller
         return (await _achievementService.GetAchievementsForPlayer(playerId)).Match(Ok, this.ErrorResult);
     }
     
-    [HttpGet("getAllAchievementsForPlayer")]
-    public async Task<IActionResult> GetAllAchievementsForPlayer([FromQuery] long playerId)
+    [HttpPut("unlockAchievement")]
+    public async Task<IActionResult> UnlockAchievement([FromQuery] long playerId, [FromQuery] long achievementTypeId, [FromQuery] long currentPlayerThreshold)
     {
-        return (await _achievementService.GetAllAchievementsForPlayer(playerId)).Match(Ok, this.ErrorResult);
+        return (await _achievementService.UnlockAchievement(playerId, achievementTypeId, currentPlayerThreshold)).Match(Ok, this.ErrorResult);
     }
+
     
     [HttpGet("getAchievementTypes")]
     public async Task<IActionResult> GetAchievementTypes()

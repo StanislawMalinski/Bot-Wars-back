@@ -1,5 +1,6 @@
 ﻿using System.Data;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Shared.DataAccess.Context;
 using Shared.DataAccess.DataBaseEntities;
 using Shared.DataAccess.Enumerations;
@@ -19,9 +20,11 @@ public class TaskRepository
     {
         _taskDataContext = taskDataContext;
     }
-
-    public async Task<HandlerResult<SuccessData<long>, IErrorResult>> CreateTask(TaskTypes type, long operatingOn,DateTime scheduledOn , TaskStatus status = TaskStatus.Unassigned)
+    
+    
+    public async Task<EntityEntry<_Task>> AddTask(TaskTypes type, long operatingOn,DateTime scheduledOn , TaskStatus status = TaskStatus.Unassigned)
     {
+        Console.WriteLine("dodano zdanie w repozytoruim");
         _Task task = new _Task
         {
             Type = type,
@@ -29,52 +32,29 @@ public class TaskRepository
             ScheduledOn = scheduledOn,
             Status = status
         };
-        var res = await _taskDataContext.AddAsync(task);
-        await _taskDataContext.SaveChangesAsync();
-        return new SuccessData<long>()
-        {
-            Data = res.Entity.Id
-        };
+        return await _taskDataContext.AddAsync(task);
+    }
+    public async Task<EntityEntry<_Task>> AddTask(_Task task)
+    {
+        return await _taskDataContext.AddAsync(task);
+    }
+    public async Task<_Task?> GetTask(long taskId)
+    {
+        return await _taskDataContext.Tasks.FirstOrDefaultAsync(x => x.Id == taskId);
+    }
+    public async Task<_Task?> GetTask(TaskTypes type, long operatingOn)
+    {
+        return  await _taskDataContext.Tasks.FirstOrDefaultAsync(x => x.Type == type && x.OperatingOn == operatingOn);
+    }
+    public async Task<List<_Task>> GetTasks(TaskStatus status)
+    {
+        return await _taskDataContext.Tasks.Where(x => x.Status == status).ToListAsync();
     }
 
-    public async Task<HandlerResult<SuccessData<_Task>, IErrorResult>> GetTask(long taskId)
+    public async Task SaveChangesAsync()
     {
-        var res = await _taskDataContext.Tasks.FirstOrDefaultAsync(x => x.Id == taskId);
-        if (res == null) return new EntityNotFoundErrorResult();
-        return new SuccessData<_Task>()
-        {
-            Data = res
-        };
-    }
-    
-    public async Task<HandlerResult<SuccessData<TaskStatus>, IErrorResult>> CheckStatus(TaskTypes type, long operatingOn)
-    {
-        var res = await _taskDataContext.Tasks.FirstOrDefaultAsync(x => x.Type == type && x.OperatingOn == operatingOn);
-        if (res == null) return new EntityNotFoundErrorResult();
-        return new SuccessData<TaskStatus>()
-        {
-            Data = res.Status
-        };
-    }
-    
-    public async Task<HandlerResult<Success, IErrorResult>> TaskComplete(long taskId)
-    {
-        var res = await _taskDataContext.Tasks.FirstOrDefaultAsync(x => x.Id == taskId);
-        if (res == null) return new EntityNotFoundErrorResult();
-        res.Status = TaskStatus.Done;
         await _taskDataContext.SaveChangesAsync();
-        return new Success();
     }
     
-    public async Task<HandlerResult<Success, IErrorResult>> RestartTasks()
-    {
-        var res = await _taskDataContext.Tasks.Where(x => x.Status == TaskStatus.Doing).ToListAsync();
-        foreach (var task in res)
-        {
-            task.Status = TaskStatus.Unassigned;
-        }
-        await _taskDataContext.SaveChangesAsync();
-        return new Success();
-    }
     
 }

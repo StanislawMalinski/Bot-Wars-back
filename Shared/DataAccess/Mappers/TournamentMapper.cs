@@ -56,6 +56,7 @@ namespace Shared.DataAccess.Mappers
             var tournamentResponse = new TournamentResponse()
             {
                 Id = tournament.Id,
+                CreatorId = tournament.CreatorId,
                 TournamentTitle = tournament.TournamentTitle,
                 Description = tournament.Description,
                 PlayersLimit = tournament.PlayersLimit,
@@ -65,12 +66,14 @@ namespace Shared.DataAccess.Mappers
                 Constraints = tournament.Constraints,
                 MemoryLimit = tournament.MemoryLimit,
                 TimeLimit = tournament.TimeLimit,
+                Status = tournament.Status.ToString(),
                 MatchIds = tournament.Matches?
                     .Select(match => match.Id)
                     .ToList(),
                 BotIds = tournament.TournamentReference?
                     .Select(reference => reference.botId)
                     .ToList(),
+                PlayersBots = tournament.TournamentReference?.Select(x=> new TournamentResponse.BotPlayer(x.botId,x.botId) ).ToList() ,
                 WasPlayedOut = tournament.Status == TournamentStatus.DONE
             };
 

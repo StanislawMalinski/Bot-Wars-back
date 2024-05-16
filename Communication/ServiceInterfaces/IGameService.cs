@@ -10,7 +10,7 @@ namespace Shared.DataAccess.RepositoryInterfaces
 {
 	public interface IGameService
     {
-        Task<HandlerResult<SuccessData<List<GameResponse>>,IErrorResult>> GetGames(PageParameters pageParameters);
+        Task<HandlerResult<SuccessData<PageResponse<GameResponse>>,IErrorResult>> GetGames(PageParameters pageParameters);
 
         Task<HandlerResult<SuccessData<GameResponse>,IErrorResult>> GetGame(long id);
 
@@ -19,8 +19,8 @@ namespace Shared.DataAccess.RepositoryInterfaces
         Task<HandlerResult<Success,IErrorResult>> DeleteGame(long id);
 
         Task<HandlerResult<Success,IErrorResult>> CreateGameType(long? userId,GameRequest gameRequest);
-        Task<HandlerResult<SuccessData<List<GameResponse>>, IErrorResult>> GetGamesByPlayer(string? name, PageParameters pageParameters);
-        Task<HandlerResult<SuccessData<List<GameResponse>>, IErrorResult>> GetListOfTypesOfAvailableGames(PageParameters pageParameters);
-        Task<HandlerResult<SuccessData<List<GameResponse>>, IErrorResult>> Search(string? name, PageParameters pageParameters);
+        Task<HandlerResult<SuccessData<PageResponse<GameResponse>>, IErrorResult>> GetGamesByPlayer(string? name, PageParameters pageParameters);
+        Task<HandlerResult<SuccessData<PageResponse<GameResponse>>, IErrorResult>> GetListOfTypesOfAvailableGames(PageParameters pageParameters);
+        Task<HandlerResult<SuccessData<PageResponse<GameResponse>>, IErrorResult>> Search(string? name, PageParameters pageParameters);
     }
 }

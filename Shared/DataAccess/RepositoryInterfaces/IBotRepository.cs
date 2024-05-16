@@ -12,21 +12,24 @@ namespace Shared.DataAccess.RepositoryInterfaces;
 
 public interface IBotRepository
 {
-    Task<HandlerResult<SuccessData<BotResponse>, IErrorResult>> GetBotResponse(long botId);
-    Task<HandlerResult<Success, IErrorResult>> AddBot(BotRequest botRequest, long playerId);
-    Task<HandlerResult<Success, IErrorResult>> DeleteBot(long botId);
 
-    Task<HandlerResult<SuccessData<List<BotResponse>>, IErrorResult>> GetBotsForPlayer(string? playerName,
+    Task<bool> AddBot(BotRequest botRequest, long playerId);
+    Task<bool> DeleteBot(long botId);
+    Task SaveChangeAsync();
+
+    Task<List<BotResponse>> GetPlayerBots(long playerId,
+        PageParameters pageParameters);
+    
+
+    Task<Game?> GetGame(long botId);
+    Task<Bot?> GetBot(long botId);
+    
+
+    Task<IFormFile?> GetBotFileForPlayer(long botId);
+
+    Task<List<BotResponse>> GetBotsForTournament(long tournamentId,
         PageParameters pageParameters);
 
-    Task<HandlerResult<SuccessData<Game>, IErrorResult>> GetGame(long botId);
-    Task<HandlerResult<SuccessData<Bot>, IErrorResult>> GetBot(long botId);
 
-    Task<HandlerResult<Success, IErrorResult>> ValidationResult(long taskId, bool result, int memoryUsed,
-        int timeUsed);
-
-    Task<HandlerResult<SuccessData<IFormFile>, IErrorResult>> GetBotFileForPlayer(long botId);
-
-    Task<HandlerResult<SuccessData<List<BotResponse>>, IErrorResult>> GetBotsForTournament(long tournamentId,
-        PageParameters pageParameters);
+    Task<Bot?> GetBotAndCreator(long botId);
 }
