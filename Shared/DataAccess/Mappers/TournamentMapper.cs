@@ -73,7 +73,7 @@ namespace Shared.DataAccess.Mappers
                 BotIds = tournament.TournamentReference?
                     .Select(reference => reference.botId)
                     .ToList(),
-                PlayersBots = tournament.TournamentReference!.Select(x=> new TournamentResponse.BotPlayer(x.botId,x.botId) ).ToList() ,
+                PlayersBots = tournament.TournamentReference?.Select(x=> new TournamentResponse.BotPlayer(x.botId,x.botId) ).ToList() ,
                 WasPlayedOut = tournament.Status == TournamentStatus.DONE
             };
 
