@@ -97,12 +97,10 @@ namespace Communication.Services.Tournament
             GetListOfTournamentsFiltered(
                 TournamentFilterRequest tournamentFilterRequest, PageParameters pageParameters)
         {
-            Console.WriteLine("wywrotka 1");
             var unfilteredTournaments = _tournamentRepository.GetTournamentsQuery();
 
             if (tournamentFilterRequest.MaxPlayOutDate != null)
             {
-                Console.WriteLine("wywrotka 2");
 
                 unfilteredTournaments = unfilteredTournaments.Where(tournament =>
                     tournament.TournamentsDate <= tournamentFilterRequest.MaxPlayOutDate);
@@ -110,7 +108,6 @@ namespace Communication.Services.Tournament
 
             if (tournamentFilterRequest.MinPlayOutDate != null)
             {
-                Console.WriteLine("wywrotka 3");
 
                 unfilteredTournaments = unfilteredTournaments.Where(tournament =>
                     tournament.TournamentsDate >= tournamentFilterRequest.MinPlayOutDate);
@@ -118,7 +115,6 @@ namespace Communication.Services.Tournament
 
             if (tournamentFilterRequest.Creator != null)
             {
-                Console.WriteLine("wywrotka 4");
 
                 unfilteredTournaments = unfilteredTournaments.Where(tournament =>
                     tournamentFilterRequest.Creator == null
@@ -127,7 +123,6 @@ namespace Communication.Services.Tournament
 
             if (tournamentFilterRequest.TournamentTitle != null)
             {
-                Console.WriteLine("wywrotka 5");
 
                 unfilteredTournaments = unfilteredTournaments.Where(tournament =>
                     tournament.TournamentTitle.Contains(tournamentFilterRequest.TournamentTitle));
@@ -135,7 +130,6 @@ namespace Communication.Services.Tournament
 
             if (tournamentFilterRequest.UserParticipation == null)
             {
-                Console.WriteLine("wywrotka 5");
 
                 var count = unfilteredTournaments.Count();
                 
@@ -151,18 +145,15 @@ namespace Communication.Services.Tournament
                 };
             }
 
-            Console.WriteLine("wywrotka 6");
 
             var filteredTournaments = await unfilteredTournaments
                 .Select(tournament => _mapper.TournamentToTournamentResponse(tournament))
                 .ToListAsync();
             var filteredTournamentList = new List<TournamentResponse>();
             int skipped = 0;
-            Console.WriteLine("wywrotka 7");
 
             foreach (var tournamentResponse in filteredTournaments)
             {
-                Console.WriteLine("wywrotka x");
 
                 if ((await PlayerParticipate(tournamentResponse.Id, tournamentFilterRequest.UserParticipation))
                     .IsSuccess)
@@ -179,7 +170,6 @@ namespace Communication.Services.Tournament
                     }
                 }
             }
-            Console.WriteLine("wywrotka 8");
 
             return new SuccessData<PageResponse<TournamentResponse>>()
             {
