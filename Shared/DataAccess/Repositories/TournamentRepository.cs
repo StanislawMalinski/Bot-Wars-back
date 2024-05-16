@@ -279,6 +279,10 @@ namespace Shared.DataAccess.Repositories
         {
             return _dataContext
                 .Tournaments.Include(tournament => tournament.Creator)
+                .Include(tournament => tournament.TournamentReference)
+                .Include(tournament => tournament.Game)
+                .Include(tournament => tournament.Matches)
+                .Include(tournament => tournament.PointHistories)
                 .Where(tournament => true);    
         }
 
