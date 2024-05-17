@@ -1,6 +1,7 @@
 ﻿using System.Security.Claims;
 using Communication.APIs.Controllers.Helper;
 using Communication.Services.Bot;
+using Communication.Services.GameType;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Shared.DataAccess.DTO.Requests;
@@ -53,7 +54,11 @@ public class BotController : Controller
     public async Task<IActionResult> GetBotFileForPlayer([FromQuery] long botId)
     {
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-        return (await _botService.GetBotFileForPlayer(long.Parse(userId!), botId)).Match(Ok, this.ErrorResult);
+        var res = await _botService.GetBotFileForPlayer(long.Parse(userId!), botId);
+        return res.Match(
+            x => File(x.Data.OpenReadStream(), x.Data.ContentType, x.Data.FileName),
+            this.ErrorResult
+        );
     }
 
     [HttpGet("getBotsForTournament")]

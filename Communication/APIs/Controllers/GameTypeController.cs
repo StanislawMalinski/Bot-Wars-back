@@ -30,7 +30,7 @@ namespace Communication.APIs.Controllers
         }
 
         [HttpPost("getFile")]
-        //[Authorize(Roles = "User,Admin")]
+        [Authorize(Roles = "User,Admin")]
         public async Task<IActionResult> GetGameFile([FromQuery] long id)
         {
             var res = await _gameTypeService.GetGameFile(id);
