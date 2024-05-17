@@ -67,18 +67,20 @@ public class TournamentWorker: IInvocable
                 .EverySeconds(8).Once().PreventOverlapping("TournamentWorker"+ DateTime.Now+" "+ TaskId);
             return;
         }
-
+        Console.WriteLine("turniej dalsze");
         var playedGames =  (await _resolver.GetPlayedMatches(TourId)).Match(x=>x.Data,x=>new List<long>());
         foreach (var p in playedGames)
         {
+            Console.WriteLine("updar=te zogranych gier");
             await _resolver.ResolveMatch(p);
         }
         var readyGames =  (await _resolver.GetMatchesReadyToPlay(TourId)).Match(x=>x.Data,x=>new List<long>());
         foreach (var p in readyGames)
         {
+            Console.WriteLine("uruchumienie gier");
             await _resolver.PlayMatch(p);
         }
-
+        
         var tournamentWinner = await _resolver.IsMatchResolved(TourId, "0");
         if (tournamentWinner.IsError)
         {
@@ -86,7 +88,6 @@ public class TournamentWorker: IInvocable
                 .EverySeconds(8).Once().PreventOverlapping("TournamentWorker"+ DateTime.Now+" "+ TaskId);
             return;
         }
-        
 
         var end = await _resolver.EndTournament(TourId,tournamentWinner.Match(x=>x.Data,x=>0), TaskId);
         if (end.IsError)
@@ -95,8 +96,6 @@ public class TournamentWorker: IInvocable
                 .EverySeconds(8).Once().PreventOverlapping("TournamentWorker"+ DateTime.Now+" "+ TaskId);
         }
         Console.WriteLine("finished tournament "+ TaskId + " " + TourId);
-        
-       
         
     }
     
