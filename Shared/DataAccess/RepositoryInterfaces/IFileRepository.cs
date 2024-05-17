@@ -11,5 +11,7 @@ namespace Shared.DataAccess.RepositoryInterfaces
         // name could be anything you want xdd
         public Task<HandlerResult<SuccessData<IFormFile>, IErrorResult>> GetFile(long id, string name);
         public Task<HandlerResult<SuccessData<long>, IErrorResult>> UploadFile(IFormFile file);
+        public Task<HandlerResult<SuccessData<string>, IErrorResult>> FormFileToString(IFormFile formFile);
+        public HandlerResult<SuccessData<IFormFile>, IErrorResult> StringToFormFile(string content, string fileName, string contentType);
     }
 }

@@ -129,6 +129,6 @@ public class MatchResolver : Resolver
 
     public async Task<long> SaveLogGame(string log,string fileName)
     {
-        return await _fileManager.savegameLog(log, fileName);
+        return await _fileManager.SaveGameLog(log, fileName);
     }
 }

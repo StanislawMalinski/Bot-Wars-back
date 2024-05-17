@@ -19,8 +19,8 @@ namespace Shared.DataAccess.Repositories
     {
         private readonly HttpClient _httpClient;
         private readonly string _gathererEndpoint = "http://host.docker.internal:7002/api/Gatherer";
-        public FileRepository(HttpClient httpClient) 
-        { 
+        public FileRepository(HttpClient httpClient)
+        {
             _httpClient = httpClient;
         }
 
@@ -81,6 +81,47 @@ namespace Shared.DataAccess.Repositories
             catch (Exception ex)
             {
                 Console.WriteLine($"GetFile: {ex.Message}");
+                return new EntityNotFoundErrorResult
+                {
+                    Title = "Exception",
+                    Message = ex.Message
+                };
+            }
+        }
+
+        public async Task<HandlerResult<SuccessData<string>, IErrorResult>> FormFileToString(IFormFile formFile)
+        {
+            if (formFile == null)
+            {
+                return new IncorrectOperation();
+            }
+            using (var stream = formFile.OpenReadStream())
+            using (var reader = new StreamReader(stream))
+            {
+                string res = await reader.ReadToEndAsync();
+                return new SuccessData<string>()
+                {
+                    Data = res
+                };
+            }
+        }
+
+        public HandlerResult<SuccessData<IFormFile>, IErrorResult> StringToFormFile(string content, string fileName, string contentType)
+        {
+            try
+            {
+                byte[] byteArray = Encoding.UTF8.GetBytes(content);
+                var stream = new MemoryStream(byteArray);
+                IFormFile formFile = new FormFile(stream, 0, stream.Length, "formFile", fileName)
+                {
+                    Headers = new HeaderDictionary(),
+                    ContentType = contentType
+                };
+                return new SuccessData<IFormFile> { Data = formFile };
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"StringToFormFile: {ex.Message}");
                 return new EntityNotFoundErrorResult
                 {
                     Title = "Exception",
