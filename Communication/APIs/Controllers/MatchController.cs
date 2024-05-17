@@ -29,4 +29,15 @@ public class MatchController : Controller
     {
         return (await _matchService.GetMatchById(id)).Match(Ok, this.ErrorResult);
     }
- }
+
+    [HttpGet("GetLog")]
+    public async Task<IActionResult> GetLog([FromQuery] long matchId)
+    {
+        var result = await _matchService.GetLogFile(matchId);
+        return result.Match(
+            x => File(x.Data.OpenReadStream(), x.Data.ContentType, x.Data.FileName),
+            this.ErrorResult
+        ); 
+    }
+
+}

@@ -40,14 +40,14 @@ public class TScheduler: IInvocable
                 case TaskTypes.PlayGame:
                     if (await _schedulerRepository.Taskdoing(t.Id))
                     {
-                        Console.WriteLine("Shceduled "+t.Id);
+                        Console.WriteLine("Shceduled rozegnie gry "+t.Id);
                         _scheduler.ScheduleWithParams<GameWorker>(t.Id).EverySecond().Once().PreventOverlapping("game worker " + t.Id); 
                     }
                     break;
                 case TaskTypes.ValidateBot:
                     if (await _schedulerRepository.Taskdoing(t.Id))
                     {
-                        Console.WriteLine("Shceduled "+t.Id);
+                        Console.WriteLine("Shceduled bot validation "+t.Id);
                         _scheduler.ScheduleWithParams<ValidationWorker>(t.Id)
                             .EverySecond().Once().PreventOverlapping("Validation worker " + t.Id);
                         Console.WriteLine("zaskejulowyny validator");

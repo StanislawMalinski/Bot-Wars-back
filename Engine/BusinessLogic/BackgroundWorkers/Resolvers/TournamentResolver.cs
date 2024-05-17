@@ -120,7 +120,7 @@ public class TournamentResolver : Resolver
    
     public async Task<HandlerResult<Success,IErrorResult>> PlayMatch(long matchId)
     {
-
+        Console.WriteLine($"{matchId} rozegranie gry oepracje");
         var result = await _matchRepository.GetMatch(matchId);
         if(result == null) return new EntityNotFoundErrorResult();
         if (result.Status == GameStatus.Playing || result.Status == GameStatus.Played) return new Success();
@@ -131,9 +131,10 @@ public class TournamentResolver : Resolver
         task.ScheduledOn = DateTime.Now;
         task.Status = TaskStatus.Unassigned;
         task.Type = TaskTypes.PlayGame;
-        await _taskService.CreateTask(task);
+        Console.WriteLine($"{matchId} regane");
         await _taskService.CreateTask(task);
         await _matchRepository.SaveChangesAsync();
+        Console.WriteLine($"{matchId} zapisnaie");
         return new Success();
         
     }
@@ -145,11 +146,13 @@ public class TournamentResolver : Resolver
     
     public async Task<HandlerResult<Success,IErrorResult>> ResolveMatch(long matchId)
     {
+        Console.WriteLine($"{matchId} resoveld macth ");
         var match = await _matchRepository.GetMatch(matchId);
         if (match == null) return new EntityNotFoundErrorResult();
         if (match.Status != GameStatus.Played) return new IncorrectOperation();
         int key = Int32.Parse(match.Data);
         match.Status = GameStatus.Resolve;
+        Console.WriteLine($"{matchId} pobranie ");
         if (key == 0)
         {
             await _matchRepository.SaveChangesAsync();
@@ -176,8 +179,10 @@ public class TournamentResolver : Resolver
         MatchPlayers newBot = new MatchPlayers();
         newBot.BotId = match.Winner;
         newBot.Matches = childMatch;
+        Console.WriteLine($"{matchId} jest wynik");
         await _matchRepository.AddMatch(newBot);
         await _matchRepository.SaveChangesAsync();
+        Console.WriteLine($"{matchId} zapisanie gwynik gry");
         return new Success();
     }
     

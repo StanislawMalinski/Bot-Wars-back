@@ -130,15 +130,14 @@ namespace Communication.Services.Tournament
        
             if (tournamentFilterRequest.UserParticipation == null)
             {
-
-                var count = unfilteredTournaments.Count();
+                
                 
                 var tournaments = await unfilteredTournaments
                     .Select(tournament => _mapper.TournamentToTournamentResponse(tournament))
                     .Skip(pageParameters.PageNumber * pageParameters.PageSize)
                     .Take(pageParameters.PageSize)
                     .ToListAsync();
-                
+                var count = tournaments.Count;
                 return new SuccessData<PageResponse<TournamentResponse>>()
                 {
                     Data = new PageResponse<TournamentResponse>(tournaments, count)

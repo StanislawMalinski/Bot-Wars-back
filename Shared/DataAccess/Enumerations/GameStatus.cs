@@ -4,9 +4,9 @@ namespace Shared.DataAccess.Enumerations;
 
 public enum GameStatus
 {
-    Played,
+    NotReadyToPlay,
     ReadyToPlay,
     Playing,
-    NotReadyToPlay,
+    Played,
     Resolve
 }

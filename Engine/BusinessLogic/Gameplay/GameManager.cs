@@ -20,7 +20,7 @@ public class GameManager : IGameManager
         Console.WriteLine("play wrapery ");
         IOProgramWrapper game = new IOProgramWrapper(await manager.GetGameFilepath(gameData),memoryLimit,timeLimit,gameData.Language);
         int ind = 0;
-        
+        Console.WriteLine("hejo");
         foreach (var bot in botsArray)
         {
             Console.WriteLine("bots playa");
@@ -31,6 +31,7 @@ public class GameManager : IGameManager
         }
         Console.WriteLine("bots play");
         ind = 0;
+        string gamelog = string.Empty;
         foreach (var bot in botsArray)
         {
             if (bots[ind].wasErros())
@@ -38,6 +39,7 @@ public class GameManager : IGameManager
                 await InterruptAllBots();
                 return new ErrorGameResult()
                 {
+                    gameLog = gamelog,
                     BotError = true,
                     BotErrorId = bot.Id,
                     ErrorGameStatus = bots[ind].GetErrorType()
@@ -46,7 +48,6 @@ public class GameManager : IGameManager
             ind++;
         }
         
-        
         bool ok = true;
         Console.WriteLine("play game run ");
         await game.Run();
@@ -54,9 +55,10 @@ public class GameManager : IGameManager
         string? curr = await game.Get();
         if (game.wasErros())
         {
-           
+            gamelog = "game error";
             return new ErrorGameResult
             {
+                gameLog = gamelog,
                 BotError = false,
                 GameError = true,
                 ErrorGameStatus = game.GetErrorType()
@@ -65,21 +67,21 @@ public class GameManager : IGameManager
         int nextBot = 0;
         int counter = 0;
         int counterMax = 1000;
-        string gamelog = string.Empty;
-        gamelog += curr;
+        
+        gamelog += curr+'\n';
         
         while (Int32.Parse(curr) != -1 && counter < counterMax)
         {
             nextBot = Int32.Parse(curr);
             curr = await game.Get();
             if (curr == null) {ok = false;  Console.WriteLine(" to eror 1 "+bots[nextBot].wasErros()); break;}
-            gamelog += curr;
+            gamelog += curr+'\n';
             curr = await bots[nextBot].SendAndGet(curr);
             if(curr == null) {ok = false;  Console.WriteLine(" to eror 2 "+bots[nextBot].wasErros()); break;}
-            gamelog += curr;
+            gamelog += curr+'\n';
             curr = await game.SendAndGet(curr);
             if(curr == null) {ok = false;  Console.WriteLine(" to eror 3 "+bots[nextBot].wasErros()); break;}
-            gamelog += curr;
+            gamelog += curr+'\n';
             counter++;
           
         }
@@ -95,13 +97,14 @@ public class GameManager : IGameManager
                     await InterruptAllBots();
                     return new ErrorGameResult
                     {
+                        gameLog = gamelog,
                         BotError = false,
                         GameError = true,
                         ErrorGameStatus = game.GetErrorType()
                     };
                 }
 
-                gamelog += curr;
+                gamelog += curr+'\n';
                 nextBot = Int32.Parse(curr);
                 Console.WriteLine(curr + " to jest zwyczezca");
                 //winner
@@ -111,16 +114,16 @@ public class GameManager : IGameManager
             {
                 nextBot = 0;
             }
-
-            Console.WriteLine(gamelog);
+            
             Console.WriteLine(nextBot);
             Console.WriteLine("jest zwyciezca");
             var cos = botsArray[nextBot];
             await game.Interrupt();
             await InterruptAllBots();
-
+            
             return new SuccessfullGameResult()
             {
+                gameLog = gamelog,
                 BotWinner = cos
             };
         }
@@ -159,7 +162,7 @@ public class GameManager : IGameManager
         Console.WriteLine("niemozliwey was eeroe");
         return new ErrorGameResult()
         {
-            
+            gameLog = gamelog,
         };
         
     }

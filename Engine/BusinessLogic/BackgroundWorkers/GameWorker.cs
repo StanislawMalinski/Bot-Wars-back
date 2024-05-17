@@ -27,35 +27,45 @@ public class GameWorker: IInvocable
         Console.WriteLine("game worker " +TaskId);
         GameManager gameManager = new GameManager();
         _Task task = (await _resolver.GetTask(TaskId)).Match(x=>x.Data,x=>null);
+        Console.WriteLine("game worker1 " +TaskId);
         if (task.Status == TaskStatus.Done) return;
+        Console.WriteLine("game worker2 " +TaskId);
         var tour = (await _resolver.GetTournament(task.OperatingOn)).Match(x=>x.Data,null);
+        Console.WriteLine("game worker3 " +TaskId);
         var botlist = (await _resolver.GetBotsInMatch(task.OperatingOn)).Match(x=>x.Data,x=>new List<Bot>());
+        Console.WriteLine("game worker4 " +TaskId);
         var game = (await _resolver.GetMatchGame(task.OperatingOn)).Match(x=>x.Data,x=>null);
+        Console.WriteLine("game worker5 " +TaskId);
         GameResult result = await gameManager.PlayGame(game, botlist,tour.MemoryLimit,tour.TimeLimit);
-        Console.WriteLine("er12345");
+        Console.WriteLine("game worker6 " +TaskId);
+        Console.WriteLine("er12345 "+TaskId);
+        var lr = await _resolver.SaveLogGame(result.gameLog, $"{TaskId} hejo elo{TaskId}");
+        Console.WriteLine("game worker7 " +TaskId);
+        Console.WriteLine($"{TaskId} Zapis logyu gry pod id { lr}");
+        var saa =result.gameLog;
         if (result is SuccessfullGameResult)
         {
-            Console.WriteLine("er123400");
+            Console.WriteLine("er123400 "+TaskId);
             SuccessfullGameResult sr = (SuccessfullGameResult) result;
-            await _resolver.MatchWinner(task.OperatingOn, sr.BotWinner.Id, TaskId);
-            Console.WriteLine("er123400 end");
+            await _resolver.MatchWinner(task.OperatingOn, sr.BotWinner.Id, TaskId,lr);
+            Console.WriteLine("er123400 end "+TaskId);
         }
         else
         {
-            Console.WriteLine("er1234");
+            Console.WriteLine("er1234 "+TaskId);
             ErrorGameResult er = (ErrorGameResult) result;
             if (er.GameError && er.BotError)
             {
                 Console.WriteLine("er 0");
-                await _resolver.GameAndBotFiled(task.OperatingOn, er.BotErrorId, TaskId, game.Id);
+                await _resolver.GameAndBotFiled(task.OperatingOn, er.BotErrorId, TaskId, game.Id,lr);
             }else if (!er.GameError && er.BotError)
             {
                 Console.WriteLine("er 1");
-                await _resolver.BotFiled(task.OperatingOn, er.BotErrorId, TaskId);
+                await _resolver.BotFiled(task.OperatingOn, er.BotErrorId, TaskId,lr);
             }else if (er.GameError && !er.BotError)
             {
                 Console.WriteLine("er 2");
-                await _resolver.GameFiled(task.OperatingOn,TaskId,game.Id);
+                await _resolver.GameFiled(task.OperatingOn,TaskId,game.Id,lr);
             }
             else
             {

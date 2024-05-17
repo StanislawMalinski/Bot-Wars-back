@@ -10,6 +10,8 @@ using Shared.DataAccess.AuthorizationRequirements;
 using Shared.DataAccess.Mappers;
 using Shared.DataAccess.Pagination;
 using Shared.Results.ErrorResults;
+using Microsoft.AspNetCore.Http;
+using System.Text.RegularExpressions;
 
 namespace Communication.Services.GameType;
 
@@ -20,16 +22,18 @@ public class GameTypeService : IGameService
     private readonly IUserContextRepository _userContextRepository;
     private readonly IGameTypeMapper _gameTypeMapper;
     private readonly IPlayerRepository _playerRepository;
+    private readonly IFileRepository _fileRepository;
 
     public GameTypeService(IGameRepository gameRepository,
         IAuthorizationService authorizationService,
-        IUserContextRepository userContextRepository, IGameTypeMapper gameTypeMapper, IPlayerRepository playerRepository)
+        IUserContextRepository userContextRepository, IGameTypeMapper gameTypeMapper, IPlayerRepository playerRepository, IFileRepository fileRepository)
     {
         _userContextRepository = userContextRepository;
         _gameTypeMapper = gameTypeMapper;
         _playerRepository = playerRepository;
         _authorizationService = authorizationService;
         _gameRepository = gameRepository;
+        _fileRepository = fileRepository;
     }
 
     public async Task<HandlerResult<SuccessData<GameResponse>, IErrorResult>> GetGame(long id)
@@ -136,6 +140,28 @@ public class GameTypeService : IGameService
         return new SuccessData<PageResponse<GameResponse>>()
         {
             Data = new PageResponse<GameResponse>(botList, botList.Count)
+        };
+    }
+
+    public async Task<HandlerResult<SuccessData<IFormFile>, IErrorResult>> GetGameFile(long id)
+    {
+        var res = await _gameRepository.GetGameIncluded(id);
+        if (res == null) return new EntityNotFoundErrorResult();
+        var log = await _fileRepository.GetFile(res.FileId, res.GameFile);
+
+        if (!log.IsSuccess)
+        {
+            Console.WriteLine("Log file not found in File Gatherer");
+            return new EntityNotFoundErrorResult
+            {
+                Title = "EntityNotFoundErrorResult 404",
+                Message = "Log not found in File Gatherer"
+            };
+        }
+
+        return new SuccessData<IFormFile>()
+        {
+            Data = log.Match(x => x.Data, null!)
         };
     }
 }

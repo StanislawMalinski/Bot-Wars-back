@@ -7,6 +7,7 @@ namespace Shared.DataAccess.DataBaseEntities
         public long Id { get; set; }
         public long GameId { get; set; }
         public long TournamentsId { get; set; }
+        public long LogId { get; set; }
         public DateTime Played { get; set; }
         public GameStatus Status;
         public long Winner { get; set; }

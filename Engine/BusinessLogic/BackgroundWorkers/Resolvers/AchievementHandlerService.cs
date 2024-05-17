@@ -29,8 +29,9 @@ public class AchievementHandlerService
         _taskService = taskService;
     }
 
-    public async  Task<HandlerResult<Success,IErrorResult>> MatchWinner(long matchId, long winner, long taskId)
+    public async  Task<HandlerResult<Success,IErrorResult>> MatchWinner(long matchId, long winner, long taskId,long logId)
     {
+        Console.WriteLine($"{matchId} zwyciesca  meczu");
         var losers = await _matchRepository.GetAllLosers(matchId, winner);
         var playerWinner = ((await _matchRepository.GetPlayerFromBot(winner))!).Id;
         var tour = await _matchRepository.GetTournament(matchId);
@@ -43,20 +44,22 @@ public class AchievementHandlerService
         var result = await _matchRepository.GetMatchById(matchId);
         var taskDone = (await _taskService.GetTask(taskId)).Match(x=>x.Data,null);
         if (result == null || taskDone == null) return new EntityNotFoundErrorResult();
-            taskDone.Status  = Shared.DataAccess.Enumerations.TaskStatus.Done;
-            result.Played = DateTime.Now;
-            result.Status = GameStatus.Played;
-            result.Winner = winner;
-            
-            await _achievementsRepository.UpDateProgressNoSave(AchievementsTypes.WinGames, winner);
-            var bots = await _matchRepository.GetMatchBots(matchId);
-            foreach (var bot in bots)
-            {
-                await _achievementsRepository.UpDateProgressNoSave(AchievementsTypes.GamePlayed, bot.Id);
-            }
-
-            await _matchRepository.SaveChangesAsync();
-            return new Success();
+        taskDone.Status  = Shared.DataAccess.Enumerations.TaskStatus.Done;
+        result.Played = DateTime.Now;
+        result.Status = GameStatus.Played;
+        result.LogId = logId;
+        result.Winner = winner;
+        Console.WriteLine($"{matchId}  pobrnaie przliczeni ");
+        await _achievementsRepository.UpDateProgressNoSave(AchievementsTypes.WinGames, winner);
+        var bots = await _matchRepository.GetMatchBots(matchId);
+        foreach (var bot in bots)
+        {
+            await _achievementsRepository.UpDateProgressNoSave(AchievementsTypes.GamePlayed, bot.Id);
+        }
+        Console.WriteLine($"{matchId}  po przelcizneiu ");
+        await _matchRepository.SaveChangesAsync();
+        Console.WriteLine($"{matchId}  zapisanie");
+        return new Success();
     }
         
     
