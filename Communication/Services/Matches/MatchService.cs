@@ -115,6 +115,7 @@ public class MatchService : IMatchService
 
         if (!log.IsSuccess)
         {
+            Console.WriteLine("Log file not found in File Gatherer");
             return new EntityNotFoundErrorResult
             {
                 Title = "EntityNotFoundErrorResult 404",
@@ -136,6 +137,6 @@ public class MatchService : IMatchService
             "game" +
             match.GameId.ToString() +
             "log" +
-            match.Played.ToString();
+            match.Played.ToString("yyyy_MM_dd");
     }
 }

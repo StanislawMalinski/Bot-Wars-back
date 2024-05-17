@@ -29,6 +29,17 @@ namespace Communication.APIs.Controllers
                 .Match(Ok, this.ErrorResult);
         }
 
+        [HttpPost("getFile")]
+        //[Authorize(Roles = "User,Admin")]
+        public async Task<IActionResult> GetGameFile([FromQuery] long id)
+        {
+            var res = await _gameTypeService.GetGameFile(id);
+            return res.Match(
+                x => File(x.Data.OpenReadStream(), x.Data.ContentType, x.Data.FileName),
+                this.ErrorResult
+            );
+        }
+
         [HttpGet("getAll")]
         public async Task<IActionResult> GetGames([FromQuery] PageParameters pageParameters)
         {

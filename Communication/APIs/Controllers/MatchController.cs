@@ -33,6 +33,11 @@ public class MatchController : Controller
     [HttpGet("GetLog")]
     public async Task<IActionResult> GetLog([FromQuery] long matchId)
     {
-        return (await _matchService.GetLogFile(matchId)).Match(Ok, this.ErrorResult);
+        var result = await _matchService.GetLogFile(matchId);
+        return result.Match(
+            x => File(x.Data.OpenReadStream(), x.Data.ContentType, x.Data.FileName),
+            this.ErrorResult
+        ); 
     }
- }
+
+}

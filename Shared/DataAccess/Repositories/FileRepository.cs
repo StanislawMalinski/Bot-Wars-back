@@ -19,7 +19,6 @@ namespace Shared.DataAccess.Repositories
     {
         private readonly HttpClient _httpClient;
         private readonly string _gathererEndpoint = "http://host.docker.internal:7002/api/Gatherer";
-
         public FileRepository(HttpClient httpClient) 
         { 
             _httpClient = httpClient;
@@ -55,9 +54,13 @@ namespace Shared.DataAccess.Repositories
         {
             try
             {
-                HttpResponseMessage res = await _httpClient.GetAsync(string.Format(_gathererEndpoint, id));
+                string endpoint = _gathererEndpoint + $"/{id}";
+                HttpResponseMessage res = await _httpClient.GetAsync(endpoint);
                 if (!res.IsSuccessStatusCode)
                 {
+                    Console.WriteLine(string.Format(_gathererEndpoint, id));
+                    Console.WriteLine(res.StatusCode);
+                    Console.WriteLine($"GetFile: file {id} not found in Gatherer");
                     return new EntityNotFoundErrorResult
                     {
                         Title = "EntityNotFoundErrorResult",
@@ -77,6 +80,7 @@ namespace Shared.DataAccess.Repositories
             }
             catch (Exception ex)
             {
+                Console.WriteLine($"GetFile: {ex.Message}");
                 return new EntityNotFoundErrorResult
                 {
                     Title = "Exception",
