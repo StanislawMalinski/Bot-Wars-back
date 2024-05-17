@@ -70,13 +70,18 @@ namespace Shared.DataAccess.Mappers
                 MatchIds = tournament.Matches?
                     .Select(match => match.Id)
                     .ToList(),
-                BotIds = tournament.TournamentReference?
-                    .Select(reference => reference.botId)
-                    .ToList(),
-                PlayersBots = tournament.TournamentReference?.Select(x=> new TournamentResponse.BotPlayer(x.botId,x.botId) ).ToList() ,
+                
                 WasPlayedOut = tournament.Status == TournamentStatus.DONE
             };
-
+            if (tournament.TournamentReference != null && tournament.TournamentReference.FirstOrDefault()!= null && tournament.TournamentReference.First().Bot != null && tournament.TournamentReference.First().Bot!.Player != null)
+            {
+                tournamentResponse.PlayersBots = tournament.TournamentReference
+                    .Select(x => new TournamentResponse.BotPlayer(x.botId, x.Bot.Player.Login)).ToList();
+            }
+            else
+            {
+                tournamentResponse.PlayersBots = new List<TournamentResponse.BotPlayer>();
+            }
             if (tournament.Image != null)
             {
                 tournamentResponse.Image = Convert.ToBase64String(tournament.Image);

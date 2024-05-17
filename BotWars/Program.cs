@@ -88,6 +88,7 @@ builder.Services.AddAuthentication(options =>
 builder.Services
     .AddGameType()
     .AddPlayer()
+    .AddFileService()
     .AddTournament()
     .AddAdministrative()
     .AddUserSettings()

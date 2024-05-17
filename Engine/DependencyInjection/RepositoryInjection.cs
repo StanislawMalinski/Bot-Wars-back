@@ -21,8 +21,7 @@ public static class RepositoryInjection
         serviceCollection.AddScoped<MatchRepository>();
         serviceCollection.AddScoped<TaskRepository>();
         serviceCollection.AddScoped<AchievementHandlerService>();
-        
-        
+        serviceCollection.AddScoped<IFileRepository, FileRepository>();
         
         return serviceCollection;
     }

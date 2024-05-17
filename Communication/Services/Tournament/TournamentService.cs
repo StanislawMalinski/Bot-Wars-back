@@ -127,7 +127,7 @@ namespace Communication.Services.Tournament
                 unfilteredTournaments = unfilteredTournaments.Where(tournament =>
                     tournament.TournamentTitle.Contains(tournamentFilterRequest.TournamentTitle));
             }
-
+       
             if (tournamentFilterRequest.UserParticipation == null)
             {
 

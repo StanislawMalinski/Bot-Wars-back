@@ -37,15 +37,7 @@ services:
             dockerfile: FileGatherer/gatherer.dockerfile
         ports:
             - "7002:8080"
-        volumes:
-            - file_gatherer:/app/Storage
         
 volumes:
     bot_wars_db:
         driver: local
-    file_gatherer:
-        driver: local
-        driver_opts:
-            type: none
-            o: bind
-            device: FileGatherer/Storage
