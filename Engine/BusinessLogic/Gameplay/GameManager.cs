@@ -20,7 +20,7 @@ public class GameManager : IGameManager
         Console.WriteLine("play wrapery ");
         IOProgramWrapper game = new IOProgramWrapper(await manager.GetGameFilepath(gameData),memoryLimit,timeLimit,gameData.Language);
         int ind = 0;
-        
+        Console.WriteLine("hejo");
         foreach (var bot in botsArray)
         {
             Console.WriteLine("bots playa");
@@ -68,20 +68,20 @@ public class GameManager : IGameManager
         int counter = 0;
         int counterMax = 1000;
         
-        gamelog += curr;
+        gamelog += curr+'\n';
         
         while (Int32.Parse(curr) != -1 && counter < counterMax)
         {
             nextBot = Int32.Parse(curr);
             curr = await game.Get();
             if (curr == null) {ok = false;  Console.WriteLine(" to eror 1 "+bots[nextBot].wasErros()); break;}
-            gamelog += curr;
+            gamelog += curr+'\n';
             curr = await bots[nextBot].SendAndGet(curr);
             if(curr == null) {ok = false;  Console.WriteLine(" to eror 2 "+bots[nextBot].wasErros()); break;}
-            gamelog += curr;
+            gamelog += curr+'\n';
             curr = await game.SendAndGet(curr);
             if(curr == null) {ok = false;  Console.WriteLine(" to eror 3 "+bots[nextBot].wasErros()); break;}
-            gamelog += curr;
+            gamelog += curr+'\n';
             counter++;
           
         }
@@ -104,7 +104,7 @@ public class GameManager : IGameManager
                     };
                 }
 
-                gamelog += curr;
+                gamelog += curr+'\n';
                 nextBot = Int32.Parse(curr);
                 Console.WriteLine(curr + " to jest zwyczezca");
                 //winner
@@ -114,8 +114,7 @@ public class GameManager : IGameManager
             {
                 nextBot = 0;
             }
-
-            Console.WriteLine(gamelog);
+            
             Console.WriteLine(nextBot);
             Console.WriteLine("jest zwyciezca");
             var cos = botsArray[nextBot];

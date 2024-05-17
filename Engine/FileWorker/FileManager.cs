@@ -64,11 +64,16 @@ public class FileManager
     
     private async Task GetBotFile(long id,string fileName, long fileId,Language language)
     {
+        Console.WriteLine("plik póba");
         var file = await GetFileFromStorage(fileId);
+        Console.WriteLine($"plik zdobyt {id}");
         string newBotPath = BotFilePath + "/" + id;
         Directory.CreateDirectory(newBotPath);
+        Console.WriteLine("dictioniarty ");
         SaveFileAs(newBotPath,fileName,file,language);
+        Console.WriteLine("zapisnaie");
         await Compile(fileName, language, newBotPath);
+        Console.WriteLine("compilacja ");
     }
     private async Task GetGameFile(long id,string fileName, long fileId,Language language)
     {
@@ -81,6 +86,7 @@ public class FileManager
     private async Task<string> GetFileFromStorage(long fileId)
     {
         HttpResponseMessage res = await _httpClient.GetAsync(string.Format(_gathererEndpoint, fileId));
+        Console.WriteLine("huh");
         if (!res.IsSuccessStatusCode)
         {
             return string.Empty;
@@ -107,6 +113,7 @@ public class FileManager
     }
     public async Task<string> GetBotFilepath(Bot bot)
     {
+        Console.WriteLine($"get Botfile {bot.Id} {bot.FileId}");
         if (Directory.GetDirectories(BotFilePath, bot.Id.ToString()).Length != 0)
         {
             
@@ -130,8 +137,9 @@ public class FileManager
                 
             }
         }
-       
+        Console.WriteLine($"get Botfile2 {bot.Id} {bot.FileId}");
         await GetBotFile(bot.Id,bot.BotFile, bot.FileId,bot.Language);
+        Console.WriteLine($"get Botfil3 {bot.Id} {bot.FileId}");
         switch (bot.Language)
         {
             case Language.C:
@@ -141,13 +149,13 @@ public class FileManager
             case Language.Java:
                 return $"{BotFilePath}/{bot.Id}/{Path.GetFileNameWithoutExtension(bot.BotFile)}.class";
         }
-        
+        Console.WriteLine($"get Botfile4 {bot.Id} {bot.FileId}");
         return string.Empty;
     }
     
     public async Task<string> GetGameFilepath(Game game)
     {
-       
+        Console.WriteLine($"Get game{game.Id} {game.FileId}");
         if (Directory.GetDirectories(GameFilePath, game.Id.ToString()).Length != 0)
         {
             
@@ -231,23 +239,34 @@ public class FileManager
 
     private async Task<bool> ExecuteCommand(string command)
     {
+        Console.WriteLine("compisacja start");
         Process compilerProcess = new Process();
+        Console.WriteLine("to cos");
         compilerProcess.StartInfo.FileName = "bash"; // or "cmd" if running on Windows
         compilerProcess.StartInfo.Arguments = $"-c \"{command}\"";;
         compilerProcess.StartInfo.RedirectStandardOutput = true;
         compilerProcess.StartInfo.RedirectStandardError = true;
         compilerProcess.StartInfo.UseShellExecute = false;
         compilerProcess.StartInfo.CreateNoWindow = true;
-        
-        compilerProcess.Start();
-        string output = compilerProcess.StandardOutput.ReadToEnd();
-        string error = compilerProcess.StandardError.ReadToEnd();
-        compilerProcess.WaitForExit();
-        if (compilerProcess.ExitCode != 0)
+        try
         {
+            Console.WriteLine($"rey {command}");
+            compilerProcess.Start();
+            Console.WriteLine("rey2");
+          
+            await Task.Delay(1000);
+            Console.WriteLine("przcekanie");
+            compilerProcess.Kill();
             
+            Console.WriteLine("huh");
+           
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine("zlapanie ");
             return false;
         }
+       
         
         return true;
     }
@@ -264,7 +283,6 @@ public class FileManager
     {
         try
         {
-            long botFileId;
             var content = new MultipartFormDataContent();
             var streamContent =new StreamContent( GenerateStreamFromString(log));
             content.Add(streamContent, "file", name );
