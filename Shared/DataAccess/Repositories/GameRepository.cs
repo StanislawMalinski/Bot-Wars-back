@@ -21,21 +21,24 @@ public class GameRepository : IGameRepository
 {
     private readonly DataContext _dataContext;
     private readonly IGameTypeMapper _mapper;
-
-    private readonly HttpClient _httpClient;
-
-    // move to config
-    private readonly string _gathererEndpoint = "http://host.docker.internal:7002/api/Gatherer";
-
+    private readonly IFileRepository _fileRepository;
+    //private readonly IAuthorizationService _authorizationService;
+    //private readonly IUserContextRepository _userContextRepository;
 
     public GameRepository(DataContext dataContext,
         IGameTypeMapper gameTypeMapper,
-        HttpClient httpClient
-    )
+        HttpClient httpClient,
+        IFileRepository fileRepository
+        //IAuthorizationService authorizationService,
+        //IUserContextRepository userContextRepository
+        )
     {
+        //_userContextRepository = userContextRepository;
+        //_authorizationService = authorizationService;
+        _fileRepository = fileRepository;
+
         _mapper = gameTypeMapper;
         _dataContext = dataContext;
-        _httpClient = httpClient;
     }
 
     public async Task<HandlerResult<Success, IErrorResult>> CreateGameType(long? userId, GameRequest gameRequest)
@@ -49,17 +52,9 @@ public class GameRepository : IGameRepository
             };
         }
 
-        var content = new MultipartFormDataContent();
-        var streamContent = new StreamContent(gameRequest.GameFile.OpenReadStream());
-        content.Add(streamContent, "file", gameRequest.GameFile.FileName);
-        var res = await _httpClient.PutAsync(_gathererEndpoint, content);
-        long gameFileId;
-        if (res.IsSuccessStatusCode)
-        {
-            string cont = await res.Content.ReadAsStringAsync();
-            gameFileId = Convert.ToInt32(cont);
-        }
-        else
+        var res = await _fileRepository.UploadFile(gameRequest.GameFile);
+        long gameFileId = res.Match(x => x.Data, x => -1);
+        if (!res.IsSuccess || gameFileId != -1)
         {
             return new IncorrectOperation
             {
@@ -67,7 +62,6 @@ public class GameRepository : IGameRepository
                 Message = "Faild to upload file to FileGatherer"
             };
         }
-
         Game game = _mapper.MapRequestToGame(gameRequest);
         game.FileId = gameFileId;
         game.CreatorId = (long)userId;
