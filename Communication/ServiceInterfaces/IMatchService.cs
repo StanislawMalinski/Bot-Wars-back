@@ -1,4 +1,5 @@
-﻿using Shared.DataAccess.DTO.Requests;
+﻿using Microsoft.AspNetCore.Http;
+using Shared.DataAccess.DTO.Requests;
 using Shared.DataAccess.DTO.Responses;
 using Shared.DataAccess.Pagination;
 using Shared.Results;
@@ -13,4 +14,5 @@ public interface IMatchService
         MatchFilterRequest matchFilterRequest, PageParameters pageParameters);
 
     Task<HandlerResult<SuccessData<MatchResponse>, IErrorResult>> GetMatchById(long id);
+    Task<HandlerResult<SuccessData<IFormFile>, IErrorResult>> GetLogFile(long matchId);
 }
