@@ -151,11 +151,11 @@ public class GameTypeService : IGameService
 
         if (!log.IsSuccess)
         {
-            Console.WriteLine("Log file not found in File Gatherer");
+            Console.WriteLine("Game file not found in File Gatherer");
             return new EntityNotFoundErrorResult
             {
                 Title = "EntityNotFoundErrorResult 404",
-                Message = "Log not found in File Gatherer"
+                Message = "Game file not found in File Gatherer"
             };
         }
 
