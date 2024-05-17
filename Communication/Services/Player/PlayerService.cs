@@ -70,13 +70,14 @@ public class PlayerService : IPlayerService
     
     public async Task<HandlerResult<Success, IErrorResult>> RegisterNewPlayer(RegistrationRequest registrationRequest)
     {
+        
         var newPlayer = _playerMapper.ToPlayerFromRegistrationRequest(registrationRequest);
-
+       
         if (newPlayer is null)
         {
             return new EntityNotFoundErrorResult();
         }
-
+    
         var emailPlayer = await _playerRepository.GetPlayer(registrationRequest.Email);
 
         if (emailPlayer != null)
@@ -87,7 +88,7 @@ public class PlayerService : IPlayerService
                 Message = "Player with given email already exists"
             };
         }
-
+        
         var loginPlayer = await _playerRepository.GetPlayerByLogin(registrationRequest.Login);
 
         if (loginPlayer != null)
@@ -98,7 +99,7 @@ public class PlayerService : IPlayerService
                 Message = "Player with given login already exists"
             };
         }
-
+        Console.WriteLine("hein6");
         newPlayer.RoleId = 1;
         var hashedPassword =
             (await _passwordHasher.HashPassword(registrationRequest.Password)).Match(x => x.Data, x => null);

@@ -42,9 +42,11 @@ namespace Shared.DataAccess.Repositories
 
         public async Task<Tournament?> GetTournamentExtended(long tournamentId)
         {
-            return await _dataContext.Tournaments.Include(tournament => tournament.Matches)
-                .Include(tournament => tournament.TournamentReference)
-                .SingleOrDefaultAsync(tournament => tournament.Id == tournamentId);;
+            return await _dataContext.Tournaments.Where(x => x.Id == tournamentId)
+                .Include(tournament => tournament.Matches)
+                .Include(tournament => tournament.TournamentReference)!
+                .ThenInclude(x => x.Bot)
+                .ThenInclude(x => x.Player).FirstOrDefaultAsync();
         }
         public async Task<Tournament?> GetTournament(long tournamentId)
         {
