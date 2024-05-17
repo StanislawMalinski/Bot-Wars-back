@@ -67,7 +67,13 @@ public class TournamentWorker: IInvocable
                 .EverySeconds(8).Once().PreventOverlapping("TournamentWorker"+ DateTime.Now+" "+ TaskId);
             return;
         }
-        Console.WriteLine("turniej dalsze");
+        Console.WriteLine("web socett");
+        // Web socety
+        await _resolver.GetTournamentMatchStatus(TourId);
+        
+        
+        
+        Console.WriteLine("koniec wib sokiety");
         var playedGames =  (await _resolver.GetPlayedMatches(TourId)).Match(x=>x.Data,x=>new List<long>());
         foreach (var p in playedGames)
         {
