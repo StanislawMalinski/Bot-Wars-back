@@ -33,6 +33,9 @@ public class GameWorker: IInvocable
         var game = (await _resolver.GetMatchGame(task.OperatingOn)).Match(x=>x.Data,x=>null);
         GameResult result = await gameManager.PlayGame(game, botlist,tour.MemoryLimit,tour.TimeLimit);
         Console.WriteLine("er12345");
+        var lr = await _resolver.SaveLogGame(result.gameLog, $"{TaskId} hejo elo");
+        Console.WriteLine($"Zapis logyu gry pod id { lr}");
+        var saa =result.gameLog;
         if (result is SuccessfullGameResult)
         {
             Console.WriteLine("er123400");

@@ -31,6 +31,7 @@ public class GameManager : IGameManager
         }
         Console.WriteLine("bots play");
         ind = 0;
+        string gamelog = string.Empty;
         foreach (var bot in botsArray)
         {
             if (bots[ind].wasErros())
@@ -38,6 +39,7 @@ public class GameManager : IGameManager
                 await InterruptAllBots();
                 return new ErrorGameResult()
                 {
+                    gameLog = gamelog,
                     BotError = true,
                     BotErrorId = bot.Id,
                     ErrorGameStatus = bots[ind].GetErrorType()
@@ -46,7 +48,6 @@ public class GameManager : IGameManager
             ind++;
         }
         
-        
         bool ok = true;
         Console.WriteLine("play game run ");
         await game.Run();
@@ -54,9 +55,10 @@ public class GameManager : IGameManager
         string? curr = await game.Get();
         if (game.wasErros())
         {
-           
+            gamelog = "game error";
             return new ErrorGameResult
             {
+                gameLog = gamelog,
                 BotError = false,
                 GameError = true,
                 ErrorGameStatus = game.GetErrorType()
@@ -65,7 +67,7 @@ public class GameManager : IGameManager
         int nextBot = 0;
         int counter = 0;
         int counterMax = 1000;
-        string gamelog = string.Empty;
+        
         gamelog += curr;
         
         while (Int32.Parse(curr) != -1 && counter < counterMax)
@@ -95,6 +97,7 @@ public class GameManager : IGameManager
                     await InterruptAllBots();
                     return new ErrorGameResult
                     {
+                        gameLog = gamelog,
                         BotError = false,
                         GameError = true,
                         ErrorGameStatus = game.GetErrorType()
@@ -118,9 +121,10 @@ public class GameManager : IGameManager
             var cos = botsArray[nextBot];
             await game.Interrupt();
             await InterruptAllBots();
-
+            
             return new SuccessfullGameResult()
             {
+                gameLog = gamelog,
                 BotWinner = cos
             };
         }
@@ -159,7 +163,7 @@ public class GameManager : IGameManager
         Console.WriteLine("niemozliwey was eeroe");
         return new ErrorGameResult()
         {
-            
+            gameLog = gamelog,
         };
         
     }

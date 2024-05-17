@@ -1,4 +1,5 @@
-﻿using Engine.Services;
+﻿using Engine.FileWorker;
+using Engine.Services;
 using Shared.DataAccess.DataBaseEntities;
 using Shared.DataAccess.Enumerations;
 using Shared.DataAccess.Repositories;
@@ -17,13 +18,15 @@ public class MatchResolver : Resolver
     private readonly MatchRepository _matchRepository;
     private readonly AchievementHandlerService _achievementHandlerService;
     private readonly IGameRepository _gameRepository;
+    private readonly FileManager _fileManager;
 
-    public MatchResolver(TaskService taskService, MatchRepository matchRepository, AchievementHandlerService achievementHandlerService, IGameRepository gameRepository)
+    public MatchResolver(TaskService taskService, MatchRepository matchRepository, AchievementHandlerService achievementHandlerService, IGameRepository gameRepository , FileManager fileManager)
     {
         _taskService = taskService;
         _matchRepository = matchRepository;
         _achievementHandlerService = achievementHandlerService;
         _gameRepository = gameRepository;
+        _fileManager = fileManager;
     }
 
 
@@ -118,5 +121,10 @@ public class MatchResolver : Resolver
 
         await _matchRepository.SaveChangesAsync();
         return new Success();
+    }
+
+    public async Task<long> SaveLogGame(string log,string fileName)
+    {
+        return await _fileManager.savegameLog(log, fileName);
     }
 }

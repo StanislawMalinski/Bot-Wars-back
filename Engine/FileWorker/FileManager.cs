@@ -20,6 +20,7 @@ public class FileManager
     private readonly HttpClient _httpClient;
     // move to config
     private readonly string _gathererEndpoint = "http://host.docker.internal:7002/api/Gatherer/{0}";
+    private readonly string _gathererEndpointSave = "http://host.docker.internal:7002/api/Gatherer";
     public FileManager(HttpClient httpClient)
     {
         _httpClient = httpClient;
@@ -249,6 +250,41 @@ public class FileManager
         }
         
         return true;
+    }
+    private static Stream GenerateStreamFromString(string s)
+    {
+        var stream = new MemoryStream();
+        var writer = new StreamWriter(stream);
+        writer.Write(s);
+        writer.Flush();
+        stream.Position = 0;
+        return stream;
+    }
+    public async Task<long> savegameLog(string log,string name)
+    {
+        try
+        {
+            long botFileId;
+            var content = new MultipartFormDataContent();
+            var streamContent =new StreamContent( GenerateStreamFromString(log));
+            content.Add(streamContent, "file", name );
+            var res = await _httpClient.PutAsync(_gathererEndpointSave, content);
+            if (res.IsSuccessStatusCode)
+            {
+                string cont = await res.Content.ReadAsStringAsync();
+                long id = Convert.ToInt32(cont);
+                return id;
+            }
+            else
+            {
+                return 0;
+            }
+            
+        }
+        catch (Exception ex)
+        {
+            return 0;
+        }
     }
     
 }
