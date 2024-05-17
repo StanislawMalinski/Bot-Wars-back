@@ -46,14 +46,14 @@ namespace Shared.DataAccess.Repositories
         public async Task<Player?> GetPlayer(string playerEmail)
         {
             return await _dataContext.Players.Where(x => x.Email.Equals(playerEmail))
-                .Include(x => x.Role).FirstAsync();
+                .Include(x => x.Role).FirstOrDefaultAsync();
         }
         
         public async Task<Player?> GetPlayerByLogin(string login)
         {
             return await _dataContext.Players.Where(x => x.Login.Equals(login))
                 .Include(x => x.Role)
-                .FirstAsync();
+                .FirstOrDefaultAsync();
         }
 
         public async Task SaveChangesAsync()
@@ -102,7 +102,7 @@ namespace Shared.DataAccess.Repositories
         public async Task<Player?> GetPlayer(long playerId)
         {
             return await _dataContext.Players.Where(x => x.Id == playerId)
-                .Include(x => x.Role).FirstAsync();
+                .Include(x => x.Role).FirstOrDefaultAsync();
         }
         
 

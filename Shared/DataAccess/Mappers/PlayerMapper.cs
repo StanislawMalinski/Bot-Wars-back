@@ -62,7 +62,8 @@ public class PlayerMapper : IPlayerMapper
             HashedPassword = registrationRequest.Password,
             Points = 1000,
             isBanned = false,
-            Registered = DateTime.Now
+            Registered = DateTime.Now,
+            Role = new Role()
         };
     }
 
