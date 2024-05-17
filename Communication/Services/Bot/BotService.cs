@@ -92,7 +92,7 @@ public class BotService : IBotService
 
         return new SuccessData<PageResponse<BotResponse>>
         {
-            Data = new PageResponse<BotResponse>(bots, bots.Count)
+            Data = new PageResponse<BotResponse>(bots,pageParameters.PageSize, bots.Count)
         };
         
     }
@@ -131,7 +131,7 @@ public class BotService : IBotService
         var res = await _botRepository.GetBotsForTournament(tournamentId, pageParameters) ;
         return new SuccessData<PageResponse<BotResponse>>()
         {
-            Data = new PageResponse<BotResponse>(res, res.Count)
+            Data = new PageResponse<BotResponse>(res,pageParameters.PageSize, res.Count)
         };
     }
 }

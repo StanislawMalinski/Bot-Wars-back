@@ -106,13 +106,15 @@ public class MatchResolver : Resolver
         var taskDone = await _taskService.GetTask(taskId);
         if (result == null || taskDone.IsError) return new EntityNotFoundErrorResult();
         var task = taskDone.Match(x => x.Data, null!);
-        var winner = await _matchRepository.GetMatchPlayerByIdNoBotId(matchId, loser);
         
+        var winner = await _matchRepository.GetMatchPlayerByIdNoBotId(matchId, loser);
+        Console.WriteLine($"mach ide losset {matchId} {loser} {winner.Id}");
         task!.Status = TaskStatus.Done;
         result.Played = DateTime.Now;
         result.Status = GameStatus.Played;
         result.LogId = logId;
         result.Winner = winner.Id;
+        
         await _achievementHandlerService.UpDateAchievement(AchievementsTypes.GamePlayed, winner.Id);
         await _achievementHandlerService.UpDateAchievement(AchievementsTypes.WinGames, winner.Id);
         var bots = await _matchRepository.GetListMatchPlayersByMatchIdAndNoBotId(matchId, winner.BotId);
@@ -127,6 +129,6 @@ public class MatchResolver : Resolver
 
     public async Task<long> SaveLogGame(string log,string fileName)
     {
-        return await _fileManager.savegameLog(log, fileName);
+        return await _fileManager.SaveGameLog(log, fileName);
     }
 }

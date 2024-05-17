@@ -4,6 +4,7 @@ using Engine.BusinessLogic.Gameplay.Interface;
 using Engine.FileWorker;
 using Shared.DataAccess.DataBaseEntities;
 using Shared.DataAccess.Enumerations;
+using Shared.DataAccess.Repositories;
 
 namespace Engine.BusinessLogic.Gameplay;
 
@@ -11,11 +12,12 @@ public class GameManager : IGameManager
 {
     private IOProgramWrapper[] bots;
     private Bot[] botsArray;
+
     public async Task<GameResult> PlayGame(Game gameData, List<Bot> botsData,int memoryLimit = 1073741824, int timeLimit=2000)
     {
         Console.WriteLine("play game ");
         botsArray = botsData.ToArray();
-        FileManager manager = new FileManager(new HttpClient()); //???
+        FileManager manager = new FileManager(new FileRepository(new HttpClient()));
         bots = new IOProgramWrapper[botsData.Count()];
         Console.WriteLine("play wrapery ");
         IOProgramWrapper game = new IOProgramWrapper(await manager.GetGameFilepath(gameData),memoryLimit,timeLimit,gameData.Language);

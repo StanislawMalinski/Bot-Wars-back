@@ -6,6 +6,7 @@ using Shared.DataAccess.DAO;
 using Shared.DataAccess.DataBaseEntities;
 using Shared.DataAccess.DTO;
 using Shared.DataAccess.Enumerations;
+using Shared.DataAccess.RepositoryInterfaces;
 using Shared.Results;
 using Shared.Results.ErrorResults;
 using Shared.Results.IResults;
@@ -17,13 +18,11 @@ public class FileManager
 {
     private string BotFilePath =  "FileSystem/Bots";
     private string GameFilePath = "FileSystem/Games";
-    private readonly HttpClient _httpClient;
-    // move to config
-    private readonly string _gathererEndpoint = "http://host.docker.internal:7002/api/Gatherer/{0}";
-    private readonly string _gathererEndpointSave = "http://host.docker.internal:7002/api/Gatherer";
-    public FileManager(HttpClient httpClient)
+    private readonly IFileRepository _fileRepository;
+    
+    public FileManager(IFileRepository fileRepository)
     {
-        _httpClient = httpClient;
+        _fileRepository = fileRepository;
     }
 
     // FileDto -> BotFileDto with string FileContent instead of IFormFile file
@@ -31,8 +30,8 @@ public class FileManager
     {
         try
         {
-            HttpResponseMessage res = await _httpClient.GetAsync(string.Format(_gathererEndpoint, bot.FileId));
-            if (!res.IsSuccessStatusCode)
+            var res = await _fileRepository.GetFile(bot.FileId, bot.BotFile);
+            if (!res.IsSuccess)
             {
                 return new EntityNotFoundErrorResult
                 {
@@ -40,8 +39,15 @@ public class FileManager
                     Message = $"File {bot.FileId} not found in Gatherer"
                 };
             }
-            string cont = await res.Content.ReadAsStringAsync();
-
+            string? cont = (await _fileRepository.FormFileToString(res.Match(x => x.Data, null))).Match(x => x.Data, null); 
+            if (cont == null) 
+            {
+                return new EntityNotFoundErrorResult
+                {
+                    Title = "EntityNotFoundErrorResult",
+                    Message = $"File parsing error"
+                };
+            }
             FileDto ret = new FileDto()
             {
                 PlayerId = bot.PlayerId,
@@ -85,13 +91,18 @@ public class FileManager
     }
     private async Task<string> GetFileFromStorage(long fileId)
     {
-        HttpResponseMessage res = await _httpClient.GetAsync(string.Format(_gathererEndpoint, fileId));
-        Console.WriteLine("huh");
-        if (!res.IsSuccessStatusCode)
+        var res = await _fileRepository.GetFile(fileId, "file");
+        if (!res.IsSuccess)
         {
-            return string.Empty;
+            throw new ArgumentException("File not found in Gatherer!");
         }
-        return await res.Content.ReadAsStringAsync();
+        string? cont = (await _fileRepository.FormFileToString(res.Match(x => x.Data, null))).Match(x => x.Data, null);
+        if (cont == null)
+        {
+            throw new ArgumentException("File is null!");
+        }
+        Console.WriteLine("huh");
+        return cont;
     }
     private void SaveFileAs( string where,string filename, string fileContent,Language language)
     {
@@ -107,10 +118,9 @@ public class FileManager
             case Language.Java:
                 System.IO.File.WriteAllText($"{where}/{ Path.GetFileNameWithoutExtension(filename)}.java", fileContent);
                 break;
-            
         }
-        
     }
+
     public async Task<string> GetBotFilepath(Bot bot)
     {
         Console.WriteLine($"get Botfile {bot.Id} {bot.FileId}");
@@ -279,30 +289,11 @@ public class FileManager
         stream.Position = 0;
         return stream;
     }
-    public async Task<long> savegameLog(string log,string name)
+    public async Task<long> SaveGameLog(string log, string name)
     {
-        try
-        {
-            var content = new MultipartFormDataContent();
-            var streamContent =new StreamContent( GenerateStreamFromString(log));
-            content.Add(streamContent, "file", name );
-            var res = await _httpClient.PutAsync(_gathererEndpointSave, content);
-            if (res.IsSuccessStatusCode)
-            {
-                string cont = await res.Content.ReadAsStringAsync();
-                long id = Convert.ToInt32(cont);
-                return id;
-            }
-            else
-            {
-                return 0;
-            }
-            
-        }
-        catch (Exception ex)
-        {
-            return 0;
-        }
+        IFormFile file = _fileRepository.StringToFormFile(log, name, "text/plain").Match(x => x.Data, null);
+        var res = await _fileRepository.UploadFile(file);
+        return res.Match(x => x.Data, x => 0);
     }
     
 }

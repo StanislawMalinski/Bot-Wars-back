@@ -43,6 +43,7 @@ namespace Shared.DataAccess.Repositories
         public async Task<Tournament?> GetTournamentExtended(long tournamentId)
         {
             return await _dataContext.Tournaments.Where(x => x.Id == tournamentId)
+                .Include(x=>x.Creator)
                 .Include(tournament => tournament.Matches)
                 .Include(tournament => tournament.TournamentReference)!
                 .ThenInclude(x => x.Bot)
