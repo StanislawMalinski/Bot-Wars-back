@@ -52,9 +52,9 @@ public class MatchResolver : Resolver
         };
     }
 
-    public async  Task<HandlerResult<Success,IErrorResult>> MatchWinner(long matchId, long winner, long taskId)
+    public async  Task<HandlerResult<Success,IErrorResult>> MatchWinner(long matchId, long winner, long taskId,long logId)
     {
-        return await _achievementHandlerService.MatchWinner(matchId, winner, taskId);
+        return await _achievementHandlerService.MatchWinner(matchId, winner, taskId,logId);
     }
 
     public async Task<HandlerResult<SuccessData<Tournament>, IErrorResult>> GetTournament(long matchId)
@@ -67,7 +67,7 @@ public class MatchResolver : Resolver
         };
     }
 
-    public async Task<HandlerResult<Success, IErrorResult>> GameFiled(long matchId,long taskId,long gameId)
+    public async Task<HandlerResult<Success, IErrorResult>> GameFiled(long matchId,long taskId,long gameId,long logId)
     {
         await _gameRepository.GameNotAvailableForPlay(gameId);
 
@@ -78,6 +78,7 @@ public class MatchResolver : Resolver
         var random = await _matchRepository.GetMatchPlayerByMatchId(matchId);
         task.Status = TaskStatus.Done;
         result.Played = DateTime.Now;
+        result.LogId = logId;
         result.Status = GameStatus.Played;
         result.Winner = random!.Id;
 
@@ -87,19 +88,19 @@ public class MatchResolver : Resolver
         
     } 
     
-    public async Task<HandlerResult<Success, IErrorResult>> GameAndBotFiled(long matchId,long loser,long taskId,long gameId)
+    public async Task<HandlerResult<Success, IErrorResult>> GameAndBotFiled(long matchId,long loser,long taskId,long gameId,long logId)
     {
         await _gameRepository.GameNotAvailableForPlay(gameId);
-        return await Loser(matchId, loser, taskId);
+        return await Loser(matchId, loser, taskId,logId);
     } 
     
-    public async Task<HandlerResult<Success, IErrorResult>> BotFiled(long matchId,long loser,long taskId)
+    public async Task<HandlerResult<Success, IErrorResult>> BotFiled(long matchId,long loser,long taskId,long logId)
     {
-        return await Loser(matchId, loser, taskId);
+        return await Loser(matchId, loser, taskId,logId);
     } 
     
     
-    private  async Task<HandlerResult<Success, IErrorResult>> Loser(long matchId, long loser, long taskId)
+    private  async Task<HandlerResult<Success, IErrorResult>> Loser(long matchId, long loser, long taskId,long logId)
     {
         var result = await _matchRepository.GetMatch(matchId);
         var taskDone = await _taskService.GetTask(taskId);
@@ -110,6 +111,7 @@ public class MatchResolver : Resolver
         task!.Status = TaskStatus.Done;
         result.Played = DateTime.Now;
         result.Status = GameStatus.Played;
+        result.LogId = logId;
         result.Winner = winner.Id;
         await _achievementHandlerService.UpDateAchievement(AchievementsTypes.GamePlayed, winner.Id);
         await _achievementHandlerService.UpDateAchievement(AchievementsTypes.WinGames, winner.Id);
