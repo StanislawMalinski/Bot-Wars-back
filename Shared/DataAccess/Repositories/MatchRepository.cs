@@ -2,7 +2,9 @@
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Shared.DataAccess.Context;
 using Shared.DataAccess.DataBaseEntities;
+using Shared.DataAccess.DTO.Responses;
 using Shared.DataAccess.Enumerations;
+using Shared.DataAccess.Mappers;
 
 
 namespace Shared.DataAccess.Repositories;
@@ -10,10 +12,12 @@ namespace Shared.DataAccess.Repositories;
 public class MatchRepository
 {
     private readonly DataContext _dataContext;
+    private readonly MatchMapper _mapper;
 
-    public MatchRepository(DataContext dataContext)
+    public MatchRepository(DataContext dataContext, MatchMapper mapper)
     {
         _dataContext = dataContext;
+        _mapper = mapper;
     }
 
     public async Task<Matches?> GetMatch(long matchId)
@@ -109,10 +113,10 @@ public class MatchRepository
             .Where(match => true);
     }
     
-    public async Task<Matches?> GetMatchById(long id)
+    public async Task<Matches?> GetMatchById(long matchId)
     {
-        return await _dataContext.Matches.Include(matches => matches.Tournament)
-            .Include(matches => matches.Game).Where(match => match.Id == id).FirstOrDefaultAsync();
+        return await _dataContext.Matches.Where(matches =>  matches.Id == matchId).Include(x=>x.MatchPlayers)
+            .Include(matches => matches.Game).FirstOrDefaultAsync();
     }
 
     public async Task<List<Bot?>> GetMatchBots(long matchId)
@@ -137,5 +141,11 @@ public class MatchRepository
     public async Task<Tournament?> GetTournament(long matchId)
     {
         return await _dataContext.Matches.Where (x => x.Id == matchId).Include (x => x.Tournament).Select (x=>x.Tournament).FirstAsync();
+    }
+
+    public async Task<List<MatchInTournamentRespond>> GetTournamentStatus(long tourId)
+    {
+        return await _dataContext.Matches.Where(x => x.TournamentsId == tourId)
+            .Include(x => x.MatchPlayers).Select(x => _mapper.MapEntityToMatcInTournamentResponse(x)).ToListAsync();
     }
  }

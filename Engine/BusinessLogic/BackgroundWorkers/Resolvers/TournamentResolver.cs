@@ -1,6 +1,7 @@
 ﻿using Engine.Services;
 using Shared.DataAccess.DataBaseEntities;
 using Shared.DataAccess.DTO;
+using Shared.DataAccess.DTO.Responses;
 using Shared.DataAccess.Enumerations;
 using Shared.DataAccess.Repositories;
 using Shared.Results;
@@ -194,6 +195,16 @@ public class TournamentResolver : Resolver
         return new SuccessData<long>()
         {
             Data = res.Winner
+        };
+    }
+
+    public async Task<HandlerResult<SuccessData<List<MatchInTournamentRespond>>, IErrorResult>> GetTournamentMatchStatus(
+        long tournamentId)
+    {
+
+        return new SuccessData<List<MatchInTournamentRespond>>()
+        {
+            Data = await _matchRepository.GetTournamentStatus(tournamentId)
         };
     }
     

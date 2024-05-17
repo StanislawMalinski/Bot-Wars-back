@@ -41,7 +41,7 @@ public class PointRepository : IPointsRepository
         }
 
         var pointHistory = await _dataContext.PointHistories
-            .Where(pointsHistory => pointsHistory.PlayerId == playerId)
+            .Where(pointsHistory => pointsHistory.PlayerId == playerId).OrderBy(x=>x.LogDate)
             .ToListAsync();
         
         return new SuccessData<List<PointHistoryDto>>

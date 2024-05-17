@@ -15,6 +15,7 @@ public static class MapperInjection
         serviceCollection.AddScoped<ITournamentMapper, TournamentMapper>();
         serviceCollection.AddScoped<IUserSettingsMapper, UserSettingsMapper>();
         serviceCollection.AddScoped<IBotMapper, BotMapper>();
+        serviceCollection.AddScoped<MatchMapper>();
         return serviceCollection;
     }
 }

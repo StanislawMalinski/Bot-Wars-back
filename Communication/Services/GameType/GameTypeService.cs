@@ -51,7 +51,7 @@ public class GameTypeService : IGameService
         var res = await _gameRepository.Search(name, pageParameters);
         return new SuccessData<PageResponse<GameResponse>>()
         {
-            Data = new PageResponse<GameResponse>(res, res.Count)
+            Data = new PageResponse<GameResponse>(res,pageParameters.PageSize, res.Count)
         };
     }
 
@@ -117,7 +117,7 @@ public class GameTypeService : IGameService
         var res = await _gameRepository.GetGames(pageParameters);
         return new SuccessData<PageResponse<GameResponse>>()
         {
-            Data = new PageResponse<GameResponse>(res, res.Count)
+            Data = new PageResponse<GameResponse>(res,pageParameters.PageSize, res.Count)
         };
     }
 
@@ -128,7 +128,7 @@ public class GameTypeService : IGameService
         var res = await _gameRepository.GetAvailableGames(pageParameters);
         return new SuccessData<PageResponse<GameResponse>>()
         {
-            Data = new PageResponse<GameResponse>(res, res.Count)
+            Data = new PageResponse<GameResponse>(res,pageParameters.PageSize,  res.Count)
         };
     }
 
@@ -139,7 +139,7 @@ public class GameTypeService : IGameService
         var botList = await _gameRepository.GetGamesByPlayer(res.Id, pageParameters);
         return new SuccessData<PageResponse<GameResponse>>()
         {
-            Data = new PageResponse<GameResponse>(botList, botList.Count)
+            Data = new PageResponse<GameResponse>(botList,pageParameters.PageSize, botList.Count)
         };
     }
 

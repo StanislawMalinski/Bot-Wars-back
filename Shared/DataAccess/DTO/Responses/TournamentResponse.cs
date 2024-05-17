@@ -6,6 +6,7 @@ public class TournamentResponse
 {
     public long Id { get; set; }
     public long CreatorId { get; set; }
+    public string CreatorName { get; set; }
     public string TournamentTitle { get; set; }
     public string Description { get; set; }
     public int PlayersLimit { get; set; }

@@ -5,4 +5,7 @@ public record MatchResponse(long Id,
     string GameName,
     long TournamentId,
     string TournamentName,
+    List<long> BotId,
+    string Status,
+    long Winner,
     DateTime PlayedOutDate);

@@ -98,7 +98,7 @@ namespace Communication.Services.Tournament
                 TournamentFilterRequest tournamentFilterRequest, PageParameters pageParameters)
         {
             var unfilteredTournaments = _tournamentRepository.GetTournamentsQuery();
-
+            int count;
             if (tournamentFilterRequest.MaxPlayOutDate != null)
             {
 
@@ -131,16 +131,25 @@ namespace Communication.Services.Tournament
             if (tournamentFilterRequest.UserParticipation == null)
             {
                 
+                count = unfilteredTournaments.Count();
+                if (Math.Min(pageParameters.PageSize,
+                        Math.Max(0, count - (pageParameters.PageNumber - 1) * pageParameters.PageSize)) == 0)
+                {
+                    return new SuccessData<PageResponse<TournamentResponse>>()
+                    {
+                        Data = new PageResponse<TournamentResponse>(new List<TournamentResponse>(),pageParameters.PageSize, count)
+                    };
+                }
                 
                 var tournaments = await unfilteredTournaments
                     .Select(tournament => _mapper.TournamentToTournamentResponse(tournament))
-                    .Skip(pageParameters.PageNumber * pageParameters.PageSize)
-                    .Take(pageParameters.PageSize)
+                    .Skip(Math.Min((pageParameters.PageNumber-1) * pageParameters.PageSize,count))
+                    .Take( Math.Min( pageParameters.PageSize,  Math.Max(0,count- (pageParameters.PageNumber-1) * pageParameters.PageSize)    ) )
                     .ToListAsync();
-                var count = tournaments.Count;
+                
                 return new SuccessData<PageResponse<TournamentResponse>>()
                 {
-                    Data = new PageResponse<TournamentResponse>(tournaments, count)
+                    Data = new PageResponse<TournamentResponse>(tournaments,pageParameters.PageSize, count)
                 };
             }
 
@@ -149,7 +158,7 @@ namespace Communication.Services.Tournament
                 .Select(tournament => _mapper.TournamentToTournamentResponse(tournament))
                 .ToListAsync();
             var filteredTournamentList = new List<TournamentResponse>();
-            int skipped = 0;
+            
 
             foreach (var tournamentResponse in filteredTournaments)
             {
@@ -157,22 +166,37 @@ namespace Communication.Services.Tournament
                 if ((await PlayerParticipate(tournamentResponse.Id, tournamentFilterRequest.UserParticipation))
                     .IsSuccess)
                 {
-                    if (skipped++ < pageParameters.PageNumber * pageParameters.PageSize)
+                    /*if (skipped++ < pageParameters.PageNumber * pageParameters.PageSize)
                     {
                         continue;
                     }
+                    */
 
                     filteredTournamentList.Add(tournamentResponse);
-                    if (filteredTournamentList.Count >= pageParameters.PageSize)
+                    /*if (filteredTournamentList.Count >= pageParameters.PageSize)
                     {
                         break;
-                    }
+                    }*/
                 }
             }
-
+            count = filteredTournamentList.Count();
+            if (Math.Min(pageParameters.PageSize,
+                    Math.Max(0, count - (pageParameters.PageNumber - 1) * pageParameters.PageSize)) == 0)
+            {
+                return new SuccessData<PageResponse<TournamentResponse>>()
+                {
+                    Data = new PageResponse<TournamentResponse>(new List<TournamentResponse>(),pageParameters.PageSize, count)
+                };
+            }
+            
+            
+            var tournament = filteredTournamentList
+                .Skip( Math.Min((pageParameters.PageNumber-1) * pageParameters.PageSize,count ))
+                .Take( Math.Min( pageParameters.PageSize,  Math.Max(0,count- (pageParameters.PageNumber-1) * pageParameters.PageSize)    ) )
+                .ToList();
             return new SuccessData<PageResponse<TournamentResponse>>()
             {
-                Data = new PageResponse<TournamentResponse>(filteredTournamentList, filteredTournaments.Count)
+                Data = new PageResponse<TournamentResponse>(tournament,pageParameters.PageSize, count)
             };
         
 

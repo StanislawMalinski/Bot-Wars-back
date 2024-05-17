@@ -57,6 +57,7 @@ namespace Shared.DataAccess.Mappers
             {
                 Id = tournament.Id,
                 CreatorId = tournament.CreatorId,
+                
                 TournamentTitle = tournament.TournamentTitle,
                 Description = tournament.Description,
                 PlayersLimit = tournament.PlayersLimit,
@@ -85,6 +86,11 @@ namespace Shared.DataAccess.Mappers
             if (tournament.Image != null)
             {
                 tournamentResponse.Image = Convert.ToBase64String(tournament.Image);
+            }
+
+            if (tournament.Creator != null)
+            {
+                tournamentResponse.CreatorName = tournament.Creator.Login;
             }
 
             return tournamentResponse;

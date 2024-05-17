@@ -6,12 +6,12 @@ public class PageResponse <T>
     public int AllRecords { get; set; }
     public int AmountOfPages { get; set; }
     
-    public PageResponse(List<T> page, int allRecords)
+    public PageResponse(List<T> page,int pageSize,  int allRecords)
     {
         Page = page;
         AllRecords = allRecords;
         if (allRecords <= 0) return;
-        AmountOfPages = (AllRecords / Page.Count);
-        if (Page.Count % allRecords > 0) AmountOfPages++;
+        AmountOfPages = (AllRecords / pageSize);
+        if ( allRecords % pageSize > 0) AmountOfPages++;
     }
 }
