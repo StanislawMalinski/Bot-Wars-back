@@ -1,5 +1,9 @@
-﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
+using System.Net.WebSockets;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Shared.DataAccess.Context;
@@ -22,23 +26,24 @@ public class BotRepository : IBotRepository
 {
     private readonly DataContext _dataContext;
     private readonly IBotMapper _botMapper;
-
-    private readonly HttpClient _httpClient;
+    private readonly IFileRepository _fileRepository;
 
     // move to config
-    private readonly string _gathererEndpoint = "http://host.docker.internal:7002/api/Gatherer";
-
+    //private readonly IAuthorizationService _authorizationService;
+    //private readonly IUserContextRepository _userContextRepository;
 
     public BotRepository(DataContext dataContext,
         IBotMapper botMapper,
-        HttpClient httpClient
-    
+        IFileRepository fileRepository
+        //IAuthorizationService authorizationService,
+        //IUserContextRepository userContextRepository
     )
     {
-      
+        //_userContextRepository = userContextRepository;
+        //_authorizationService = authorizationService;
+        _fileRepository = fileRepository;
         _dataContext = dataContext;
         _botMapper = botMapper;
-        _httpClient = httpClient;
     }
 
     public async Task<Bot?> GetBotAndCreator(long botId)
@@ -68,26 +73,8 @@ public class BotRepository : IBotRepository
             .FirstOrDefaultAsync(bot => bot.Id == botId);
 
         if (bot == null) return null;
-
-        try
-        {
-            HttpResponseMessage res = await _httpClient.GetAsync(string.Format(_gathererEndpoint, bot.FileId));
-            if (!res.IsSuccessStatusCode) return null;
-            
-            Stream cont = await res.Content.ReadAsStreamAsync();
-
-            IFormFile resBotFile = new FormFile(cont, 0, cont.Length, "botFile", bot.BotFile)
-            {
-                Headers = new HeaderDictionary(),
-                ContentType = "text/plain"
-            };
-
-            return resBotFile;
-        }
-        catch (Exception ex)
-        {
-            return null;
-        }
+        var res = await _fileRepository.GetFile(bot.FileId, bot.BotFile);
+        return  res.Match(x=>x.Data, null!);
     }
 
     public async Task<List<BotResponse>> GetBotsForTournament(
@@ -109,15 +96,11 @@ public class BotRepository : IBotRepository
     {
         try
         {
-            var content = new MultipartFormDataContent();
-            var streamContent = new StreamContent(botRequest.BotFile.OpenReadStream());
-            content.Add(streamContent, "file", botRequest.BotFile.FileName);
-            var res = await _httpClient.PutAsync(_gathererEndpoint, content);
             long botFileId;
-            if (res.IsSuccessStatusCode)
+            var res = await _fileRepository.UploadFile(botRequest.BotFile);
+            if (res.IsSuccess)
             {
-                string cont = await res.Content.ReadAsStringAsync();
-                botFileId = Convert.ToInt32(cont);
+                botFileId = res.Match(x => x.Data, x => 0);
             }
             else
             {
