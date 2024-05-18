@@ -78,7 +78,7 @@ public class FileManager
         Console.WriteLine("dictioniarty ");
         SaveFileAs(newBotPath,fileName,file,language);
         Console.WriteLine("zapisnaie");
-        await Compile(fileName, language, newBotPath);
+        //await Compile(fileName, language, newBotPath);
         Console.WriteLine("compilacja ");
     }
     private async Task GetGameFile(long id,string fileName, long fileId,Language language)
@@ -87,7 +87,7 @@ public class FileManager
         string newGamePath =GameFilePath+ "/" + id;
         Directory.CreateDirectory(newGamePath);
         SaveFileAs(newGamePath,fileName,file,language);
-        bool res = await Compile(fileName, language, newGamePath);
+        //bool res = await Compile(fileName, language, newGamePath);
     }
     private async Task<string> GetFileFromStorage(long fileId)
     {
@@ -131,18 +131,18 @@ public class FileManager
             switch (bot.Language)
             {
                 case Language.C:
-                    dirs = Directory.GetFiles($"{BotFilePath}/{bot.Id}",$"{ Path.GetFileNameWithoutExtension(bot.BotFile)}.out");
-                    if (dirs.Length != 0) return dirs[0];
+                    dirs = Directory.GetFiles($"{BotFilePath}/{bot.Id}",$"{ Path.GetFileNameWithoutExtension(bot.BotFile)}.cpp");
+                    if (dirs.Length != 0) return $"{BotFilePath}/{bot.Id}";
                     break;
                 case Language.PYTHON:
                     dirs = Directory.GetFiles($"{BotFilePath}/{bot.Id}",
                         $"{Path.GetFileNameWithoutExtension(bot.BotFile)}.py");
-                    if (dirs.Length != 0) return dirs[0];
+                    if (dirs.Length != 0) return $"{BotFilePath}/{bot.Id}";
                     break;
                 case Language.Java:
                     dirs = Directory.GetFiles($"{BotFilePath}/{bot.Id}",
-                        $"{Path.GetFileNameWithoutExtension(bot.BotFile)}.class");
-                    if (dirs.Length != 0) return dirs[0];
+                        $"{Path.GetFileNameWithoutExtension(bot.BotFile)}.java");
+                    if (dirs.Length != 0) return $"{BotFilePath}/{bot.Id}";
                     break;
                 
             }
@@ -150,17 +150,8 @@ public class FileManager
         Console.WriteLine($"get Botfile2 {bot.Id} {bot.FileId}");
         await GetBotFile(bot.Id,bot.BotFile, bot.FileId,bot.Language);
         Console.WriteLine($"get Botfil3 {bot.Id} {bot.FileId}");
-        switch (bot.Language)
-        {
-            case Language.C:
-                return $"{BotFilePath}/{bot.Id}/{ Path.GetFileNameWithoutExtension(bot.BotFile)}.out";
-            case Language.PYTHON:
-                return $"{BotFilePath}/{bot.Id}/{Path.GetFileNameWithoutExtension(bot.BotFile)}.py";
-            case Language.Java:
-                return $"{BotFilePath}/{bot.Id}/{Path.GetFileNameWithoutExtension(bot.BotFile)}.class";
-        }
-        Console.WriteLine($"get Botfile4 {bot.Id} {bot.FileId}");
-        return string.Empty;
+        return $"{BotFilePath}/{bot.Id}";
+        
     }
     
     public async Task<string> GetGameFilepath(Game game)
@@ -174,34 +165,24 @@ public class FileManager
             {
                 case Language.C:
                     dirs = Directory.GetFiles($"{GameFilePath}/{game.Id}",$"{ Path.GetFileNameWithoutExtension(game.GameFile)}.out");
-                    if (dirs.Length != 0) return dirs[0];
+                    if (dirs.Length != 0) return $"{GameFilePath}/{game.Id}";
              
                     break;
                 case Language.PYTHON:
                     dirs = Directory.GetFiles($"{GameFilePath}/{game.Id}",$"{ Path.GetFileNameWithoutExtension(game.GameFile)}.py");
-                    if (dirs.Length != 0) return dirs[0];
+                    if (dirs.Length != 0) return $"{GameFilePath}/{game.Id}";
                     break;
                 case Language.Java:
                     dirs = Directory.GetFiles($"{GameFilePath}/{game.Id}",$"{ Path.GetFileNameWithoutExtension(game.GameFile)}.java");
-                    if (dirs.Length != 0) return dirs[0];
+                    if (dirs.Length != 0) return $"{GameFilePath}/{game.Id}";
                     break;
                 
             }
         }
      
         await GetGameFile(game.Id,game.GameFile, game.FileId,game.Language);
-     
-        switch (game.Language)
-        {
-            case Language.C:
-                return $"{GameFilePath}/{game.Id}/{ Path.GetFileNameWithoutExtension(game.GameFile)}.out";
-            case Language.PYTHON:
-                return $"{GameFilePath}/{game.Id}/{Path.GetFileNameWithoutExtension(game.GameFile)}.py";
-            case Language.Java:
-                return $"{GameFilePath}/{game.Id}/{Path.GetFileNameWithoutExtension(game.GameFile)}.class";
-        }
-        
-        return string.Empty;
+        return $"{GameFilePath}/{game.Id}";
+       
     }
 
     public async Task<bool> TestSaveFile(IFormFile file, long id, string where)
@@ -219,67 +200,10 @@ public class FileManager
         return true;
     }
 
-    private async Task<bool> Compile(string fileName, Language language,string where)
-    {
-        string filepath;
-        string compileCommand;
-        
-        switch (language)
-        {
-            case (Language.C):
-                filepath =$"{where}/{ Path.GetFileNameWithoutExtension(fileName)}.cpp";
-                compileCommand = $"g++ -o {where}/{Path.GetFileNameWithoutExtension(fileName)}.out {filepath}"; 
-                
-                //string compileCommand = "-c g++ -o "+ id+".out "+filepath;
-                return await ExecuteCommand(compileCommand);
-            case (Language.PYTHON):
-                filepath =$"{where}/{ Path.GetFileNameWithoutExtension(fileName)}.py";
-                compileCommand = "chmod +x "+filepath;
-                return await ExecuteCommand(compileCommand);
-            case (Language.Java):
-                filepath =$"{where}/{ Path.GetFileNameWithoutExtension(fileName)}.java";
-                compileCommand = "javac "+filepath;
-                return await ExecuteCommand(compileCommand);
-            
-        }
-
-        return false;
-    }
+   
     
 
-    private async Task<bool> ExecuteCommand(string command)
-    {
-        Console.WriteLine("compisacja start");
-        Process compilerProcess = new Process();
-        Console.WriteLine("to cos");
-        compilerProcess.StartInfo.FileName = "bash"; // or "cmd" if running on Windows
-        compilerProcess.StartInfo.Arguments = $"-c \"{command}\"";;
-        compilerProcess.StartInfo.RedirectStandardOutput = true;
-        compilerProcess.StartInfo.RedirectStandardError = true;
-        compilerProcess.StartInfo.UseShellExecute = false;
-        compilerProcess.StartInfo.CreateNoWindow = true;
-        try
-        {
-            Console.WriteLine($"rey {command}");
-            compilerProcess.Start();
-            Console.WriteLine("rey2");
-          
-            await Task.Delay(1000);
-            Console.WriteLine("przcekanie");
-            compilerProcess.Kill();
-            
-            Console.WriteLine("huh");
-           
-        }
-        catch (Exception e)
-        {
-            Console.WriteLine("zlapanie ");
-            return false;
-        }
-       
-        
-        return true;
-    }
+    
     private static Stream GenerateStreamFromString(string s)
     {
         var stream = new MemoryStream();

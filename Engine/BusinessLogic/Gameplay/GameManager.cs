@@ -20,14 +20,16 @@ public class GameManager : IGameManager
         FileManager manager = new FileManager(new FileRepository(new HttpClient()));
         bots = new IOProgramWrapper[botsData.Count()];
         Console.WriteLine("play wrapery ");
-        IOProgramWrapper game = new IOProgramWrapper(await manager.GetGameFilepath(gameData),memoryLimit,timeLimit,gameData.Language);
+        
+        IOProgramWrapper game = new IOProgramWrapper(await manager.GetGameFilepath(gameData),gameData.GameFile!, memoryLimit,timeLimit,gameData.Language);
         int ind = 0;
         Console.WriteLine("hejo");
         foreach (var bot in botsArray)
         {
             Console.WriteLine("bots playa");
-            bots[ind] = new IOProgramWrapper( await manager.GetBotFilepath(bot),memoryLimit,timeLimit,bot.Language);
+            bots[ind] = new IOProgramWrapper( await manager.GetBotFilepath(bot),bot.BotFile,memoryLimit,timeLimit,bot.Language);
             Console.WriteLine("bot id "+bot.Id);
+           
             await bots[ind].Run();
             ind++;
         }
@@ -38,7 +40,9 @@ public class GameManager : IGameManager
         {
             if (bots[ind].wasErros())
             {
+                Console.WriteLine("przerwanie botow");
                 await InterruptAllBots();
+                Console.WriteLine("porawnie przerwanoboty");
                 return new ErrorGameResult()
                 {
                     gameLog = gamelog,
@@ -71,15 +75,17 @@ public class GameManager : IGameManager
         int counterMax = 1000;
         
         gamelog += curr+'\n';
-        
+        Console.WriteLine($"sprawdznie przed {bots[nextBot].wasErros()}");
         while (Int32.Parse(curr) != -1 && counter < counterMax)
         {
+            Console.WriteLine( $"cuur petnela {counter} {curr}");
             nextBot = Int32.Parse(curr);
             curr = await game.Get();
             if (curr == null) {ok = false;  Console.WriteLine(" to eror 1 "+bots[nextBot].wasErros()); break;}
             gamelog += curr+'\n';
             curr = await bots[nextBot].SendAndGet(curr);
             if(curr == null) {ok = false;  Console.WriteLine(" to eror 2 "+bots[nextBot].wasErros()); break;}
+            Console.WriteLine( $"cuur petnela {counter} {curr}");
             gamelog += curr+'\n';
             curr = await game.SendAndGet(curr);
             if(curr == null) {ok = false;  Console.WriteLine(" to eror 3 "+bots[nextBot].wasErros()); break;}
@@ -87,7 +93,10 @@ public class GameManager : IGameManager
             counter++;
           
         }
-        
+        Console.WriteLine(bots[0].GetErrorType().ToString());
+        Console.WriteLine("game log star");
+        Console.WriteLine(gamelog);
+        Console.WriteLine("game log endened");
         if (ok)
         {
             if (counter < counterMax)
@@ -102,7 +111,8 @@ public class GameManager : IGameManager
                         gameLog = gamelog,
                         BotError = false,
                         GameError = true,
-                        ErrorGameStatus = game.GetErrorType()
+                        ErrorGameStatus = game.GetErrorType(),
+                        
                     };
                 }
 
@@ -140,7 +150,8 @@ public class GameManager : IGameManager
                 GameError = true,
                 BotError = true,
                 BotErrorId = botsArray[nextBot].Id,
-                ErrorGameStatus = game.GetErrorType()
+                ErrorGameStatus = game.GetErrorType(),
+                gameLog = gamelog,
             };
         
         }
@@ -157,6 +168,7 @@ public class GameManager : IGameManager
                     BotError = true,
                     BotErrorId = bot.Id,
                     ErrorGameStatus = bots[ind].GetErrorType()
+                    ,gameLog = gamelog,
                 };
             }
             ind++;

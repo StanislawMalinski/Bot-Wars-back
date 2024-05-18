@@ -28,15 +28,18 @@ public class TournamentWorker: IInvocable
     public async Task Invoke()
     {
         
-        Console.WriteLine("jaki tunie działa");
+        Console.WriteLine($"Turnie się rozpoczol {TaskId}");
+        
         _Task? task = (await _resolver.GetTask(TaskId)).Match(x=>x.Data,x=>null);
+        
         if(task == null) return;
+        Console.WriteLine($"Operuje na turnieju {task.Id}");
         TourId = task.OperatingOn;
         Game? gameBot = (await _resolver.GetGame(TourId)).Match(x=>x.Data,x=>null);
         
         if ((await _resolver.AreAnyMatchesPlayed(TourId)).IsError)
         {
-            Console.WriteLine("gry dla tunieju");
+            Console.WriteLine("Truniej katywcja brak jeszcze meczów");
             await _resolver.StartPlaying(TourId);
             var botList = await _resolver.GetRegisterBots(TourId);
             //var tournament = (await _tournamentRepository.GetTournamentAsync(TourId)).Match(x=>x.Data,x=>null);
@@ -67,7 +70,7 @@ public class TournamentWorker: IInvocable
                 .EverySeconds(8).Once().PreventOverlapping("TournamentWorker"+ DateTime.Now+" "+ TaskId);
             return;
         }
-        Console.WriteLine("web socett");
+        Console.WriteLine($"Sa już macze początkwowe {TaskId}");
         // Web socety
         await _resolver.GetTournamentMatchStatus(TourId);
         
@@ -90,11 +93,12 @@ public class TournamentWorker: IInvocable
         var tournamentWinner = await _resolver.IsMatchResolved(TourId, "0");
         if (tournamentWinner.IsError)
         {
+            Console.WriteLine($"Nie rozegrano jescze ostatniego meczu ");
             _scheduler.ScheduleWithParams<TournamentWorker>(TaskId)
                 .EverySeconds(8).Once().PreventOverlapping("TournamentWorker"+ DateTime.Now+" "+ TaskId);
             return;
         }
-
+        Console.WriteLine($"Wszykie mecze zakończoe próba zakończenie tujenieju");
         var end = await _resolver.EndTournament(TourId,tournamentWinner.Match(x=>x.Data,x=>0), TaskId);
         if (end.IsError)
         {

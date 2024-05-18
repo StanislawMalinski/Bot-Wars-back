@@ -407,8 +407,8 @@ public class Seeder
             },
             new Bot()
             {
-                Id = 17, GameId = 2, PlayerId = 8, BotFile = "minecraft_bot_2", FileId = 9, MemoryUsed = 8000,
-                TimeUsed = 100, Language = Language.PYTHON
+                Id = 17, GameId = 2, PlayerId = 8, BotFile = "bot_zero_5.java", FileId = 8, MemoryUsed = 8000,
+                TimeUsed = 100, Language = Language.Java
             }
             
             

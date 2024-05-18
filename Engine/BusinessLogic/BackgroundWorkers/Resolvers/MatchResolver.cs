@@ -80,7 +80,7 @@ public class MatchResolver : Resolver
         result.Played = DateTime.Now;
         result.LogId = logId;
         result.Status = GameStatus.Played;
-        result.Winner = random!.Id;
+        result.Winner = random!.BotId;
 
 
         await _matchRepository.SaveChangesAsync();
@@ -96,7 +96,9 @@ public class MatchResolver : Resolver
     
     public async Task<HandlerResult<Success, IErrorResult>> BotFiled(long matchId,long loser,long taskId,long logId)
     {
-        return await Loser(matchId, loser, taskId,logId);
+        var winner = await _matchRepository.GetMatchPlayerByIdNoBotId(matchId, loser);
+        return await _achievementHandlerService.MatchWinner(matchId, winner.BotId, taskId, logId);
+        //return await Loser(matchId, loser, taskId,logId);
     } 
     
     
@@ -113,7 +115,7 @@ public class MatchResolver : Resolver
         result.Played = DateTime.Now;
         result.Status = GameStatus.Played;
         result.LogId = logId;
-        result.Winner = winner.Id;
+        result.Winner = winner.BotId;
         
         await _achievementHandlerService.UpDateAchievement(AchievementsTypes.GamePlayed, winner.Id);
         await _achievementHandlerService.UpDateAchievement(AchievementsTypes.WinGames, winner.Id);

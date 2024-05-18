@@ -20,15 +20,18 @@ public class IOProgramWrapper : ICorespondable
     private int timemax = 0 ;
     private int memorymax = 0;
     private bool isError = false;
+    private string _fileName;
+    private string _exePath;
     private Language _language;
 
     private ErrorGameStatus _errorType= ErrorGameStatus.InternalError;
     //bash -c "ps -p 119 -o vsz= | grep -o '[0-9]\+'"
     //apt-get install procps
     // Program Configuration parameter should be added
-    public IOProgramWrapper(string path,int memorylimit,int timelimit,Language language)
+    public IOProgramWrapper(string path,string fileName,int memorylimit,int timelimit,Language language)
     {
         _path = path;
+        _fileName = fileName;
         Console.WriteLine(_path+" siceiszka1");
         this.memorylimit = memorylimit;
         this.timelimit = timelimit;
@@ -38,15 +41,23 @@ public class IOProgramWrapper : ICorespondable
     // Not safe at all, maybe could be run as user without any privilages
     public async Task<bool> Run()
     {
+        Console.WriteLine("uruchominei programy");
         if (isRunning)
         {
-            throw new Exception("Program already is running");
+            return false;
         }
         isRunning = true;
         _process = new Process();
-       
-        
-        Console.WriteLine(_path+" siceiszka");
+            
+        var res = await Compile();
+        Console.WriteLine("po kompilacji");
+        if (res == false)
+        {
+            Console.WriteLine("niew udana compilacja");
+            isError = true;
+            return false;
+        }
+        Console.WriteLine("exe -"+  _exePath +" siceiszka");
         ProcessStartInfo startInfo;
         switch (_language)
         {
@@ -55,7 +66,7 @@ public class IOProgramWrapper : ICorespondable
                 {
                     //ulimit -v "+memorylimit+";
                     FileName = "bash",
-                    Arguments = "-c ./"+_path,
+                    Arguments = "-c ./"+_exePath,
                     //Arguments = "-c \"(ulimit -v 15000  ; ./"+_path+")\" ",
                     RedirectStandardInput = true,
                     RedirectStandardOutput = true,
@@ -71,7 +82,7 @@ public class IOProgramWrapper : ICorespondable
                 {
                     //ulimit -v "+memorylimit+";
                     FileName = "bash",
-                    Arguments = "-c \"python3 "+_path+ "\"",
+                    Arguments = "-c \"python3 "+_exePath+ "\"",
                     //Arguments = "-c \"(ulimit -v 15000  ; ./"+_path+")\" ",
                     RedirectStandardInput = true,
                     RedirectStandardOutput = true,
@@ -83,11 +94,12 @@ public class IOProgramWrapper : ICorespondable
                 };
                 break;
             case Language.Java:
+                Console.WriteLine($"-c \"java -cp {_path} {_exePath}\"");
                 startInfo = new ProcessStartInfo
                 {
                     //ulimit -v "+memorylimit+";
                     FileName = "bash",
-                    Arguments = "-c \"java "+_path+ "\"",
+                    Arguments = $"-c \"java -cp {_path} {_exePath}\"",
                     //Arguments = "-c \"(ulimit -v 15000  ; ./"+_path+")\" ",
                     RedirectStandardInput = true,
                     RedirectStandardOutput = true,
@@ -121,6 +133,39 @@ public class IOProgramWrapper : ICorespondable
        
         
         return true;
+    }
+
+    private async Task<bool> Compile()
+    {
+        try
+        {
+            var res = await Compile(_fileName, _language, _path);
+            string[] dirs;
+            switch (_language)
+            {
+                case Language.C:
+                    dirs = Directory.GetFiles($"{_path}", $"{Path.GetFileNameWithoutExtension(_fileName)}.out");
+                    if (dirs.Length != 0) _exePath = dirs[0];
+
+                    break;
+                case Language.PYTHON:
+                    dirs = Directory.GetFiles($"{_path}", $"{Path.GetFileNameWithoutExtension(_fileName)}.py");
+                    if (dirs.Length != 0) _exePath = dirs[0];
+                    break;
+                case Language.Java:
+                    dirs = Directory.GetFiles($"{_path}", $"{Path.GetFileNameWithoutExtension(_fileName)}.class");
+                    if (dirs.Length != 0) _exePath =$"{Path.GetFileNameWithoutExtension(_fileName)}" ;
+                    break;
+
+            }
+
+            return res;
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine("zlapanie ");
+            return false;
+        }
     }
 
     public async Task<string?> Get()
@@ -176,14 +221,17 @@ public class IOProgramWrapper : ICorespondable
         {
             try
             {
-                _process.Kill();
-                Console.WriteLine("killed "+_process.Id);
+                if (_process != null)
+                {
+                    _process.Kill();
+                    Console.WriteLine("killed "+_process.Id);
+                }
+                
             }
             catch (Exception e)
             {
                 isError = true;
-                Console.WriteLine("not killed "+_process.Id);
-                // ignored
+                
             }
         }
      
@@ -284,5 +332,72 @@ public class IOProgramWrapper : ICorespondable
     public ErrorGameStatus GetErrorType()
     {
         return _errorType;
+    }
+    
+    
+    private async Task<bool> Compile(string fileName, Language language,string where)
+    {
+        string filepath;
+        string compileCommand;
+        Console.WriteLine("pryba kompilacji");
+        
+        switch (language)
+        {
+            case (Language.C):
+                filepath =$"{where}/{ Path.GetFileNameWithoutExtension(fileName)}.cpp";
+                compileCommand = $"g++ -o {where}/{Path.GetFileNameWithoutExtension(fileName)}.out {filepath}"; 
+                
+                //string compileCommand = "-c g++ -o "+ id+".out "+filepath;
+                return await ExecuteCommand(compileCommand);
+            case (Language.PYTHON):
+                //filepath =$"{where}/{ Path.GetFileNameWithoutExtension(fileName)}.py";
+                //compileCommand = "chmod +x "+filepath;
+                //return await ExecuteCommand(compileCommand);
+                return true;
+            case (Language.Java):
+                filepath =$"{where}/{ Path.GetFileNameWithoutExtension(fileName)}.java";
+                compileCommand = "javac "+filepath;
+                return await ExecuteCommand(compileCommand);
+        }
+    
+
+        return false;
+    }
+    private async Task<bool> ExecuteCommand(string command)
+    {
+        Console.WriteLine("compisacja start");
+        Process compilerProcess = new Process();
+        compilerProcess.StartInfo.FileName = "bash"; // or "cmd" if running on Windows
+        compilerProcess.StartInfo.Arguments = $"-c \"{command}\"";;
+        compilerProcess.StartInfo.RedirectStandardOutput = true;
+        compilerProcess.StartInfo.RedirectStandardError = true;
+        compilerProcess.StartInfo.UseShellExecute = false;
+        compilerProcess.StartInfo.CreateNoWindow = true;
+        
+        Console.WriteLine($"rey {command}");
+        compilerProcess.Start();
+        Console.WriteLine("rey2");
+        
+        compilerProcess.WaitForExit(2000);
+        Console.WriteLine("koniec czekanie");
+        if (compilerProcess.HasExited)
+        {
+          
+            // Check the exit code
+            if (compilerProcess.ExitCode == 0)
+            {
+                Console.WriteLine("błądu niebył");
+                return true;
+            }
+            else
+            {
+                Console.WriteLine("był błąd ");
+                return false;
+            }
+        }
+
+        Console.WriteLine("nie zostało skończonne ");
+        compilerProcess.Kill();
+        return false;
     }
 }
