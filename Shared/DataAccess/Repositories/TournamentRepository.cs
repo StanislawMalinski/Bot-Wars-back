@@ -56,6 +56,7 @@ namespace Shared.DataAccess.Repositories
         public async Task<EntityEntry<TournamentReference>> AddTournamentReference(TournamentReference tournamentReference)
         {
             return await _dataContext.TournamentReferences.AddAsync(tournamentReference);
+            
         }
 
         public async Task<bool> TournamentStarted(long tourId)
@@ -78,6 +79,15 @@ namespace Shared.DataAccess.Repositories
 
         public async Task<EntityEntry<Tournament>> AddTournament(Tournament tournament)
         {
+            
+            _Task task = new _Task
+            {
+                OperatingOn = 0,
+                ScheduledOn = DateTime.Now,
+                Status = TaskStatus.ToDo,
+                Type = TaskTypes.ScheduleTournament
+            };
+            await _dataContext.Tasks.AddAsync(task);
             return await _dataContext.Tournaments.AddAsync(tournament);
         }
 
@@ -260,22 +270,12 @@ namespace Shared.DataAccess.Repositories
             return true;
         }
 
-        public async Task<bool> ScheduleTournament(long tournamentId)
+        public async Task TournamentTaskDelete(long tournamentId)
         {
-            var res = await _dataContext.Tournaments.FindAsync(tournamentId);
-            if (res == null) return false;
-            if (res.Status != TournamentStatus.NOTSCHEDULED) return false;
-            res.Status = TournamentStatus.SCHEDULED;
-            _Task task = new _Task
-            {
-                OperatingOn = tournamentId,
-                ScheduledOn = res.TournamentsDate,
-                Status = TaskStatus.ToDo,
-                Type = TaskTypes.PlayTournament
-            };
-            await _dataContext.Tasks.AddAsync(task);
-            await _dataContext.SaveChangesAsync();
-            return true;
+            var res = await _dataContext.Tasks.FirstOrDefaultAsync(x =>
+                x.Status == TaskStatus.ToDo && x.Type == TaskTypes.PlayTournament && x.OperatingOn == tournamentId);
+            if(res == null) return;
+            _dataContext.Tasks.Remove(res);
         }
 
         public  IQueryable<Tournament> GetTournamentsQuery()

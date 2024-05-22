@@ -67,6 +67,15 @@ public class TScheduler: IInvocable
                     await _schedulerRepository.SaveChangeAsync();
                     break;
                 case TaskTypes.ScheduleValidation:
+                    var bot = await _schedulerRepository.GetBotNotValidated();
+                    if (bot != null)
+                    {
+                        bot.Validation = BotStatus.NotValidated;
+                        await _taskRepository.AddTask(TaskTypes.ValidateBot, bot.Id, DateTime.Now);
+                        
+                    } 
+                    await _schedulerRepository.TaskDone(t.Id);
+                    await _schedulerRepository.SaveChangeAsync();
                     break;
             }
         }

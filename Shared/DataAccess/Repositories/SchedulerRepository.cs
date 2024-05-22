@@ -69,8 +69,7 @@ public class SchedulerRepository
     
     public async Task<Bot?> GetBotNotValidated()
     {
-        return await _dataContext.Bots.FirstOrDefaultAsync(x => x.Validation == BotStatus.NotValidated);
-        
+        return await _dataContext.Bots.FirstOrDefaultAsync(x => x.Validation == BotStatus.ToScheduleForValidation);
     }
 
     public async Task TaskDone(long taskId)

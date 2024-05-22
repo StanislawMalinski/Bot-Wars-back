@@ -325,7 +325,7 @@ public class Seeder
                     "Enter the world of strategic battles in the Dota 2 Clash of Titans. Assemble your team, choose your heroes, and conquer the opposition.",
                 PostedDate = DateTime.Now,
                 TournamentsDate = new DateTime(2025, 10, 20),
-                Status = TournamentStatus.NOTSCHEDULED,
+                Status = TournamentStatus.SCHEDULED,
                 Constraints = "Teams must adhere to the standard Dota 2 competitive rules.",
                 CreatorId = 1, MemoryLimit = 15000, TimeLimit = 2000,
                 Image = Convert.FromBase64String(
@@ -341,89 +341,89 @@ public class Seeder
             new Bot()
             {
                 Id = 1, GameId = 1, PlayerId = 1, BotFile = "quake3_bot_1", FileId = 2, MemoryUsed = 8000,
-                TimeUsed = 100, Language = Language.C
+                TimeUsed = 100, Language = Language.C,Validation = BotStatus.NotValidated
             },
             new Bot()
             {
                 Id = 2, GameId = 1, PlayerId = 2, BotFile = "quake3_bot_2", FileId = 3, MemoryUsed = 8000,
-                TimeUsed = 100, Language = Language.C
+                TimeUsed = 100, Language = Language.C,Validation = BotStatus.NotValidated
             },
             new Bot()
             {
                 Id = 3, GameId = 1, PlayerId = 3, BotFile = "zelda_bot_1", FileId = 2, MemoryUsed = 8000,
-                TimeUsed = 100, Language = Language.C
+                TimeUsed = 100, Language = Language.C,Validation = BotStatus.NotValidated
             },
             new Bot()
             {
                 Id = 4, GameId = 1, PlayerId = 4, BotFile = "zelda_bot_2", FileId = 2, MemoryUsed = 8000,
-                TimeUsed = 100, Language = Language.C
+                TimeUsed = 100, Language = Language.C,Validation = BotStatus.NotValidated
             },
             new Bot()
             {
                 Id = 5, GameId = 1, PlayerId = 5, BotFile = "fifa22_bot_1", FileId = 4, MemoryUsed = 8000,
-                TimeUsed = 100, Language = Language.C
+                TimeUsed = 100, Language = Language.C,Validation = BotStatus.NotValidated
             },
             new Bot()
             {
                 Id = 6, GameId = 1, PlayerId = 6, BotFile = "fifa22_bot_2", FileId = 2, MemoryUsed = 8000,
-                TimeUsed = 100, Language = Language.C
+                TimeUsed = 100, Language = Language.C,Validation = BotStatus.NotValidated
             },
             new Bot()
             {
                 Id = 7, GameId = 1, PlayerId = 7, BotFile = "amongus_bot_1", FileId = 3, MemoryUsed = 8000,
-                TimeUsed = 100, Language = Language.C
+                TimeUsed = 100, Language = Language.C,Validation = BotStatus.NotValidated
             },
             new Bot()
             {
                 Id = 8, GameId = 1, PlayerId = 8, BotFile = "amongus_bot_2", FileId = 4, MemoryUsed = 8000,
-                TimeUsed = 100, Language = Language.C
+                TimeUsed = 100, Language = Language.C,Validation = BotStatus.NotValidated
             },
             new Bot()
             {
                 Id = 9, GameId = 1, PlayerId = 9, BotFile = "minecra", FileId = 2, MemoryUsed = 8000,
-                TimeUsed = 100, Language = Language.C
+                TimeUsed = 100, Language = Language.C,Validation = BotStatus.NotValidated
             },
             new Bot()
             {
                 Id = 10, GameId = 1, PlayerId = 10, BotFile = "minecr", FileId = 4, MemoryUsed = 8000,
-                TimeUsed = 100, Language = Language.C
+                TimeUsed = 100, Language = Language.C,Validation = BotStatus.NotValidated
             },
             new Bot()
             {
                 Id = 11, GameId = 2, PlayerId = 2, BotFile = "minecraft_bot_2", FileId = 9, MemoryUsed = 8000,
-                TimeUsed = 100, Language = Language.PYTHON
+                TimeUsed = 100, Language = Language.PYTHON,Validation = BotStatus.NotValidated
             }
             ,
             new Bot()
             {
                 Id = 12, GameId = 2, PlayerId = 3, BotFile = "minecraft_bot_2", FileId = 10, MemoryUsed = 8000,
-                TimeUsed = 100, Language = Language.PYTHON
+                TimeUsed = 100, Language = Language.PYTHON,Validation = BotStatus.NotValidated
             }
             ,
             new Bot()
             {
                 Id = 13, GameId = 2, PlayerId = 4, BotFile = "minecraft_bot_2", FileId = 11, MemoryUsed = 8000,
-                TimeUsed = 100, Language = Language.C
+                TimeUsed = 100, Language = Language.C,Validation = BotStatus.NotValidated
             },
             new Bot()
             {
                 Id = 14, GameId = 2, PlayerId = 5, BotFile = "minecraft_bot_2", FileId = 9, MemoryUsed = 8000,
-                TimeUsed = 100, Language = Language.PYTHON
+                TimeUsed = 100, Language = Language.PYTHON,Validation = BotStatus.NotValidated
             },
             new Bot()
             {
                 Id = 15, GameId = 2, PlayerId = 6, BotFile = "minecraft_bot_2", FileId = 10, MemoryUsed = 8000,
-                TimeUsed = 100, Language = Language.PYTHON
+                TimeUsed = 100, Language = Language.PYTHON,Validation = BotStatus.NotValidated
             },
             new Bot()
             {
                 Id = 16, GameId = 2, PlayerId = 7, BotFile = "minecraft_bot_2", FileId = 11, MemoryUsed = 8000,
-                TimeUsed = 100, Language = Language.C
+                TimeUsed = 100, Language = Language.C,Validation = BotStatus.NotValidated
             },
             new Bot()
             {
                 Id = 17, GameId = 2, PlayerId = 8, BotFile = "bot_zero_5.java", FileId = 8, MemoryUsed = 8000,
-                TimeUsed = 100, Language = Language.Java
+                TimeUsed = 100, Language = Language.Java,Validation = BotStatus.NotValidated
             }
             
             

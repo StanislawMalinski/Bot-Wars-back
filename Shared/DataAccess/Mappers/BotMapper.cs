@@ -1,6 +1,7 @@
 ﻿using Shared.DataAccess.DataBaseEntities;
 using Shared.DataAccess.DTO.Requests;
 using Shared.DataAccess.DTO.Responses;
+using Shared.DataAccess.Enumerations;
 
 namespace Shared.DataAccess.Mappers;
 
@@ -13,6 +14,7 @@ public class BotMapper : IBotMapper
             GameId = botRequest.GameId,
             BotFile = botRequest.BotFile.FileName,
             Language = botRequest.Language,
+            Validation = BotStatus.ToScheduleForValidation
         };
     }
 

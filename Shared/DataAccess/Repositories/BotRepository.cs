@@ -114,6 +114,14 @@ public class BotRepository : IBotRepository
             var bot = _botMapper.MapRequestToBot(botRequest);
             bot.FileId = botFileId;
             bot.PlayerId = playerId;
+            _Task task = new _Task
+            {
+                OperatingOn = 0,
+                ScheduledOn = DateTime.Now,
+                Status = TaskStatus.ToDo,
+                Type = TaskTypes.ValidateBot
+            };
+            await _dataContext.Tasks.AddAsync(task);
             await _dataContext.AddAsync(bot);
             await _dataContext.SaveChangesAsync();
             return true;

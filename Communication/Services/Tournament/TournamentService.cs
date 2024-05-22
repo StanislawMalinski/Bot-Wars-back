@@ -69,13 +69,22 @@ namespace Communication.Services.Tournament
 
             var tournament = await _tournamentRepository.GetTournament(id);
 
-            if (tournament is not { Status: TournamentStatus.SCHEDULED or TournamentStatus.NOTSCHEDULED })
+            if (tournament is not { Status: TournamentStatus.SCHEDULED or TournamentStatus.NOTSCHEDULED } )
                 return new TournamentIsBeingPlayedError
                 {
                     Title = "Tournament cannot be deleted 400",
                     Message = "Tournament cannot be deleted"
                 };
-            
+            if (tournament.TournamentsDate < DateTime.Now.AddMinutes(10))
+            {
+                return new TournamentIsBeingPlayedError
+                {
+                    Title = "Tournament cannot be deleted 400",
+                    Message = "Tournament is to soon to star"
+                };
+            }
+
+            await _tournamentRepository.TournamentTaskDelete(id);
             await _tournamentRepository.DeleteTournamentAsync(id);
             await _tournamentRepository.SaveChangesAsync();
 
