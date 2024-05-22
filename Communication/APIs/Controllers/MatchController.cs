@@ -1,9 +1,13 @@
-﻿using Communication.APIs.Controllers.Helper;
+﻿using System.Net;
+using Communication.APIs.Controllers.Helper;
 using Communication.ServiceInterfaces;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Net.Http.Headers;
 using Shared.DataAccess.DTO;
 using Shared.DataAccess.DTO.Requests;
 using Shared.DataAccess.Pagination;
+using ContentDispositionHeaderValue = System.Net.Http.Headers.ContentDispositionHeaderValue;
+using MediaTypeHeaderValue = System.Net.Http.Headers.MediaTypeHeaderValue;
 
 namespace Communication.APIs.Controllers;
 
@@ -39,5 +43,36 @@ public class MatchController : Controller
             this.ErrorResult
         ); 
     }
+    
+    
+    [HttpGet("GetLogFile")]
+    public async Task<HttpResponseMessage> GetFile([FromQuery]  long matchId)
+    {
+        //if (matchId == 0) return;
+
+        
+        
+        var result = await _matchService.GetLogFile(matchId);
+        if (result.IsError) throw new NotImplementedException();
+        var file = result.Match(
+            x => x.Data,
+            null!);
+        byte[] fileBytes;
+        using (var memoryStream = new MemoryStream())
+        {
+            file.CopyTo(memoryStream);
+            fileBytes = memoryStream.ToArray();
+        }
+        
+        HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.OK);
+        Console.WriteLine(fileBytes.Length);
+        response.Content = new ByteArrayContent(fileBytes);
+        response.Content.Headers.ContentDisposition = new ContentDispositionHeaderValue("attachment");
+        response.Content.Headers.ContentDisposition.FileName = file.FileName;
+        response.Content.Headers.ContentType = new MediaTypeHeaderValue("text/html");
+
+        return response;
+    }
+    
 
 }

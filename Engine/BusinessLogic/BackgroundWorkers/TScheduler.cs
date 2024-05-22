@@ -13,12 +13,14 @@ public class TScheduler: IInvocable
     private IScheduler _scheduler;
     private SchedulerRepository _schedulerRepository;
     private InstanceSettings _instanceSettings;
+    private TaskRepository _taskRepository;
 
-    public TScheduler(SchedulerRepository schedulerRepository, IScheduler scheduler, InstanceSettings instanceSettings)
+    public TScheduler(SchedulerRepository schedulerRepository, TaskRepository taskRepository, IScheduler scheduler, InstanceSettings instanceSettings)
     {
         _schedulerRepository = schedulerRepository;
         _scheduler = scheduler;
         _instanceSettings = instanceSettings;
+        _taskRepository = taskRepository;
     }
 
     public async Task Invoke()
@@ -52,6 +54,19 @@ public class TScheduler: IInvocable
                             .EverySecond().Once().PreventOverlapping("Validation worker " + t.Id);
                         Console.WriteLine("zaskejulowyny validator");
                     }
+                    break;
+                case TaskTypes.ScheduleTournament:
+                    var tour = await _schedulerRepository.GetTournamentNotScheduled();
+                    if (tour != null)
+                    {
+                        tour.Status = TournamentStatus.SCHEDULED;
+                        await _taskRepository.AddTask(TaskTypes.PlayTournament, tour.Id, tour.TournamentsDate);
+                        
+                    } 
+                    await _schedulerRepository.TaskDone(t.Id);
+                    await _schedulerRepository.SaveChangeAsync();
+                    break;
+                case TaskTypes.ScheduleValidation:
                     break;
             }
         }

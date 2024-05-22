@@ -158,8 +158,24 @@ public class PlayerService : IPlayerService
         return new Success();
     }
 
-    public async Task<HandlerResult<Success, IErrorResult>> DeletePlayerAsync(long id)
+    public async Task<HandlerResult<Success, IErrorResult>> DeletePlayerAsync(long id,PasswordRequest request)
     {
+        var player = await _playerRepository.GetPlayer(id);
+        
+        if (player is null)
+        {
+            return new BadAccountInformationError()
+            {
+                Title = "Return null",
+                Message = "Niepoprawny email lub haslo"
+            };
+        }
+        
+        var passwordMatchResult = await _passwordHasher.VerifyPasswordHash(request.Password, player.HashedPassword);
+        if (passwordMatchResult.IsError)
+        {
+            return new AccessDeniedError() { };
+        }
         await _tournamentService.DeleteUserScheduledTournaments(id);
         if (!await _playerRepository.DeletePlayerAsync(id))
         {

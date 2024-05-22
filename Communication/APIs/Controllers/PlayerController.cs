@@ -92,10 +92,10 @@ namespace Communication.APIs.Controllers
 
         [HttpDelete("deleteAccount")]
         [Authorize(Roles = "User,Admin")]
-        public async Task<IActionResult> DeleteAccount()
+        public async Task<IActionResult> DeleteAccount([FromBody] PasswordRequest passwordRequest)
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            return (await _playerService.DeletePlayerAsync(long.Parse(userId))).Match(Ok, this.ErrorResult);
+            return (await _playerService.DeletePlayerAsync(long.Parse(userId),passwordRequest)).Match(Ok, this.ErrorResult);
         }
 
         [HttpGet("getBotsForPlayer")]

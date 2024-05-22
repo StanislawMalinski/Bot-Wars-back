@@ -22,6 +22,6 @@ public interface IPlayerService
     Task<HandlerResult<SuccessData<PlayerInfo>, IErrorResult>> GetPlayerInfoAsync(string ?playerName);
     Task<HandlerResult<Success, IErrorResult>> ChangePlayerImage(PlayerImageRequest imageRequest, long playerId);
     Task<HandlerResult<SuccessData<string>, IErrorResult>> GetPlayerImage(long playerId);
-    Task<HandlerResult<Success, IErrorResult>> DeletePlayerAsync(long id);
+    Task<HandlerResult<Success, IErrorResult>> DeletePlayerAsync(long id,PasswordRequest request);
     Task<HandlerResult<SuccessData<List<BotResponse>>, IErrorResult>> GetPlayerBots(long id);
 }

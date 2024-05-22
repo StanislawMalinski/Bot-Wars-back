@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Shared.DataAccess.Context;
 using Shared.DataAccess.DataBaseEntities;
+using Shared.DataAccess.Enumerations;
 using Shared.Results;
 using Shared.Results.ErrorResults;
 using Shared.Results.IResults;
@@ -59,5 +60,27 @@ public class SchedulerRepository
         res.Status = TaskStatus.Doing;
         await _dataContext.SaveChangesAsync();
         return true;
+    }
+
+    public async Task<Tournament?> GetTournamentNotScheduled()
+    {
+        return await _dataContext.Tournaments.FirstOrDefaultAsync(x => x.Status == TournamentStatus.NOTSCHEDULED);
+    }
+    
+    public async Task<Bot?> GetBotNotValidated()
+    {
+        return await _dataContext.Bots.FirstOrDefaultAsync(x => x.Validation == BotStatus.NotValidated);
+        
+    }
+
+    public async Task TaskDone(long taskId)
+    {
+        var res = await _dataContext.Tasks.FindAsync(taskId);
+        if (res != null) res.Status = TaskStatus.Done;
+    }
+
+    public async Task SaveChangeAsync()
+    {
+        await _dataContext.SaveChangesAsync();
     }
 }
