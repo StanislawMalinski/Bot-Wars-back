@@ -315,6 +315,21 @@ public class Seeder
                 CreatorId = 1, MemoryLimit = 15000, TimeLimit = 2000,
                 Image = Convert.FromBase64String(
                     "iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAAXNSR0IArs4c6QAAADpJREFUKFPt0KERADAIBMF/j0JB/wXRCS08M/EkDeT0qqO7q7vxigAk6epI4sN10dkTEcpMVNUKzQwDWXAoJWfFnuMAAAAASUVORK5CYII=")
+            },
+            new Tournament()
+            {
+                Id = 11,
+                GameId = 10,
+                TournamentTitle = "Dota 2 Clash of Titans",
+                Description =
+                    "Enter the world of strategic battles in the Dota 2 Clash of Titans. Assemble your team, choose your heroes, and conquer the opposition.",
+                PostedDate = DateTime.Now,
+                TournamentsDate = new DateTime(2025, 10, 20),
+                Status = TournamentStatus.NOTSCHEDULED,
+                Constraints = "Teams must adhere to the standard Dota 2 competitive rules.",
+                CreatorId = 1, MemoryLimit = 15000, TimeLimit = 2000,
+                Image = Convert.FromBase64String(
+                    "iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAAXNSR0IArs4c6QAAADpJREFUKFPt0KERADAIBMF/j0JB/wXRCS08M/EkDeT0qqO7q7vxigAk6epI4sN10dkTEcpMVNUKzQwDWXAoJWfFnuMAAAAASUVORK5CYII=")
             }
         };
     }

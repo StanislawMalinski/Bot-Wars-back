@@ -45,7 +45,6 @@ namespace Communication.APIs.Controllers
         }
         
         [HttpGet("GetPlayerInfoByName")]
-        [Authorize(Roles = "User,Admin")]
         public async Task<IActionResult> GetPlayerInfoByName(string playerName)
         {
             return (await _playerService.GetPlayerInfoAsync(playerName)).Match(Ok, this.ErrorResult);
