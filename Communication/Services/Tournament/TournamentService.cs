@@ -3,6 +3,7 @@ using Shared.DataAccess.DataBaseEntities;
 using Shared.DataAccess.DTO;
 using Shared.DataAccess.DTO.Requests;
 using Shared.DataAccess.DTO.Responses;
+using Shared.DataAccess.Enumerations;
 using Shared.DataAccess.Mappers;
 using Shared.DataAccess.Pagination;
 using Shared.DataAccess.Repositories;
@@ -54,8 +55,7 @@ namespace Communication.Services.Tournament
 
         public async Task<HandlerResult<Success, IErrorResult>> DeleteTournament(long id, long playerId)
         {
-
-
+            
             var authorizationResult = await _playerRepository.GetPlayer(playerId);
             
             if (authorizationResult == null  || ( ! await _tournamentRepository.TournamentCreator(id,playerId) && authorizationResult.RoleId != 2))
@@ -67,8 +67,19 @@ namespace Communication.Services.Tournament
                 };
             }
 
+            var tournament = await _tournamentRepository.GetTournament(id);
+
+            if (tournament is not { Status: TournamentStatus.SCHEDULED or TournamentStatus.NOTSCHEDULED })
+                return new TournamentIsBeingPlayedError
+                {
+                    Title = "Tournament cannot be deleted 400",
+                    Message = "Tournament cannot be deleted"
+                };
+            
             await _tournamentRepository.DeleteTournamentAsync(id);
             await _tournamentRepository.SaveChangesAsync();
+
+
             return new Success();
            
         }
