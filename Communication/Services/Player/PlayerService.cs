@@ -53,20 +53,6 @@ public class PlayerService : IPlayerService
         _userContextRepository = userContextRepository;
         _authorizationService = authorizationService;
     }
-
-    public async Task<HandlerResult<SuccessData<PlayerDto>, IErrorResult>> getPlayerInfo(long playerId)
-    {
-        var resPlayer = await _playerRepository.GetPlayer(playerId);
-        if (resPlayer is null)
-        {
-            return new EntityNotFoundErrorResult();
-        }
-
-        return new SuccessData<PlayerDto>()
-        {
-            Data = _playerMapper.ToDto(resPlayer)
-        };
-    }
     
     public async Task<HandlerResult<Success, IErrorResult>> RegisterNewPlayer(RegistrationRequest registrationRequest)
     {

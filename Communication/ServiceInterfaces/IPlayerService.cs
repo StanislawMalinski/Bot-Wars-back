@@ -9,7 +9,6 @@ namespace Communication.ServiceInterfaces;
 
 public interface IPlayerService
 {
-    Task<HandlerResult<SuccessData<PlayerDto>, IErrorResult>> getPlayerInfo(long PlayerId);
     Task<HandlerResult<Success, IErrorResult>> RegisterNewPlayer(RegistrationRequest registrationRequest);
     Task<HandlerResult<Success, IErrorResult>> RegisterNewAdmin(RegistrationRequest registrationRequest);
     Task<HandlerResult<Success, IErrorResult>> resetPassWordByLogin(String Login);
