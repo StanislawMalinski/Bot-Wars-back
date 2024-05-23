@@ -28,6 +28,7 @@ public class ValidationWorker: IInvocable
         Console.Write("validanion ffds begin");
         var bot = (await _resolver.GetBot(task.OperatingOn)).Match(x=>x.Data,x=>null);
         var game = (await _resolver.GetGame(task.OperatingOn)).Match(x=>x.Data,x=>null);
+        if(bot == null  || game == null) return;
         GameResult result = await gameManager.PlayGame(game, new List<Bot>()
         {
             bot,

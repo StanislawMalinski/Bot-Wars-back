@@ -85,7 +85,8 @@ namespace Shared.DataAccess.Repositories
                 OperatingOn = 0,
                 ScheduledOn = DateTime.Now,
                 Status = TaskStatus.ToDo,
-                Type = TaskTypes.ScheduleTournament
+                Type = TaskTypes.ScheduleTournament,
+                EngineId = 1
             };
             await _dataContext.Tasks.AddAsync(task);
             return await _dataContext.Tournaments.AddAsync(tournament);

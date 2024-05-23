@@ -119,7 +119,8 @@ public class BotRepository : IBotRepository
                 OperatingOn = 0,
                 ScheduledOn = DateTime.Now,
                 Status = TaskStatus.ToDo,
-                Type = TaskTypes.ValidateBot
+                Type = TaskTypes.ScheduleValidation,
+                EngineId = 1
             };
             await _dataContext.Tasks.AddAsync(task);
             await _dataContext.AddAsync(bot);

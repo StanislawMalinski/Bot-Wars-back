@@ -34,6 +34,19 @@ public class TaskRepository
         };
         return await _taskDataContext.AddAsync(task);
     }
+    public async Task<EntityEntry<_Task>> AddTask(TaskTypes type, long operatingOn,DateTime scheduledOn ,int enginId, TaskStatus status = TaskStatus.Unassigned)
+    {
+        
+        _Task task = new _Task
+        {
+            Type = type,
+            OperatingOn = operatingOn,
+            ScheduledOn = scheduledOn,
+            Status = status,
+            EngineId = enginId
+        };
+        return await _taskDataContext.AddAsync(task);
+    }
     public async Task<EntityEntry<_Task>> AddTask(_Task task)
     {
         return await _taskDataContext.AddAsync(task);

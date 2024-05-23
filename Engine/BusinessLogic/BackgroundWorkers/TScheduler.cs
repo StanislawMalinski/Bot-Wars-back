@@ -60,7 +60,7 @@ public class TScheduler: IInvocable
                     if (tour != null)
                     {
                         tour.Status = TournamentStatus.SCHEDULED;
-                        await _taskRepository.AddTask(TaskTypes.PlayTournament, tour.Id, tour.TournamentsDate);
+                        await _taskRepository.AddTask(TaskTypes.PlayTournament, tour.Id, tour.TournamentsDate,1);
                         
                     } 
                     await _schedulerRepository.TaskDone(t.Id);
@@ -71,7 +71,7 @@ public class TScheduler: IInvocable
                     if (bot != null)
                     {
                         bot.Validation = BotStatus.NotValidated;
-                        await _taskRepository.AddTask(TaskTypes.ValidateBot, bot.Id, DateTime.Now);
+                        await _taskRepository.AddTask(TaskTypes.ValidateBot, bot.Id, DateTime.Now,1);
                         
                     } 
                     await _schedulerRepository.TaskDone(t.Id);
