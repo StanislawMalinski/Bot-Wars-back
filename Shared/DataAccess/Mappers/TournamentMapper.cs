@@ -53,8 +53,6 @@ namespace Shared.DataAccess.Mappers
 
         public TournamentResponse TournamentToTournamentResponse(Tournament tournament)
         {
-            Console.WriteLine("wchodzi");
-
             var tournamentResponse = new TournamentResponse()
             {
                 Id = tournament.Id,
@@ -76,34 +74,24 @@ namespace Shared.DataAccess.Mappers
                 
                 WasPlayedOut = tournament.Status == TournamentStatus.DONE
             };
-            Console.WriteLine("maper0");
-
             if (tournament.TournamentReference?.FirstOrDefault() != null && tournament.TournamentReference.First().Bot != null && tournament.TournamentReference.First().Bot.Player != null)
             {
-                Console.WriteLine("maper1");
                 tournamentResponse.PlayersBots = tournament.TournamentReference
                     .Select(x => new TournamentResponse.BotPlayer(x.botId, x.Bot.Player.Login)).ToList();
             }
             else
             {
-                Console.WriteLine("maper2");
-
                 tournamentResponse.PlayersBots = new List<TournamentResponse.BotPlayer>();
             }
             if (tournament.Image != null)
             {
-                Console.WriteLine("maper3");
-
                 tournamentResponse.Image = Convert.ToBase64String(tournament.Image);
             }
-            Console.WriteLine("maper4");
-
             if (tournament.Creator != null)
             {
                 tournamentResponse.CreatorName = tournament.Creator.Login;
             }
-            Console.WriteLine("maper5");
-
+            
             return tournamentResponse;
         }
 

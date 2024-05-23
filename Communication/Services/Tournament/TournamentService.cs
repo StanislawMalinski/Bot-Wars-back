@@ -116,9 +116,6 @@ namespace Communication.Services.Tournament
             GetListOfTournamentsFiltered(
                 TournamentFilterRequest tournamentFilterRequest, PageParameters pageParameters)
         {
-            Console.WriteLine("Start of method");
-
-            
             var unfilteredTournaments = _tournamentRepository.GetTournamentsQuery();
 
             
@@ -162,7 +159,6 @@ namespace Communication.Services.Tournament
                             pageParameters.PageSize, count)
                     };
                 }
-                Console.WriteLine("tu jest prob lem");
                 var tournaments = await unfilteredTournaments
                     .Select(tournament => _mapper.TournamentToTournamentResponse(tournament))
                     .Skip((pageParameters.PageNumber) * pageParameters.PageSize)
