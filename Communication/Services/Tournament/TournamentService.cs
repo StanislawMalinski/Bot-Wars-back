@@ -23,7 +23,8 @@ namespace Communication.Services.Tournament
         private readonly IPlayerRepository _playerRepository;
         private readonly IBotRepository _botRepository;
 
-        public TournamentService(TournamentRepository tournamentRepository,IGameRepository gameRepository,ITournamentMapper tournamentMapper, IPlayerRepository playerRepository,IBotRepository botRepository)
+        public TournamentService(TournamentRepository tournamentRepository, IGameRepository gameRepository,
+            ITournamentMapper tournamentMapper, IPlayerRepository playerRepository, IBotRepository botRepository)
         {
             _tournamentRepository = tournamentRepository;
             _gameRepository = gameRepository;
@@ -43,7 +44,7 @@ namespace Communication.Services.Tournament
 
             var game = await _gameRepository.GetGame(tournamentRequest.GameId);
             if (game is null) return new EntityNotFoundErrorResult();
-            
+
 
             var tournament = _mapper
                 .TournamentRequestToTournament(tournamentRequest);
@@ -55,10 +56,10 @@ namespace Communication.Services.Tournament
 
         public async Task<HandlerResult<Success, IErrorResult>> DeleteTournament(long id, long playerId)
         {
-            
             var authorizationResult = await _playerRepository.GetPlayer(playerId);
-            
-            if (authorizationResult == null  || ( ! await _tournamentRepository.TournamentCreator(id,playerId) && authorizationResult.RoleId != 2))
+
+            if (authorizationResult == null || (!await _tournamentRepository.TournamentCreator(id, playerId) &&
+                                                authorizationResult.RoleId != 2))
             {
                 return new NotTournamentCreatorError()
                 {
@@ -69,7 +70,7 @@ namespace Communication.Services.Tournament
 
             var tournament = await _tournamentRepository.GetTournament(id);
 
-            if (tournament is not { Status: TournamentStatus.SCHEDULED or TournamentStatus.NOTSCHEDULED } )
+            if (tournament is not { Status: TournamentStatus.SCHEDULED or TournamentStatus.NOTSCHEDULED })
                 return new TournamentIsBeingPlayedError
                 {
                     Title = "Tournament cannot be deleted 400",
@@ -90,7 +91,6 @@ namespace Communication.Services.Tournament
 
 
             return new Success();
-           
         }
 
         public async Task<HandlerResult<Success, IErrorResult>> DeleteUserScheduledTournaments(long userId)
@@ -109,7 +109,6 @@ namespace Communication.Services.Tournament
 
             await _tournamentRepository.SaveChangesAsync();
             return new Success();
-            
         }
 
 
@@ -118,24 +117,22 @@ namespace Communication.Services.Tournament
                 TournamentFilterRequest tournamentFilterRequest, PageParameters pageParameters)
         {
             var unfilteredTournaments = _tournamentRepository.GetTournamentsQuery();
-            int count;
+
+            
             if (tournamentFilterRequest.MaxPlayOutDate != null)
             {
-
                 unfilteredTournaments = unfilteredTournaments.Where(tournament =>
                     tournament.TournamentsDate <= tournamentFilterRequest.MaxPlayOutDate);
             }
 
             if (tournamentFilterRequest.MinPlayOutDate != null)
             {
-
                 unfilteredTournaments = unfilteredTournaments.Where(tournament =>
                     tournament.TournamentsDate >= tournamentFilterRequest.MinPlayOutDate);
             }
 
             if (tournamentFilterRequest.Creator != null)
             {
-
                 unfilteredTournaments = unfilteredTournaments.Where(tournament =>
                     tournamentFilterRequest.Creator == null
                     || tournamentFilterRequest.Creator.Equals(tournament.Creator.Login));
@@ -143,92 +140,79 @@ namespace Communication.Services.Tournament
 
             if (tournamentFilterRequest.TournamentTitle != null)
             {
-
                 unfilteredTournaments = unfilteredTournaments.Where(tournament =>
                     tournament.TournamentTitle.Contains(tournamentFilterRequest.TournamentTitle));
             }
-       
+
+            
+            int count = unfilteredTournaments.Count();
+
+            
             if (tournamentFilterRequest.UserParticipation == null)
             {
-                
-                count = unfilteredTournaments.Count();
                 if (Math.Min(pageParameters.PageSize,
-                        Math.Max(0, count - (pageParameters.PageNumber - 1) * pageParameters.PageSize)) == 0)
+                        Math.Max(0, count - (pageParameters.PageNumber) * pageParameters.PageSize)) == 0)
                 {
                     return new SuccessData<PageResponse<TournamentResponse>>()
                     {
-                        Data = new PageResponse<TournamentResponse>(new List<TournamentResponse>(),pageParameters.PageSize, count)
+                        Data = new PageResponse<TournamentResponse>(new List<TournamentResponse>(),
+                            pageParameters.PageSize, count)
                     };
                 }
-                
                 var tournaments = await unfilteredTournaments
                     .Select(tournament => _mapper.TournamentToTournamentResponse(tournament))
-                    .Skip(Math.Min((pageParameters.PageNumber-1) * pageParameters.PageSize,count))
-                    .Take( Math.Min( pageParameters.PageSize,  Math.Max(0,count- (pageParameters.PageNumber-1) * pageParameters.PageSize)    ) )
+                    .Skip((pageParameters.PageNumber) * pageParameters.PageSize)
+                    .Take(Math.Min(pageParameters.PageSize,
+                        Math.Max(0, count - (pageParameters.PageNumber) * pageParameters.PageSize)))
                     .ToListAsync();
-                
+
                 return new SuccessData<PageResponse<TournamentResponse>>()
                 {
-                    Data = new PageResponse<TournamentResponse>(tournaments,pageParameters.PageSize, count)
+                    Data = new PageResponse<TournamentResponse>(tournaments, pageParameters.PageSize, count)
                 };
             }
 
-
+            
             var filteredTournaments = await unfilteredTournaments
                 .Select(tournament => _mapper.TournamentToTournamentResponse(tournament))
                 .ToListAsync();
+
             var filteredTournamentList = new List<TournamentResponse>();
-            
 
             foreach (var tournamentResponse in filteredTournaments)
             {
-
                 if ((await PlayerParticipate(tournamentResponse.Id, tournamentFilterRequest.UserParticipation))
                     .IsSuccess)
                 {
-                    /*if (skipped++ < pageParameters.PageNumber * pageParameters.PageSize)
-                    {
-                        continue;
-                    }
-                    */
-
                     filteredTournamentList.Add(tournamentResponse);
-                    /*if (filteredTournamentList.Count >= pageParameters.PageSize)
-                    {
-                        break;
-                    }*/
                 }
             }
+
             count = filteredTournamentList.Count();
+
             if (Math.Min(pageParameters.PageSize,
-                    Math.Max(0, count - (pageParameters.PageNumber - 1) * pageParameters.PageSize)) == 0)
+                    Math.Max(0, count - (pageParameters.PageNumber) * pageParameters.PageSize)) == 0)
             {
                 return new SuccessData<PageResponse<TournamentResponse>>()
                 {
-                    Data = new PageResponse<TournamentResponse>(new List<TournamentResponse>(),pageParameters.PageSize, count)
+                    Data = new PageResponse<TournamentResponse>(new List<TournamentResponse>(), pageParameters.PageSize,
+                        count)
                 };
             }
-            
-            
-            var tournament = filteredTournamentList
-                .Skip( Math.Min((pageParameters.PageNumber-1) * pageParameters.PageSize,count ))
-                .Take( Math.Min( pageParameters.PageSize,  Math.Max(0,count- (pageParameters.PageNumber-1) * pageParameters.PageSize)    ) )
+
+            var pagedFilteredTournamentList = filteredTournamentList
+                .Skip(Math.Min((pageParameters.PageNumber) * pageParameters.PageSize, count))
+                .Take(Math.Min(pageParameters.PageSize,
+                    Math.Max(0, count - (pageParameters.PageNumber) * pageParameters.PageSize)))
                 .ToList();
+
             return new SuccessData<PageResponse<TournamentResponse>>()
             {
-                Data = new PageResponse<TournamentResponse>(tournament,pageParameters.PageSize, count)
+                Data = new PageResponse<TournamentResponse>(pagedFilteredTournamentList, pageParameters.PageSize, count)
             };
-        
-
-        
-            
-            
-            
-            /*return new SuccessData<PageResponse<TournamentResponse>>()
-            {
-                Data = await _tournamentRepository.g .GetFilteredTournamentsAsync(tournamentFilterRequest, pageParameters)
-            };*/
         }
+
+
         private async Task<HandlerResult<Success, IErrorResult>> PlayerParticipate(long tourId, string? playerUsername)
         {
             if (playerUsername == null) return new Success();
@@ -240,6 +224,7 @@ namespace Communication.Services.Tournament
 
             return new EntityNotFoundErrorResult();
         }
+
         public async Task<HandlerResult<SuccessData<TournamentResponse>, IErrorResult>> GetTournament(long id)
         {
             var tournament = await _tournamentRepository.GetTournamentExtended(id);
@@ -285,8 +270,8 @@ namespace Communication.Services.Tournament
                 };
             }
 
-            
-            if (await _tournamentRepository.IsRegisteredForTournament(botId,tournamentId))
+
+            if (await _tournamentRepository.IsRegisteredForTournament(botId, tournamentId))
             {
                 return new AlreadyRegisterForTournamentError()
                 {

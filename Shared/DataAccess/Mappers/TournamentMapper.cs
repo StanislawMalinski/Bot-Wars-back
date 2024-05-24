@@ -74,7 +74,7 @@ namespace Shared.DataAccess.Mappers
                 
                 WasPlayedOut = tournament.Status == TournamentStatus.DONE
             };
-            if (tournament.TournamentReference != null && tournament.TournamentReference.FirstOrDefault()!= null && tournament.TournamentReference.First().Bot != null && tournament.TournamentReference.First().Bot!.Player != null)
+            if (tournament.TournamentReference?.FirstOrDefault() != null && tournament.TournamentReference.First().Bot != null && tournament.TournamentReference.First().Bot.Player != null)
             {
                 tournamentResponse.PlayersBots = tournament.TournamentReference
                     .Select(x => new BotPlayer(x.botId,x.Bot.BotFile, x.Bot.Player.Login)).ToList();
@@ -87,12 +87,11 @@ namespace Shared.DataAccess.Mappers
             {
                 tournamentResponse.Image = Convert.ToBase64String(tournament.Image);
             }
-
             if (tournament.Creator != null)
             {
                 tournamentResponse.CreatorName = tournament.Creator.Login;
             }
-
+            
             return tournamentResponse;
         }
 
