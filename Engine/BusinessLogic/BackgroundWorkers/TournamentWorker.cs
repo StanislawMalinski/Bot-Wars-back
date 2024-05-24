@@ -69,39 +69,29 @@ public class TournamentWorker: IInvocable
             {
                 await _resolver.PlayMatch(p);
             }
+
+            await WebSockets();
             _scheduler.ScheduleWithParams<TournamentWorker>(TaskId)
                 .EverySeconds(8).Once().PreventOverlapping("TournamentWorker"+ DateTime.Now+" "+ TaskId);
             return;
         }
-        Console.WriteLine($"Sa już macze początkwowe {TaskId}");
-
-        // Web sockety
-        var status = (await _resolver.GetTournamentMatchStatus(TourId)).Match(x => x.Data, null);
-        if (status != null)
-        {
-            string jsonStatus = JsonSerializer.Serialize(status);
-            Console.WriteLine(jsonStatus);
-            await _websocketService.SendUpdateToAllClients(jsonStatus);
-            Console.WriteLine("koniec wib sokiety");
-        } 
-        else
-        {
-            Console.WriteLine("Status cannot be obtained!");
-        }
+        
+        bool flag = false;
 
         var playedGames =  (await _resolver.GetPlayedMatches(TourId)).Match(x=>x.Data,x=>new List<long>());
         foreach (var p in playedGames)
         {
-            
+            flag = true;
             await _resolver.ResolveMatch(p);
         }
         var readyGames =  (await _resolver.GetMatchesReadyToPlay(TourId)).Match(x=>x.Data,x=>new List<long>());
         foreach (var p in readyGames)
         {
-            
+            flag = true;
             await _resolver.PlayMatch(p);
         }
-        
+
+        if (flag) await WebSockets();
         var tournamentWinner = await _resolver.IsMatchResolved(TourId, "0");
         if (tournamentWinner.IsError)
         {
@@ -110,7 +100,7 @@ public class TournamentWorker: IInvocable
                 .EverySeconds(8).Once().PreventOverlapping("TournamentWorker"+ DateTime.Now+" "+ TaskId);
             return;
         }
-        
+   
         var end = await _resolver.EndTournament(TourId,tournamentWinner.Match(x=>x.Data,x=>0), TaskId);
         if (end.IsError)
         {
@@ -164,5 +154,21 @@ public class TournamentWorker: IInvocable
             }
         }
 
+    }
+
+    private async Task WebSockets()
+    {
+        var status = (await _resolver.GetTournamentMatchStatus(TourId)).Match(x => x.Data, null);
+        if (status != null)
+        {
+            string jsonStatus = JsonSerializer.Serialize(status);
+            Console.WriteLine(jsonStatus);
+            await _websocketService.SendUpdateToAllClients(jsonStatus);
+            Console.WriteLine("koniec wib sokiety");
+        } 
+        else
+        {
+            Console.WriteLine("Status cannot be obtained!");
+        }
     }
 }
