@@ -9,7 +9,7 @@ public class MatchMapper
     {
         MatchResponse matchResponse = new(match.Id, match.GameId, match.Game?
                 .GameFile , match.TournamentsId, match.Tournament?.TournamentTitle
-            ,match.MatchPlayers.Select(x=>x.BotId).ToList(),match.Status.ToString(),match.Winner
+            ,match.MatchPlayers.Select(x=>new BotPlayer(x.BotId,x.Bot.BotFile,x.Bot.Player.Login)  ).ToList(),match.Status.ToString(),match.Winner
         , match.Played);
 
         return matchResponse;
@@ -17,7 +17,7 @@ public class MatchMapper
     
     public MatchInTournamentRespond MapEntityToMatcInTournamentResponse(Matches match)
     {
-        MatchInTournamentRespond matchResponse = new(match.Id, match.MatchPlayers.Select(x=>x.BotId).ToList()
+        MatchInTournamentRespond matchResponse = new(match.Id, match.MatchPlayers.Select(x=>new BotPlayer(x.BotId,x.Bot.BotFile,x.Bot.Player.Login)).ToList()
             ,match.Status.ToString(),match.Winner, 
              Int32.Parse( match.Data ) , match.Played,match.MatchResult);
 

@@ -108,6 +108,8 @@ public class MatchRepository
     {
         return _dataContext.Matches
             .Include(matches => matches.MatchPlayers)
+            .ThenInclude(players => players.Bot)
+            .ThenInclude(bot => bot.Player)
             .Include(matches => matches.Tournament)
             .Include(matches => matches.Game)
             .Where(match => true);
@@ -118,6 +120,14 @@ public class MatchRepository
         return await _dataContext.Matches.Where(matches =>  matches.Id == matchId).Include(x=>x.MatchPlayers)
             .Include(matches => matches.Game).FirstOrDefaultAsync();
     }
+    public async Task<Matches?> GetMatchByIdExtended(long matchId)
+    {
+        return await _dataContext.Matches.Where(matches =>  matches.Id == matchId).Include(x=>x.MatchPlayers)!
+            .ThenInclude(players => players.Bot)
+            .ThenInclude(bot => bot!.Player)
+            .Include(matches => matches.Game).FirstOrDefaultAsync();
+    }
+    
 
     public async Task<List<Bot?>> GetMatchBots(long matchId)
     {
@@ -146,6 +156,9 @@ public class MatchRepository
     public async Task<List<MatchInTournamentRespond>> GetTournamentStatus(long tourId)
     {
         return await _dataContext.Matches.Where(x => x.TournamentsId == tourId)
-            .Include(x => x.MatchPlayers).Select(x => _mapper.MapEntityToMatcInTournamentResponse(x)).ToListAsync();
+            .Include(x => x.MatchPlayers)!
+            .ThenInclude(x=>x.Bot)
+            .ThenInclude(x=>x!.Player)
+            .Select(x => _mapper.MapEntityToMatcInTournamentResponse(x)).ToListAsync();
     }
  }

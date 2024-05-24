@@ -22,11 +22,7 @@ public class TournamentResponse
     
     public List<long>? MatchIds { get; set; }
 
-    public struct BotPlayer(long botId,string userName)
-    {
-        public long BotId = botId;
-        public string UserName = userName;
-    }
+   
     public List<BotPlayer>? PlayersBots  { get; set; }
    
 }

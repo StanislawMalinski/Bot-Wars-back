@@ -81,7 +81,7 @@ public class MatchService : IMatchService
 
     public async Task<HandlerResult<SuccessData<MatchResponse>, IErrorResult>> GetMatchById(long id)
     {
-        var match =  await _matchRepository.GetMatchById(id);
+        var match =  await _matchRepository.GetMatchByIdExtended(id);
 
         if (match == null)
         {
