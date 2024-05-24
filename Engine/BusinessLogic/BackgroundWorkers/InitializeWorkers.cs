@@ -10,8 +10,6 @@ public class InitializeWorkers: IInvocable
     private IScheduler _scheduler;
     private TaskService _taskService;
 
-    
-
     public InitializeWorkers(IScheduler scheduler, TaskService taskService)
     {
         _scheduler = scheduler;

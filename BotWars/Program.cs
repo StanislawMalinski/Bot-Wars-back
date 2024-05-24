@@ -9,6 +9,7 @@ using NLog.Web;
 using Shared.DataAccess.Context;
 using FluentValidation;
 using FluentValidation.AspNetCore;
+using Communication.Services.Websocket;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -96,7 +97,7 @@ builder.Services
     .AddAchievements()
     .AddBot()
     .AddMatch();
-
+builder.Services.AddSingleton<WebSocketProxyService>();
 builder.Services.AddControllers().AddFluentValidation();
 builder.Services.AddHttpContextAccessor();
 
@@ -127,7 +128,6 @@ app.UseCors(options =>
 {
     options.AllowAnyMethod();
     options.AllowAnyHeader();
-
     options.AllowAnyOrigin();
 });
 app.UseSwagger();
@@ -140,7 +140,7 @@ app.UseHttpsRedirection();
 app.UseRouting();
 
 app.UseAuthorization();
-
+app.UseWebSockets();
 app.MapControllers();
 
 app.Run();
