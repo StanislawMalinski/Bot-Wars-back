@@ -19,7 +19,7 @@ public class MatchMapper
     {
         MatchInTournamentRespond matchResponse = new(match.Id, match.MatchPlayers.Select(x=>new BotPlayer(x.BotId,x.Bot.BotFile,x.Bot.Player.Login)).ToList()
             ,match.Status.ToString(),match.Winner, 
-             Int32.Parse( match.Data ) , match.Played,match.MatchResult);
+             Int32.Parse( match.Data ) , match.Played,match.MatchResult.ToString());
 
         return matchResponse;
     }

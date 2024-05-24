@@ -8,6 +8,6 @@ public record class MatchInTournamentRespond(
     string Status,
     long Winner,
     int Position,
-    DateTime PlayedOutDate,MatchResult MatchResult
+    DateTime PlayedOutDate,string MatchResult
     );
     
