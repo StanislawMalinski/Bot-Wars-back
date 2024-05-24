@@ -165,7 +165,6 @@ namespace Communication.Services.Tournament
                     .Take(Math.Min(pageParameters.PageSize,
                         Math.Max(0, count - (pageParameters.PageNumber) * pageParameters.PageSize)))
                     .ToListAsync();
-
                 return new SuccessData<PageResponse<TournamentResponse>>()
                 {
                     Data = new PageResponse<TournamentResponse>(tournaments, pageParameters.PageSize, count)

@@ -3,9 +3,11 @@ using Coravel.Scheduling.Schedule.Interfaces;
 using Engine.BusinessLogic.BackgroundWorkers.Resolvers;
 using Shared.DataAccess.DataBaseEntities;
 using Shared.DataAccess.DTO;
+using System.Text.Json;
 using Shared.DataAccess.Enumerations;
 using Shared.DataAccess.Repositories;
 using Shared.DataAccess.RepositoryInterfaces;
+using Engine.Services;
 
 
 namespace Engine.BusinessLogic.BackgroundWorkers;
@@ -14,15 +16,16 @@ public class TournamentWorker: IInvocable
 {
     private readonly IScheduler _scheduler;
     private readonly TournamentResolver _resolver;
+    private readonly WebSocketService _websocketService;
     private long TaskId { get; set; }
     private long TourId { get; set; }
     private Dictionary<int,GameInfo> _games;
-    public TournamentWorker(IScheduler scheduler ,TournamentResolver resolver,long task)
+    public TournamentWorker(IScheduler scheduler, TournamentResolver resolver, long task, WebSocketService webSocketService)
     {
         _scheduler = scheduler;
         _resolver = resolver;
         TaskId = task;
-      
+        _websocketService = webSocketService;
     }
 
     public async Task Invoke()
@@ -71,12 +74,21 @@ public class TournamentWorker: IInvocable
             return;
         }
         Console.WriteLine($"Sa już macze początkwowe {TaskId}");
-        // Web socety
-        await _resolver.GetTournamentMatchStatus(TourId);
-        
-        
-        
-        Console.WriteLine("koniec wib sokiety");
+
+        // Web sockety
+        var status = (await _resolver.GetTournamentMatchStatus(TourId)).Match(x => x.Data, null);
+        if (status != null)
+        {
+            string jsonStatus = JsonSerializer.Serialize(status);
+            Console.WriteLine(jsonStatus);
+            await _websocketService.SendUpdateToAllClients(jsonStatus);
+            Console.WriteLine("koniec wib sokiety");
+        } 
+        else
+        {
+            Console.WriteLine("Status cannot be obtained!");
+        }
+
         var playedGames =  (await _resolver.GetPlayedMatches(TourId)).Match(x=>x.Data,x=>new List<long>());
         foreach (var p in playedGames)
         {
@@ -108,7 +120,6 @@ public class TournamentWorker: IInvocable
         Console.WriteLine("finished tournament "+ TaskId + " " + TourId);
         
     }
-    
 
     private void MadeHeap(List<Bot?> bots)
     {
@@ -154,7 +165,4 @@ public class TournamentWorker: IInvocable
         }
 
     }
-
-
-    
 }
