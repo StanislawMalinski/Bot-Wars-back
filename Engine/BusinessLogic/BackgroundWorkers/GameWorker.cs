@@ -5,6 +5,7 @@ using Engine.BusinessLogic.BackgroundWorkers.Resolvers;
 using Engine.BusinessLogic.Gameplay;
 using Engine.BusinessLogic.Gameplay.Interface;
 using Shared.DataAccess.DataBaseEntities;
+using Shared.DataAccess.Enumerations;
 using Shared.DataAccess.Repositories;
 using Shared.DataAccess.RepositoryInterfaces;
 using TaskStatus = Shared.DataAccess.Enumerations.TaskStatus;
@@ -47,7 +48,7 @@ public class GameWorker: IInvocable
         {
             Console.WriteLine("game_worker_8 gra zakończona skucesem "+TaskId);
             SuccessfullGameResult sr = (SuccessfullGameResult) result;
-            await _resolver.MatchWinner(task.OperatingOn, sr.BotWinner.Id, TaskId,lr);
+            await _resolver.MatchWinner(task.OperatingOn, sr.BotWinner.Id, TaskId,lr,MatchResult.Won);
             Console.WriteLine("game_worker_8 zapisanie zwyciescy "+TaskId);
         }
         else
@@ -57,15 +58,32 @@ public class GameWorker: IInvocable
             if (er.GameError && er.BotError)
             {
                 Console.WriteLine("typ błędu 1 0");
-                await _resolver.GameAndBotFiled(task.OperatingOn, er.BotErrorId, TaskId, game.Id,lr);
+                await _resolver.GameAndBotFiled(task.OperatingOn, er.BotErrorId, TaskId, game.Id,lr,MatchResult.GameAndBotFiled );
             }else if (!er.GameError && er.BotError)
             {
                 Console.WriteLine("typ błędu 1");
-                await _resolver.BotFiled(task.OperatingOn, er.BotErrorId, TaskId,lr);
+                MatchResult res;
+                switch (er.ErrorGameStatus)
+                {
+                    case ErrorGameStatus.InternalError:
+                        res = MatchResult.BotFiled;
+                        break;
+                    case ErrorGameStatus.MemoryLimit:
+                        res = MatchResult.BotMemoryFiled;
+                        break;
+                    case ErrorGameStatus.TimeLimit:
+                        res = MatchResult.BotTimeFiled;
+                        break;
+                    default:
+                        res = MatchResult.BotFiled;
+                        break;
+                }
+                
+                await _resolver.BotFiled(task.OperatingOn, er.BotErrorId, TaskId,lr,res);
             }else if (er.GameError && !er.BotError)
             {
                 Console.WriteLine("typ błędu 2");
-                await _resolver.GameFiled(task.OperatingOn,TaskId,game.Id,lr);
+                await _resolver.GameFiled(task.OperatingOn,TaskId,game.Id,lr,MatchResult.GameFiled);
             }
             else
             {

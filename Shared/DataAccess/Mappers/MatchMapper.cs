@@ -17,9 +17,9 @@ public class MatchMapper
     
     public MatchInTournamentRespond MapEntityToMatcInTournamentResponse(Matches match)
     {
-        MatchInTournamentRespond matchResponse = new(match.MatchPlayers.Select(x=>x.BotId).ToList()
+        MatchInTournamentRespond matchResponse = new(match.Id, match.MatchPlayers.Select(x=>x.BotId).ToList()
             ,match.Status.ToString(),match.Winner, 
-             Int32.Parse( match.Data ) , match.Played);
+             Int32.Parse( match.Data ) , match.Played,match.MatchResult);
 
         return matchResponse;
     }

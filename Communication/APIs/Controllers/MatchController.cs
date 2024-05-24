@@ -45,34 +45,5 @@ public class MatchController : Controller
     }
     
     
-    [HttpGet("GetLogFile")]
-    public async Task<HttpResponseMessage> GetFile([FromQuery]  long matchId)
-    {
-        //if (matchId == 0) return;
-
-        
-        
-        var result = await _matchService.GetLogFile(matchId);
-        if (result.IsError) throw new NotImplementedException();
-        var file = result.Match(
-            x => x.Data,
-            null!);
-        byte[] fileBytes;
-        using (var memoryStream = new MemoryStream())
-        {
-            file.CopyTo(memoryStream);
-            fileBytes = memoryStream.ToArray();
-        }
-        
-        HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.OK);
-        Console.WriteLine(fileBytes.Length);
-        response.Content = new ByteArrayContent(fileBytes);
-        response.Content.Headers.ContentDisposition = new ContentDispositionHeaderValue("attachment");
-        response.Content.Headers.ContentDisposition.FileName = file.FileName;
-        response.Content.Headers.ContentType = new MediaTypeHeaderValue("text/html");
-
-        return response;
-    }
-    
 
 }

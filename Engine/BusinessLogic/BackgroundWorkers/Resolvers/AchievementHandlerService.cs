@@ -29,7 +29,7 @@ public class AchievementHandlerService
         _taskService = taskService;
     }
 
-    public async  Task<HandlerResult<Success,IErrorResult>> MatchWinner(long matchId, long winner, long taskId,long logId)
+    public async  Task<HandlerResult<Success,IErrorResult>> MatchWinner(long matchId, long winner, long taskId,long logId, MatchResult matchResult)
     {
         Console.WriteLine($"{matchId} zwyciesca  meczu");
         var losers = await _matchRepository.GetAllLosers(matchId, winner);
@@ -49,6 +49,7 @@ public class AchievementHandlerService
         result.Status = GameStatus.Played;
         result.LogId = logId;
         result.Winner = winner;
+        result.MatchResult = matchResult;
         Console.WriteLine($"{matchId}  pobrnaie przliczeni ");
         await _achievementsRepository.UpDateProgressNoSave(AchievementsTypes.WinGames, winner);
         var bots = await _matchRepository.GetMatchBots(matchId);

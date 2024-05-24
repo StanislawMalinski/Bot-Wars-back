@@ -43,6 +43,7 @@ public class GameManager : IGameManager
                 Console.WriteLine("przerwanie botow");
                 await InterruptAllBots();
                 Console.WriteLine("porawnie przerwanoboty");
+                gamelog += bots[ind].GetErrorType().ToString() + '\n';
                 return new ErrorGameResult()
                 {
                     gameLog = gamelog,
@@ -62,6 +63,7 @@ public class GameManager : IGameManager
         if (game.wasErros())
         {
             gamelog = "game error";
+            gamelog += game.GetErrorType().ToString() + '\n';
             return new ErrorGameResult
             {
                 gameLog = gamelog,
@@ -72,13 +74,13 @@ public class GameManager : IGameManager
         }
         int nextBot = 0;
         int counter = 0;
-        int counterMax = 1000;
+        int counterMax = 10000;
         
         gamelog += curr+'\n';
         Console.WriteLine($"sprawdznie przed {bots[nextBot].wasErros()}");
         while (Int32.Parse(curr) != -1 && counter < counterMax)
         {
-            Console.WriteLine( $"cuur petnela {counter} {curr}");
+            
             nextBot = Int32.Parse(curr);
             curr = await game.Get();
             if (curr == null) {ok = false;  Console.WriteLine(" to eror 1 "+bots[nextBot].wasErros()); break;}
@@ -94,9 +96,7 @@ public class GameManager : IGameManager
           
         }
         Console.WriteLine(bots[0].GetErrorType().ToString());
-        Console.WriteLine("game log star");
-        Console.WriteLine(gamelog);
-        Console.WriteLine("game log endened");
+     
         if (ok)
         {
             if (counter < counterMax)
@@ -106,8 +106,10 @@ public class GameManager : IGameManager
                 {
                     await game.Interrupt();
                     await InterruptAllBots();
+                    gamelog += game.GetErrorType().ToString() + '\n';
                     return new ErrorGameResult
                     {
+                       
                         gameLog = gamelog,
                         BotError = false,
                         GameError = true,
@@ -124,6 +126,7 @@ public class GameManager : IGameManager
             }
             else
             {
+                gamelog = "game take to long \n";
                 nextBot = 0;
             }
             
@@ -145,6 +148,8 @@ public class GameManager : IGameManager
         if (game.wasErros())
         {
             Console.WriteLine("game was eeror");
+            gamelog += game.GetErrorType().ToString() + '\n';
+            
             return new ErrorGameResult()
             {
                 GameError = true,
@@ -163,6 +168,8 @@ public class GameManager : IGameManager
             if (bots[ind].wasErros())
             {
                 Console.WriteLine("bot was znaleziony "+ind);
+                gamelog += bots[ind].GetErrorType().ToString() + '\n';
+                
                 return new ErrorGameResult()
                 {
                     BotError = true,

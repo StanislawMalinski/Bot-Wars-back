@@ -6,6 +6,7 @@ using Shared.DataAccess.DataBaseEntities;
 using Shared.DataAccess.DTO;
 using Shared.DataAccess.Repositories;
 using System.IO;
+using Engine.BusinessLogic.BackgroundWorkers.Resolvers;
 using Engine.Services;
 using Shared.DataAccess.Enumerations;
 
@@ -19,13 +20,15 @@ public class FileController : Controller
     private FileManager _fileManager;
     private MatchRepository _matchRepository;
     private TaskService _taskService;
+    private readonly TournamentResolver _resolver;
 
 
-    public FileController(FileManager fileManager, MatchRepository matchRepository, TaskService taskService)
+    public FileController(FileManager fileManager, MatchRepository matchRepository, TaskService taskService, TournamentResolver resolver)
     {
         _fileManager = fileManager;
         _matchRepository = matchRepository;
         _taskService = taskService;
+        _resolver = resolver;
     }
 
     [HttpPost("test")]
@@ -70,4 +73,13 @@ public class FileController : Controller
         //return (await _fileManager.addGame(gameFileDto)).Match(Ok, Ok);
         return Ok();
     }
+    [HttpGet("tourstatus")]
+    public async Task<IActionResult> kopiec(long tourId)
+    {
+        
+        return (await _resolver.GetTournamentMatchStatus(tourId)).Match(Ok,Ok);
+        
+    }
+
+    
 }

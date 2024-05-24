@@ -12,6 +12,7 @@ namespace Shared.DataAccess.DataBaseEntities
         public GameStatus Status;
         public long Winner { get; set; }
         public string? Data { get; set; }
+        public MatchResult MatchResult { get; set; }
 
         public List<MatchPlayers>? MatchPlayers { get; set; }
         public Tournament? Tournament { get; set; }
