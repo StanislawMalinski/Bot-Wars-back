@@ -131,14 +131,14 @@ namespace Communication.Services.Tournament
                     tournament.TournamentsDate >= tournamentFilterRequest.MinPlayOutDate);
             }
 
-            if (tournamentFilterRequest.Creator != null)
+            if (tournamentFilterRequest.Creator != null && !tournamentFilterRequest.Creator.Equals(string.Empty))
             {
                 unfilteredTournaments = unfilteredTournaments.Where(tournament =>
                     tournamentFilterRequest.Creator == null
                     || tournamentFilterRequest.Creator.Equals(tournament.Creator.Login));
             }
 
-            if (tournamentFilterRequest.TournamentTitle != null)
+            if (tournamentFilterRequest.TournamentTitle != null && !tournamentFilterRequest.TournamentTitle.Equals(string.Empty))
             {
                 unfilteredTournaments = unfilteredTournaments.Where(tournament =>
                     tournament.TournamentTitle.Contains(tournamentFilterRequest.TournamentTitle));
@@ -148,7 +148,7 @@ namespace Communication.Services.Tournament
             int count = unfilteredTournaments.Count();
 
             
-            if (tournamentFilterRequest.UserParticipation == null)
+            if (tournamentFilterRequest.UserParticipation == null || tournamentFilterRequest.UserParticipation.Equals(string.Empty))
             {
                 if (Math.Min(pageParameters.PageSize,
                         Math.Max(0, count - (pageParameters.PageNumber) * pageParameters.PageSize)) == 0)

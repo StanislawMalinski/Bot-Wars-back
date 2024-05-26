@@ -34,7 +34,7 @@ public class MatchService : IMatchService
     {
         var unfilteredMatches = _matchRepository.GetListOfUnfilteredMatches();
 
-        if (matchFilterRequest.GameName != null)
+        if (matchFilterRequest.GameName != null && !matchFilterRequest.GameName.Equals(string.Empty))
         {
             unfilteredMatches = unfilteredMatches.Where(match =>
                 match.Game != null && match.Game.GameFile == matchFilterRequest.GameName);
@@ -52,7 +52,7 @@ public class MatchService : IMatchService
                 match.Played <= matchFilterRequest.MaxPlayOutDate);
         }
 
-        if (matchFilterRequest.TournamentName != null)
+        if (matchFilterRequest.TournamentName != null && !matchFilterRequest.TournamentName.Equals(string.Empty))
         {
             unfilteredMatches = unfilteredMatches.Where(match =>
                 match.Tournament != null && match.Tournament.TournamentTitle == matchFilterRequest.TournamentName);
