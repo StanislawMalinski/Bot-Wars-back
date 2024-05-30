@@ -52,7 +52,7 @@ public class PointRepository : IPointsRepository
 
     public async Task<List<PlayerResponse>> GetLeaderboards(PageParameters pageParameters)
     {
-        var players = await _dataContext.Players
+        var players = await _dataContext.Players.Where(x=>x.isBanned == false)
             .OrderByDescending(player => player.Points).Select(x=> _playerMapper.ToPlayerResponse(x))
             .Skip(pageParameters.PageNumber * pageParameters.PageSize)
             .Take(pageParameters.PageSize)
@@ -89,6 +89,6 @@ public class PointRepository : IPointsRepository
 
     public async Task<int> NumberOfLeaderBoard()
     {
-        return await _dataContext.Players.CountAsync();
+        return await _dataContext.Players.Where(x=>x.isBanned == false).CountAsync();
     }
 }
