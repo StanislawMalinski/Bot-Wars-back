@@ -37,7 +37,7 @@ public class PointsService : IPointsService
         return new SuccessData<PageResponse<PlayerResponse>>
         {
             Data = new PageResponse<PlayerResponse>(await _pointsRepository.GetLeaderboards(pageParameters),
-                pageParameters.PageSize, 2)
+                pageParameters.PageSize, await _pointsRepository.NumberOfLeaderBoard())
         };
 
 

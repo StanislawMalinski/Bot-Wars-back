@@ -15,5 +15,5 @@ public interface IPointsRepository
     Task<List<PlayerResponse>> GetLeaderboards(PageParameters pageParameters);
     Task<long> GetPlayerPoint(long playerId);
     Task UpdatePointsForPlayerNoSave(long playerId, long points,long tourId);
-    Task<long> NumberOfLeaderBoard();
+    Task<int> NumberOfLeaderBoard();
 }

@@ -87,7 +87,7 @@ public class PointRepository : IPointsRepository
         
     }
 
-    public async Task<long> NumberOfLeaderBoard()
+    public async Task<int> NumberOfLeaderBoard()
     {
         return await _dataContext.Players.CountAsync();
     }
