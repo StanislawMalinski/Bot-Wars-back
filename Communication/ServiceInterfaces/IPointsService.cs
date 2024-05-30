@@ -12,6 +12,6 @@ public interface IPointsService
 {
     Task<HandlerResult<Success, IErrorResult>> SetPointsForPlayer(long playerId, long points);
     Task<HandlerResult<SuccessData<List<PointHistoryDto>>,IErrorResult>> GetHistoryForPlayer(long playerId);
-    Task<HandlerResult<SuccessData<List<PlayerResponse>>, IErrorResult>> GetLeaderboards(PageParameters pageParameters);
+    Task<HandlerResult<SuccessData<PageResponse<PlayerResponse>>, IErrorResult>> GetLeaderboards(PageParameters pageParameters);
     Task<HandlerResult<SuccessData<long>, IErrorResult>> GetPointsForPlayer(long playerId);
 }

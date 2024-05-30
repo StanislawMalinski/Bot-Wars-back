@@ -28,49 +28,29 @@ public class PointRepository : IPointsRepository
         _pointHistoryMapper = pointHistoryMapper;
     }
 
-    public async Task<HandlerResult<SuccessData<List<PointHistoryDto>>, IErrorResult>> GetHistoryForPlayer(long playerId)
+    public async Task<List<PointHistoryDto>> GetHistoryForPlayer(long playerId)
     {
         var player = await _dataContext.Players.FindAsync(playerId);
-        if (player == null)
-        {
-            return new EntityNotFoundErrorResult()
-            {
-                Title = "EntityNotFoundErrorResult 404",
-                Message = "No player with such id"
-            };
-        }
+        if (player == null) return new List<PointHistoryDto>();
 
         var pointHistory = await _dataContext.PointHistories
             .Where(pointsHistory => pointsHistory.PlayerId == playerId).OrderBy(x=>x.LogDate)
             .ToListAsync();
         
-        return new SuccessData<List<PointHistoryDto>>
-        {
-            Data = pointHistory.ConvertAll(element => _pointHistoryMapper
-                .MapPointHistoryToPointHistoryDto(element))
-        };
+        return pointHistory.ConvertAll(element => _pointHistoryMapper
+                .MapPointHistoryToPointHistoryDto(element));
 
     }
 
-    public async Task<HandlerResult<SuccessData<long>, IErrorResult>> GetCurrentPointsForPlayer(long playerId)
+    public async Task<long> GetCurrentPointsForPlayer(long playerId)
     {
         var player = await _dataContext.Players.FindAsync(playerId);
-        if (player == null)
-        {
-            return new EntityNotFoundErrorResult()
-            {
-                Title = "EntityNotFoundErrorResult 404",
-                Message = "No player with such id"
-            };
-        }
+        if (player == null) return 0;
 
-        return new SuccessData<long>()
-        {
-            Data = player.Points
-        };
+        return player.Points;
     }
 
-    public async Task<HandlerResult<SuccessData<List<PlayerResponse>>, IErrorResult>> GetLeaderboards(PageParameters pageParameters)
+    public async Task<List<PlayerResponse>> GetLeaderboards(PageParameters pageParameters)
     {
         var players = await _dataContext.Players
             .OrderByDescending(player => player.Points).Select(x=> _playerMapper.ToPlayerResponse(x))
@@ -78,26 +58,20 @@ public class PointRepository : IPointsRepository
             .Take(pageParameters.PageSize)
             .ToListAsync();
 
-        return new SuccessData<List<PlayerResponse>>
-        {
-            Data = players
-        };
+        return  players ;
     }
 
-    public async Task<HandlerResult<SuccessData<long>, IErrorResult>> GetPlayerPoint(long playerId)
+    public async Task<long> GetPlayerPoint(long playerId)
     {
         var res = await _dataContext.Players.FindAsync(playerId);
-        if (res == null) return new EntityNotFoundErrorResult();
-        return new SuccessData<long>()
-        {
-            Data = res.Points
-        };
+        if (res == null) return 0;
+        return res.Points;
     }
 
-    public async Task<HandlerResult<Success, IErrorResult>> UpdatePointsForPlayerNoSave(long playerId, long points,long tourId)
+    public async Task UpdatePointsForPlayerNoSave(long playerId, long points,long tourId)
     {
         var res = await _dataContext.Players.FindAsync(playerId);
-        if (res == null) return new EntityNotFoundErrorResult();
+        if (res == null) return;
        
         var pointHistory = new PointHistory()
         {
@@ -111,6 +85,10 @@ public class PointRepository : IPointsRepository
         _dataContext.Players.Update(res);
         await _dataContext.PointHistories.AddAsync(pointHistory);
         
-        return new Success();
+    }
+
+    public async Task<long> NumberOfLeaderBoard()
+    {
+        return await _dataContext.Players.CountAsync();
     }
 }

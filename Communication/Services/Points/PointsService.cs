@@ -26,17 +26,29 @@ public class PointsService : IPointsService
     
     public async Task<HandlerResult<SuccessData<List<PointHistoryDto>>, IErrorResult>> GetHistoryForPlayer(long playerId)
     {
-        return await _pointsRepository.GetHistoryForPlayer(playerId);
+        return new SuccessData<List<PointHistoryDto>>()
+        {
+            Data = await _pointsRepository.GetHistoryForPlayer(playerId)
+        };
     }
 
-    public async Task<HandlerResult<SuccessData<List<PlayerResponse>>,IErrorResult>> GetLeaderboards(PageParameters pageParameters)
+    public async Task<HandlerResult<SuccessData<PageResponse<PlayerResponse>>,IErrorResult>> GetLeaderboards(PageParameters pageParameters)
     {
-        return await _pointsRepository.GetLeaderboards(pageParameters);
+        return new SuccessData<PageResponse<PlayerResponse>>
+        {
+            Data = new PageResponse<PlayerResponse>(await _pointsRepository.GetLeaderboards(pageParameters),
+                pageParameters.PageSize, 2)
+        };
+
+
     }
 
     public async Task<HandlerResult<SuccessData<long>, IErrorResult>> GetPointsForPlayer(long playerId)
     {
-        return await _pointsRepository.GetCurrentPointsForPlayer(playerId);
+        return new SuccessData<long>()
+        {
+            Data = await _pointsRepository.GetCurrentPointsForPlayer(playerId)
+        };
     }
     
 }
