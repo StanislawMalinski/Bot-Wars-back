@@ -1,20 +1,12 @@
-﻿using Microsoft.AspNetCore.Http.HttpResults;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Shared.DataAccess.Context;
+using Shared.DataAccess.DataBaseEntities;
 using Shared.DataAccess.DTO.Requests;
 using Shared.DataAccess.DTO.Responses;
 using Shared.DataAccess.Mappers;
-using Shared.DataAccess.RepositoryInterfaces;
-using Shared.Results;
-using Shared.Results.ErrorResults;
-using Shared.Results.IResults;
-using Shared.Results.SuccessResults;
-using Shared.DataAccess.DataBaseEntities;
-using System.Net.Http;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.EntityFrameworkCore.ChangeTracking;
-using Shared.DataAccess.AuthorizationRequirements;
 using Shared.DataAccess.Pagination;
+using Shared.DataAccess.RepositoryInterfaces;
 
 namespace Shared.DataAccess.Repositories;
 
@@ -69,6 +61,10 @@ public class GameRepository : IGameRepository
         
         return await _dataContext
             .Games
+            .Include(game => game.Bot)
+            .Include(game => game.Matches)
+            .Include(game => game.Tournaments)
+            .Include(game => game.Creator)
             .Where(x => x.GameFile != null && x.GameFile.Contains(name))
             .Skip(pageParameters.PageNumber * pageParameters.PageSize)
             .Take(pageParameters.PageSize)
@@ -81,6 +77,10 @@ public class GameRepository : IGameRepository
     {
         return await _dataContext
             .Games
+            .Include(game => game.Bot)
+            .Include(game => game.Matches)
+            .Include(game => game.Tournaments)
+            .Include(game => game.Creator)
             .Where(x => x.GameFile != null && x.CreatorId == playerId)
             .Skip(pageParameters.PageNumber * pageParameters.PageSize)
             .Take(pageParameters.PageSize)
@@ -95,6 +95,7 @@ public class GameRepository : IGameRepository
             .Include(game => game.Bot)
             .Include(game => game.Matches)
             .Include(game => game.Tournaments)
+            .Include(game => game.Creator)
             .Skip(pageParameters.PageNumber * pageParameters.PageSize)
             .Take(pageParameters.PageSize)
             .Select(x => _mapper.MapGameToResponse(x))
@@ -141,6 +142,7 @@ public class GameRepository : IGameRepository
             .Include(game => game.Bot)
             .Include(game => game.Matches)
             .Include(game => game.Tournaments)
+            .Include(game => game.Creator)
             .Where(game => game.IsAvailableForPlay)
             .Skip(pageParameters.PageNumber * pageParameters.PageSize)
             .Take(pageParameters.PageSize)
@@ -182,6 +184,7 @@ public class GameRepository : IGameRepository
             .Include(game => game.Bot)
             .Include(game => game.Matches)
             .Include(game => game.Tournaments)
+            .Include(game => game.Creator)
             .FirstOrDefaultAsync();;
     }
     

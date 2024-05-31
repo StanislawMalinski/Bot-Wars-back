@@ -134,7 +134,7 @@ public class GameTypeService : IGameService
 
     public async Task<HandlerResult<SuccessData<PageResponse<GameResponse>>, IErrorResult>> GetGamesByPlayer(string? name, PageParameters pageParameters)
     {
-        var res=  await _playerRepository.GetPlayer(name);
+        var res=  await _playerRepository.GetPlayerByLogin(name);
         if (res == null) return new EntityNotFoundErrorResult();
         var botList = await _gameRepository.GetGamesByPlayer(res.Id, pageParameters);
         return new SuccessData<PageResponse<GameResponse>>()
