@@ -1,11 +1,16 @@
-﻿using Shared.DataAccess.DataBaseEntities;
+﻿using Microsoft.AspNetCore.Mvc.RazorPages.Infrastructure;
+using Shared.DataAccess.DataBaseEntities;
 using Shared.DataAccess.DTO.Requests;
 using Shared.DataAccess.DTO.Responses;
+using Shared.DataAccess.Repositories;
+using Shared.DataAccess.RepositoryInterfaces;
+using Shared.Results.ErrorResults;
 
 namespace Shared.DataAccess.Mappers
 {
     public class GameTypeMapper : IGameTypeMapper
     {
+
         public Game MapRequestToGame(GameRequest gameRequest)
         {
             return new Game
@@ -25,6 +30,7 @@ namespace Shared.DataAccess.Mappers
 
         public GameResponse MapGameToResponse(Game game)
         {
+            
             return new GameResponse
             {
                 Id = game.Id,
@@ -38,6 +44,7 @@ namespace Shared.DataAccess.Mappers
                 MatchesIds = game.Matches?.Select(match => match.Id).ToList(),
                 TournamentsIds = game.Tournaments?.Select(tournament => tournament.Id).ToList(),
                 FileId = game.FileId,
+                CreatorName = game.Creator.Login
             };
         }
 
