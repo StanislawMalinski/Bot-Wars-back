@@ -18,7 +18,7 @@ namespace Shared.DataAccess.Repositories
     public class FileRepository : IFileRepository
     {
         private readonly HttpClient _httpClient;
-        private readonly string _gathererEndpoint = "http://host.docker.internal:7002/api/Gatherer";
+        private readonly string _gathererEndpoint = "http://file_gatherer:8080/api/Gatherer";
         public FileRepository(HttpClient httpClient)
         {
             _httpClient = httpClient;
