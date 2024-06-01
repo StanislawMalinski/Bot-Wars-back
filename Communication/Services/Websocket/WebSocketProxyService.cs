@@ -10,7 +10,7 @@ namespace Communication.Services.Websocket
 {
     public class WebSocketProxyService
     {
-        private readonly string _engineWebSocketEndpoint = "ws://host.docker.internal:7001/ws";
+        private readonly string _engineWebSocketEndpoint = "ws://bot_wars_engine:8080/ws";
         private static ConcurrentDictionary<string, WebSocket> _sockets = new ConcurrentDictionary<string, WebSocket>();
 
         public WebSocketProxyService() 
