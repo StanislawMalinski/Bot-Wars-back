@@ -7,6 +7,7 @@ using Shared.DataAccess.DataBaseEntities;
 using Shared.DataAccess.DTO;
 using Shared.DataAccess.DTO.Requests;
 using Shared.DataAccess.DTO.Responses;
+using Shared.DataAccess.Enumerations;
 using Shared.DataAccess.Mappers;
 using Shared.DataAccess.MappersInterfaces;
 using Shared.DataAccess.RepositoryInterfaces;
@@ -63,6 +64,14 @@ namespace Shared.DataAccess.Repositories
 
         public async Task<EntityEntry<Player>> AddPlayer(Player player)
         {
+            AchievementRecord newRecord = new AchievementRecord()
+            {
+                AchievementTypeId = (int)AchievementsTypes.AccountCreated,
+                Player = player,
+                Value = 1,
+            };
+            player.AchievementRecords = new List<AchievementRecord>();
+            player.AchievementRecords.Add(newRecord);
             return await _dataContext.Players.AddAsync(player);
         }
         

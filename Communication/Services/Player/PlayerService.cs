@@ -316,7 +316,8 @@ public class PlayerService : IPlayerService
             Login = player.Login,
             Registered = player.Registered,
             Point = player.Points,
-            Id = player.Id
+            Id = player.Id,
+            LastVisit = player.LastLogin
         };
         playerInfo.BotsNumber = await _playerRepository.PlayerBotCount(playerId);
         playerInfo.TournamentNumber = await _playerRepository.PlayerTournamentCount(playerId);
@@ -345,7 +346,8 @@ public class PlayerService : IPlayerService
             Login = player.Login,
             Registered = player.Registered,
             Point = player.Points,
-            Id = player.Id
+            Id = player.Id,
+            LastVisit = player.LastLogin
         };
         playerInfo.BotsNumber = await _playerRepository.PlayerBotCount(player.Id);
         playerInfo.TournamentNumber = await _playerRepository.PlayerTournamentCount(player.Id);

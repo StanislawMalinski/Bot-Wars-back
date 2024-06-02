@@ -467,7 +467,10 @@ public class Seeder
             new AchievementType()
             {
                 Id = (int)AchievementsTypes.TournamentsWon, Description = "You need to win this amount of tournaments"
-            },
+            },new AchievementType()
+            {
+                Id = (int)AchievementsTypes.AccountCreated, Description = "Creating Account"
+            }
         };
     }
 
@@ -479,18 +482,22 @@ public class Seeder
                 { Id = 1, AchievementTypeId = (int)AchievementsTypes.GamePlayed, Threshold = 10 },
             new AchievementThresholds()
                 { Id = 2, AchievementTypeId = (int)AchievementsTypes.BotsUploads, Threshold = 4 },
-            new AchievementThresholds() { Id = 3, AchievementTypeId = (int)AchievementsTypes.WinGames, Threshold = 5 },
+            new AchievementThresholds() 
+                { Id = 3, AchievementTypeId = (int)AchievementsTypes.WinGames, Threshold = 5 },
             new AchievementThresholds()
                 { Id = 4, AchievementTypeId = (int)AchievementsTypes.TournamentsWon, Threshold = 1 },
             new AchievementThresholds()
                 { Id = 5, AchievementTypeId = (int)AchievementsTypes.GamePlayed, Threshold = 20 },
             new AchievementThresholds()
                 { Id = 6, AchievementTypeId = (int)AchievementsTypes.BotsUploads, Threshold = 8 },
-            new AchievementThresholds() { Id = 7, AchievementTypeId = (int)AchievementsTypes.WinGames, Threshold = 10 },
+            new AchievementThresholds() 
+                { Id = 7, AchievementTypeId = (int)AchievementsTypes.WinGames, Threshold = 10 },
             new AchievementThresholds()
                 { Id = 8, AchievementTypeId = (int)AchievementsTypes.TournamentsWon, Threshold = 5 },
             new AchievementThresholds()
                 { Id = 9, AchievementTypeId = (int)AchievementsTypes.GamePlayed, Threshold = 5 },
+            new AchievementThresholds()
+                {Id = 10, AchievementTypeId = (int)AchievementsTypes.AccountCreated, Threshold = 1}
         };
     }
 
@@ -502,6 +509,16 @@ public class Seeder
             new AchievementRecord() { Id = 2, AchievementTypeId = 2, PlayerId = 1, Value = 15 },
             new AchievementRecord() { Id = 3, AchievementTypeId = 1, PlayerId = 2, Value = 10 },
             new AchievementRecord() { Id = 4, AchievementTypeId = 2, PlayerId = 2, Value = 15 },
+            new AchievementRecord() { Id = 5, AchievementTypeId = 5, PlayerId = 1, Value = 1 },
+            new AchievementRecord() { Id = 6, AchievementTypeId = 5, PlayerId = 2, Value = 1 },
+            new AchievementRecord() { Id = 7, AchievementTypeId = 5, PlayerId = 3, Value = 1 },
+            new AchievementRecord() { Id = 8, AchievementTypeId = 5, PlayerId = 4, Value = 1 },
+            new AchievementRecord() { Id = 9, AchievementTypeId = 5, PlayerId = 5, Value = 1 },
+            new AchievementRecord() { Id = 10, AchievementTypeId = 5, PlayerId = 6, Value = 1 },
+            new AchievementRecord() { Id = 11, AchievementTypeId = 5, PlayerId = 7, Value = 1 },
+            new AchievementRecord() { Id = 12, AchievementTypeId = 5, PlayerId = 8, Value = 1 },
+            new AchievementRecord() { Id = 13, AchievementTypeId = 5, PlayerId = 9, Value = 1 },
+            new AchievementRecord() { Id = 14, AchievementTypeId = 5, PlayerId = 10, Value = 1 },
         };
     }
 }
