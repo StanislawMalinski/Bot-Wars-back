@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Shared.DataAccess.DTO;
 using Shared.DataAccess.DTO.Requests;
+using Shared.DataAccess.Pagination;
 
 namespace Communication.APIs.Controllers
 {
@@ -42,6 +43,12 @@ namespace Communication.APIs.Controllers
         public async Task<IActionResult> GetPlayerInfo([FromQuery] long playerId)
         {
             return (await _playerService.GetPlayerInfoAsync(playerId)).Match(Ok, this.ErrorResult);
+        }
+
+        [HttpGet("SearchByName")]
+        public async Task<IActionResult> SearchByName([FromQuery] string playerName, [FromQuery] PageParameters pageParameters)
+        {
+            return (await _playerService.GetPlayersByNameAsync(playerName, pageParameters)).Match(Ok, this.ErrorResult);
         }
         
         [HttpGet("GetPlayerInfoByName")]

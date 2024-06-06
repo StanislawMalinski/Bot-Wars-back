@@ -12,6 +12,7 @@ using Shared.DataAccess.DTO.Requests;
 using Shared.DataAccess.DTO.Responses;
 using Shared.DataAccess.Mappers;
 using Shared.DataAccess.MappersInterfaces;
+using Shared.DataAccess.Pagination;
 using Shared.DataAccess.Repositories;
 using Shared.DataAccess.RepositoryInterfaces;
 using Shared.Results;
@@ -93,6 +94,29 @@ public class PlayerService : IPlayerService
         await _playerRepository.AddPlayer(newPlayer);
         await _playerRepository.SaveChangesAsync();
         return new Success();
+    }
+
+    public async Task<HandlerResult<SuccessData<List<PlayerInfo>>, IErrorResult>> GetPlayersByNameAsync(string playerName, PageParameters pageParameters)
+    {
+        var players = await _playerRepository.GetPlayersByPartialName(playerName, pageParameters);
+        List<PlayerInfo> res = new List<PlayerInfo>();
+        foreach (var player in players)
+        {
+            PlayerInfo playerInfo = new PlayerInfo
+            {
+                Login = player.Login,
+                Registered = player.Registered,
+                Point = player.Points,
+                Id = player.Id,
+                BotsNumber = await _playerRepository.PlayerBotCount(player.Id),
+                TournamentNumber = await _playerRepository.PlayerTournamentCount(player.Id)
+            };
+            res.Add(playerInfo);
+        }
+        return new SuccessData<List<PlayerInfo>>()
+        {
+            Data = res
+        };
     }
 
     public async Task<HandlerResult<Success, IErrorResult>> RegisterNewAdmin(RegistrationRequest registrationRequest)
@@ -387,4 +411,5 @@ public class PlayerService : IPlayerService
             Data = Convert.ToBase64String(res.Image)
         };
     }
+
 }
