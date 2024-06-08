@@ -28,7 +28,7 @@ public class MatchService : IMatchService
         _fileRepository = fileRepository;
     }
 
-    public async Task<HandlerResult<SuccessData<List<MatchResponse>>, IErrorResult>> GetListOfMatchesFiltered(
+    public async Task<HandlerResult<SuccessData<PageResponse<MatchResponse>>, IErrorResult>> GetListOfMatchesFiltered(
         MatchFilterRequest matchFilterRequest, PageParameters pageParameters)
     {
         var unfilteredMatches = _matchRepository.GetListOfUnfilteredMatches();
@@ -60,16 +60,16 @@ public class MatchService : IMatchService
                                                                              && matchPlayers.Bot != null && matchPlayers.Bot.Player.Login
                                                                              ==matchFilterRequest.Username).ToList().IsNullOrEmpty());
         }*/
-
+        int cout = unfilteredMatches.Count();
         var matches = await unfilteredMatches
             .Skip(pageParameters.PageNumber * pageParameters.PageSize)
             .Take(pageParameters.PageSize)
             .Select(match => _matchMapper.MapEntityToResponse(match))
             .ToListAsync();
 
-        return new SuccessData<List<MatchResponse>>
+        return new SuccessData<PageResponse<MatchResponse>>
         {
-            Data = matches
+            Data = new PageResponse<MatchResponse>(matches,pageParameters.PageSize, cout)
         };
     }
 
