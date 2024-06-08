@@ -48,6 +48,9 @@ public class MatchService : IMatchService
         if (matchFilterRequest.TournamentName != null && !matchFilterRequest.TournamentName.Equals(string.Empty))
             unfilteredMatches = unfilteredMatches.Where(match =>
                 match.Tournament != null && match.Tournament.TournamentTitle == matchFilterRequest.TournamentName);
+        if (matchFilterRequest.userParticipation != null && !matchFilterRequest.userParticipation.Equals(string.Empty))
+            unfilteredMatches = unfilteredMatches.Where(match =>
+                match.MatchPlayers!.Any(mp => mp.Bot.Player.Login.Equals(matchFilterRequest.userParticipation)));
         //XDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD
         /*if (matchFilterRequest.Username != null)
         {
