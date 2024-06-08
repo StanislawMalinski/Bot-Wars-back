@@ -15,6 +15,8 @@ using Shared.Results;
 using Shared.Results.ErrorResults;
 using Shared.Results.IResults;
 using Shared.Results.SuccessResults;
+using Shared.DataAccess.Pagination;
+
 
 namespace Shared.DataAccess.Repositories
 {
@@ -48,6 +50,15 @@ namespace Shared.DataAccess.Repositories
         {
             return await _dataContext.Players.Where(x => x.Email.Equals(playerEmail))
                 .Include(x => x.Role).FirstOrDefaultAsync();
+        }
+
+        public async Task<List<Player>> GetPlayersByPartialName(string playerName, PageParameters pageParameters)
+        {
+            var players = await _dataContext.Players.Where(x => x.Login.Contains(playerName))
+            .Skip(pageParameters.PageNumber * pageParameters.PageSize)
+            .Take(pageParameters.PageSize)
+            .ToListAsync();
+            return  players ;
         }
         
         public async Task<Player?> GetPlayerByLogin(string login)

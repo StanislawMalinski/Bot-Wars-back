@@ -92,7 +92,6 @@ public class PlayerMapper : IPlayerMapper
         {
             return null;
         }
-
         
         return new Player
         {
