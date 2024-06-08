@@ -62,6 +62,8 @@ namespace Shared.DataAccess.Mappers
                 Description = tournament.Description,
                 PlayersLimit = tournament.PlayersLimit,
                 TournamentsDate = tournament.TournamentsDate,
+                GameId = tournament.GameId,
+                GameName = tournament.Game.GameFile,
                 PostedDate = tournament.PostedDate,
                 RankingType = tournament.RankingType,
                 Constraints = tournament.Constraints,

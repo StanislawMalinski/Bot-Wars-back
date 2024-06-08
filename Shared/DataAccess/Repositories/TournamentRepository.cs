@@ -45,6 +45,7 @@ namespace Shared.DataAccess.Repositories
             return await _dataContext.Tournaments.Where(x => x.Id == tournamentId)
                 .Include(x=>x.Creator)
                 .Include(tournament => tournament.Matches)
+                .Include(tournament => tournament.Game)
                 .Include(tournament => tournament.TournamentReference)!
                 .ThenInclude(x => x.Bot)
                 .ThenInclude(x => x.Player).FirstOrDefaultAsync();
