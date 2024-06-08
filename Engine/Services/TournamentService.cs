@@ -2,8 +2,4 @@
 
 public class TournamentService
 {
-    public TournamentService()
-    {
-        
-    }
 }

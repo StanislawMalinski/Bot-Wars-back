@@ -7,8 +7,9 @@ namespace Communication.APIs.Controllers.Helper;
 
 public static class ErrorResultConverter
 {
-    public static IActionResult ErrorResult(this ControllerBase controller, IErrorResult errorResult) =>
-        errorResult switch
+    public static IActionResult ErrorResult(this ControllerBase controller, IErrorResult errorResult)
+    {
+        return errorResult switch
         {
             AccessDeniedError => controller.BadRequest(),
             EntityNotFoundErrorResult => controller.NotFound(errorResult),
@@ -25,4 +26,5 @@ public static class ErrorResultConverter
             NotBotCreatorError => controller.BadRequest(errorResult),
             _ => controller.StatusCode((int)HttpStatusCode.InternalServerError, errorResult)
         };
+    }
 }

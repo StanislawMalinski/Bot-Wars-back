@@ -6,9 +6,8 @@ public class BotResponse
     public long PlayerId { get; set; }
     public long GameId { get; set; }
     public long FileId { get; set; }
-    
+
     public int MemoryUsed { get; set; }
     public int TimeUsed { get; set; }
     public string? Validation { get; set; }
-    
 }

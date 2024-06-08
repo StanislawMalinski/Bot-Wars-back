@@ -1,7 +1,5 @@
 ﻿using System.Security.Claims;
 using Communication.APIs.Controllers.Helper;
-using Communication.Services.Bot;
-using Communication.Services.GameType;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Shared.DataAccess.DTO.Requests;

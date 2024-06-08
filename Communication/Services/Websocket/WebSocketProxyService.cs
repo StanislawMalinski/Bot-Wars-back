@@ -1,15 +1,11 @@
-﻿using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Concurrent;
 using System.Net.WebSockets;
 using System.Text;
-using System.Threading.Tasks;
 
-namespace Communication.Services.Websocket
+namespace Communication.Services.Websocket;
+
+public class WebSocketProxyService
 {
-    public class WebSocketProxyService
-    {
         private readonly string _engineWebSocketEndpoint = "ws://bot_wars_engine:8080/ws/{0}";
         private static ConcurrentDictionary<long, ConcurrentDictionary<string, WebSocket>> _sockets = new ConcurrentDictionary<long, ConcurrentDictionary<string, WebSocket>>();
         private static ConcurrentDictionary<long, bool> _connectedTournaments = new ConcurrentDictionary<long, bool>();
@@ -107,5 +103,4 @@ namespace Communication.Services.Websocket
             await webSocket.CloseAsync(result.CloseStatus.Value, result.CloseStatusDescription, CancellationToken.None);
             Console.WriteLine("WebSocket connection closed");
         }
-    }
 }

@@ -6,10 +6,9 @@ namespace Shared.DataAccess.DTO.Requests;
 
 public class BotRequest
 {
-    [Required]
-    public long GameId { get; set; }
-    [Required]
-    public IFormFile BotFile { get; set; }
-    [Required]
-    public Language Language { get; set; }
+    [Required] public long GameId { get; set; }
+
+    [Required] public IFormFile BotFile { get; set; }
+
+    [Required] public Language Language { get; set; }
 }

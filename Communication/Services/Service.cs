@@ -7,10 +7,10 @@ public abstract class Service<T>(T adminInterface, T identifiedPlayerInterface,
     T badValidationInterface, IPlayerValidator validator)
 {
     private readonly T _adminInterface = adminInterface;
-    private readonly T _identifiedPlayerInterface = identifiedPlayerInterface;
-    private readonly T _bannedPlayerInterface = bannedPlayerInterface;
-    private readonly T _unidentifiedUserInterface = unidentifiedUserInterface;
     private readonly T _badValidationInterface = badValidationInterface;
+    private readonly T _bannedPlayerInterface = bannedPlayerInterface;
+    private readonly T _identifiedPlayerInterface = identifiedPlayerInterface;
+    private readonly T _unidentifiedUserInterface = unidentifiedUserInterface;
     private readonly IPlayerValidator _validator = validator;
 
     protected T Validate(string login, string key)

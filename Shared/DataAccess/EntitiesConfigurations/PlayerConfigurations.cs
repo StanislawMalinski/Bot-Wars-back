@@ -8,7 +8,6 @@ public class PlayerConfigurations : IEntityTypeConfiguration<Player>
 {
     public void Configure(EntityTypeBuilder<Player> builder)
     {
-        
         builder.HasKey(entity => entity.Id);
 
         builder.Property(entity => entity.Email)
@@ -21,11 +20,11 @@ public class PlayerConfigurations : IEntityTypeConfiguration<Player>
 
         builder.Property(entity => entity.Points)
             .IsRequired();
-        
+
 
         builder.Property(entity => entity.HashedPassword)
             .IsRequired();
-        
+
 
         // builder.HasOne(entity => entity.Role)
         //     .WithMany()

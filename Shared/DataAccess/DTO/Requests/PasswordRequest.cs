@@ -4,6 +4,5 @@ namespace Shared.DataAccess.DTO.Requests;
 
 public class PasswordRequest
 {
-    [Required]
-    public string Password { get; set; }
+    [Required] public string Password { get; set; }
 }

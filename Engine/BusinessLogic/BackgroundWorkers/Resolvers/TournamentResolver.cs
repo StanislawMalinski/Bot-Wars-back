@@ -14,24 +14,23 @@ namespace Engine.BusinessLogic.BackgroundWorkers.Resolvers;
 
 public class TournamentResolver : Resolver
 {
-    private readonly TournamentRepository _tournamentRepository;
-    private readonly TaskService _taskService;
-    private readonly MatchRepository _matchRepository;
     private readonly AchievementHandlerService _achievementHandlerService;
+    private readonly MatchRepository _matchRepository;
+    private readonly TaskService _taskService;
+    private readonly TournamentRepository _tournamentRepository;
 
-    public TournamentResolver(TournamentRepository tournamentRepository, TaskService taskService, MatchRepository matchRepository, AchievementHandlerService achievementHandlerService)
+    public TournamentResolver(TournamentRepository tournamentRepository, TaskService taskService,
+        MatchRepository matchRepository, AchievementHandlerService achievementHandlerService)
     {
         _tournamentRepository = tournamentRepository;
         _taskService = taskService;
         _matchRepository = matchRepository;
         _achievementHandlerService = achievementHandlerService;
     }
-    
-    
 
-    public async Task<HandlerResult<Success,IErrorResult>> EndTournament(long tournamentId, long taskId)
+
+    public async Task<HandlerResult<Success, IErrorResult>> EndTournament(long tournamentId, long taskId)
     {
-
         var res = await _tournamentRepository.GetTournament(tournamentId);
         var taskRes = await _taskService.GetTask(taskId);
         if (res == null || taskRes.IsError) return new EntityNotFoundErrorResult();
@@ -40,94 +39,92 @@ public class TournamentResolver : Resolver
         task!.Status = TaskStatus.Done;
         await _tournamentRepository.SaveChangesAsync();
         return new Success();
-        
-        
     }
-    
-    public async Task<HandlerResult<Success,IErrorResult>> EndTournament(long tourId,long botId, long taskId)
+
+    public async Task<HandlerResult<Success, IErrorResult>> EndTournament(long tourId, long botId, long taskId)
     {
         return await _achievementHandlerService.EndTournament(tourId, botId, taskId);
     }
+
     public override async Task<HandlerResult<SuccessData<_Task>, IErrorResult>> GetTask(long taskId)
     {
-        return await  _taskService.GetTask(taskId);
+        return await _taskService.GetTask(taskId);
     }
 
-    public async  Task<HandlerResult<SuccessData<Game>,IErrorResult>> GetGame(long tourId)
+    public async Task<HandlerResult<SuccessData<Game>, IErrorResult>> GetGame(long tourId)
     {
         var res = await _tournamentRepository.TournamentGame(tourId);
         if (res == null) return new EntityNotFoundErrorResult();
-        return new SuccessData<Game>()
+        return new SuccessData<Game>
         {
             Data = res
         };
     }
 
-    public async Task<HandlerResult<Success,IErrorResult>> AreAnyMatchesPlayed(long tourId)
+    public async Task<HandlerResult<Success, IErrorResult>> AreAnyMatchesPlayed(long tourId)
     {
         if (await _matchRepository.AreAny(tourId)) return new Success();
         Console.WriteLine("hejo2");
         return new EntityNotFoundErrorResult();
     }
 
-    public async Task<HandlerResult<Success,IErrorResult>> StartPlaying(long tourId)
+    public async Task<HandlerResult<Success, IErrorResult>> StartPlaying(long tourId)
     {
         if (await _tournamentRepository.TournamentPlaying(tourId)) return new Success();
         return new IncorrectOperation();
     }
-    
-    
-    public async Task<HandlerResult<SuccessData<List<Bot>>,IErrorResult>> GetRegisterBots (long tourId)
+
+
+    public async Task<HandlerResult<SuccessData<List<Bot>>, IErrorResult>> GetRegisterBots(long tourId)
     {
-        return new SuccessData<List<Bot>>()
+        return new SuccessData<List<Bot>>
         {
             Data = await _tournamentRepository.TournamentBotsToPlay(tourId)
         };
+    }
 
-    }
-    
-    public async Task<HandlerResult<Success,IErrorResult>> CreateLadder(List<GameInfo> matches, long tourId)
+    public async Task<HandlerResult<Success, IErrorResult>> CreateLadder(List<GameInfo> matches, long tourId)
     {
-        
-            foreach (var match in matches)
+        foreach (var match in matches)
+        {
+            var m = new Matches();
+            m.TournamentsId = tourId;
+            var tour = await _tournamentRepository.GetTournament(tourId);
+            m.GameId = tour.GameId;
+            m.Data = match.Key.ToString();
+            m.Winner = -1;
+            m.Status = match.ReadyToPlay ? GameStatus.ReadyToPlay : GameStatus.NotReadyToPlay;
+            var res = await _matchRepository.AddMatch(m);
+            foreach (var bot in match.Bots)
             {
-                Matches m = new Matches();
-                m.TournamentsId = tourId;
-                var tour = await _tournamentRepository.GetTournament(tourId);
-                m.GameId = tour.GameId;
-                m.Data = match.Key.ToString();
-                m.Winner = -1;
-                m.Status = match.ReadyToPlay ? GameStatus.ReadyToPlay : GameStatus.NotReadyToPlay;
-                var res = await _matchRepository.AddMatch(m);
-                foreach (var bot in match.Bots)
-                {
-                    MatchPlayers players = new MatchPlayers();
-                    players.BotId = bot.Id;
-                    players.Matches = res.Entity;
-                    await _matchRepository.AddMatch(players);
-                }
+                var players = new MatchPlayers();
+                players.BotId = bot.Id;
+                players.Matches = res.Entity;
+                await _matchRepository.AddMatch(players);
             }
-            await _matchRepository.SaveChangesAsync();
-            return new Success();
+        }
+
+        await _matchRepository.SaveChangesAsync();
+        return new Success();
     }
-    
-    public async Task<HandlerResult<SuccessData<List<long>>,IErrorResult>> GetMatchesReadyToPlay(long tourId)
+
+    public async Task<HandlerResult<SuccessData<List<long>>, IErrorResult>> GetMatchesReadyToPlay(long tourId)
     {
-        return new SuccessData<List<long>>()
+        return new SuccessData<List<long>>
         {
             Data = await _matchRepository.GetAllReadyToPlay(tourId)
         };
     }
-   
-    public async Task<HandlerResult<Success,IErrorResult>> PlayMatch(long matchId)
+
+    public async Task<HandlerResult<Success, IErrorResult>> PlayMatch(long matchId)
     {
         Console.WriteLine($"{matchId} rozegranie gry oepracje");
         var result = await _matchRepository.GetMatch(matchId);
-        if(result == null) return new EntityNotFoundErrorResult();
+        if (result == null) return new EntityNotFoundErrorResult();
         if (result.Status == GameStatus.Playing || result.Status == GameStatus.Played) return new Success();
         if (result.Status == GameStatus.NotReadyToPlay) return new IncorrectOperation();
         result.Status = GameStatus.Playing;
-        _Task task = new _Task();
+        var task = new _Task();
         task.OperatingOn = result.Id;
         task.ScheduledOn = DateTime.Now;
         task.Status = TaskStatus.Unassigned;
@@ -137,21 +134,20 @@ public class TournamentResolver : Resolver
         await _matchRepository.SaveChangesAsync();
         Console.WriteLine($"{matchId} zapisnaie");
         return new Success();
-        
     }
-    
-    public async Task<HandlerResult<SuccessData<List<long>>,IErrorResult>> GetPlayedMatches(long tourId)
+
+    public async Task<HandlerResult<SuccessData<List<long>>, IErrorResult>> GetPlayedMatches(long tourId)
     {
-        return new SuccessData<List<long>>() { Data = await _matchRepository.GetAllPlayed(tourId) };
+        return new SuccessData<List<long>> { Data = await _matchRepository.GetAllPlayed(tourId) };
     }
-    
-    public async Task<HandlerResult<Success,IErrorResult>> ResolveMatch(long matchId)
+
+    public async Task<HandlerResult<Success, IErrorResult>> ResolveMatch(long matchId)
     {
         Console.WriteLine($"{matchId} resoveld macth ");
         var match = await _matchRepository.GetMatch(matchId);
         if (match == null) return new EntityNotFoundErrorResult();
         if (match.Status != GameStatus.Played) return new IncorrectOperation();
-        int key = Int32.Parse(match.Data);
+        var key = int.Parse(match.Data);
         match.Status = GameStatus.Resolve;
         Console.WriteLine($"{matchId} pobranie ");
         if (key == 0)
@@ -159,8 +155,9 @@ public class TournamentResolver : Resolver
             await _matchRepository.SaveChangesAsync();
             return new Success();
         }
-        int pkey = ((key - 1) / 2);
-        string parsPkey = pkey.ToString();
+
+        var pkey = (key - 1) / 2;
+        var parsPkey = pkey.ToString();
         var childMatch = await _matchRepository.GetMatchByTourIdEndKey(match.TournamentsId, parsPkey);
         if (childMatch == null)
         {
@@ -177,7 +174,7 @@ public class TournamentResolver : Resolver
             childMatch.Status = GameStatus.ReadyToPlay;
         }
 
-        MatchPlayers newBot = new MatchPlayers();
+        var newBot = new MatchPlayers();
         newBot.BotId = match.Winner;
         newBot.Matches = childMatch;
         Console.WriteLine($"{matchId} jest wynik");
@@ -186,26 +183,24 @@ public class TournamentResolver : Resolver
         Console.WriteLine($"{matchId} zapisanie gwynik gry");
         return new Success();
     }
-    
-    public async Task<HandlerResult<SuccessData<long>,IErrorResult>> IsMatchResolved(long tourId,string key)
+
+    public async Task<HandlerResult<SuccessData<long>, IErrorResult>> IsMatchResolved(long tourId, string key)
     {
-        
-        var res = await _matchRepository.IsResolve(tourId,key);
+        var res = await _matchRepository.IsResolve(tourId, key);
         if (res == null) return new EntityNotFoundErrorResult();
-        return new SuccessData<long>()
+        return new SuccessData<long>
         {
             Data = res.Winner
         };
     }
 
-    public async Task<HandlerResult<SuccessData<List<MatchInTournamentRespond>>, IErrorResult>> GetTournamentMatchStatus(
-        long tournamentId)
+    public async Task<HandlerResult<SuccessData<List<MatchInTournamentRespond>>, IErrorResult>>
+        GetTournamentMatchStatus(
+            long tournamentId)
     {
-
-        return new SuccessData<List<MatchInTournamentRespond>>()
+        return new SuccessData<List<MatchInTournamentRespond>>
         {
             Data = await _matchRepository.GetTournamentStatus(tournamentId)
         };
     }
-    
 }

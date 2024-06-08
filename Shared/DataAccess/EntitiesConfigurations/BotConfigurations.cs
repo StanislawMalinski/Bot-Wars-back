@@ -8,7 +8,6 @@ public class BotConfigurations : IEntityTypeConfiguration<Bot>
 {
     public void Configure(EntityTypeBuilder<Bot> builder)
     {
-        
         builder.HasKey(entity => entity.Id);
 
         builder.HasOne(x => x.Player)
@@ -25,6 +24,5 @@ public class BotConfigurations : IEntityTypeConfiguration<Bot>
 
         builder.Property(x => x.Validation)
             .IsRequired();
-
     }
 }

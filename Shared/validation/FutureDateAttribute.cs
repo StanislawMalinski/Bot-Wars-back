@@ -6,12 +6,9 @@ public class FutureDateAttribute : ValidationAttribute
 {
     public override bool IsValid(object value)
     {
-        if (value == null || !(value is DateTime))
-        {
-            return false;
-        }
+        if (value == null || !(value is DateTime)) return false;
 
-        DateTime dateValue = (DateTime)value;
+        var dateValue = (DateTime)value;
 
         return dateValue.Date >= DateTime.Now.Date.AddHours(24);
     }

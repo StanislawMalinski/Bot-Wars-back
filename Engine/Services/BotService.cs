@@ -10,6 +10,4 @@ public class BotService
     {
         _botRepository = botRepository;
     }
-
-    
 }
