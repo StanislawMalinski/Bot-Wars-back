@@ -6,89 +6,101 @@ namespace Communication.Services.Websocket;
 
 public class WebSocketProxyService
 {
-    private static readonly ConcurrentDictionary<string, WebSocket> _sockets = new();
-    private readonly string _engineWebSocketEndpoint = "ws://bot_wars_engine:8080/ws";
-
-    public WebSocketProxyService()
-    {
-        ConnectToEngine();
-    }
-
-    public async Task ConnectToEngine()
-    {
-        Console.WriteLine("Web Socket service created - waiting");
-        using (var engineWebSocket = new ClientWebSocket())
+        private readonly string _engineWebSocketEndpoint = "ws://bot_wars_engine:8080/ws/{0}";
+        private static ConcurrentDictionary<long, ConcurrentDictionary<string, WebSocket>> _sockets = new ConcurrentDictionary<long, ConcurrentDictionary<string, WebSocket>>();
+        private static ConcurrentDictionary<long, bool> _connectedTournaments = new ConcurrentDictionary<long, bool>();
+        public WebSocketProxyService() 
         {
-            try
+        }
+
+        public async Task ConnectToEngine(long tournamentId)
+        {
+            Console.WriteLine($"Connecting to Engine WebSocket with id {tournamentId}");
+            if (!_connectedTournaments.ContainsKey(tournamentId))
             {
-                var serverUri = new Uri(_engineWebSocketEndpoint);
-                await engineWebSocket.ConnectAsync(serverUri, CancellationToken.None);
-                Console.WriteLine("Connected to engine WebSocket");
-                await ReceiveMessages(engineWebSocket);
+                _connectedTournaments.TryAdd(tournamentId, false);
             }
-            catch (Exception ex)
+            if (_connectedTournaments[tournamentId])
             {
-                Console.WriteLine($"Connecting to engine WebSocket: {ex.Message}");
+                return;
+            }
+            using (var engineWebSocket = new ClientWebSocket())
+            {
+                try
+                {
+                    Uri serverUri = new Uri(string.Format(_engineWebSocketEndpoint, tournamentId));
+                    await engineWebSocket.ConnectAsync(serverUri, CancellationToken.None);
+                    Console.WriteLine($"Connected to engine WebSocket {serverUri}");
+                    await ReceiveMessages(engineWebSocket, tournamentId);
+                    _connectedTournaments[tournamentId] = true;
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Connecting to engine WebSocket: {ex.Message}");
+                }
             }
         }
-    }
 
-    private async Task ReceiveMessages(ClientWebSocket clientWebSocket)
-    {
-        var buffer = new byte[1024 * 4];
-
-        while (clientWebSocket.State == WebSocketState.Open)
+        private async Task ReceiveMessages(ClientWebSocket clientWebSocket, long tournamentId)
         {
-            var result = await clientWebSocket.ReceiveAsync(new ArraySegment<byte>(buffer), CancellationToken.None);
+            var buffer = new byte[1024 * 4];
 
-            if (result.MessageType == WebSocketMessageType.Close)
+            while (clientWebSocket.State == WebSocketState.Open)
             {
-                await clientWebSocket.CloseAsync(WebSocketCloseStatus.NormalClosure, string.Empty,
-                    CancellationToken.None);
-                Console.WriteLine("WebSocket connection closed.");
-            }
-            else
-            {
-                var message = Encoding.UTF8.GetString(buffer, 0, result.Count);
-                Console.WriteLine("Received: " + message);
-                await SendUpdateToAllClients(message);
+                var result = await clientWebSocket.ReceiveAsync(new ArraySegment<byte>(buffer), CancellationToken.None);
+
+                if (result.MessageType == WebSocketMessageType.Close)
+                {
+                    await clientWebSocket.CloseAsync(WebSocketCloseStatus.NormalClosure, string.Empty, CancellationToken.None);
+                    Console.WriteLine("WebSocket connection closed.");
+                }
+                else
+                {
+                    var message = Encoding.UTF8.GetString(buffer, 0, result.Count);
+                    Console.WriteLine("Received: " + message);
+                    await SendUpdateToClients(message, tournamentId);
+                }
             }
         }
-    }
 
-    public async Task AddWebSocketClient(WebSocket webSocket)
-    {
-        var socketId = Guid.NewGuid().ToString();
-        _sockets.TryAdd(socketId, webSocket);
-        Console.WriteLine("WebSocket connection established");
-        await HandleClientConnection(socketId, webSocket);
-    }
-
-    private async Task SendUpdateToAllClients(string message)
-    {
-        Console.WriteLine("Sending update to all websocket clients");
-        var tasks = _sockets.Values.Select(async socket =>
+        public async Task AddWebSocketClient(WebSocket webSocket, long tournamentId)
         {
-            if (socket.State == WebSocketState.Open)
+            Console.WriteLine("Adding new client WebScoket");
+            ConnectToEngine(tournamentId);
+            _sockets.TryAdd(tournamentId, new ConcurrentDictionary<string, WebSocket>());
+            var socketId = Guid.NewGuid().ToString();
+            _sockets[tournamentId][socketId] = webSocket;
+            Console.WriteLine("WebSocket connection established");
+            await HandleClientConnection(socketId, webSocket);
+        }
+
+        private async Task SendUpdateToClients(string message, long tournamentId)
+        {
+            Console.WriteLine("Sending update to all websocket clients");
+            var tasks = _sockets[tournamentId].Values.Select(async socket =>
             {
-                var serverMsg = Encoding.UTF8.GetBytes(message);
-                await socket.SendAsync(new ArraySegment<byte>(serverMsg, 0, serverMsg.Length),
-                    WebSocketMessageType.Text, true, CancellationToken.None);
+                if (socket.State == WebSocketState.Open)
+                {
+                    var serverMsg = Encoding.UTF8.GetBytes(message);
+                    await socket.SendAsync(new ArraySegment<byte>(serverMsg, 0, serverMsg.Length), WebSocketMessageType.Text, true, CancellationToken.None);
+                }
+            }).ToArray();
+            await Task.WhenAll(tasks);
+        }
+
+        private async Task HandleClientConnection(string socketId, WebSocket webSocket)
+        {
+            var buffer = new byte[1024 * 4];
+            var result = await webSocket.ReceiveAsync(new ArraySegment<byte>(buffer), CancellationToken.None);
+            while (!result.CloseStatus.HasValue)
+            {
+                result = await webSocket.ReceiveAsync(new ArraySegment<byte>(buffer), CancellationToken.None);
             }
-        }).ToArray();
-        await Task.WhenAll(tasks);
-    }
-
-    private async Task HandleClientConnection(string socketId, WebSocket webSocket)
-    {
-        var buffer = new byte[1024 * 4];
-        var result = await webSocket.ReceiveAsync(new ArraySegment<byte>(buffer), CancellationToken.None);
-
-        while (!result.CloseStatus.HasValue)
-            result = await webSocket.ReceiveAsync(new ArraySegment<byte>(buffer), CancellationToken.None);
-
-        _sockets.TryRemove(socketId, out _);
-        await webSocket.CloseAsync(result.CloseStatus.Value, result.CloseStatusDescription, CancellationToken.None);
-        Console.WriteLine("WebSocket connection closed");
-    }
+            foreach (var keyValueSocket in _sockets)
+            {
+                keyValueSocket.Value.TryRemove(socketId, out _);
+            }
+            await webSocket.CloseAsync(result.CloseStatus.Value, result.CloseStatusDescription, CancellationToken.None);
+            Console.WriteLine("WebSocket connection closed");
+        }
 }

@@ -14,13 +14,13 @@ public class WebSocketsController : ControllerBase
         _webSocketService = webSocketService;
     }
 
-    [HttpGet("/ws")]
-    public async Task Get()
+    [HttpGet("/tournamentWs/{id}")]
+    public async Task Get([FromRoute] long id)
     {
         if (HttpContext.WebSockets.IsWebSocketRequest)
         {
             using var webSocket = await HttpContext.WebSockets.AcceptWebSocketAsync();
-            await _webSocketService.AddWebSocketClient(webSocket);
+            await _webSocketService.AddWebSocketClient(webSocket, id);
         }
         else
         {
