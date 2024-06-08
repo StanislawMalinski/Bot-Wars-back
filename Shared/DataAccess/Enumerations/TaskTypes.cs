@@ -7,5 +7,4 @@ public enum TaskTypes
     ValidateBot,
     ScheduleTournament,
     ScheduleValidation
-    
 }

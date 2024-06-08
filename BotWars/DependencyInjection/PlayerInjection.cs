@@ -1,9 +1,7 @@
 ﻿using Communication.ServiceInterfaces;
 using Communication.Services.Player;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Shared.DataAccess.AuthorizationRequirements;
-using Shared.DataAccess.DataBaseEntities;
 using Shared.DataAccess.Mappers;
 using Shared.DataAccess.MappersInterfaces;
 using Shared.DataAccess.Repositories;

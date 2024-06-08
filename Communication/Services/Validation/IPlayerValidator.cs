@@ -1,7 +1,6 @@
-﻿namespace Communication.Services.Validation
+﻿namespace Communication.Services.Validation;
+
+public interface IPlayerValidator
 {
-	public interface IPlayerValidator
-	{
-		public PlayerPermitEnum ValidateUser(string login, string key);
-	}
+    public PlayerPermitEnum ValidateUser(string login, string key);
 }

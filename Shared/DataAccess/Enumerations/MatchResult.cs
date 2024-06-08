@@ -8,5 +8,5 @@ public enum MatchResult
     BotMemoryFiled,
     BotTimeFiled,
     GameFiled,
-    GameAndBotFiled,
+    GameAndBotFiled
 }

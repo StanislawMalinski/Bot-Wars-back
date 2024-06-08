@@ -4,5 +4,4 @@ namespace Shared.Results.ErrorResults;
 
 public class AccessDeniedError : IErrorResult
 {
-    
 }

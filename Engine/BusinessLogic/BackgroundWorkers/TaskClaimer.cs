@@ -1,31 +1,23 @@
 ﻿using Coravel.Invocable;
-using Coravel.Queuing.Interfaces;
-using Coravel.Scheduling.Schedule.Interfaces;
-using Shared.DataAccess.Context;
-using Shared.DataAccess.DataBaseEntities;
 using Shared.DataAccess.Repositories;
 
-namespace Engine.BusinessLogic.BackgroundWorkers
+namespace Engine.BusinessLogic.BackgroundWorkers;
+
+public class TaskClaimer : IInvocable
 {
-    public class TaskClaimer : IInvocable
+    private readonly InstanceSettings _instanceSettings;
+    private readonly SchedulerRepository _schedulerRepository;
+
+    public TaskClaimer(SchedulerRepository schedulerRepository, InstanceSettings instanceSettings)
     {
-        private SchedulerRepository _schedulerRepository;
-        private InstanceSettings _instanceSettings;
+        _schedulerRepository = schedulerRepository;
+        _instanceSettings = instanceSettings;
+    }
 
-        public TaskClaimer(SchedulerRepository schedulerRepository, InstanceSettings instanceSettings) 
-        {
-            _schedulerRepository = schedulerRepository;
-            _instanceSettings = instanceSettings;
-        }
-
-        public async Task Invoke()
-        {
-            var tasks = await _schedulerRepository.UnassignedTasks();
-            foreach (var t in tasks)
-            {
-                await _schedulerRepository.AssignTask(t.Id, _instanceSettings.EngineId);
-            }
-            Console.WriteLine("Tasks Assigned");
-        }
+    public async Task Invoke()
+    {
+        var tasks = await _schedulerRepository.UnassignedTasks();
+        foreach (var t in tasks) await _schedulerRepository.AssignTask(t.Id, _instanceSettings.EngineId);
+        Console.WriteLine("Tasks Assigned");
     }
 }

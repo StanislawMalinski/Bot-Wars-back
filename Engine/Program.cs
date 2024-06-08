@@ -15,7 +15,7 @@ builder.Services.AddRepositories()
     .AddMappers()
     .AddBackGroundTask()
     .AddServices();
-InstanceSettings instanceSettings = new InstanceSettings();
+var instanceSettings = new InstanceSettings();
 builder.Configuration.Bind("InstanceSettings", instanceSettings);
 builder.Services.AddSingleton(instanceSettings);
 
@@ -34,7 +34,7 @@ app.UseCors(options =>
 });
 
 app.Services.UseScheduler(async x => x.Schedule<InitializeWorkers>()
-  .EverySecond().Once().PreventOverlapping("Initializer"));
+    .EverySecond().Once().PreventOverlapping("Initializer"));
 app.MapControllers();
 app.UseWebSockets();
 app.UseSwagger();

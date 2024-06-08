@@ -1,6 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Shared.DataAccess.Context;
 using Shared.DataAccess.DataBaseEntities;
 
 namespace Shared.DataAccess.EntitiesConfigurations;
@@ -9,7 +8,6 @@ public class GameConfigurations : IEntityTypeConfiguration<Game>
 {
     public void Configure(EntityTypeBuilder<Game> builder)
     {
-        
         builder.HasKey(entity => entity.Id);
 
         builder.Property(entity => entity.NumbersOfPlayer)
@@ -36,6 +34,5 @@ public class GameConfigurations : IEntityTypeConfiguration<Game>
         builder.HasOne(x => x.Creator)
             .WithMany(x => x.Games)
             .HasForeignKey(x => x.CreatorId).OnDelete(DeleteBehavior.NoAction);
-
     }
 }

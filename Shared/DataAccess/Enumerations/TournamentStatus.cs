@@ -1,14 +1,12 @@
-﻿namespace Shared.DataAccess.Enumerations
+﻿namespace Shared.DataAccess.Enumerations;
+
+public enum TournamentStatus
 {
-	public enum TournamentStatus
-	{
-		NOTSCHEDULED,
-		SCHEDULED,
-		CANCELLED,
-		PLAYED,
-		DONE,
-		SUSPENDED,
-		INPLAY,
-		
-	}
+    NOTSCHEDULED,
+    SCHEDULED,
+    CANCELLED,
+    PLAYED,
+    DONE,
+    SUSPENDED,
+    INPLAY
 }

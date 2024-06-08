@@ -6,5 +6,5 @@ namespace Engine.BusinessLogic.Gameplay;
 public class DisqualificationGameResult : GameResult
 {
     public Bot DisqualifiedBot { get; set; }
-    public DisqualificationGameStatus Status { get; set; } 
+    public DisqualificationGameStatus Status { get; set; }
 }

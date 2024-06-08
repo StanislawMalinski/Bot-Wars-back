@@ -21,7 +21,5 @@ public class AchievementRecordConfigurations : IEntityTypeConfiguration<Achievem
 
         builder.Property(x => x.Value)
             .IsRequired();
-        
-        
     }
 }

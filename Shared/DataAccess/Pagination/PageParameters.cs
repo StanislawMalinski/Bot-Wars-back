@@ -4,7 +4,9 @@ public class PageParameters
 {
     private const int maxPageSize = 10;
 
-    private int _pageNumber = 0;
+    private int _pageNumber;
+
+    private int _pageSize = 10;
 
     public int PageNumber
     {
@@ -12,11 +14,9 @@ public class PageParameters
         set => _pageNumber = value;
     }
 
-    private int _pageSize = 10;
-
     public int PageSize
     {
         get => _pageSize < 0 ? 1 : _pageSize;
-        set => _pageSize = (value > maxPageSize) ? maxPageSize : value;
+        set => _pageSize = value > maxPageSize ? maxPageSize : value;
     }
 }

@@ -1,5 +1,4 @@
 ﻿using Communication.ServiceInterfaces;
-using Microsoft.EntityFrameworkCore;
 using Shared.DataAccess.Context;
 using Shared.DataAccess.DataBaseEntities;
 using Shared.DataAccess.DTO;
@@ -37,23 +36,19 @@ public class AchievementService : IAchievementService
             .GetPlayer(playerId);
 
         if (player == null)
-        {
             return new EntityNotFoundErrorResult
             {
                 Title = "EntityNotFoundError 404",
                 Message = "Player could not have been found"
             };
-        }
 
         var achievementRecords = await _achievementsRepository.GetAchievementRecordsByPlayerId(playerId);
 
         var result = new List<AchievementRecordDto>();
         var finalResult = new List<AchievementRecordDto>();
         foreach (var var in achievementRecords)
-        {
             result.AddRange((await _achievementsRepository.GetAchievementRecordByAchievementRecord(var))
                 .ConvertAll(x => _recordMapper.ToDto(var, x)));
-        }
 
         var grouped = result.GroupBy(x => x.AchievementTypeId)
             .Select(g => g.ToArray())
@@ -80,24 +75,20 @@ public class AchievementService : IAchievementService
             .GetPlayer(playerId);
 
         if (player == null)
-        {
             return new EntityNotFoundErrorResult
             {
                 Title = "EntityNotFoundError 404",
                 Message = "Player could not have been found"
             };
-        }
 
         var achievementType = await _achievementsRepository.GetAchievementTypeById(achievementTypeId);
 
         if (achievementType == null)
-        {
             return new EntityNotFoundErrorResult
             {
                 Title = "EntityNotFoundError 404",
                 Message = "Achievement type could not have been found"
             };
-        }
 
         var achievementRecords =
             await _achievementsRepository.GetAchievementRecordsByPlayerIdAndAchievementTypeId(playerId,
@@ -115,13 +106,11 @@ public class AchievementService : IAchievementService
         var nextThreshold = achievementRecords.Count;
         var currentThreshold = achievementThresholds.ElementAt(nextThreshold);
         if (currentThreshold.Threshold > currentPlayerThreshold)
-        {
             return new NotEnoughAchievementPointsError
             {
                 Title = "NotEnoughAchievementPointsError 400",
                 Message = "You are not eligible for this achievement yet"
             };
-        }
 
         var obtainedAchievement = new AchievementRecord
         {

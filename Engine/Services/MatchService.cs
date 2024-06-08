@@ -2,8 +2,4 @@
 
 public class MatchService
 {
-    public MatchService()
-    {
-        
-    }
 }

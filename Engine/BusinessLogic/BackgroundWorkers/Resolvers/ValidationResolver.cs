@@ -1,7 +1,6 @@
 ﻿using Engine.Services;
 using Shared.DataAccess.DataBaseEntities;
 using Shared.DataAccess.Enumerations;
-using Shared.DataAccess.Repositories;
 using Shared.DataAccess.RepositoryInterfaces;
 using Shared.Results;
 using Shared.Results.ErrorResults;
@@ -13,48 +12,45 @@ namespace Engine.BusinessLogic.BackgroundWorkers.Resolvers;
 
 public class ValidationResolver : Resolver
 {
-    private readonly TaskService _taskService;
     private readonly IBotRepository _botRepository;
+    private readonly TaskService _taskService;
 
     public ValidationResolver(TaskService taskService, IBotRepository botRepository)
     {
         _taskService = taskService;
         _botRepository = botRepository;
     }
+
     public override async Task<HandlerResult<SuccessData<_Task>, IErrorResult>> GetTask(long taskId)
     {
         return await _taskService.GetTask(taskId);
     }
-    public async Task<HandlerResult<SuccessData<Bot>,IErrorResult>> GetBot(long botId)
+
+    public async Task<HandlerResult<SuccessData<Bot>, IErrorResult>> GetBot(long botId)
     {
         var res = await _botRepository.GetBot(botId);
-        if (res == null)
-        {
-            return new EntityNotFoundErrorResult();
-        }
+        if (res == null) return new EntityNotFoundErrorResult();
 
-        return new SuccessData<Bot>()
-        {
-            Data = res
-        };
-    }
-    public async Task<HandlerResult<SuccessData<Game>,IErrorResult>> GetGame(long botId)
-    {
-        var res= await _botRepository.GetGame(botId);
-        if (res == null)
-        {
-            return new EntityNotFoundErrorResult();
-        }
-
-        return new SuccessData<Game>()
+        return new SuccessData<Bot>
         {
             Data = res
         };
     }
 
-    public async Task<HandlerResult<Success,IErrorResult>> ValidateBot(long taskId, bool result,int memoryUsed,int timeUsed)
+    public async Task<HandlerResult<SuccessData<Game>, IErrorResult>> GetGame(long botId)
     {
-        
+        var res = await _botRepository.GetGame(botId);
+        if (res == null) return new EntityNotFoundErrorResult();
+
+        return new SuccessData<Game>
+        {
+            Data = res
+        };
+    }
+
+    public async Task<HandlerResult<Success, IErrorResult>> ValidateBot(long taskId, bool result, int memoryUsed,
+        int timeUsed)
+    {
         var resTask = await _taskService.GetTask(taskId);
         if (resTask.IsError) return new EntityNotFoundErrorResult();
         var task = resTask.Match(x => x.Data, null!);
@@ -66,6 +62,5 @@ public class ValidationResolver : Resolver
         resBot.TimeUsed = timeUsed;
         await _botRepository.SaveChangeAsync();
         return new Success();
-        
     }
 }

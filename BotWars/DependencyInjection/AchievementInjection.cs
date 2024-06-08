@@ -14,7 +14,7 @@ public static class AchievementInjection
         serviceCollection.AddScoped<IAchievementRecordMapper, AchievementRecordMapper>();
         serviceCollection.AddScoped<IAchievementTypeMapper, AchievementTypeMapper>();
         serviceCollection.AddScoped<IAchievementService, AchievementService>();
-    
+
         return serviceCollection;
     }
 }

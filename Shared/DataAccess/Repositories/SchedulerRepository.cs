@@ -2,17 +2,13 @@
 using Shared.DataAccess.Context;
 using Shared.DataAccess.DataBaseEntities;
 using Shared.DataAccess.Enumerations;
-using Shared.Results;
-using Shared.Results.ErrorResults;
-using Shared.Results.IResults;
-using Shared.Results.SuccessResults;
 using TaskStatus = Shared.DataAccess.Enumerations.TaskStatus;
 
 namespace Shared.DataAccess.Repositories;
 
 public class SchedulerRepository
 {
-    private DataContext _dataContext;
+    private readonly DataContext _dataContext;
 
     public SchedulerRepository(DataContext dataContext)
     {
@@ -21,26 +17,22 @@ public class SchedulerRepository
 
     public async Task<List<_Task>> TaskToDo()
     {
-
-        DateTime data = DateTime.Now;
+        var data = DateTime.Now;
         return await _dataContext.Tasks.Where(x => x.ScheduledOn <= data && x.Status == TaskStatus.ToDo).ToListAsync();
-        
     }
 
     public async Task<List<_Task>> TaskToDo(int engineId)
     {
-
-        DateTime data = DateTime.Now;
-        return await _dataContext.Tasks.Where(x => x.ScheduledOn <= data && x.Status == TaskStatus.ToDo && x.EngineId == engineId).ToListAsync();
-        
+        var data = DateTime.Now;
+        return await _dataContext.Tasks
+            .Where(x => x.ScheduledOn <= data && x.Status == TaskStatus.ToDo && x.EngineId == engineId).ToListAsync();
     }
 
     public async Task<List<_Task>> UnassignedTasks()
     {
-
-        DateTime data = DateTime.Now;
-        return await _dataContext.Tasks.Where(x => x.ScheduledOn <= data && x.Status == TaskStatus.Unassigned).ToListAsync();
-       
+        var data = DateTime.Now;
+        return await _dataContext.Tasks.Where(x => x.ScheduledOn <= data && x.Status == TaskStatus.Unassigned)
+            .ToListAsync();
     }
 
     public async Task<bool> AssignTask(long taskId, int engineId)
@@ -66,7 +58,7 @@ public class SchedulerRepository
     {
         return await _dataContext.Tournaments.FirstOrDefaultAsync(x => x.Status == TournamentStatus.NOTSCHEDULED);
     }
-    
+
     public async Task<Bot?> GetBotNotValidated()
     {
         return await _dataContext.Bots.FirstOrDefaultAsync(x => x.Validation == BotStatus.ToScheduleForValidation);

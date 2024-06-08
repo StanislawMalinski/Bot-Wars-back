@@ -16,7 +16,8 @@ var app = builder.Build();
 
 
 // Configure the HTTP request pipeline.
-app.UseCors(options => {
+app.UseCors(options =>
+{
     options.AllowAnyMethod();
     options.AllowAnyHeader();
     options.AllowAnyOrigin();
@@ -32,10 +33,7 @@ using (var scope = app.Services.CreateScope())
     var services = scope.ServiceProvider;
 
     var context = services.GetRequiredService<Database>();
-    if (context.Database.GetPendingMigrations().Any())
-    {
-        context.Database.Migrate();
-    }
+    if (context.Database.GetPendingMigrations().Any()) context.Database.Migrate();
 }
 
 await app.Services.GetRequiredService<Seeder>().Seed();

@@ -15,13 +15,14 @@ namespace Communication.Services.Bot;
 
 public class BotService : IBotService
 {
-    private readonly IBotRepository _botRepository;
     private readonly IAuthorizationService _authorizationService;
-    private readonly IUserContextRepository _userContextRepository;
     private readonly IBotMapper _botMapper;
+    private readonly IBotRepository _botRepository;
     private readonly IPlayerRepository _playerRepository;
+    private readonly IUserContextRepository _userContextRepository;
 
-    public BotService(IBotRepository botRepository, IAuthorizationService authorizationService, IUserContextRepository userContextRepository, IBotMapper botMapper, IPlayerRepository playerRepository)
+    public BotService(IBotRepository botRepository, IAuthorizationService authorizationService,
+        IUserContextRepository userContextRepository, IBotMapper botMapper, IPlayerRepository playerRepository)
     {
         _botRepository = botRepository;
         _authorizationService = authorizationService;
@@ -29,17 +30,14 @@ public class BotService : IBotService
         _botMapper = botMapper;
         _playerRepository = playerRepository;
     }
-    
+
 
     public async Task<HandlerResult<SuccessData<BotResponse>, IErrorResult>> GetBotResponse(long botId)
     {
         var res = await _botRepository.GetBot(botId);
-        if (res == null)
-        {
-            return new EntityNotFoundErrorResult();
-        }
+        if (res == null) return new EntityNotFoundErrorResult();
 
-        return new SuccessData<BotResponse>()
+        return new SuccessData<BotResponse>
         {
             Data = _botMapper.MapBotToResponse(res)
         };
@@ -48,10 +46,7 @@ public class BotService : IBotService
     public async Task<HandlerResult<Success, IErrorResult>> AddBot(BotRequest botRequest, long playerId)
     {
         var res = await _botRepository.AddBot(botRequest, playerId);
-        if (res)
-        {
-            return new Success();
-        }
+        if (res) return new Success();
         return new IncorrectOperation();
     }
 
@@ -59,42 +54,37 @@ public class BotService : IBotService
     {
         var botResult = await _botRepository.GetBot(botId);
         if (botResult == null)
-        {
-            return new EntityNotFoundErrorResult()
+            return new EntityNotFoundErrorResult
             {
                 Title = "Return null",
                 Message = "Bot o podanym id nie istnieje"
             };
-        }
         var authorizationResult = _authorizationService.AuthorizeAsync(_userContextRepository.GetUser(),
             botResult,
             new ResourceOperationRequirement(ResourceOperation.Delete)).Result;
-        
-        if (!authorizationResult.Succeeded)
-        {
-            return new UnauthorizedError();
-        }
-        var res =  await _botRepository.DeleteBot(botId);
+
+        if (!authorizationResult.Succeeded) return new UnauthorizedError();
+        var res = await _botRepository.DeleteBot(botId);
         if (!res) new EntityNotFoundErrorResult();
         await _botRepository.SaveChangeAsync();
         return new Success();
     }
 
-    public async Task<HandlerResult<SuccessData<PageResponse<BotResponse>>, IErrorResult>> GetBotsForPlayer(string? playerName, PageParameters pageParameters)
+    public async Task<HandlerResult<SuccessData<PageResponse<BotResponse>>, IErrorResult>> GetBotsForPlayer(
+        string? playerName, PageParameters pageParameters)
     {
-        if (playerName == null) return new EntityNotFoundErrorResult(); 
+        if (playerName == null) return new EntityNotFoundErrorResult();
         var player = await _playerRepository.GetPlayerByLogin(playerName);
-    
+
         if (player == null) return new EntityNotFoundErrorResult();
-        
-            
+
+
         var bots = await _botRepository.GetPlayerBots(player.Id, pageParameters);
 
         return new SuccessData<PageResponse<BotResponse>>
         {
-            Data = new PageResponse<BotResponse>(bots,pageParameters.PageSize, bots.Count)
+            Data = new PageResponse<BotResponse>(bots, pageParameters.PageSize, bots.Count)
         };
-        
     }
 
     public async Task<HandlerResult<SuccessData<IFormFile>, IErrorResult>> GetBotFileForPlayer(long playerId,
@@ -102,36 +92,32 @@ public class BotService : IBotService
     {
         var botResult = await _botRepository.GetBot(botId);
         if (botResult == null)
-        {
-            return new EntityNotFoundErrorResult()
+            return new EntityNotFoundErrorResult
             {
                 Title = "Return null",
                 Message = "Bot o podanym id nie istnieje"
             };
-        }
-       
+
         var authorizationResult = _authorizationService.AuthorizeAsync(_userContextRepository.GetUser(),
             botResult,
             new ResourceOperationRequirement(ResourceOperation.ReadRestricted)).Result;
-        
-        if (!authorizationResult.Succeeded)
-        {
-            return new UnauthorizedError();
-        }
+
+        if (!authorizationResult.Succeeded) return new UnauthorizedError();
         var res = await _botRepository.GetBotFileForPlayer(botId);
         if (res == null) new EntityNotFoundErrorResult();
-        return new SuccessData<IFormFile>()
+        return new SuccessData<IFormFile>
         {
             Data = res
         };
     }
 
-    public async Task<HandlerResult<SuccessData<PageResponse<BotResponse>>, IErrorResult>> GetBotsForTournament(long tournamentId, PageParameters pageParameters)
+    public async Task<HandlerResult<SuccessData<PageResponse<BotResponse>>, IErrorResult>> GetBotsForTournament(
+        long tournamentId, PageParameters pageParameters)
     {
-        var res = await _botRepository.GetBotsForTournament(tournamentId, pageParameters) ;
-        return new SuccessData<PageResponse<BotResponse>>()
+        var res = await _botRepository.GetBotsForTournament(tournamentId, pageParameters);
+        return new SuccessData<PageResponse<BotResponse>>
         {
-            Data = new PageResponse<BotResponse>(res,pageParameters.PageSize, res.Count)
+            Data = new PageResponse<BotResponse>(res, pageParameters.PageSize, res.Count)
         };
     }
 }

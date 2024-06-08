@@ -1,5 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore.ChangeTracking;
-using Shared.DataAccess.DataBaseEntities;
+﻿using Shared.DataAccess.DataBaseEntities;
 using Shared.DataAccess.DTO;
 using Shared.DataAccess.DTO.Responses;
 using Shared.Results;
@@ -23,7 +22,4 @@ public interface ITournamentRepository
 
     Task<HandlerResult<SuccessData<PageResponse<TournamentDto>>, IErrorResult>> GetTournamentsAsync(
         TournamentFilterRequest tournamentFilterRequest);
-    
-    
-   
 }

@@ -1,5 +1,5 @@
-﻿using Shared.DataAccess.DTO;
-using Shared.DataAccess.DataBaseEntities;
+﻿using Shared.DataAccess.DataBaseEntities;
+using Shared.DataAccess.DTO;
 
 namespace Shared.DataAccess.Mappers;
 
@@ -15,7 +15,6 @@ public class AchievementRecordMapper : IAchievementRecordMapper
             PlayerId = achievementRecord.PlayerId,
             Value = achievementRecord.Value
         };
-        
     }
 
     public AchievementRecordDto ToDto(AchievementRecord achievementRecord, AchievementThresholds achievementThresholds)
@@ -26,7 +25,7 @@ public class AchievementRecordMapper : IAchievementRecordMapper
             AchievementTypeId = achievementRecord.AchievementTypeId,
             Description = achievementRecord.AchievementType.Description,
             PlayerId = achievementRecord.PlayerId,
-            Value = achievementThresholds.Threshold,
+            Value = achievementThresholds.Threshold
         };
     }
 

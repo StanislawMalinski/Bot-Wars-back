@@ -1,6 +1,4 @@
-﻿using Shared.DataAccess.Enumerations;
-
-namespace Shared.DataAccess.DTO.Responses;
+﻿namespace Shared.DataAccess.DTO.Responses;
 
 public record class MatchInTournamentRespond(
     long matchId,
@@ -8,6 +6,5 @@ public record class MatchInTournamentRespond(
     string Status,
     long Winner,
     int Position,
-    DateTime PlayedOutDate,string MatchResult
-    );
-    
+    DateTime PlayedOutDate, string MatchResult
+);
