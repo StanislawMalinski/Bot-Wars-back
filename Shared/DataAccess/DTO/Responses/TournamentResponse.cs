@@ -21,10 +21,9 @@ public class TournamentResponse
     public int MemoryLimit { get; set; }
     public int TimeLimit { get; set; }
     public string Status { get; set; }
-    
+
     public List<long>? MatchIds { get; set; }
 
-   
-    public List<BotPlayer>? PlayersBots  { get; set; }
-   
+
+    public List<BotPlayer>? PlayersBots { get; set; }
 }

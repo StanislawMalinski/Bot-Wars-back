@@ -5,6 +5,6 @@ namespace Engine.BusinessLogic.Gameplay;
 
 public class SuccessfullGameResult : GameResult
 {
-  public Bot BotWinner { get; set; }
-  public Bot BotLoser { get; set; }
+    public Bot BotWinner { get; set; }
+    public Bot BotLoser { get; set; }
 }

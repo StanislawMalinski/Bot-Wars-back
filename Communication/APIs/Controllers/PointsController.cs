@@ -2,7 +2,6 @@
 using Communication.ServiceInterfaces;
 using Microsoft.AspNetCore.Mvc;
 using Shared.DataAccess.Pagination;
-using Shared.DataAccess.RepositoryInterfaces;
 
 namespace Communication.APIs.Controllers;
 

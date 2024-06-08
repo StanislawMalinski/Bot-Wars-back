@@ -1,6 +1,4 @@
 ﻿using Engine.BusinessLogic.BackgroundWorkers.Resolvers;
-using Microsoft.AspNetCore.Authorization;
-using Shared.DataAccess.AuthorizationRequirements;
 using Shared.DataAccess.Repositories;
 using Shared.DataAccess.RepositoryInterfaces;
 
@@ -17,7 +15,7 @@ public static class RepositoryInjection
         serviceCollection.AddScoped<IPointsRepository, PointRepository>();
         serviceCollection.AddScoped<TournamentRepository>();
         serviceCollection.AddScoped<IUserSettingsRepository, UserSettingsRepository>();
-        serviceCollection.AddScoped<IBotRepository,BotRepository>();
+        serviceCollection.AddScoped<IBotRepository, BotRepository>();
         serviceCollection.AddScoped<MatchRepository>();
         serviceCollection.AddScoped<TaskRepository>();
         serviceCollection.AddScoped<AchievementHandlerService>();

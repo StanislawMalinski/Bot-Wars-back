@@ -9,26 +9,26 @@ namespace Communication.Services.Administration;
 public class AdministrativeService : IAdministrativeService
 {
     private readonly IPlayerRepository _playerRepository;
-    private string login = "login";
     private string key = "key";
+    private string login = "login";
 
-    public AdministrativeService( IPlayerRepository playerRepository)
+    public AdministrativeService(IPlayerRepository playerRepository)
     {
         _playerRepository = playerRepository;
     }
 
     public async Task<HandlerResult<Success, IErrorResult>> UnbanPlayer(long playerId)
     {
-        var resPlayer =  await _playerRepository.GetPlayer(playerId);
+        var resPlayer = await _playerRepository.GetPlayer(playerId);
         if (resPlayer == null) return new EntityNotFoundErrorResult();
         resPlayer.isBanned = false;
         await _playerRepository.SaveChangesAsync();
         return new Success();
     }
-    
+
     public async Task<HandlerResult<Success, IErrorResult>> BanPlayer(long playerId)
     {
-        var resPlayer =  await _playerRepository.GetPlayer(playerId);
+        var resPlayer = await _playerRepository.GetPlayer(playerId);
         if (resPlayer == null) return new EntityNotFoundErrorResult();
         resPlayer.isBanned = true;
         await _playerRepository.SaveChangesAsync();

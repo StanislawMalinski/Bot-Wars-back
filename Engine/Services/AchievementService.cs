@@ -2,8 +2,4 @@
 
 public class AchievementService
 {
-    public AchievementService()
-    {
-        
-    }
 }

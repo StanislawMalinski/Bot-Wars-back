@@ -8,14 +8,12 @@ public class MatchPlayersConfigurations : IEntityTypeConfiguration<MatchPlayers>
 {
     public void Configure(EntityTypeBuilder<MatchPlayers> builder)
     {
-        
         builder.HasKey(entity => entity.Id);
 
         builder.HasOne(x => x.Bot)
             .WithMany(x => x.MatchPlayers)
             .HasForeignKey(x => x.BotId)
             .OnDelete(DeleteBehavior.NoAction);
-
 
 
         builder.HasOne(x => x.Matches)
@@ -28,7 +26,5 @@ public class MatchPlayersConfigurations : IEntityTypeConfiguration<MatchPlayers>
             .WithOne(x => x.ArchivedMatchPlayers)
             .HasForeignKey<ArchivedMatchPlayers>(x => x.TournamentId)
             .OnDelete(DeleteBehavior.Cascade);*/
-
-
     }
 }

@@ -4,6 +4,7 @@ using Microsoft.Extensions.Hosting;
 using Shared.DataAccess.Context;
 
 namespace Communication.APIs.Controllers;
+
 [Route("api/v1/[controller]")]
 [ApiController]
 public class DataBaseController : Controller
@@ -16,7 +17,7 @@ public class DataBaseController : Controller
         _dataContext = dataContext;
         _env = env;
     }
-    
+
     [HttpGet("reset")]
     public async Task<IActionResult> reset()
     {
@@ -24,7 +25,7 @@ public class DataBaseController : Controller
         // {
         //     return NotFound();
         // }
-        
+
         var pendingMigrations = await _dataContext.Database.GetPendingMigrationsAsync();
         if (pendingMigrations.Any())
         {
@@ -32,13 +33,11 @@ public class DataBaseController : Controller
             await _dataContext.Database.MigrateAsync();
             return Ok();
         }
-    
+
         Console.WriteLine("No pending migrations.");
         return NotFound();
-        
-
-        
     }
+
     [HttpDelete("delete")]
     public async Task<IActionResult> delete()
     {
@@ -47,10 +46,7 @@ public class DataBaseController : Controller
         //     return NotFound();
         // }
         await _dataContext.Database.EnsureDeletedAsync();
-        
-        return Ok();
-        
 
-        
+        return Ok();
     }
 }

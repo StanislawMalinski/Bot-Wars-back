@@ -1,15 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Internal;
 using Shared.DataAccess.Context;
-using Shared.DataAccess.DTO;
 using Shared.DataAccess.DataBaseEntities;
 using Shared.DataAccess.Enumerations;
-using Shared.DataAccess.Mappers;
 using Shared.DataAccess.RepositoryInterfaces;
-using Shared.Results;
-using Shared.Results.ErrorResults;
-using Shared.Results.IResults;
-using Shared.Results.SuccessResults;
 
 namespace Shared.DataAccess.Repositories;
 
@@ -28,24 +21,27 @@ public class AchievementsRepository : IAchievementsRepository
             .AchievementType
             .FindAsync(achievementTypeId);
     }
-    
+
     public async Task<List<AchievementRecord>> GetAchievementRecordsByPlayerId(long playerId)
     {
         return await _dataContext
             .AchievementRecord
-            .Include(x=>x.AchievementType)
+            .Include(x => x.AchievementType)
             .Where(x => x.PlayerId == playerId)
             .ToListAsync();
     }
 
-    public async Task<List<AchievementThresholds>> GetAchievementRecordByAchievementRecord(AchievementRecord achievementRecord)
+    public async Task<List<AchievementThresholds>> GetAchievementRecordByAchievementRecord(
+        AchievementRecord achievementRecord)
     {
         return await _dataContext.AchievementThresholds
-            .Where(x => x.Threshold <= achievementRecord.Value && x.AchievementTypeId == achievementRecord.AchievementTypeId)
+            .Where(x => x.Threshold <= achievementRecord.Value &&
+                        x.AchievementTypeId == achievementRecord.AchievementTypeId)
             .ToListAsync();
     }
 
-    public async Task<List<AchievementRecord>> GetAchievementRecordsByPlayerIdAndAchievementTypeId(long playerId, long achievementTypeId)
+    public async Task<List<AchievementRecord>> GetAchievementRecordsByPlayerIdAndAchievementTypeId(long playerId,
+        long achievementTypeId)
     {
         return await _dataContext
             .AchievementRecord
@@ -77,26 +73,21 @@ public class AchievementsRepository : IAchievementsRepository
         SaveAsync();
     }
 
-    private async void SaveAsync()
-    {
-        await _dataContext.SaveChangesAsync();
-    }
-    
     public async Task<bool> UpDateProgressNoSave(AchievementsTypes type, long botId)
     {
         var botRes = await _dataContext.Bots.FindAsync(botId);
         if (botRes == null) return false;
-        long userId = botRes.PlayerId;
+        var userId = botRes.PlayerId;
         var res = await _dataContext.AchievementRecord.FirstOrDefaultAsync(x =>
             x.AchievementTypeId == (long)type && x.PlayerId == userId);
         long value;
         if (res == null)
         {
-            await _dataContext.AchievementRecord.AddAsync(new AchievementRecord()
+            await _dataContext.AchievementRecord.AddAsync(new AchievementRecord
             {
-                AchievementTypeId = (long) type,
+                AchievementTypeId = (long)type,
                 Value = 1,
-                PlayerId = userId,
+                PlayerId = userId
             });
             value = 1;
         }
@@ -109,16 +100,18 @@ public class AchievementsRepository : IAchievementsRepository
         var notification = await _dataContext.AchievementThresholds.FirstOrDefaultAsync(x =>
             x.AchievementTypeId == (long)type && x.Threshold == value);
         if (notification != null)
-        {
-            await _dataContext.NotificationOutboxes.AddAsync(new NotificationOutbox()
+            await _dataContext.NotificationOutboxes.AddAsync(new NotificationOutbox
             {
                 Type = NotificationType.Achievement,
                 NotificationValue = 1,
                 PLayerId = userId
             });
-        }
-        
+
         return true;
-    } 
-    
+    }
+
+    private async void SaveAsync()
+    {
+        await _dataContext.SaveChangesAsync();
+    }
 }

@@ -9,7 +9,7 @@ public static class MapperInjection
     {
         serviceCollection.AddScoped<IAchievementRecordMapper, AchievementRecordMapper>();
         serviceCollection.AddScoped<IAchievementTypeMapper, AchievementTypeMapper>();
-        serviceCollection.AddScoped<IGameTypeMapper, GameTypeMapper > ();
+        serviceCollection.AddScoped<IGameTypeMapper, GameTypeMapper>();
         serviceCollection.AddScoped<IPlayerMapper, PlayerMapper>();
         serviceCollection.AddScoped<IPointHistoryMapper, PointHistoryMapper>();
         serviceCollection.AddScoped<ITournamentMapper, TournamentMapper>();

@@ -1,9 +1,8 @@
-﻿namespace FileGatherer
+﻿namespace FileGatherer;
+
+public class ServiceResponse<T>
 {
-    public class ServiceResponse<T>
-    {
-        public bool Success { get; set; }
-        public T Data { get; set; }
-        public String Message { get; set; }
-    }
+    public bool Success { get; set; }
+    public T Data { get; set; }
+    public string Message { get; set; }
 }

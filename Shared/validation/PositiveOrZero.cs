@@ -6,13 +6,10 @@ public class PositiveOrZero : ValidationAttribute
 {
     public override bool IsValid(object value)
     {
-        if (value == null || !(value is int))
-        {
-            return false;
-        }
+        if (value == null || !(value is int)) return false;
 
-        int number = (int)value;
+        var number = (int)value;
 
-        return number >=0;
+        return number >= 0;
     }
 }
