@@ -14,7 +14,7 @@ public class WebSocketsController : ControllerBase
         _webSocketService = webSocketService;
     }
 
-    [HttpGet("/tournament_ws/{id}")]
+    [HttpGet("/tournamentWs/{id}")]
     public async Task Get([FromRoute] long id)
     {
         if (HttpContext.WebSockets.IsWebSocketRequest)
