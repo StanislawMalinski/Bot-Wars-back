@@ -163,7 +163,7 @@ public class TournamentWorker: IInvocable
         {
             string jsonStatus = JsonSerializer.Serialize(status);
             Console.WriteLine(jsonStatus);
-            await _websocketService.SendUpdateToAllClients(jsonStatus);
+            await _websocketService.SendUpdateToAllClients(jsonStatus, TourId);
             Console.WriteLine("koniec wib sokiety");
         } 
         else

@@ -1,4 +1,5 @@
-﻿using System.Collections.Concurrent;
+﻿using Shared.DataAccess.DataBaseEntities;
+using System.Collections.Concurrent;
 using System.Net.WebSockets;
 using System.Text;
 
@@ -6,20 +7,21 @@ namespace Engine.Services
 {
     public class WebSocketService
     {
-        private static ConcurrentDictionary<string, WebSocket> _sockets = new ConcurrentDictionary<string, WebSocket>();
+        private static ConcurrentDictionary<long, ConcurrentDictionary<string, WebSocket>> _sockets = new ConcurrentDictionary<long, ConcurrentDictionary<string, WebSocket>>();
 
-        public async Task AddWebSocket(WebSocket webSocket)
+        public async Task AddWebSocket(WebSocket webSocket, long tournamentId)
         {
+            _sockets.TryAdd(tournamentId, new ConcurrentDictionary<string, WebSocket>());
             var socketId = Guid.NewGuid().ToString();
-            _sockets.TryAdd(socketId, webSocket);
+            _sockets[tournamentId][socketId] = webSocket;
             Console.WriteLine("WebSocket connection established");
             await HandleConnection(socketId, webSocket);
         }
 
-        public async Task SendUpdateToAllClients(string message)
+        public async Task SendUpdateToAllClients(string message, long tournamentId)
         {
             Console.WriteLine("Sending update to all websocket clients");
-            var tasks = _sockets.Values.Select(async socket =>
+            var tasks = _sockets[tournamentId].Values.Select(async socket =>
             {
                 if (socket.State == WebSocketState.Open)
                 {
@@ -39,7 +41,10 @@ namespace Engine.Services
                 result = await webSocket.ReceiveAsync(new ArraySegment<byte>(buffer), CancellationToken.None);
             }
 
-            _sockets.TryRemove(socketId, out _);
+            foreach (var keyValueSocket in _sockets)
+            {
+                keyValueSocket.Value.TryRemove(socketId, out _);
+            }
             await webSocket.CloseAsync(result.CloseStatus.Value, result.CloseStatusDescription, CancellationToken.None);
             Console.WriteLine("WebSocket connection closed");
         }

@@ -14,13 +14,13 @@ namespace Engine.WebsocketController
             _webSocketService = webSocketService;
         }
 
-        [HttpGet("/ws")]
-        public async Task Get()
+        [HttpGet("/ws/{id}")]
+        public async Task Get([FromRoute] long id)
         {
             if (HttpContext.WebSockets.IsWebSocketRequest)
             {
                 using var webSocket = await HttpContext.WebSockets.AcceptWebSocketAsync();
-                await _webSocketService.AddWebSocket(webSocket);
+                await _webSocketService.AddWebSocket(webSocket, id);
             }
             else
             {

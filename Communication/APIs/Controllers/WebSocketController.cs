@@ -20,13 +20,13 @@ namespace Communication.APIs.Controllers
             _webSocketService = webSocketService;
         }
 
-        [HttpGet("/ws")]
-        public async Task Get()
+        [HttpGet("/tournament_ws/{id}")]
+        public async Task Get([FromRoute] long id)
         {
             if (HttpContext.WebSockets.IsWebSocketRequest)
             {
                 using var webSocket = await HttpContext.WebSockets.AcceptWebSocketAsync();
-                await _webSocketService.AddWebSocketClient(webSocket);
+                await _webSocketService.AddWebSocketClient(webSocket, id);
             }
             else
             {
