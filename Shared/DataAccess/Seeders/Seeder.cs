@@ -97,30 +97,30 @@ public class Seeder
         {
             new()
             {
-                Id = 1, NumbersOfPlayer = 10, LastModification = DateTime.Now, GameFile = "QuakeIIIArena",
-                GameInstructions = "Eliminate the enemy players in fast-paced multiplayer battles.",
-                InterfaceDefinition = "First-Person Shooter (FPS)", IsAvailableForPlay = true, FileId = 5,
+                Id = 1, NumbersOfPlayer = 10, LastModification = DateTime.Now, GameFile = "Black_Jack",
+                GameInstructions = "Gra Black Jack opiera się na implementacji popularnej gry karcianej o tej samej nazwie. Boty będą grać ze sobą 100 rund gdzie w każdej obstawiają po 1 punkcie.\nBot który będzie miał po 100 rundzie więcej punktów wygrywa. W przypadku remisu rozegrane dodatkowe rundy aż ilość punktów będzie różna. Boty będą w swojej rundzie dostawać informacje o planszy w taki sposób \n9_Diamonds 7_Clubs 8_Spades d: Jack_Spades \nKarty są zdefiniowane w następujący sposób\n{\"2\", \"3\", \"4\", \"5\", \"6\", \"7\", \"8\", \"9\", \"10\", \"Jack\", \"Queen\", \"King\", \"Ace\"}\n {\"Hearts\", \"Diamonds\", \"Clubs\", \"Spades\"}\nNajpier będa pokazane kary uzytkowniak a potem po znaku d: karty dealera. Po tym użytkownik ma następujące możliwości: \nhit, stand, double, insurance, surrender, split\nodpowiadają one komendom z gry Dokładniejszy ich opis można znaleźć na stronie z zasadami np. https://www.venetianlasvegas.com/casino/table-games/how-to-play-blackjack.html\n",
+                InterfaceDefinition = "Gra kraciana", IsAvailableForPlay = true, FileId = 5,
                 CreatorId = 1, Language = Language.C
             },
             new()
             {
                 Id = 2, NumbersOfPlayer = 1, LastModification = DateTime.Now,
-                GameFile = "TheLegendofZelda",
-                GameInstructions = "Embark on an epic adventure to defeat the Calamity Ganon and save Hyrule.",
-                InterfaceDefinition = "Action-Adventure", IsAvailableForPlay = true, FileId = 12, CreatorId = 1,
+                GameFile = "Zero",
+                GameInstructions = "Zero zasady: każdy z graczy ma 9 kart, na stole leży 5 kart. W swojej turze każdy gracz może wymienić 1 kartę z ręki z 1 kartą ze stołu lub spasować. Gra kończy się gdy ktoś zdobędzie układ dający 0 punktów, lub 2 razy ktoś spasuje. Jeśli będą 2 pasy, dogrywa się kolejkę do końca aby wszyscy mieli tyle samo tur. Punkty liczy się następująco: każda unikalna wartość karty jest ma tyle punktów jaką ma wartość, 3 karty z wartością 7 mają nadal 7 punktów. Ponadto 5 lub więcej kart z tą samą cechą (kolorem lub wartością) są warte 0 punktów. Przykładowo 5 kart z wartością 7 mają 0 punktów. Celem gry jest zdobycie MNIEJ punktów od innych graczy (tutaj jednego gracza).\nGra ma następujące kolory: ['Yellow', 'Green', 'Blue', 'Red', 'Pink', 'White', 'Brown'] i wartości: ['1', '2', '3', '4', '5', '6', '7', '8']. Bot dostanie jako wejście 9 kart na ręce i 5 kart stole w takim formacie: \"7 of Red;1 of Yellow;7 of Pink;5 of Brown;1 of Blue;2 of Brown;5 of Red;7 of Green;7 of White; Table: 4 of Green;6 of Yellow;6 of White;4 of Yellow;6 of Brown;\" a odpowiada 1) parą kart które wymienia, najpierw z ręki a potem ze stołu (liczba 0-8 spacja liczba 0-4) 2) \"fold\" jeśli chce spasować.\n",
+                InterfaceDefinition = "Gra kraciana", IsAvailableForPlay = true, FileId = 12, CreatorId = 1,
                 Language = Language.PYTHON
             },
             new()
             {
-                Id = 3, NumbersOfPlayer = 2, LastModification = DateTime.Now, GameFile = "FIFA 22",
-                GameInstructions = "Experience realistic football simulation with updated teams and gameplay.",
-                InterfaceDefinition = "Sports Simulation", IsAvailableForPlay = true, FileId = 1, CreatorId = 1,
+                Id = 3, NumbersOfPlayer = 2, LastModification = DateTime.Now, GameFile = "Chess",
+                GameInstructions = "Kalsyczne szachu potowi będą przekazywanie ruchy peciwnika po czym on sam ma zwrócić swój ruch jeśli bot miałby się ruszyć pierwszy otrzyma na start -1 -1.\nPola są opisywane w postaci dwóch znaków litery i cyfry na przykład a1, a2 e5.\nPlansza jest definiowana jako pole od a1 - h1 do a8 - h8 figury pionków biały znajdują się na pozycjach od a1 do h1 i a2 h2 natomiast pionków czarnych na a8 -h8 i a7-h7 rozłożenie figur jest zgodne z standardem szachowym.\nRuch odbywa się poprzez podanie pozycji figury po czym podanie pozycji na którą ma się przemieścić  na przykład”  a2 a3  “ byłby to ruch białego piona do przodu . Nieprawidłowy ruch kończy się przegraną bota.\nAwansowanie piona jest automatycznym awansowaniem do królowej.\n",
+                InterfaceDefinition = "Szachu ruchy format ruchów pgn", IsAvailableForPlay = true, FileId = 13, CreatorId = 1,
                 Language = Language.C
             },
             new()
             {
                 Id = 4, NumbersOfPlayer = 7, LastModification = DateTime.Now, GameFile = "Among Us",
-                GameInstructions = "Work together to complete tasks while identifying the impostors among the crew.",
+                GameInstructions = "",
                 InterfaceDefinition = "Social Deduction", IsAvailableForPlay = true, FileId = 1, CreatorId = 1,
                 Language = Language.C
             },
@@ -179,9 +179,9 @@ public class Seeder
             {
                 Id = 1,
                 GameId = 1,
-                TournamentTitle = "Quake III Arena Championship",
+                TournamentTitle = "Black_Jack",
                 Description =
-                    "Compete in the ultimate Quake III Arena tournament and prove your skills in fast-paced multiplayer battles.",
+                    "Truniej w popularna gre karcianą BlackJack",
                 PostedDate = DateTime.Now,
                 TournamentsDate = new DateTime(2023, 1, 20),
                 Status = TournamentStatus.PLAYED,
@@ -194,14 +194,14 @@ public class Seeder
             {
                 Id = 2,
                 GameId = 2,
-                TournamentTitle = "Zelda Master Cup",
+                TournamentTitle = "Zero",
                 Description =
-                    "Embark on a quest to become the master of The Legend of Zelda: Breath of the Wild. Solve puzzles and defeat foes to claim victory.",
+                    "Truniej w popularna gre karcianą Zero.",
                 PostedDate = DateTime.Now,
                 TournamentsDate = new DateTime(2023, 2, 15),
                 Status = TournamentStatus.PLAYED,
                 Constraints = "Participants must complete the game on a specific difficulty level.",
-                CreatorId = 2, MemoryLimit = 15000, TimeLimit = 2000,
+                CreatorId = 2, MemoryLimit = 150000, TimeLimit = 2000,
                 Image = Convert.FromBase64String(
                     "iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAAXNSR0IArs4c6QAAADpJREFUKFPt0KERADAIBMF/j0JB/wXRCS08M/EkDeT0qqO7q7vxigAk6epI4sN10dkTEcpMVNUKzQwDWXAoJWfFnuMAAAAASUVORK5CYII=") // You can replace this with the actual image file or URL
             },
@@ -209,24 +209,24 @@ public class Seeder
             {
                 Id = 3,
                 GameId = 3,
-                TournamentTitle = "FIFA 22 World Cup",
+                TournamentTitle = "Chess",
                 Description =
-                    "Experience the thrill of virtual football in the FIFA 22 World Cup. Compete with players from around the globe for the championship.",
+                    "Klasyczny turniej w szachy botów.",
                 PostedDate = DateTime.Now,
                 TournamentsDate = new DateTime(2023, 3, 10),
                 Status = TournamentStatus.PLAYED,
                 Constraints = "Teams must consist of real-world players.",
-                CreatorId = 3, MemoryLimit = 15000, TimeLimit = 2000,
+                CreatorId = 3, MemoryLimit = 150000, TimeLimit = 4000,
                 Image = Convert.FromBase64String(
                     "iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAAXNSR0IArs4c6QAAADpJREFUKFPt0KERADAIBMF/j0JB/wXRCS08M/EkDeT0qqO7q7vxigAk6epI4sN10dkTEcpMVNUKzQwDWXAoJWfFnuMAAAAASUVORK5CYII=") // You can replace this with the actual image file or URL
             },
             new()
             {
                 Id = 4,
-                GameId = 4,
+                GameId = 2,
                 TournamentTitle = "Among Us Infiltration Challenge",
                 Description =
-                    "Test your deception skills in the Among Us Infiltration Challenge. Work as a crew member or impostor to secure victory.",
+                    "this game not exist",
                 PostedDate = DateTime.Now,
                 TournamentsDate = new DateTime(2022, 4, 5),
                 Status = TournamentStatus.PLAYED,
@@ -241,7 +241,7 @@ public class Seeder
                 GameId = 5,
                 TournamentTitle = "Minecraft Building Showcase",
                 Description =
-                    "Showcase your creative building skills in the Minecraft Building Showcase. Construct impressive structures and compete for recognition.",
+                    "this game not exist",
                 PostedDate = DateTime.Now,
                 TournamentsDate = new DateTime(2023, 5, 20),
                 Status = TournamentStatus.PLAYED,
@@ -256,7 +256,7 @@ public class Seeder
                 GameId = 6,
                 TournamentTitle = "Cyberpunk 2077 Cyberwarfare Challenge",
                 Description =
-                    "Immerse yourself in the cyberpunk world of Night City. Compete in cyberwarfare challenges and emerge as the ultimate netrunner.",
+                    "this game not exist",
                 PostedDate = DateTime.Now,
                 TournamentsDate = new DateTime(2022, 6, 15),
                 Status = TournamentStatus.PLAYED,
@@ -271,7 +271,7 @@ public class Seeder
                 GameId = 7,
                 TournamentTitle = "Rocket League Championship",
                 Description =
-                    "Take part in high-flying, rocket-powered soccer action. Compete in the Rocket League Championship and score goals to victory.",
+                    "this game not exist",
                 PostedDate = DateTime.Now,
                 TournamentsDate = new DateTime(2023, 7, 1),
                 Status = TournamentStatus.PLAYED,
@@ -286,7 +286,7 @@ public class Seeder
                 GameId = 8,
                 TournamentTitle = "Call of Duty: Warzone Battle Royale",
                 Description =
-                    "Join the intense battle royale action in Call of Duty: Warzone. Compete against other squads to be the last team standing.",
+                    "ds",
                 PostedDate = DateTime.Now,
                 TournamentsDate = new DateTime(2023, 8, 10),
                 Status = TournamentStatus.PLAYED,
@@ -301,7 +301,7 @@ public class Seeder
                 GameId = 9,
                 TournamentTitle = "Animal Crossing Island Showcase",
                 Description =
-                    "Create the most charming and unique island paradise in the Animal Crossing Island Showcase. Display your creativity and win accolades.",
+                    "this game not exist",
                 PostedDate = DateTime.Now,
                 TournamentsDate = new DateTime(2023, 9, 5),
                 Status = TournamentStatus.PLAYED,
@@ -316,7 +316,7 @@ public class Seeder
                 GameId = 10,
                 TournamentTitle = "Dota 2 Clash of Titans",
                 Description =
-                    "Enter the world of strategic battles in the Dota 2 Clash of Titans. Assemble your team, choose your heroes, and conquer the opposition.",
+                    "this game not exist",
                 PostedDate = DateTime.Now,
                 TournamentsDate = new DateTime(2023, 10, 20),
                 Status = TournamentStatus.PLAYED,
@@ -331,7 +331,7 @@ public class Seeder
                 GameId = 10,
                 TournamentTitle = "Dota 2 Clash of Titans",
                 Description =
-                    "Enter the world of strategic battles in the Dota 2 Clash of Titans. Assemble your team, choose your heroes, and conquer the opposition.",
+                    "this game not exist",
                 PostedDate = DateTime.Now,
                 TournamentsDate = new DateTime(2025, 10, 20),
                 Status = TournamentStatus.SCHEDULED,
@@ -349,88 +349,113 @@ public class Seeder
         {
             new()
             {
-                Id = 1, GameId = 1, PlayerId = 1, BotFile = "quake3_bot_1", FileId = 2, MemoryUsed = 8000,
+                Id = 1, GameId = 1, PlayerId = 1, BotFile = "Back_jackbot_1", FileId = 2, MemoryUsed = 8000,
                 TimeUsed = 100, Language = Language.C, Validation = BotStatus.NotValidated
             },
             new()
             {
-                Id = 2, GameId = 1, PlayerId = 2, BotFile = "quake3_bot_2", FileId = 3, MemoryUsed = 8000,
+                Id = 2, GameId = 1, PlayerId = 2, BotFile = "Back_jackbot_2", FileId = 3, MemoryUsed = 8000,
                 TimeUsed = 100, Language = Language.C, Validation = BotStatus.NotValidated
             },
             new()
             {
-                Id = 3, GameId = 1, PlayerId = 3, BotFile = "zelda_bot_1", FileId = 2, MemoryUsed = 8000,
+                Id = 3, GameId = 1, PlayerId = 3, BotFile = "Back_jackbot_3", FileId = 2, MemoryUsed = 8000,
                 TimeUsed = 100, Language = Language.C, Validation = BotStatus.NotValidated
             },
             new()
             {
-                Id = 4, GameId = 1, PlayerId = 4, BotFile = "zelda_bot_2", FileId = 2, MemoryUsed = 8000,
+                Id = 4, GameId = 1, PlayerId = 4, BotFile = "Back_jackbot_4", FileId = 2, MemoryUsed = 8000,
                 TimeUsed = 100, Language = Language.C, Validation = BotStatus.NotValidated
             },
             new()
             {
-                Id = 5, GameId = 1, PlayerId = 5, BotFile = "fifa22_bot_1", FileId = 4, MemoryUsed = 8000,
+                Id = 5, GameId = 1, PlayerId = 5, BotFile = "Back_jackbot_5", FileId = 4, MemoryUsed = 8000,
                 TimeUsed = 100, Language = Language.C, Validation = BotStatus.NotValidated
             },
             new()
             {
-                Id = 6, GameId = 1, PlayerId = 6, BotFile = "fifa22_bot_2", FileId = 2, MemoryUsed = 8000,
+                Id = 6, GameId = 1, PlayerId = 6, BotFile = "Back_jackbot_6", FileId = 2, MemoryUsed = 8000,
                 TimeUsed = 100, Language = Language.C, Validation = BotStatus.NotValidated
             },
             new()
             {
-                Id = 7, GameId = 1, PlayerId = 7, BotFile = "amongus_bot_1", FileId = 3, MemoryUsed = 8000,
+                Id = 7, GameId = 1, PlayerId = 7, BotFile = "Back_jackbot_7", FileId = 3, MemoryUsed = 8000,
                 TimeUsed = 100, Language = Language.C, Validation = BotStatus.NotValidated
             },
             new()
             {
-                Id = 8, GameId = 1, PlayerId = 8, BotFile = "amongus_bot_2", FileId = 4, MemoryUsed = 8000,
+                Id = 8, GameId = 1, PlayerId = 8, BotFile = "Back_jackbot_8", FileId = 4, MemoryUsed = 8000,
                 TimeUsed = 100, Language = Language.C, Validation = BotStatus.NotValidated
             },
             new()
             {
-                Id = 9, GameId = 1, PlayerId = 9, BotFile = "minecra", FileId = 2, MemoryUsed = 8000,
+                Id = 9, GameId = 1, PlayerId = 9, BotFile = "Back_jackbot_9", FileId = 2, MemoryUsed = 8000,
                 TimeUsed = 100, Language = Language.C, Validation = BotStatus.NotValidated
             },
             new()
             {
-                Id = 10, GameId = 1, PlayerId = 10, BotFile = "minecr", FileId = 4, MemoryUsed = 8000,
+                Id = 10, GameId = 1, PlayerId = 10, BotFile = "Back_jackbot_10", FileId = 4, MemoryUsed = 8000,
                 TimeUsed = 100, Language = Language.C, Validation = BotStatus.NotValidated
             },
             new()
             {
-                Id = 11, GameId = 2, PlayerId = 2, BotFile = "minecraft_bot_2", FileId = 9, MemoryUsed = 8000,
+                Id = 11, GameId = 2, PlayerId = 2, BotFile = "Zero_bot_1", FileId = 9, MemoryUsed = 8000,
                 TimeUsed = 100, Language = Language.PYTHON, Validation = BotStatus.NotValidated
             },
             new()
             {
-                Id = 12, GameId = 2, PlayerId = 3, BotFile = "minecraft_bot_2", FileId = 10, MemoryUsed = 8000,
+                Id = 12, GameId = 2, PlayerId = 3, BotFile = "Zero_bot_1", FileId = 10, MemoryUsed = 8000,
                 TimeUsed = 100, Language = Language.PYTHON, Validation = BotStatus.NotValidated
             },
             new()
             {
-                Id = 13, GameId = 2, PlayerId = 4, BotFile = "minecraft_bot_2", FileId = 11, MemoryUsed = 8000,
+                Id = 13, GameId = 2, PlayerId = 4, BotFile = "Zero_bot_2", FileId = 11, MemoryUsed = 8000,
                 TimeUsed = 100, Language = Language.C, Validation = BotStatus.NotValidated
             },
             new()
             {
-                Id = 14, GameId = 2, PlayerId = 5, BotFile = "minecraft_bot_2", FileId = 9, MemoryUsed = 8000,
+                Id = 14, GameId = 2, PlayerId = 5, BotFile = "Zero_bot_3", FileId = 9, MemoryUsed = 8000,
                 TimeUsed = 100, Language = Language.PYTHON, Validation = BotStatus.NotValidated
             },
             new()
             {
-                Id = 15, GameId = 2, PlayerId = 6, BotFile = "minecraft_bot_2", FileId = 10, MemoryUsed = 8000,
+                Id = 15, GameId = 2, PlayerId = 6, BotFile = "Zero_bot_4", FileId = 10, MemoryUsed = 8000,
                 TimeUsed = 100, Language = Language.PYTHON, Validation = BotStatus.NotValidated
             },
             new()
             {
-                Id = 16, GameId = 2, PlayerId = 7, BotFile = "minecraft_bot_2", FileId = 11, MemoryUsed = 8000,
+                Id = 16, GameId = 2, PlayerId = 7, BotFile = "Zero_bot_6", FileId = 11, MemoryUsed = 8000,
                 TimeUsed = 100, Language = Language.C, Validation = BotStatus.NotValidated
             },
             new()
             {
                 Id = 17, GameId = 2, PlayerId = 8, BotFile = "bot_zero_5.java", FileId = 8, MemoryUsed = 8000,
                 TimeUsed = 100, Language = Language.Java, Validation = BotStatus.NotValidated
+            },
+            new()
+            {
+                Id = 18, GameId = 3, PlayerId = 1, BotFile = "chess_bot1.cpp", FileId = 14, MemoryUsed = 8000,
+                TimeUsed = 100, Language = Language.C, Validation = BotStatus.NotValidated
+            },
+            new()
+            {
+                Id = 19, GameId = 3, PlayerId = 2, BotFile = "chess_bot2.cpp", FileId = 15, MemoryUsed = 8000,
+                TimeUsed = 100, Language = Language.C, Validation = BotStatus.NotValidated
+            },
+            new()
+            {
+                Id = 20, GameId = 3, PlayerId = 3, BotFile = "chess_bot2.cpp", FileId = 16, MemoryUsed = 8000,
+                TimeUsed = 100, Language = Language.C, Validation = BotStatus.NotValidated
+            },
+            new()
+            {
+                Id = 21, GameId = 3, PlayerId = 4, BotFile = "chess_bot1.cpp", FileId = 14, MemoryUsed = 8000,
+                TimeUsed = 100, Language = Language.C, Validation = BotStatus.NotValidated
+            },
+            new()
+            {
+                Id = 22, GameId = 3, PlayerId = 5, BotFile = "chess_bot1.cpp", FileId = 14, MemoryUsed = 8000,
+                TimeUsed = 100, Language = Language.C, Validation = BotStatus.NotValidated
             }
         };
     }
@@ -441,9 +466,9 @@ public class Seeder
         {
             new() { Id = 1, tournamentId = 1, botId = 1 },
             new() { Id = 2, tournamentId = 1, botId = 2 },
-            new() { Id = 3, tournamentId = 3, botId = 3 },
-            new() { Id = 4, tournamentId = 3, botId = 4 },
-            new() { Id = 5, tournamentId = 3, botId = 10 },
+            new() { Id = 3, tournamentId = 4, botId = 3 },
+            new() { Id = 4, tournamentId = 4, botId = 4 },
+            new() { Id = 5, tournamentId = 4, botId = 10 },
             new() { Id = 6, tournamentId = 1, botId = 5 },
             new() { Id = 7, tournamentId = 1, botId = 6 },
             new() { Id = 8, tournamentId = 1, botId = 7 },
@@ -455,7 +480,12 @@ public class Seeder
             new() { Id = 14, tournamentId = 2, botId = 14 },
             new() { Id = 15, tournamentId = 2, botId = 15 },
             new() { Id = 16, tournamentId = 2, botId = 16 },
-            new() { Id = 17, tournamentId = 2, botId = 17 }
+            new() { Id = 17, tournamentId = 2, botId = 17 },
+            new() { Id = 18, tournamentId = 3, botId = 18 },
+            new() { Id = 19, tournamentId = 3, botId = 19 },
+            new() { Id = 20, tournamentId = 3, botId = 20 },
+            new() { Id = 21, tournamentId = 3, botId = 21 },
+            new() { Id = 22, tournamentId = 3, botId = 22 }
         };
     }
 

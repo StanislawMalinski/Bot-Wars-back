@@ -33,7 +33,7 @@ public class IOProgramWrapper : ICorespondable
         _path = path;
         _fileName = fileName;
         Console.WriteLine(_path + " siceiszka1");
-        this.memorylimit = memorylimit;
+        this.memorylimit = memorylimit*1000;
         this.timelimit = timelimit;
         _language = language;
     }

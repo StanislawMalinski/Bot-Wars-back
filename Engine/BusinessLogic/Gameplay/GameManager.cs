@@ -100,8 +100,7 @@ public class GameManager : IGameManager
                 Console.WriteLine(" to eror 2 " + bots[nextBot].wasErros());
                 break;
             }
-
-            Console.WriteLine($"cuur petnela {counter} {curr}");
+            
             gamelog += curr + '\n';
             curr = await game.SendAndGet(curr);
             if (curr == null)
@@ -143,7 +142,7 @@ public class GameManager : IGameManager
             }
             else
             {
-                gamelog = "game take to long \n";
+                gamelog += "game take to long \n";
                 nextBot = 0;
             }
 
