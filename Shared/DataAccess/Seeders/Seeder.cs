@@ -97,75 +97,73 @@ public class Seeder
         {
             new()
             {
-                Id = 1, NumbersOfPlayer = 10, LastModification = DateTime.Now, GameFile = "QuakeIIIArena",
-                GameInstructions = "Eliminate the enemy players in fast-paced multiplayer battles.",
-                InterfaceDefinition = "First-Person Shooter (FPS)", IsAvailableForPlay = true, FileId = 5,
+                Id = 1, NumbersOfPlayer = 8, LastModification = DateTime.Now, GameFile = "Blackjack",
+                GameInstructions = "Join us for an exciting Blackjack Bots Tournament! Programmers and enthusiasts from around the world will compete by developing advanced AI bots to play Blackjack. Witness intense, strategic gameplay as these bots go head-to-head, showcasing their skills in probability, strategy, and decision-making. Whether you're a coder or a Blackjack fan, this tournament promises thrilling action and innovative AI in every hand dealt!",
+                InterfaceDefinition = "Classical Card Game, Gambling", IsAvailableForPlay = true, FileId = 5,
                 CreatorId = 1, Language = Language.C
             },
             new()
             {
-                Id = 2, NumbersOfPlayer = 1, LastModification = DateTime.Now,
-                GameFile = "TheLegendofZelda",
-                GameInstructions = "Embark on an epic adventure to defeat the Calamity Ganon and save Hyrule.",
-                InterfaceDefinition = "Action-Adventure", IsAvailableForPlay = true, FileId = 12, CreatorId = 1,
+                Id = 2, NumbersOfPlayer = 2, LastModification = DateTime.Now,
+                GameFile = "Zero",
+                GameInstructions = "Reduce your points to Zero by strategically improving your hand and prevent your opponents from doing the same!",
+                InterfaceDefinition = "Card Game", IsAvailableForPlay = true, FileId = 12, CreatorId = 1,
                 Language = Language.PYTHON
             },
             new()
             {
-                Id = 3, NumbersOfPlayer = 2, LastModification = DateTime.Now, GameFile = "FIFA 22",
-                GameInstructions = "Experience realistic football simulation with updated teams and gameplay.",
-                InterfaceDefinition = "Sports Simulation", IsAvailableForPlay = true, FileId = 1, CreatorId = 1,
+                Id = 3, NumbersOfPlayer = 2, LastModification = DateTime.Now, GameFile = "Checkers++",
+                GameInstructions = "Join us for an exhilarating Checkers Bots Tournament! Talented programmers and AI enthusiasts from across the globe will compete by designing sophisticated bots to play Checkers. Watch as these intelligent bots face off in strategic battles, demonstrating their prowess in planning, tactics, and decision-making. Whether you're a developer or a Checkers enthusiast, this tournament guarantees captivating matches and cutting-edge AI strategies in every move!",
+                InterfaceDefinition = "Abstract Strategy, Board Game", IsAvailableForPlay = true, FileId = 1, CreatorId = 1,
                 Language = Language.C
             },
             new()
             {
-                Id = 4, NumbersOfPlayer = 7, LastModification = DateTime.Now, GameFile = "Among Us",
-                GameInstructions = "Work together to complete tasks while identifying the impostors among the crew.",
-                InterfaceDefinition = "Social Deduction", IsAvailableForPlay = true, FileId = 1, CreatorId = 1,
+                Id = 4, NumbersOfPlayer = 2, LastModification = DateTime.Now, GameFile = "Chess",
+                GameInstructions = "Strategize and checkmate your opponent's king.",
+                InterfaceDefinition = "Strategy", IsAvailableForPlay = true, FileId = 1, CreatorId = 1,
                 Language = Language.C
             },
             new()
             {
-                Id = 5, NumbersOfPlayer = 16, LastModification = DateTime.Now, GameFile = "Minecraft",
-                GameInstructions = "Build and explore a blocky world, mine resources, and survive.",
-                InterfaceDefinition = "Sandbox", IsAvailableForPlay = false, FileId = 1, CreatorId = 1,
+                Id = 5, NumbersOfPlayer = 4, LastModification = DateTime.Now, GameFile = "Monopoly",
+                GameInstructions = "Buy, trade, and manage properties to bankrupt your opponents.",
+                InterfaceDefinition = "Economic Strategy", IsAvailableForPlay = true, FileId = 1, CreatorId = 1,
                 Language = Language.C
             },
             new()
             {
-                Id = 6, NumbersOfPlayer = 1, LastModification = DateTime.Now, GameFile = "Cyberpunk 2077",
-                GameInstructions = "Navigate the futuristic open world of Night City as the mercenary V.",
-                InterfaceDefinition = "Action RPG", IsAvailableForPlay = true, FileId = 1, CreatorId = 1,
+                Id = 6, NumbersOfPlayer = 4, LastModification = DateTime.Now, GameFile = "Scrabble",
+                GameInstructions = "Create words on the board with letter tiles to score points.",
+                InterfaceDefinition = "Word Game", IsAvailableForPlay = true, FileId = 1, CreatorId = 1,
                 Language = Language.C
             },
             new()
             {
-                Id = 7, NumbersOfPlayer = 14, LastModification = DateTime.Now, GameFile = "Rocket League",
-                GameInstructions = "Play soccer with rocket-powered cars in this unique sports game.",
-                InterfaceDefinition = "Vehicular Soccer", IsAvailableForPlay = true, FileId = 1, CreatorId = 1,
+                Id = 7, NumbersOfPlayer = 2, LastModification = DateTime.Now, GameFile = "Checkers",
+                GameInstructions = "Capture all of your opponent's pieces by jumping over them.",
+                InterfaceDefinition = "Strategy", IsAvailableForPlay = true, FileId = 1, CreatorId = 1,
                 Language = Language.C
             },
             new()
             {
-                Id = 8, NumbersOfPlayer = 8, LastModification = DateTime.Now, GameFile = "Call of Duty: Warzone",
-                GameInstructions = "Engage in intense battle royale action in the Call of Duty universe.",
-                InterfaceDefinition = "First-Person Shooter (Battle Royale)", IsAvailableForPlay = false, FileId = 1,
-                CreatorId = 1, Language = Language.C
-            },
-            new()
-            {
-                Id = 9, NumbersOfPlayer = 5, LastModification = DateTime.Now,
-                GameFile = "Animal Crossing: New Horizons",
-                GameInstructions = "Create and customize your own island paradise in a relaxing simulation.",
-                InterfaceDefinition = "Life Simulation", IsAvailableForPlay = true, FileId = 1, CreatorId = 1,
+                Id = 8, NumbersOfPlayer = 2, LastModification = DateTime.Now, GameFile = "Backgammon",
+                GameInstructions = "Move all your pieces off the board before your opponent does.",
+                InterfaceDefinition = "Strategy", IsAvailableForPlay = true, FileId = 1, CreatorId = 1,
                 Language = Language.C
             },
             new()
             {
-                Id = 10, NumbersOfPlayer = 10, LastModification = DateTime.Now, GameFile = "Dota 2",
-                GameInstructions =
-                    "Compete in strategic team-based battles in this multiplayer online battle arena (MOBA).",
-                InterfaceDefinition = "MOBA", IsAvailableForPlay = true, FileId = 1, CreatorId = 1,
+                Id = 9, NumbersOfPlayer = 4, LastModification = DateTime.Now, GameFile = "Bridge",
+                GameInstructions = "Compete in teams to win tricks and score points.",
+                InterfaceDefinition = "Card Game", IsAvailableForPlay = true, FileId = 1, CreatorId = 1,
+                Language = Language.C
+            },
+            new()
+            {
+                Id = 10, NumbersOfPlayer = 4, LastModification = DateTime.Now, GameFile = "Clue",
+                GameInstructions = "Solve the mystery by deducing the murderer, weapon, and location.",
+                InterfaceDefinition = "Deduction", IsAvailableForPlay = true, FileId = 1, CreatorId = 1,
                 Language = Language.C
             }
         };
@@ -179,58 +177,58 @@ public class Seeder
             {
                 Id = 1,
                 GameId = 1,
-                TournamentTitle = "Quake III Arena Championship",
+                TournamentTitle = "Blackjack Bots Showdown",
                 Description =
-                    "Compete in the ultimate Quake III Arena tournament and prove your skills in fast-paced multiplayer battles.",
+                    "Join us for an exciting Blackjack Bots Tournament! Programmers and enthusiasts from around the world will compete by developing advanced AI bots to play Blackjack. Witness intense, strategic gameplay as these bots go head-to-head, showcasing their skills in probability, strategy, and decision-making. Whether you're a coder or a Blackjack fan, this tournament promises thrilling action and innovative AI in every hand dealt!",
                 PostedDate = DateTime.Now,
                 TournamentsDate = new DateTime(2023, 1, 20),
                 Status = TournamentStatus.PLAYED,
-                Constraints = "Participants must have a minimum skill level of intermediate.",
+                Constraints = "Bots must complete each hand within 5 seconds. Maximum memory usage: 15000 KB.",
                 Image = Convert.FromBase64String(
-                    "iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAAXNSR0IArs4c6QAAADpJREFUKFPt0KERADAIBMF/j0JB/wXRCS08M/EkDeT0qqO7q7vxigAk6epI4sN10dkTEcpMVNUKzQwDWXAoJWfFnuMAAAAASUVORK5CYII="), // You can replace this with the actual image file or URL,
+                    "iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAAXNSR0IArs4c6QAAADpJREFUKFPt0KERADAIBMF/j0JB/wXRCS08M/EkDeT0qqO7q7vxigAk6epI4sN10dkTEcpMVNUKzQwDWXAoJWfFnuMAAAAASUVORK5CYII="),
                 CreatorId = 1, MemoryLimit = 15000, TimeLimit = 2000
             },
             new()
             {
                 Id = 2,
                 GameId = 2,
-                TournamentTitle = "Zelda Master Cup",
+                TournamentTitle = "Zero Card Game Challenge",
                 Description =
-                    "Embark on a quest to become the master of The Legend of Zelda: Breath of the Wild. Solve puzzles and defeat foes to claim victory.",
+                    "Reduce your points to Zero by strategically improving your hand and prevent your opponents from doing the same! Prove your skills in this exciting card game tournament.",
                 PostedDate = DateTime.Now,
                 TournamentsDate = new DateTime(2023, 2, 15),
                 Status = TournamentStatus.PLAYED,
-                Constraints = "Participants must complete the game on a specific difficulty level.",
+                Constraints = "Each round must be completed within 10 minutes. Maximum memory usage: 15000 KB.",
                 CreatorId = 2, MemoryLimit = 15000, TimeLimit = 2000,
                 Image = Convert.FromBase64String(
-                    "iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAAXNSR0IArs4c6QAAADpJREFUKFPt0KERADAIBMF/j0JB/wXRCS08M/EkDeT0qqO7q7vxigAk6epI4sN10dkTEcpMVNUKzQwDWXAoJWfFnuMAAAAASUVORK5CYII=") // You can replace this with the actual image file or URL
+                    "iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAAXNSR0IArs4c6QAAADpJREFUKFPt0KERADAIBMF/j0JB/wXRCS08M/EkDeT0qqO7q7vxigAk6epI4sN10dkTEcpMVNUKzQwDWXAoJWfFnuMAAAAASUVORK5CYII=")
             },
             new()
             {
                 Id = 3,
                 GameId = 3,
-                TournamentTitle = "FIFA 22 World Cup",
+                TournamentTitle = "Checkers++ Championship",
                 Description =
-                    "Experience the thrill of virtual football in the FIFA 22 World Cup. Compete with players from around the globe for the championship.",
+                    "Join us for an exhilarating Checkers Bots Tournament! Talented programmers and AI enthusiasts from across the globe will compete by designing sophisticated bots to play Checkers. Watch as these intelligent bots face off in strategic battles, demonstrating their prowess in planning, tactics, and decision-making. Whether you're a developer or a Checkers enthusiast, this tournament guarantees captivating matches and cutting-edge AI strategies in every move!",
                 PostedDate = DateTime.Now,
                 TournamentsDate = new DateTime(2023, 3, 10),
                 Status = TournamentStatus.PLAYED,
-                Constraints = "Teams must consist of real-world players.",
+                Constraints = "Each move must be made within 10 seconds. Maximum memory usage: 15000 KB.",
                 CreatorId = 3, MemoryLimit = 15000, TimeLimit = 2000,
                 Image = Convert.FromBase64String(
-                    "iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAAXNSR0IArs4c6QAAADpJREFUKFPt0KERADAIBMF/j0JB/wXRCS08M/EkDeT0qqO7q7vxigAk6epI4sN10dkTEcpMVNUKzQwDWXAoJWfFnuMAAAAASUVORK5CYII=") // You can replace this with the actual image file or URL
+                    "iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAAXNSR0IArs4c6QAAADpJREFUKFPt0KERADAIBMF/j0JB/wXRCS08M/EkDeT0qqO7q7vxigAk6epI4sN10dkTEcpMVNUKzQwDWXAoJWfFnuMAAAAASUVORK5CYII=")
             },
             new()
             {
                 Id = 4,
                 GameId = 4,
-                TournamentTitle = "Among Us Infiltration Challenge",
+                TournamentTitle = "Chess Grandmaster Tournament",
                 Description =
-                    "Test your deception skills in the Among Us Infiltration Challenge. Work as a crew member or impostor to secure victory.",
+                    "Strategize and checkmate your opponent's king in this prestigious Chess Grandmaster Tournament. Compete with the best and showcase your strategic prowess.",
                 PostedDate = DateTime.Now,
-                TournamentsDate = new DateTime(2022, 4, 5),
+                TournamentsDate = new DateTime(2023, 4, 5),
                 Status = TournamentStatus.PLAYED,
-                Constraints = "Players must use voice communication during the game.",
+                Constraints = "Each player has a total of 60 minutes for all moves. Maximum memory usage: 15000 KB.",
                 CreatorId = 1, MemoryLimit = 15000, TimeLimit = 2000,
                 Image = Convert.FromBase64String(
                     "iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAAXNSR0IArs4c6QAAADpJREFUKFPt0KERADAIBMF/j0JB/wXRCS08M/EkDeT0qqO7q7vxigAk6epI4sN10dkTEcpMVNUKzQwDWXAoJWfFnuMAAAAASUVORK5CYII=")
@@ -239,13 +237,13 @@ public class Seeder
             {
                 Id = 5,
                 GameId = 5,
-                TournamentTitle = "Minecraft Building Showcase",
+                TournamentTitle = "Monopoly Tycoon Tournament",
                 Description =
-                    "Showcase your creative building skills in the Minecraft Building Showcase. Construct impressive structures and compete for recognition.",
+                    "Buy, trade, and manage properties to bankrupt your opponents in the Monopoly Tycoon Tournament. Compete to become the ultimate tycoon.",
                 PostedDate = DateTime.Now,
                 TournamentsDate = new DateTime(2023, 5, 20),
                 Status = TournamentStatus.PLAYED,
-                Constraints = "Builds must adhere to a specific theme.",
+                Constraints = "Each turn must be completed within 2 minutes. Maximum memory usage: 15000 KB.",
                 CreatorId = 1, MemoryLimit = 15000, TimeLimit = 2000,
                 Image = Convert.FromBase64String(
                     "iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAAXNSR0IArs4c6QAAADpJREFUKFPt0KERADAIBMF/j0JB/wXRCS08M/EkDeT0qqO7q7vxigAk6epI4sN10dkTEcpMVNUKzQwDWXAoJWfFnuMAAAAASUVORK5CYII=")
@@ -254,13 +252,13 @@ public class Seeder
             {
                 Id = 6,
                 GameId = 6,
-                TournamentTitle = "Cyberpunk 2077 Cyberwarfare Challenge",
+                TournamentTitle = "Scrabble Wordsmith Showdown",
                 Description =
-                    "Immerse yourself in the cyberpunk world of Night City. Compete in cyberwarfare challenges and emerge as the ultimate netrunner.",
+                    "Create words on the board with letter tiles to score points in the Scrabble Wordsmith Showdown. Showcase your vocabulary and strategic skills.",
                 PostedDate = DateTime.Now,
-                TournamentsDate = new DateTime(2022, 6, 15),
+                TournamentsDate = new DateTime(2023, 6, 15),
                 Status = TournamentStatus.PLAYED,
-                Constraints = "Participants must customize their character's appearance.",
+                Constraints = "Each turn must be completed within 2 minutes. Maximum memory usage: 15000 KB.",
                 CreatorId = 3, MemoryLimit = 15000, TimeLimit = 2000,
                 Image = Convert.FromBase64String(
                     "iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAAXNSR0IArs4c6QAAADpJREFUKFPt0KERADAIBMF/j0JB/wXRCS08M/EkDeT0qqO7q7vxigAk6epI4sN10dkTEcpMVNUKzQwDWXAoJWfFnuMAAAAASUVORK5CYII=")
@@ -269,13 +267,13 @@ public class Seeder
             {
                 Id = 7,
                 GameId = 7,
-                TournamentTitle = "Rocket League Championship",
+                TournamentTitle = "Checkers Championship",
                 Description =
-                    "Take part in high-flying, rocket-powered soccer action. Compete in the Rocket League Championship and score goals to victory.",
+                    "Capture all of your opponent's pieces by jumping over them in the Checkers Championship. Test your strategy and tactics in this classic game.",
                 PostedDate = DateTime.Now,
                 TournamentsDate = new DateTime(2023, 7, 1),
                 Status = TournamentStatus.PLAYED,
-                Constraints = "Teams must consist of three players.",
+                Constraints = "Each move must be made within 10 seconds. Maximum memory usage: 15000 KB.",
                 CreatorId = 2, MemoryLimit = 15000, TimeLimit = 2000,
                 Image = Convert.FromBase64String(
                     "iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAAXNSR0IArs4c6QAAADpJREFUKFPt0KERADAIBMF/j0JB/wXRCS08M/EkDeT0qqO7q7vxigAk6epI4sN10dkTEcpMVNUKzQwDWXAoJWfFnuMAAAAASUVORK5CYII=")
@@ -284,59 +282,14 @@ public class Seeder
             {
                 Id = 8,
                 GameId = 8,
-                TournamentTitle = "Call of Duty: Warzone Battle Royale",
+                TournamentTitle = "Backgammon Battle Royale",
                 Description =
-                    "Join the intense battle royale action in Call of Duty: Warzone. Compete against other squads to be the last team standing.",
+                    "Move all your pieces off the board before your opponent does in the Backgammon Battle Royale. Engage in this strategic and timeless game.",
                 PostedDate = DateTime.Now,
                 TournamentsDate = new DateTime(2023, 8, 10),
                 Status = TournamentStatus.PLAYED,
-                Constraints = "Players must adhere to the battle royale ruleset.",
+                Constraints = "Each move must be made within 30 seconds. Maximum memory usage: 15000 KB.",
                 CreatorId = 2, MemoryLimit = 15000, TimeLimit = 2000,
-                Image = Convert.FromBase64String(
-                    "iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAAXNSR0IArs4c6QAAADpJREFUKFPt0KERADAIBMF/j0JB/wXRCS08M/EkDeT0qqO7q7vxigAk6epI4sN10dkTEcpMVNUKzQwDWXAoJWfFnuMAAAAASUVORK5CYII=")
-            },
-            new()
-            {
-                Id = 9,
-                GameId = 9,
-                TournamentTitle = "Animal Crossing Island Showcase",
-                Description =
-                    "Create the most charming and unique island paradise in the Animal Crossing Island Showcase. Display your creativity and win accolades.",
-                PostedDate = DateTime.Now,
-                TournamentsDate = new DateTime(2023, 9, 5),
-                Status = TournamentStatus.PLAYED,
-                Constraints = "Islands must be designed within a specific theme.",
-                CreatorId = 3, MemoryLimit = 15000, TimeLimit = 2000,
-                Image = Convert.FromBase64String(
-                    "iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAAXNSR0IArs4c6QAAADpJREFUKFPt0KERADAIBMF/j0JB/wXRCS08M/EkDeT0qqO7q7vxigAk6epI4sN10dkTEcpMVNUKzQwDWXAoJWfFnuMAAAAASUVORK5CYII=")
-            },
-            new()
-            {
-                Id = 10,
-                GameId = 10,
-                TournamentTitle = "Dota 2 Clash of Titans",
-                Description =
-                    "Enter the world of strategic battles in the Dota 2 Clash of Titans. Assemble your team, choose your heroes, and conquer the opposition.",
-                PostedDate = DateTime.Now,
-                TournamentsDate = new DateTime(2023, 10, 20),
-                Status = TournamentStatus.PLAYED,
-                Constraints = "Teams must adhere to the standard Dota 2 competitive rules.",
-                CreatorId = 1, MemoryLimit = 15000, TimeLimit = 2000,
-                Image = Convert.FromBase64String(
-                    "iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAAXNSR0IArs4c6QAAADpJREFUKFPt0KERADAIBMF/j0JB/wXRCS08M/EkDeT0qqO7q7vxigAk6epI4sN10dkTEcpMVNUKzQwDWXAoJWfFnuMAAAAASUVORK5CYII=")
-            },
-            new()
-            {
-                Id = 11,
-                GameId = 10,
-                TournamentTitle = "Dota 2 Clash of Titans",
-                Description =
-                    "Enter the world of strategic battles in the Dota 2 Clash of Titans. Assemble your team, choose your heroes, and conquer the opposition.",
-                PostedDate = DateTime.Now,
-                TournamentsDate = new DateTime(2025, 10, 20),
-                Status = TournamentStatus.SCHEDULED,
-                Constraints = "Teams must adhere to the standard Dota 2 competitive rules.",
-                CreatorId = 1, MemoryLimit = 15000, TimeLimit = 2000,
                 Image = Convert.FromBase64String(
                     "iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAAXNSR0IArs4c6QAAADpJREFUKFPt0KERADAIBMF/j0JB/wXRCS08M/EkDeT0qqO7q7vxigAk6epI4sN10dkTEcpMVNUKzQwDWXAoJWfFnuMAAAAASUVORK5CYII=")
             }
@@ -349,87 +302,87 @@ public class Seeder
         {
             new()
             {
-                Id = 1, GameId = 1, PlayerId = 1, BotFile = "quake3_bot_1", FileId = 2, MemoryUsed = 8000,
+                Id = 1, GameId = 1, PlayerId = 1, BotFile = "blackjack_bot_1", FileId = 2, MemoryUsed = 8000,
                 TimeUsed = 100, Language = Language.C, Validation = BotStatus.NotValidated
             },
             new()
             {
-                Id = 2, GameId = 1, PlayerId = 2, BotFile = "quake3_bot_2", FileId = 3, MemoryUsed = 8000,
+                Id = 2, GameId = 1, PlayerId = 2, BotFile = "blackjack_bot_2", FileId = 3, MemoryUsed = 8000,
                 TimeUsed = 100, Language = Language.C, Validation = BotStatus.NotValidated
             },
             new()
             {
-                Id = 3, GameId = 1, PlayerId = 3, BotFile = "zelda_bot_1", FileId = 2, MemoryUsed = 8000,
+                Id = 3, GameId = 1, PlayerId = 3, BotFile = "blackjack_bot_3", FileId = 2, MemoryUsed = 8000,
                 TimeUsed = 100, Language = Language.C, Validation = BotStatus.NotValidated
             },
             new()
             {
-                Id = 4, GameId = 1, PlayerId = 4, BotFile = "zelda_bot_2", FileId = 2, MemoryUsed = 8000,
+                Id = 4, GameId = 1, PlayerId = 4, BotFile = "blackjack_bot_4", FileId = 2, MemoryUsed = 8000,
                 TimeUsed = 100, Language = Language.C, Validation = BotStatus.NotValidated
             },
             new()
             {
-                Id = 5, GameId = 1, PlayerId = 5, BotFile = "fifa22_bot_1", FileId = 4, MemoryUsed = 8000,
+                Id = 5, GameId = 1, PlayerId = 5, BotFile = "blackjack_bot_5", FileId = 4, MemoryUsed = 8000,
                 TimeUsed = 100, Language = Language.C, Validation = BotStatus.NotValidated
             },
             new()
             {
-                Id = 6, GameId = 1, PlayerId = 6, BotFile = "fifa22_bot_2", FileId = 2, MemoryUsed = 8000,
+                Id = 6, GameId = 1, PlayerId = 6, BotFile = "blackjack_bot_6", FileId = 2, MemoryUsed = 8000,
                 TimeUsed = 100, Language = Language.C, Validation = BotStatus.NotValidated
             },
             new()
             {
-                Id = 7, GameId = 1, PlayerId = 7, BotFile = "amongus_bot_1", FileId = 3, MemoryUsed = 8000,
+                Id = 7, GameId = 1, PlayerId = 7, BotFile = "blackjack_bot_7", FileId = 3, MemoryUsed = 8000,
                 TimeUsed = 100, Language = Language.C, Validation = BotStatus.NotValidated
             },
             new()
             {
-                Id = 8, GameId = 1, PlayerId = 8, BotFile = "amongus_bot_2", FileId = 4, MemoryUsed = 8000,
+                Id = 8, GameId = 1, PlayerId = 8, BotFile = "blackjack_bot_8", FileId = 4, MemoryUsed = 8000,
                 TimeUsed = 100, Language = Language.C, Validation = BotStatus.NotValidated
             },
             new()
             {
-                Id = 9, GameId = 1, PlayerId = 9, BotFile = "minecra", FileId = 2, MemoryUsed = 8000,
+                Id = 9, GameId = 1, PlayerId = 9, BotFile = "blackjack_bot_9", FileId = 2, MemoryUsed = 8000,
                 TimeUsed = 100, Language = Language.C, Validation = BotStatus.NotValidated
             },
             new()
             {
-                Id = 10, GameId = 1, PlayerId = 10, BotFile = "minecr", FileId = 4, MemoryUsed = 8000,
+                Id = 10, GameId = 1, PlayerId = 10, BotFile = "blackjack_bot_10", FileId = 4, MemoryUsed = 8000,
                 TimeUsed = 100, Language = Language.C, Validation = BotStatus.NotValidated
             },
             new()
             {
-                Id = 11, GameId = 2, PlayerId = 2, BotFile = "minecraft_bot_2", FileId = 9, MemoryUsed = 8000,
+                Id = 11, GameId = 2, PlayerId = 2, BotFile = "zero_card_bot_1", FileId = 9, MemoryUsed = 8000,
                 TimeUsed = 100, Language = Language.PYTHON, Validation = BotStatus.NotValidated
             },
             new()
             {
-                Id = 12, GameId = 2, PlayerId = 3, BotFile = "minecraft_bot_2", FileId = 10, MemoryUsed = 8000,
+                Id = 12, GameId = 2, PlayerId = 3, BotFile = "zero_card_bot_2", FileId = 10, MemoryUsed = 8000,
                 TimeUsed = 100, Language = Language.PYTHON, Validation = BotStatus.NotValidated
             },
             new()
             {
-                Id = 13, GameId = 2, PlayerId = 4, BotFile = "minecraft_bot_2", FileId = 11, MemoryUsed = 8000,
+                Id = 13, GameId = 2, PlayerId = 4, BotFile = "zero_card_bot_3", FileId = 11, MemoryUsed = 8000,
                 TimeUsed = 100, Language = Language.C, Validation = BotStatus.NotValidated
             },
             new()
             {
-                Id = 14, GameId = 2, PlayerId = 5, BotFile = "minecraft_bot_2", FileId = 9, MemoryUsed = 8000,
+                Id = 14, GameId = 2, PlayerId = 5, BotFile = "zero_card_bot_4", FileId = 9, MemoryUsed = 8000,
                 TimeUsed = 100, Language = Language.PYTHON, Validation = BotStatus.NotValidated
             },
             new()
             {
-                Id = 15, GameId = 2, PlayerId = 6, BotFile = "minecraft_bot_2", FileId = 10, MemoryUsed = 8000,
+                Id = 15, GameId = 2, PlayerId = 6, BotFile = "zero_card_bot_5", FileId = 10, MemoryUsed = 8000,
                 TimeUsed = 100, Language = Language.PYTHON, Validation = BotStatus.NotValidated
             },
             new()
             {
-                Id = 16, GameId = 2, PlayerId = 7, BotFile = "minecraft_bot_2", FileId = 11, MemoryUsed = 8000,
+                Id = 16, GameId = 2, PlayerId = 7, BotFile = "zero_card_bot_6", FileId = 11, MemoryUsed = 8000,
                 TimeUsed = 100, Language = Language.C, Validation = BotStatus.NotValidated
             },
             new()
             {
-                Id = 17, GameId = 2, PlayerId = 8, BotFile = "bot_zero_5.java", FileId = 8, MemoryUsed = 8000,
+                Id = 17, GameId = 2, PlayerId = 8, BotFile = "zero_card_bot_7", FileId = 8, MemoryUsed = 8000,
                 TimeUsed = 100, Language = Language.Java, Validation = BotStatus.NotValidated
             }
         };

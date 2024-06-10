@@ -16,7 +16,7 @@ public class TournamentConfigurations : IEntityTypeConfiguration<Tournament>
 
         builder.Property(entity => entity.Description)
             .IsRequired()
-            .HasMaxLength(1000);
+            .HasMaxLength(2000);
 
         builder.HasOne(x => x.Game)
             .WithMany(x => x.Tournaments)
