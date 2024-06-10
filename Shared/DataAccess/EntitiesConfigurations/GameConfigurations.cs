@@ -22,7 +22,7 @@ public class GameConfigurations : IEntityTypeConfiguration<Game>
 
         builder.Property(entity => entity.GameInstructions)
             .IsRequired()
-            .HasMaxLength(2000);
+            .HasMaxLength(4000);
 
         builder.Property(entity => entity.InterfaceDefinition)
             .IsRequired()
