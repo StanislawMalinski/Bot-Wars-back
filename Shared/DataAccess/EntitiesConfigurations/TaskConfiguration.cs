@@ -22,7 +22,5 @@ public class TaskConfiguration : IEntityTypeConfiguration<_Task>
 
         builder.Property(x => x.ScheduledOn)
             .IsRequired();
-
-       
     }
 }

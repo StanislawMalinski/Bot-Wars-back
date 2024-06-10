@@ -2,8 +2,4 @@
 
 public class GameService
 {
-    public GameService()
-    {
-        
-    }
 }

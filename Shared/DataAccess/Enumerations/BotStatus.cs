@@ -2,6 +2,7 @@
 
 public enum BotStatus
 {
+    ToScheduleForValidation,
     NotValidated,
     ValidationFailed,
     ValidationSucceed

@@ -10,9 +10,9 @@ public class GameResponse
     public string? InterfaceDefinition { get; set; }
     public bool IsAvailableForPlay { get; set; }
     public long FileId { get; set; }
-        
+    public string CreatorName { get; set; }
+
     public List<long>? BotIds { get; set; }
     public List<long>? TournamentsIds { get; set; }
     public List<long>? MatchesIds { get; set; }
-    
 }

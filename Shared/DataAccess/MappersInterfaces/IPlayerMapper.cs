@@ -13,5 +13,4 @@ public interface IPlayerMapper
     Player? ToPlayerInternalEntity(PlayerInternalDto? playerDto);
     PlayerInternalDto? ToInternalDto(Player? player);
     Player? ToPlayerFromRegistrationRequest(RegistrationRequest registrationRequest);
-
 }

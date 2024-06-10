@@ -8,8 +8,6 @@ public class TournamentConfigurations : IEntityTypeConfiguration<Tournament>
 {
     public void Configure(EntityTypeBuilder<Tournament> builder)
     {
-        
-        
         builder.HasKey(entity => entity.Id);
 
         builder.Property(entity => entity.TournamentTitle)
@@ -18,7 +16,7 @@ public class TournamentConfigurations : IEntityTypeConfiguration<Tournament>
 
         builder.Property(entity => entity.Description)
             .IsRequired()
-            .HasMaxLength(1000);
+            .HasMaxLength(2000);
 
         builder.HasOne(x => x.Game)
             .WithMany(x => x.Tournaments)
@@ -36,10 +34,10 @@ public class TournamentConfigurations : IEntityTypeConfiguration<Tournament>
 
         builder.Property(entity => entity.Constraints)
             .IsRequired();
-        
+
         builder.Property(entity => entity.RankingType)
             .IsRequired();
-        
+
         builder.HasOne(x => x.Creator)
             .WithMany(x => x.Tournaments)
             .HasForeignKey(x => x.CreatorId).OnDelete(DeleteBehavior.NoAction);

@@ -1,28 +1,21 @@
-﻿using Microsoft.AspNetCore.Http.HttpResults;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Shared.DataAccess.Context;
+using Shared.DataAccess.DataBaseEntities;
 using Shared.DataAccess.DTO.Requests;
 using Shared.DataAccess.DTO.Responses;
 using Shared.DataAccess.Mappers;
-using Shared.DataAccess.RepositoryInterfaces;
-using Shared.Results;
-using Shared.Results.ErrorResults;
-using Shared.Results.IResults;
-using Shared.Results.SuccessResults;
-using Shared.DataAccess.DataBaseEntities;
-using System.Net.Http;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.EntityFrameworkCore.ChangeTracking;
-using Shared.DataAccess.AuthorizationRequirements;
 using Shared.DataAccess.Pagination;
+using Shared.DataAccess.RepositoryInterfaces;
 
 namespace Shared.DataAccess.Repositories;
 
 public class GameRepository : IGameRepository
 {
     private readonly DataContext _dataContext;
-    private readonly IGameTypeMapper _mapper;
     private readonly IFileRepository _fileRepository;
+
+    private readonly IGameTypeMapper _mapper;
     //private readonly IAuthorizationService _authorizationService;
     //private readonly IUserContextRepository _userContextRepository;
 
@@ -32,7 +25,7 @@ public class GameRepository : IGameRepository
         IFileRepository fileRepository
         //IAuthorizationService authorizationService,
         //IUserContextRepository userContextRepository
-        )
+    )
     {
         //_userContextRepository = userContextRepository;
         //_authorizationService = authorizationService;
@@ -42,18 +35,15 @@ public class GameRepository : IGameRepository
         _dataContext = dataContext;
     }
 
-    
+
     public async Task<bool> CreateGameType(long? userId, GameRequest gameRequest)
     {
         if (userId is null) return false;
 
         var res = await _fileRepository.UploadFile(gameRequest.GameFile);
-        long gameFileId = res.Match(x => x.Data, x => -1);
-        if (!res.IsSuccess || gameFileId != -1)
-        {
-            return false;
-        }
-        Game game = _mapper.MapRequestToGame(gameRequest);
+        var gameFileId = res.Match(x => x.Data, x => -1);
+        if (!res.IsSuccess || gameFileId != -1) return false;
+        var game = _mapper.MapRequestToGame(gameRequest);
         game.FileId = gameFileId;
         game.CreatorId = (long)userId;
         await _dataContext
@@ -66,25 +56,31 @@ public class GameRepository : IGameRepository
     public async Task<List<GameResponse>> Search(string? name,
         PageParameters pageParameters)
     {
-        
         return await _dataContext
             .Games
+            .Include(game => game.Bot)
+            .Include(game => game.Matches)
+            .Include(game => game.Tournaments)
+            .Include(game => game.Creator)
             .Where(x => x.GameFile != null && x.GameFile.Contains(name))
             .Skip(pageParameters.PageNumber * pageParameters.PageSize)
             .Take(pageParameters.PageSize)
-            .Select(x=>_mapper.MapGameToResponse(x))
+            .Select(x => _mapper.MapGameToResponse(x))
             .ToListAsync();
-        
     }
 
     public async Task<List<GameResponse>> GetGamesByPlayer(long playerId, PageParameters pageParameters)
     {
         return await _dataContext
             .Games
+            .Include(game => game.Bot)
+            .Include(game => game.Matches)
+            .Include(game => game.Tournaments)
+            .Include(game => game.Creator)
             .Where(x => x.GameFile != null && x.CreatorId == playerId)
             .Skip(pageParameters.PageNumber * pageParameters.PageSize)
             .Take(pageParameters.PageSize)
-            .Select(x=>_mapper.MapGameToResponse(x))
+            .Select(x => _mapper.MapGameToResponse(x))
             .ToListAsync();
     }
 
@@ -95,6 +91,7 @@ public class GameRepository : IGameRepository
             .Include(game => game.Bot)
             .Include(game => game.Matches)
             .Include(game => game.Tournaments)
+            .Include(game => game.Creator)
             .Skip(pageParameters.PageNumber * pageParameters.PageSize)
             .Take(pageParameters.PageSize)
             .Select(x => _mapper.MapGameToResponse(x))
@@ -107,7 +104,7 @@ public class GameRepository : IGameRepository
             .Games
             .Include(g => g.Tournaments)
             .FirstOrDefaultAsync(g => g.Id == id);
-        
+
         if (gameToRemove == null) return false;
 
         if (gameToRemove.Tournaments != null)
@@ -117,7 +114,7 @@ public class GameRepository : IGameRepository
         _dataContext.Games.Remove(gameToRemove);
         return true;
     }
-    
+
 
     public async Task<bool> ModifyGameType(long id, GameRequest gameRequest)
     {
@@ -135,18 +132,17 @@ public class GameRepository : IGameRepository
     public async Task<List<GameResponse>> GetAvailableGames(
         PageParameters pageParameters)
     {
-        
         return await _dataContext
             .Games
             .Include(game => game.Bot)
             .Include(game => game.Matches)
             .Include(game => game.Tournaments)
+            .Include(game => game.Creator)
             .Where(game => game.IsAvailableForPlay)
             .Skip(pageParameters.PageNumber * pageParameters.PageSize)
             .Take(pageParameters.PageSize)
             .Select(game => _mapper.MapGameToResponse(game))
             .ToListAsync();
-        
     }
 
     public async Task<bool> GameNotAvailableForPlay(long gameId)
@@ -175,17 +171,18 @@ public class GameRepository : IGameRepository
     {
         return await _dataContext.Games.FindAsync(gameId);
     }
-    
+
     public async Task<Game?> GetGameIncluded(long gameId)
     {
         return await _dataContext.Games.Where(game => game.Id == gameId)
             .Include(game => game.Bot)
             .Include(game => game.Matches)
             .Include(game => game.Tournaments)
-            .FirstOrDefaultAsync();;
+            .Include(game => game.Creator)
+            .FirstOrDefaultAsync();
+        ;
     }
-    
-   
+
 
     public async Task SaveChangesAsync()
     {

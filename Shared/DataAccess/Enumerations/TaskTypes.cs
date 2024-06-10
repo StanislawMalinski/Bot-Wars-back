@@ -4,5 +4,7 @@ public enum TaskTypes
 {
     PlayTournament,
     PlayGame,
-    ValidateBot
+    ValidateBot,
+    ScheduleTournament,
+    ScheduleValidation
 }

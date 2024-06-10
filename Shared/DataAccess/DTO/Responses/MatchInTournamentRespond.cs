@@ -1,9 +1,10 @@
 ﻿namespace Shared.DataAccess.DTO.Responses;
 
 public record class MatchInTournamentRespond(
-    List<long> BotId,
+    long matchId,
+    List<BotPlayer> PlayersBots,
     string Status,
     long Winner,
     int Position,
-    DateTime PlayedOutDate);
-    
+    DateTime PlayedOutDate, string MatchResult
+);

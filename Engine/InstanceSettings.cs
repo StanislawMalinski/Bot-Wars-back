@@ -1,7 +1,6 @@
-﻿namespace Engine
+﻿namespace Engine;
+
+public class InstanceSettings
 {
-    public class InstanceSettings
-    {
-        public int EngineId { get; set; }
-    }
+    public int EngineId { get; set; }
 }

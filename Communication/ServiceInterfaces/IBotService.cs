@@ -1,6 +1,4 @@
 using Microsoft.AspNetCore.Http;
-using Shared.DataAccess.DAO;
-using Shared.DataAccess.DataBaseEntities;
 using Shared.DataAccess.DTO.Requests;
 using Shared.DataAccess.DTO.Responses;
 using Shared.DataAccess.Pagination;

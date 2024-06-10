@@ -8,7 +8,6 @@ public class MatchesConfigurations : IEntityTypeConfiguration<Matches>
 {
     public void Configure(EntityTypeBuilder<Matches> builder)
     {
-        
         builder.HasKey(entity => entity.Id);
 
         builder.HasOne(x => x.Game)
@@ -19,13 +18,12 @@ public class MatchesConfigurations : IEntityTypeConfiguration<Matches>
             .WithMany(x => x.Matches)
             .HasForeignKey(x => x.TournamentsId)
             .OnDelete(DeleteBehavior.ClientSetNull);
-        
+
         builder.Property(entity => entity.Status)
             .IsRequired();
         builder.Property(entity => entity.Winner)
             .IsRequired();
         builder.Property(entity => entity.Data)
             .IsRequired();
-        
     }
 }

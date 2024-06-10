@@ -12,6 +12,7 @@ public static class ServicesInjection
         serviceCollection.AddScoped<MatchService>();
         serviceCollection.AddScoped<TournamentService>();
         serviceCollection.AddScoped<TaskService>();
+        serviceCollection.AddScoped<WebSocketService>();
         return serviceCollection;
     }
 }

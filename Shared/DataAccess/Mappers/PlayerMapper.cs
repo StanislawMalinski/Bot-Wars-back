@@ -1,5 +1,5 @@
-﻿using Shared.DataAccess.DTO;
-using Shared.DataAccess.DataBaseEntities;
+﻿using Shared.DataAccess.DataBaseEntities;
+using Shared.DataAccess.DTO;
 using Shared.DataAccess.DTO.Requests;
 using Shared.DataAccess.DTO.Responses;
 using Shared.DataAccess.MappersInterfaces;
@@ -10,10 +10,7 @@ public class PlayerMapper : IPlayerMapper
 {
     public PlayerDto? ToDto(Player? player)
     {
-        if (player == null)
-        {
-            return null;
-        }
+        if (player == null) return null;
 
         return new PlayerDto
         {
@@ -23,16 +20,13 @@ public class PlayerMapper : IPlayerMapper
             Password = player.HashedPassword,
             Points = player.Points,
             isBanned = player.isBanned,
-            Deleted = player.Deleted,
+            Deleted = player.Deleted
         };
     }
-    
+
     public PlayerInternalDto? ToInternalDto(Player? player)
     {
-        if (player == null)
-        {
-            return null;
-        }
+        if (player == null) return null;
 
         return new PlayerInternalDto
         {
@@ -50,10 +44,7 @@ public class PlayerMapper : IPlayerMapper
 
     public Player? ToPlayerFromRegistrationRequest(RegistrationRequest? registrationRequest)
     {
-        if (registrationRequest == null)
-        {
-            return null;
-        }
+        if (registrationRequest == null) return null;
 
         return new Player
         {
@@ -68,12 +59,9 @@ public class PlayerMapper : IPlayerMapper
 
     public Player? ToPlayerEntity(PlayerDto? playerDto)
     {
-        if (playerDto == null)
-        {
-            return null;
-        }
+        if (playerDto == null) return null;
 
-        
+
         return new Player
         {
             Email = playerDto.Email,
@@ -82,18 +70,14 @@ public class PlayerMapper : IPlayerMapper
             HashedPassword = playerDto.Password,
             isBanned = playerDto.isBanned,
             Points = playerDto.Points,
-            Deleted = playerDto.Deleted,
+            Deleted = playerDto.Deleted
         };
     }
-    
+
     public Player? ToPlayerInternalEntity(PlayerInternalDto? playerDto)
     {
-        if (playerDto == null)
-        {
-            return null;
-        }
+        if (playerDto == null) return null;
 
-        
         return new Player
         {
             Email = playerDto.Email,
@@ -109,7 +93,7 @@ public class PlayerMapper : IPlayerMapper
 
     public PlayerResponse ToPlayerResponse(Player player)
     {
-        return new PlayerResponse()
+        return new PlayerResponse
         {
             Id = player.Id,
             Login = player.Login,

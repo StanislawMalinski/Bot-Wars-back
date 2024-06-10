@@ -11,61 +11,61 @@ public class Seeder
     {
         return new List<Player>
         {
-            new Player()
+            new()
             {
                 Id = 1, Email = "john.doe@example.com", Login = "john_doe", Points = 1000,
                 HashedPassword = BCrypt.Net.BCrypt.HashPassword("1234", workFactor), Registered = DateTime.Now,
                 isBanned = false, RoleId = 1
             },
-            new Player()
+            new()
             {
                 Id = 2, Email = "jane.smith@example.com", Login = "jane_smith", Points = 1000,
                 Registered = DateTime.Now,
                 HashedPassword = BCrypt.Net.BCrypt.HashPassword("1234", workFactor), isBanned = false, RoleId = 1
             },
-            new Player()
+            new()
             {
                 Id = 3, Email = "alex.jones@example.com", Login = "alex_jones", Points = 1000,
                 Registered = DateTime.Now,
                 HashedPassword = BCrypt.Net.BCrypt.HashPassword("1234", workFactor), isBanned = false, RoleId = 1
             },
-            new Player()
+            new()
             {
                 Id = 4, Email = "emily.white@example.com", Login = "emily_white", Points = 1000,
                 Registered = DateTime.Now,
                 HashedPassword = BCrypt.Net.BCrypt.HashPassword("1234", workFactor), isBanned = false, RoleId = 1
             },
-            new Player()
+            new()
             {
                 Id = 5, Email = "sam.wilson@example.com", Login = "sam_wilson", Points = 1000,
                 Registered = DateTime.Now,
                 HashedPassword = BCrypt.Net.BCrypt.HashPassword("1234", workFactor), isBanned = false, RoleId = 1
             },
-            new Player()
+            new()
             {
                 Id = 6, Email = "olivia.brown@example.com", Login = "olivia_brown", Points = 1000,
                 Registered = DateTime.Now,
                 HashedPassword = BCrypt.Net.BCrypt.HashPassword("1234", workFactor), isBanned = false, RoleId = 1
             },
-            new Player()
+            new()
             {
                 Id = 7, Email = "david.miller@example.com", Login = "david_miller", Points = 1000,
                 Registered = DateTime.Now,
                 HashedPassword = BCrypt.Net.BCrypt.HashPassword("1234", workFactor), isBanned = false, RoleId = 1
             },
-            new Player()
+            new()
             {
                 Id = 8, Email = "emma.jenkins@example.com", Login = "emma_jenkins", Points = 1000,
                 Registered = DateTime.Now,
                 HashedPassword = BCrypt.Net.BCrypt.HashPassword("1234", workFactor), isBanned = false, RoleId = 1
             },
-            new Player()
+            new()
             {
                 Id = 9, Email = "ryan.clark@example.com", Login = "ryan_clark", Points = 1000,
                 Registered = DateTime.Now,
                 HashedPassword = BCrypt.Net.BCrypt.HashPassword("1234", workFactor), isBanned = true, RoleId = 1
             },
-            new Player()
+            new()
             {
                 Id = 10, Email = "sara.taylor@example.com", Login = "sara_taylor", Points = 1000,
                 Registered = DateTime.Now,
@@ -78,12 +78,12 @@ public class Seeder
     {
         return new List<Role>
         {
-            new Role()
+            new()
             {
                 Id = 1,
                 Name = "User"
             },
-            new Role()
+            new()
             {
                 Id = 2,
                 Name = "Admin"
@@ -95,224 +95,201 @@ public class Seeder
     {
         return new List<Game>
         {
-            new Game()
+            new()
             {
-                Id = 1, NumbersOfPlayer = 10, LastModification = DateTime.Now, GameFile = "QuakeIIIArena",
-                GameInstructions = "Eliminate the enemy players in fast-paced multiplayer battles.",
-                InterfaceDefinition = "First-Person Shooter (FPS)", IsAvailableForPlay = true, FileId = 5, CreatorId = 1,Language = Language.C
+                Id = 1, NumbersOfPlayer = 10, LastModification = DateTime.Now, GameFile = "Black_Jack",
+                GameInstructions = "Blackjack game is based on the implementation of the popular card game of the same name. Bots will play 100 rounds with each betting 1 point per round.\nThe bot with more points after 100 rounds wins. In case of a tie, additional rounds will be played until the points difference is reached. Bots will receive information about the board in their round in the following format:\n9_Diamonds 7_Clubs 8_Spades d: Jack_Spades\nCards are defined as follows:\n{\"2\", \"3\", \"4\", \"5\", \"6\", \"7\", \"8\", \"9\", \"10\", \"Jack\", \"Queen\", \"King\", \"Ace\"}\n {\"Hearts\", \"Diamonds\", \"Clubs\", \"Spades\"}\nFirst, the user's cards will be shown, then after the 'd:' sign, the dealer's cards. After this, the user has the following options: \nhit, stand, double, insurance, surrender, split\nThey correspond to commands in the game. More detailed descriptions can be found on the rules page, for example: https://www.venetianlasvegas.com/casino/table-games/how-to-play-blackjack.html\n",
+                InterfaceDefinition = "Classical Card game, Gambling", IsAvailableForPlay = true, FileId = 5,
+                CreatorId = 1, Language = Language.C
             },
-            new Game()
+            new()
             {
                 Id = 2, NumbersOfPlayer = 1, LastModification = DateTime.Now,
-                GameFile = "TheLegendofZelda",
-                GameInstructions = "Embark on an epic adventure to defeat the Calamity Ganon and save Hyrule.",
-                InterfaceDefinition = "Action-Adventure", IsAvailableForPlay = true, FileId = 12, CreatorId = 1,Language = Language.PYTHON
+                GameFile = "Zero",
+                GameInstructions = "Zero rules: each player has 9 cards, and there are 5 cards on the table. In their turn, each player can exchange 1 card from their hand with 1 card from the table or fold. The game ends when someone gets a combination giving 0 points, or when someone folds twice. If there are 2 folds, an additional round is played until all players have had the same number of turns. Points are counted as follows: each unique card value is worth the same number of points as its value; 3 cards with a value of 7 still have 7 points. Additionally, 5 or more cards with the same feature (color or value) are worth 0 points. For example, 5 cards with a value of 7 are worth 0 points. The goal of the game is to get FEWER points than the other player.\nThe game has the following colors: ['Yellow', 'Green', 'Blue', 'Red', 'Pink', 'White', 'Brown'] and values: ['1', '2', '3', '4', '5', '6', '7', '8']. The bot will receive 9 cards in hand and 5 cards on the table in the following format: \"7 of Red;1 of Yellow;7 of Pink;5 of Brown;1 of Blue;2 of Brown;5 of Red;7 of Green;7 of White; Table: 4 of Green;6 of Yellow;6 of White;4 of Yellow;6 of Brown;\" and will respond with 1) pairs of cards to exchange, first from the hand and then from the table (number 0-8 space number 0-4) 2) \"fold\" if it wants to fold.\n",
+                InterfaceDefinition = "Card game", IsAvailableForPlay = true, FileId = 12, CreatorId = 1,
+                Language = Language.PYTHON
             },
-            new Game()
+            new()
             {
-                Id = 3, NumbersOfPlayer = 2, LastModification = DateTime.Now, GameFile = "FIFA 22",
-                GameInstructions = "Experience realistic football simulation with updated teams and gameplay.",
-                InterfaceDefinition = "Sports Simulation", IsAvailableForPlay = true, FileId = 1, CreatorId = 1,Language = Language.C
+                Id = 3, NumbersOfPlayer = 2, LastModification = DateTime.Now, GameFile = "Chess",
+                GameInstructions = "Classic chess game where moves are passed between opponents, then the bot must return its move. If the bot would move first, it will start with -1 -1.\nFields are described in the form of two characters: a letter and a number, for example, a1, a2, e5.\nThe board is defined as fields from a1 - h1 to a8 - h8, with white pieces located from a1 to h1 and a2 to h2, and black pieces from a8 to h8 and a7 to h7. The arrangement of pieces follows the standard chess convention.\nMoves are made by specifying the position of the piece and then the position to move to, for example, \"a2 a3\" would be a move of a white pawn forward. An invalid move results in the bot's loss.\nPawn promotion is automatic, promoting to a queen.\n",
+                InterfaceDefinition = "Abstract Strategy, Chess, moves in PGN format", IsAvailableForPlay = true, FileId = 13, CreatorId = 1,
+                Language = Language.C
             },
-            new Game()
+            new()
             {
-                Id = 4, NumbersOfPlayer = 7, LastModification = DateTime.Now, GameFile = "Among Us",
-                GameInstructions = "Work together to complete tasks while identifying the impostors among the crew.",
-                InterfaceDefinition = "Social Deduction", IsAvailableForPlay = true, FileId = 1, CreatorId = 1,Language = Language.C
+                Id = 4, NumbersOfPlayer = 2, LastModification = DateTime.Now, GameFile = "Chess 2.0",
+                GameInstructions = "Strategize and checkmate your opponent's king in new, better version of Chess!",
+                InterfaceDefinition = "Abstract Strategy", IsAvailableForPlay = true, FileId = 1, CreatorId = 1,
+                Language = Language.C
             },
-            new Game()
+            new()
             {
-                Id = 5, NumbersOfPlayer = 16, LastModification = DateTime.Now, GameFile = "Minecraft",
-                GameInstructions = "Build and explore a blocky world, mine resources, and survive.",
-                InterfaceDefinition = "Sandbox", IsAvailableForPlay = false, FileId = 1, CreatorId = 1,Language = Language.C
+                Id = 5, NumbersOfPlayer = 4, LastModification = DateTime.Now, GameFile = "Monopoly",
+                GameInstructions = "Buy, trade, and manage properties to bankrupt your opponents.",
+                InterfaceDefinition = "Economic Strategy", IsAvailableForPlay = true, FileId = 1, CreatorId = 1,
+                Language = Language.C
             },
-            new Game()
+            new()
             {
-                Id = 6, NumbersOfPlayer = 1, LastModification = DateTime.Now, GameFile = "Cyberpunk 2077",
-                GameInstructions = "Navigate the futuristic open world of Night City as the mercenary V.",
-                InterfaceDefinition = "Action RPG", IsAvailableForPlay = true, FileId = 1, CreatorId = 1,Language = Language.C
+                Id = 6, NumbersOfPlayer = 4, LastModification = DateTime.Now, GameFile = "Scrabble",
+                GameInstructions = "Create words on the board with letter tiles to score points.",
+                InterfaceDefinition = "Word Game", IsAvailableForPlay = true, FileId = 1, CreatorId = 1,
+                Language = Language.C
             },
-            new Game()
+            new()
             {
-                Id = 7, NumbersOfPlayer = 14, LastModification = DateTime.Now, GameFile = "Rocket League",
-                GameInstructions = "Play soccer with rocket-powered cars in this unique sports game.",
-                InterfaceDefinition = "Vehicular Soccer", IsAvailableForPlay = true, FileId = 1, CreatorId = 1,Language = Language.C
+                Id = 7, NumbersOfPlayer = 2, LastModification = DateTime.Now, GameFile = "Checkers",
+                GameInstructions = "Capture all of your opponent's pieces by jumping over them.",
+                InterfaceDefinition = "Abstract Strategy, Board Game", IsAvailableForPlay = true, FileId = 1, CreatorId = 1,
+                Language = Language.C
             },
-            new Game()
+            new()
             {
-                Id = 8, NumbersOfPlayer = 8, LastModification = DateTime.Now, GameFile = "Call of Duty: Warzone",
-                GameInstructions = "Engage in intense battle royale action in the Call of Duty universe.",
-                InterfaceDefinition = "First-Person Shooter (Battle Royale)", IsAvailableForPlay = false, FileId = 1,
-                CreatorId = 1,Language = Language.C
+                Id = 8, NumbersOfPlayer = 2, LastModification = DateTime.Now, GameFile = "Backgammon",
+                GameInstructions = "Move all your pieces off the board before your opponent does.",
+                InterfaceDefinition = "Abstract Strategy, Board Game", IsAvailableForPlay = true, FileId = 1, CreatorId = 1,
+                Language = Language.C
             },
-            new Game()
+            new()
             {
-                Id = 9, NumbersOfPlayer = 5, LastModification = DateTime.Now,
-                GameFile = "Animal Crossing: New Horizons",
-                GameInstructions = "Create and customize your own island paradise in a relaxing simulation.",
-                InterfaceDefinition = "Life Simulation", IsAvailableForPlay = true, FileId = 1, CreatorId = 1,Language = Language.C
+                Id = 9, NumbersOfPlayer = 4, LastModification = DateTime.Now, GameFile = "Bridge",
+                GameInstructions = "Compete in teams to win tricks and score points.",
+                InterfaceDefinition = "Classical Card Game", IsAvailableForPlay = true, FileId = 1, CreatorId = 1,
+                Language = Language.C
             },
-            new Game()
+            new()
             {
-                Id = 10, NumbersOfPlayer = 10, LastModification = DateTime.Now, GameFile = "Dota 2",
-                GameInstructions =
-                    "Compete in strategic team-based battles in this multiplayer online battle arena (MOBA).",
-                InterfaceDefinition = "MOBA", IsAvailableForPlay = true, FileId = 1, CreatorId = 1,Language = Language.C
+                Id = 10, NumbersOfPlayer = 4, LastModification = DateTime.Now, GameFile = "Clue",
+                GameInstructions = "Solve the mystery by deducing the murderer, weapon, and location.",
+                InterfaceDefinition = "Deduction", IsAvailableForPlay = true, FileId = 1, CreatorId = 1,
+                Language = Language.C
             }
         };
     }
 
     public static IEnumerable<Tournament> GenerateTournaments()
     {
-        return new List<Tournament>()
+        return new List<Tournament>
         {
-            new Tournament()
+            new()
             {
                 Id = 1,
                 GameId = 1,
-                TournamentTitle = "Quake III Arena Championship",
+                TournamentTitle = "Blackjack Bots Showdown",
                 Description =
-                    "Compete in the ultimate Quake III Arena tournament and prove your skills in fast-paced multiplayer battles.",
+                    "Join us for an exciting Blackjack Bots Tournament! Programmers and enthusiasts from around the world will compete by developing advanced AI bots to play Blackjack. Witness intense, strategic gameplay as these bots go head-to-head, showcasing their skills in probability, strategy, and decision-making. Whether you're a coder or a Blackjack fan, this tournament promises thrilling action and innovative AI in every hand dealt!",
                 PostedDate = DateTime.Now,
                 TournamentsDate = new DateTime(2023, 1, 20),
                 Status = TournamentStatus.PLAYED,
-                Constraints = "Participants must have a minimum skill level of intermediate.",
+                Constraints = "Bots must complete each hand within 5 seconds. Maximum memory usage: 15000 KB.",
                 Image = Convert.FromBase64String(
-                    "iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAAXNSR0IArs4c6QAAADpJREFUKFPt0KERADAIBMF/j0JB/wXRCS08M/EkDeT0qqO7q7vxigAk6epI4sN10dkTEcpMVNUKzQwDWXAoJWfFnuMAAAAASUVORK5CYII="), // You can replace this with the actual image file or URL,
+                    "iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAAXNSR0IArs4c6QAAADpJREFUKFPt0KERADAIBMF/j0JB/wXRCS08M/EkDeT0qqO7q7vxigAk6epI4sN10dkTEcpMVNUKzQwDWXAoJWfFnuMAAAAASUVORK5CYII="),
                 CreatorId = 1, MemoryLimit = 15000, TimeLimit = 2000
             },
-            new Tournament()
+            new()
             {
                 Id = 2,
                 GameId = 2,
-                TournamentTitle = "Zelda Master Cup",
+                TournamentTitle = "Zero Card Game Challenge",
                 Description =
-                    "Embark on a quest to become the master of The Legend of Zelda: Breath of the Wild. Solve puzzles and defeat foes to claim victory.",
+                    "Reduce your points to Zero by strategically improving your hand and prevent your opponents from doing the same! Prove your skills in this exciting card game tournament.",
                 PostedDate = DateTime.Now,
                 TournamentsDate = new DateTime(2023, 2, 15),
                 Status = TournamentStatus.PLAYED,
-                Constraints = "Participants must complete the game on a specific difficulty level.",
+                Constraints = "Each round must be completed within 10 minutes. Maximum memory usage: 15000 KB.",
                 CreatorId = 2, MemoryLimit = 15000, TimeLimit = 2000,
                 Image = Convert.FromBase64String(
-                    "iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAAXNSR0IArs4c6QAAADpJREFUKFPt0KERADAIBMF/j0JB/wXRCS08M/EkDeT0qqO7q7vxigAk6epI4sN10dkTEcpMVNUKzQwDWXAoJWfFnuMAAAAASUVORK5CYII=") // You can replace this with the actual image file or URL
+                    "iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAAXNSR0IArs4c6QAAADpJREFUKFPt0KERADAIBMF/j0JB/wXRCS08M/EkDeT0qqO7q7vxigAk6epI4sN10dkTEcpMVNUKzQwDWXAoJWfFnuMAAAAASUVORK5CYII=")
             },
-            new Tournament()
+            new()
             {
                 Id = 3,
                 GameId = 3,
-                TournamentTitle = "FIFA 22 World Cup",
+                TournamentTitle = "Chess",
                 Description =
-                    "Experience the thrill of virtual football in the FIFA 22 World Cup. Compete with players from around the globe for the championship.",
+                    "Klasyczny turniej w szachy botów.",
                 PostedDate = DateTime.Now,
                 TournamentsDate = new DateTime(2023, 3, 10),
                 Status = TournamentStatus.PLAYED,
                 Constraints = "Teams must consist of real-world players.",
-                CreatorId = 3, MemoryLimit = 15000, TimeLimit = 2000,
+                CreatorId = 3, MemoryLimit = 150000, TimeLimit = 4000,
                 Image = Convert.FromBase64String(
-                    "iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAAXNSR0IArs4c6QAAADpJREFUKFPt0KERADAIBMF/j0JB/wXRCS08M/EkDeT0qqO7q7vxigAk6epI4sN10dkTEcpMVNUKzQwDWXAoJWfFnuMAAAAASUVORK5CYII=") // You can replace this with the actual image file or URL
+                    "iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAAXNSR0IArs4c6QAAADpJREFUKFPt0KERADAIBMF/j0JB/wXRCS08M/EkDeT0qqO7q7vxigAk6epI4sN10dkTEcpMVNUKzQwDWXAoJWfFnuMAAAAASUVORK5CYII=")
             },
-            new Tournament()
+            new()
             {
                 Id = 4,
                 GameId = 4,
-                TournamentTitle = "Among Us Infiltration Challenge",
+                TournamentTitle = "Chess Grandmaster Tournament",
                 Description =
-                    "Test your deception skills in the Among Us Infiltration Challenge. Work as a crew member or impostor to secure victory.",
+                    "Strategize and checkmate your opponent's king in this prestigious Chess Grandmaster Tournament. Compete with the best and showcase your strategic prowess.",
                 PostedDate = DateTime.Now,
-                TournamentsDate = new DateTime(2022, 4, 5),
+                TournamentsDate = new DateTime(2023, 4, 5),
                 Status = TournamentStatus.PLAYED,
-                Constraints = "Players must use voice communication during the game.",
+                Constraints = "Each player has a total of 60 minutes for all moves. Maximum memory usage: 15000 KB.",
                 CreatorId = 1, MemoryLimit = 15000, TimeLimit = 2000,
                 Image = Convert.FromBase64String(
                     "iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAAXNSR0IArs4c6QAAADpJREFUKFPt0KERADAIBMF/j0JB/wXRCS08M/EkDeT0qqO7q7vxigAk6epI4sN10dkTEcpMVNUKzQwDWXAoJWfFnuMAAAAASUVORK5CYII=")
             },
-            new Tournament()
+            new()
             {
                 Id = 5,
                 GameId = 5,
-                TournamentTitle = "Minecraft Building Showcase",
+                TournamentTitle = "Monopoly Tycoon Tournament",
                 Description =
-                    "Showcase your creative building skills in the Minecraft Building Showcase. Construct impressive structures and compete for recognition.",
+                    "Buy, trade, and manage properties to bankrupt your opponents in the Monopoly Tycoon Tournament. Compete to become the ultimate tycoon.",
                 PostedDate = DateTime.Now,
                 TournamentsDate = new DateTime(2023, 5, 20),
                 Status = TournamentStatus.PLAYED,
-                Constraints = "Builds must adhere to a specific theme.",
+                Constraints = "Each turn must be completed within 2 minutes. Maximum memory usage: 15000 KB.",
                 CreatorId = 1, MemoryLimit = 15000, TimeLimit = 2000,
                 Image = Convert.FromBase64String(
                     "iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAAXNSR0IArs4c6QAAADpJREFUKFPt0KERADAIBMF/j0JB/wXRCS08M/EkDeT0qqO7q7vxigAk6epI4sN10dkTEcpMVNUKzQwDWXAoJWfFnuMAAAAASUVORK5CYII=")
             },
-            new Tournament()
+            new()
             {
                 Id = 6,
                 GameId = 6,
-                TournamentTitle = "Cyberpunk 2077 Cyberwarfare Challenge",
+                TournamentTitle = "Scrabble Wordsmith Showdown",
                 Description =
-                    "Immerse yourself in the cyberpunk world of Night City. Compete in cyberwarfare challenges and emerge as the ultimate netrunner.",
+                    "Create words on the board with letter tiles to score points in the Scrabble Wordsmith Showdown. Showcase your vocabulary and strategic skills.",
                 PostedDate = DateTime.Now,
-                TournamentsDate = new DateTime(2022, 6, 15),
+                TournamentsDate = new DateTime(2023, 6, 15),
                 Status = TournamentStatus.PLAYED,
-                Constraints = "Participants must customize their character's appearance.",
+                Constraints = "Each turn must be completed within 2 minutes. Maximum memory usage: 15000 KB.",
                 CreatorId = 3, MemoryLimit = 15000, TimeLimit = 2000,
                 Image = Convert.FromBase64String(
                     "iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAAXNSR0IArs4c6QAAADpJREFUKFPt0KERADAIBMF/j0JB/wXRCS08M/EkDeT0qqO7q7vxigAk6epI4sN10dkTEcpMVNUKzQwDWXAoJWfFnuMAAAAASUVORK5CYII=")
             },
-            new Tournament()
+            new()
             {
                 Id = 7,
                 GameId = 7,
-                TournamentTitle = "Rocket League Championship",
+                TournamentTitle = "Checkers Championship",
                 Description =
-                    "Take part in high-flying, rocket-powered soccer action. Compete in the Rocket League Championship and score goals to victory.",
+                    "Capture all of your opponent's pieces by jumping over them in the Checkers Championship. Test your strategy and tactics in this classic game.",
                 PostedDate = DateTime.Now,
                 TournamentsDate = new DateTime(2023, 7, 1),
                 Status = TournamentStatus.PLAYED,
-                Constraints = "Teams must consist of three players.",
+                Constraints = "Each move must be made within 10 seconds. Maximum memory usage: 15000 KB.",
                 CreatorId = 2, MemoryLimit = 15000, TimeLimit = 2000,
                 Image = Convert.FromBase64String(
                     "iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAAXNSR0IArs4c6QAAADpJREFUKFPt0KERADAIBMF/j0JB/wXRCS08M/EkDeT0qqO7q7vxigAk6epI4sN10dkTEcpMVNUKzQwDWXAoJWfFnuMAAAAASUVORK5CYII=")
             },
-            new Tournament()
+            new()
             {
                 Id = 8,
                 GameId = 8,
-                TournamentTitle = "Call of Duty: Warzone Battle Royale",
+                TournamentTitle = "Backgammon Battle Royale",
                 Description =
-                    "Join the intense battle royale action in Call of Duty: Warzone. Compete against other squads to be the last team standing.",
+                    "Move all your pieces off the board before your opponent does in the Backgammon Battle Royale. Engage in this strategic and timeless game.",
                 PostedDate = DateTime.Now,
                 TournamentsDate = new DateTime(2023, 8, 10),
                 Status = TournamentStatus.PLAYED,
-                Constraints = "Players must adhere to the battle royale ruleset.",
+                Constraints = "Each move must be made within 30 seconds. Maximum memory usage: 15000 KB.",
                 CreatorId = 2, MemoryLimit = 15000, TimeLimit = 2000,
-                Image = Convert.FromBase64String(
-                    "iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAAXNSR0IArs4c6QAAADpJREFUKFPt0KERADAIBMF/j0JB/wXRCS08M/EkDeT0qqO7q7vxigAk6epI4sN10dkTEcpMVNUKzQwDWXAoJWfFnuMAAAAASUVORK5CYII=")
-            },
-            new Tournament()
-            {
-                Id = 9,
-                GameId = 9,
-                TournamentTitle = "Animal Crossing Island Showcase",
-                Description =
-                    "Create the most charming and unique island paradise in the Animal Crossing Island Showcase. Display your creativity and win accolades.",
-                PostedDate = DateTime.Now,
-                TournamentsDate = new DateTime(2023, 9, 5),
-                Status = TournamentStatus.PLAYED,
-                Constraints = "Islands must be designed within a specific theme.",
-                CreatorId = 3, MemoryLimit = 15000, TimeLimit = 2000,
-                Image = Convert.FromBase64String(
-                    "iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAAXNSR0IArs4c6QAAADpJREFUKFPt0KERADAIBMF/j0JB/wXRCS08M/EkDeT0qqO7q7vxigAk6epI4sN10dkTEcpMVNUKzQwDWXAoJWfFnuMAAAAASUVORK5CYII=")
-            },
-            new Tournament()
-            {
-                Id = 10,
-                GameId = 10,
-                TournamentTitle = "Dota 2 Clash of Titans",
-                Description =
-                    "Enter the world of strategic battles in the Dota 2 Clash of Titans. Assemble your team, choose your heroes, and conquer the opposition.",
-                PostedDate = DateTime.Now,
-                TournamentsDate = new DateTime(2023, 10, 20),
-                Status = TournamentStatus.PLAYED,
-                Constraints = "Teams must adhere to the standard Dota 2 competitive rules.",
-                CreatorId = 1, MemoryLimit = 15000, TimeLimit = 2000,
                 Image = Convert.FromBase64String(
                     "iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAAXNSR0IArs4c6QAAADpJREFUKFPt0KERADAIBMF/j0JB/wXRCS08M/EkDeT0qqO7q7vxigAk6epI4sN10dkTEcpMVNUKzQwDWXAoJWfFnuMAAAAASUVORK5CYII=")
             }
@@ -321,172 +298,203 @@ public class Seeder
 
     public static IEnumerable<Bot> GenerateBots()
     {
-        return new List<Bot>()
+        return new List<Bot>
         {
-            new Bot()
+            new()
             {
-                Id = 1, GameId = 1, PlayerId = 1, BotFile = "quake3_bot_1", FileId = 2, MemoryUsed = 8000,
-                TimeUsed = 100, Language = Language.C
+                Id = 1, GameId = 1, PlayerId = 1, BotFile = "Back_jackbot_1", FileId = 2, MemoryUsed = 8000,
+                TimeUsed = 100, Language = Language.C, Validation = BotStatus.NotValidated
             },
-            new Bot()
+            new()
             {
-                Id = 2, GameId = 1, PlayerId = 2, BotFile = "quake3_bot_2", FileId = 3, MemoryUsed = 8000,
-                TimeUsed = 100, Language = Language.C
+                Id = 2, GameId = 1, PlayerId = 2, BotFile = "Back_jackbot_2", FileId = 3, MemoryUsed = 8000,
+                TimeUsed = 100, Language = Language.C, Validation = BotStatus.NotValidated
             },
-            new Bot()
+            new()
             {
-                Id = 3, GameId = 1, PlayerId = 3, BotFile = "zelda_bot_1", FileId = 2, MemoryUsed = 8000,
-                TimeUsed = 100, Language = Language.C
+                Id = 3, GameId = 1, PlayerId = 3, BotFile = "Back_jackbot_3", FileId = 2, MemoryUsed = 8000,
+                TimeUsed = 100, Language = Language.C, Validation = BotStatus.NotValidated
             },
-            new Bot()
+            new()
             {
-                Id = 4, GameId = 1, PlayerId = 4, BotFile = "zelda_bot_2", FileId = 2, MemoryUsed = 8000,
-                TimeUsed = 100, Language = Language.C
+                Id = 4, GameId = 1, PlayerId = 4, BotFile = "Back_jackbot_4", FileId = 2, MemoryUsed = 8000,
+                TimeUsed = 100, Language = Language.C, Validation = BotStatus.NotValidated
             },
-            new Bot()
+            new()
             {
-                Id = 5, GameId = 1, PlayerId = 5, BotFile = "fifa22_bot_1", FileId = 4, MemoryUsed = 8000,
-                TimeUsed = 100, Language = Language.C
+                Id = 5, GameId = 1, PlayerId = 5, BotFile = "Back_jackbot_5", FileId = 4, MemoryUsed = 8000,
+                TimeUsed = 100, Language = Language.C, Validation = BotStatus.NotValidated
             },
-            new Bot()
+            new()
             {
-                Id = 6, GameId = 1, PlayerId = 6, BotFile = "fifa22_bot_2", FileId = 2, MemoryUsed = 8000,
-                TimeUsed = 100, Language = Language.C
+                Id = 6, GameId = 1, PlayerId = 6, BotFile = "Back_jackbot_6", FileId = 2, MemoryUsed = 8000,
+                TimeUsed = 100, Language = Language.C, Validation = BotStatus.NotValidated
             },
-            new Bot()
+            new()
             {
-                Id = 7, GameId = 1, PlayerId = 7, BotFile = "amongus_bot_1", FileId = 3, MemoryUsed = 8000,
-                TimeUsed = 100, Language = Language.C
+                Id = 7, GameId = 1, PlayerId = 7, BotFile = "Back_jackbot_7", FileId = 3, MemoryUsed = 8000,
+                TimeUsed = 100, Language = Language.C, Validation = BotStatus.NotValidated
             },
-            new Bot()
+            new()
             {
-                Id = 8, GameId = 1, PlayerId = 8, BotFile = "amongus_bot_2", FileId = 4, MemoryUsed = 8000,
-                TimeUsed = 100, Language = Language.C
+                Id = 8, GameId = 1, PlayerId = 8, BotFile = "Back_jackbot_8", FileId = 4, MemoryUsed = 8000,
+                TimeUsed = 100, Language = Language.C, Validation = BotStatus.NotValidated
             },
-            new Bot()
+            new()
             {
-                Id = 9, GameId = 1, PlayerId = 9, BotFile = "minecra", FileId = 2, MemoryUsed = 8000,
-                TimeUsed = 100, Language = Language.C
+                Id = 9, GameId = 1, PlayerId = 9, BotFile = "Back_jackbot_9", FileId = 2, MemoryUsed = 8000,
+                TimeUsed = 100, Language = Language.C, Validation = BotStatus.NotValidated
             },
-            new Bot()
+            new()
             {
-                Id = 10, GameId = 1, PlayerId = 10, BotFile = "minecr", FileId = 4, MemoryUsed = 8000,
-                TimeUsed = 100, Language = Language.C
+                Id = 10, GameId = 1, PlayerId = 10, BotFile = "Back_jackbot_10", FileId = 4, MemoryUsed = 8000,
+                TimeUsed = 100, Language = Language.C, Validation = BotStatus.NotValidated
             },
-            new Bot()
+            new()
             {
-                Id = 11, GameId = 2, PlayerId = 2, BotFile = "minecraft_bot_2", FileId = 9, MemoryUsed = 8000,
-                TimeUsed = 100, Language = Language.PYTHON
+                Id = 11, GameId = 2, PlayerId = 2, BotFile = "Zero_bot_1", FileId = 9, MemoryUsed = 8000,
+                TimeUsed = 100, Language = Language.PYTHON, Validation = BotStatus.NotValidated
+            },
+            new()
+            {
+                Id = 12, GameId = 2, PlayerId = 3, BotFile = "Zero_bot_1", FileId = 10, MemoryUsed = 8000,
+                TimeUsed = 100, Language = Language.PYTHON, Validation = BotStatus.NotValidated
+            },
+            new()
+            {
+                Id = 13, GameId = 2, PlayerId = 4, BotFile = "Zero_bot_2", FileId = 11, MemoryUsed = 8000,
+                TimeUsed = 100, Language = Language.C, Validation = BotStatus.NotValidated
+            },
+            new()
+            {
+                Id = 14, GameId = 2, PlayerId = 5, BotFile = "Zero_bot_3", FileId = 9, MemoryUsed = 8000,
+                TimeUsed = 100, Language = Language.PYTHON, Validation = BotStatus.NotValidated
+            },
+            new()
+            {
+                Id = 15, GameId = 2, PlayerId = 6, BotFile = "Zero_bot_4", FileId = 10, MemoryUsed = 8000,
+                TimeUsed = 100, Language = Language.PYTHON, Validation = BotStatus.NotValidated
+            },
+            new()
+            {
+                Id = 16, GameId = 2, PlayerId = 7, BotFile = "Zero_bot_6", FileId = 11, MemoryUsed = 8000,
+                TimeUsed = 100, Language = Language.C, Validation = BotStatus.NotValidated
+            },
+            new()
+            {
+                Id = 17, GameId = 2, PlayerId = 8, BotFile = "zero_card_bot_7", FileId = 8, MemoryUsed = 8000,
+                TimeUsed = 100, Language = Language.Java, Validation = BotStatus.NotValidated
+            },
+            new()
+            {
+                Id = 18, GameId = 3, PlayerId = 1, BotFile = "chess_bot1.cpp", FileId = 14, MemoryUsed = 8000,
+                TimeUsed = 100, Language = Language.C, Validation = BotStatus.NotValidated
+            },
+            new()
+            {
+                Id = 19, GameId = 3, PlayerId = 2, BotFile = "chess_bot2.cpp", FileId = 15, MemoryUsed = 8000,
+                TimeUsed = 100, Language = Language.C, Validation = BotStatus.NotValidated
+            },
+            new()
+            {
+                Id = 20, GameId = 3, PlayerId = 3, BotFile = "chess_bot2.cpp", FileId = 16, MemoryUsed = 8000,
+                TimeUsed = 100, Language = Language.C, Validation = BotStatus.NotValidated
+            },
+            new()
+            {
+                Id = 21, GameId = 3, PlayerId = 4, BotFile = "chess_bot1.cpp", FileId = 14, MemoryUsed = 8000,
+                TimeUsed = 100, Language = Language.C, Validation = BotStatus.NotValidated
+            },
+            new()
+            {
+                Id = 22, GameId = 3, PlayerId = 5, BotFile = "chess_bot1.cpp", FileId = 14, MemoryUsed = 8000,
+                TimeUsed = 100, Language = Language.C, Validation = BotStatus.NotValidated
             }
-            ,
-            new Bot()
-            {
-                Id = 12, GameId = 2, PlayerId = 3, BotFile = "minecraft_bot_2", FileId = 10, MemoryUsed = 8000,
-                TimeUsed = 100, Language = Language.PYTHON
-            }
-            ,
-            new Bot()
-            {
-                Id = 13, GameId = 2, PlayerId = 4, BotFile = "minecraft_bot_2", FileId = 11, MemoryUsed = 8000,
-                TimeUsed = 100, Language = Language.C
-            },
-            new Bot()
-            {
-                Id = 14, GameId = 2, PlayerId = 5, BotFile = "minecraft_bot_2", FileId = 9, MemoryUsed = 8000,
-                TimeUsed = 100, Language = Language.PYTHON
-            },
-            new Bot()
-            {
-                Id = 15, GameId = 2, PlayerId = 6, BotFile = "minecraft_bot_2", FileId = 10, MemoryUsed = 8000,
-                TimeUsed = 100, Language = Language.PYTHON
-            },
-            new Bot()
-            {
-                Id = 16, GameId = 2, PlayerId = 7, BotFile = "minecraft_bot_2", FileId = 11, MemoryUsed = 8000,
-                TimeUsed = 100, Language = Language.C
-            },
-            new Bot()
-            {
-                Id = 17, GameId = 2, PlayerId = 8, BotFile = "minecraft_bot_2", FileId = 9, MemoryUsed = 8000,
-                TimeUsed = 100, Language = Language.PYTHON
-            }
-            
-            
         };
     }
 
     public static IEnumerable<TournamentReference> GenerateTournamentReferences()
     {
-        return new List<TournamentReference>()
+        return new List<TournamentReference>
         {
-            new TournamentReference() { Id = 1, tournamentId = 1, botId = 1 },
-            new TournamentReference() { Id = 2, tournamentId = 1, botId = 2 },
-            new TournamentReference() { Id = 3, tournamentId = 3, botId = 3 },
-            new TournamentReference() { Id = 4, tournamentId = 3, botId = 4 },
-            new TournamentReference() { Id = 5, tournamentId = 3, botId = 10 },
-            new TournamentReference() { Id = 6, tournamentId = 1, botId = 5 },
-            new TournamentReference() { Id = 7, tournamentId = 1, botId = 6 },
-            new TournamentReference() { Id = 8, tournamentId = 1, botId = 7 },
-            new TournamentReference() { Id = 9, tournamentId = 1, botId = 8 },
-            new TournamentReference() { Id = 10, tournamentId = 1, botId = 9 },
-            new TournamentReference() { Id = 11, tournamentId = 2, botId = 11 },
-            new TournamentReference() { Id = 12, tournamentId = 2, botId = 12 },
-            new TournamentReference() { Id = 13, tournamentId = 2, botId = 13 },
-            new TournamentReference() { Id = 14, tournamentId = 2, botId = 14 },
-            new TournamentReference() { Id = 15, tournamentId = 2, botId = 15 },
-            new TournamentReference() { Id = 16, tournamentId = 2, botId = 16 },
-            new TournamentReference() { Id = 17, tournamentId = 2, botId = 17 },
+            new() { Id = 1, tournamentId = 1, botId = 1 },
+            new() { Id = 2, tournamentId = 1, botId = 2 },
+            new() { Id = 3, tournamentId = 4, botId = 3 },
+            new() { Id = 4, tournamentId = 4, botId = 4 },
+            new() { Id = 5, tournamentId = 4, botId = 10 },
+            new() { Id = 6, tournamentId = 1, botId = 5 },
+            new() { Id = 7, tournamentId = 1, botId = 6 },
+            new() { Id = 8, tournamentId = 1, botId = 7 },
+            new() { Id = 9, tournamentId = 1, botId = 8 },
+            new() { Id = 10, tournamentId = 1, botId = 9 },
+            new() { Id = 11, tournamentId = 2, botId = 11 },
+            new() { Id = 12, tournamentId = 2, botId = 12 },
+            new() { Id = 13, tournamentId = 2, botId = 13 },
+            new() { Id = 14, tournamentId = 2, botId = 14 },
+            new() { Id = 15, tournamentId = 2, botId = 15 },
+            new() { Id = 16, tournamentId = 2, botId = 16 },
+            new() { Id = 17, tournamentId = 2, botId = 17 },
+            new() { Id = 18, tournamentId = 3, botId = 18 },
+            new() { Id = 19, tournamentId = 3, botId = 19 },
+            new() { Id = 20, tournamentId = 3, botId = 20 },
+            new() { Id = 21, tournamentId = 3, botId = 21 },
+            new() { Id = 22, tournamentId = 3, botId = 22 }
         };
     }
 
     public static IEnumerable<AchievementType> GenerateAchievementTypes()
     {
-        return new List<AchievementType>()
+        return new List<AchievementType>
         {
-            new AchievementType()
-                { Id = (int)AchievementsTypes.GamePlayed, Description = "You need to play this amount of games" },
-            new AchievementType()
-                { Id = (int)AchievementsTypes.BotsUploads, Description = "You need to upload this amount of bots" },
-            new AchievementType()
-                { Id = (int)AchievementsTypes.WinGames, Description = "You need to win this amount of games" },
-            new AchievementType()
+            new() { Id = (int)AchievementsTypes.GamePlayed, Description = "You need to play this amount of games" },
+            new() { Id = (int)AchievementsTypes.BotsUploads, Description = "You need to upload this amount of bots" },
+            new() { Id = (int)AchievementsTypes.WinGames, Description = "You need to win this amount of games" },
+            new()
             {
                 Id = (int)AchievementsTypes.TournamentsWon, Description = "You need to win this amount of tournaments"
             },
+            new()
+            {
+                Id = (int)AchievementsTypes.AccountCreated, Description = "Creating Account"
+            }
         };
     }
 
     public static IEnumerable<AchievementThresholds> GenerateAchievementThresholds()
     {
-        return new List<AchievementThresholds>()
+        return new List<AchievementThresholds>
         {
-            new AchievementThresholds()
-                { Id = 1, AchievementTypeId = (int)AchievementsTypes.GamePlayed, Threshold = 10 },
-            new AchievementThresholds()
-                { Id = 2, AchievementTypeId = (int)AchievementsTypes.BotsUploads, Threshold = 4 },
-            new AchievementThresholds() { Id = 3, AchievementTypeId = (int)AchievementsTypes.WinGames, Threshold = 5 },
-            new AchievementThresholds()
-                { Id = 4, AchievementTypeId = (int)AchievementsTypes.TournamentsWon, Threshold = 1 },
-            new AchievementThresholds()
-                { Id = 5, AchievementTypeId = (int)AchievementsTypes.GamePlayed, Threshold = 20 },
-            new AchievementThresholds()
-                { Id = 6, AchievementTypeId = (int)AchievementsTypes.BotsUploads, Threshold = 8 },
-            new AchievementThresholds() { Id = 7, AchievementTypeId = (int)AchievementsTypes.WinGames, Threshold = 10 },
-            new AchievementThresholds()
-                { Id = 8, AchievementTypeId = (int)AchievementsTypes.TournamentsWon, Threshold = 5 },
-            new AchievementThresholds()
-                { Id = 9, AchievementTypeId = (int)AchievementsTypes.GamePlayed, Threshold = 5 },
+            new() { Id = 1, AchievementTypeId = (int)AchievementsTypes.GamePlayed, Threshold = 10 },
+            new() { Id = 2, AchievementTypeId = (int)AchievementsTypes.BotsUploads, Threshold = 4 },
+            new() { Id = 3, AchievementTypeId = (int)AchievementsTypes.WinGames, Threshold = 5 },
+            new() { Id = 4, AchievementTypeId = (int)AchievementsTypes.TournamentsWon, Threshold = 1 },
+            new() { Id = 5, AchievementTypeId = (int)AchievementsTypes.GamePlayed, Threshold = 20 },
+            new() { Id = 6, AchievementTypeId = (int)AchievementsTypes.BotsUploads, Threshold = 8 },
+            new() { Id = 7, AchievementTypeId = (int)AchievementsTypes.WinGames, Threshold = 10 },
+            new() { Id = 8, AchievementTypeId = (int)AchievementsTypes.TournamentsWon, Threshold = 5 },
+            new() { Id = 9, AchievementTypeId = (int)AchievementsTypes.GamePlayed, Threshold = 5 },
+            new() { Id = 10, AchievementTypeId = (int)AchievementsTypes.AccountCreated, Threshold = 1 }
         };
     }
 
     public static IEnumerable<AchievementRecord> GenerateAchievementRecords()
     {
-        return new List<AchievementRecord>()
+        return new List<AchievementRecord>
         {
-            new AchievementRecord() { Id = 1, AchievementTypeId = 1, PlayerId = 1, Value = 20 },
-            new AchievementRecord() { Id = 2, AchievementTypeId = 2, PlayerId = 1, Value = 15 },
-            new AchievementRecord() { Id = 3, AchievementTypeId = 1, PlayerId = 2, Value = 10 },
-            new AchievementRecord() { Id = 4, AchievementTypeId = 2, PlayerId = 2, Value = 15 },
+            new() { Id = 1, AchievementTypeId = 1, PlayerId = 1, Value = 20 },
+            new() { Id = 2, AchievementTypeId = 2, PlayerId = 1, Value = 15 },
+            new() { Id = 3, AchievementTypeId = 1, PlayerId = 2, Value = 10 },
+            new() { Id = 4, AchievementTypeId = 2, PlayerId = 2, Value = 15 },
+            new() { Id = 5, AchievementTypeId = 5, PlayerId = 1, Value = 1 },
+            new() { Id = 6, AchievementTypeId = 5, PlayerId = 2, Value = 1 },
+            new() { Id = 7, AchievementTypeId = 5, PlayerId = 3, Value = 1 },
+            new() { Id = 8, AchievementTypeId = 5, PlayerId = 4, Value = 1 },
+            new() { Id = 9, AchievementTypeId = 5, PlayerId = 5, Value = 1 },
+            new() { Id = 10, AchievementTypeId = 5, PlayerId = 6, Value = 1 },
+            new() { Id = 11, AchievementTypeId = 5, PlayerId = 7, Value = 1 },
+            new() { Id = 12, AchievementTypeId = 5, PlayerId = 8, Value = 1 },
+            new() { Id = 13, AchievementTypeId = 5, PlayerId = 9, Value = 1 },
+            new() { Id = 14, AchievementTypeId = 5, PlayerId = 10, Value = 1 }
         };
     }
 }

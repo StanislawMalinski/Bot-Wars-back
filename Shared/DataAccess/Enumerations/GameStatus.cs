@@ -1,6 +1,4 @@
-﻿using Shared.DataAccess.DTO;
-
-namespace Shared.DataAccess.Enumerations;
+﻿namespace Shared.DataAccess.Enumerations;
 
 public enum GameStatus
 {

@@ -3,13 +3,20 @@
 public class PageParameters
 {
     private const int maxPageSize = 10;
-    public int PageNumber { get; set; } = 0;
+
+    private int _pageNumber;
 
     private int _pageSize = 10;
 
+    public int PageNumber
+    {
+        get => _pageNumber < 0 ? 0 : _pageNumber;
+        set => _pageNumber = value;
+    }
+
     public int PageSize
     {
-        get => _pageSize;
-        set => _pageSize = (value > maxPageSize) ? maxPageSize : value;
+        get => _pageSize < 0 ? 1 : _pageSize;
+        set => _pageSize = value > maxPageSize ? maxPageSize : value;
     }
 }

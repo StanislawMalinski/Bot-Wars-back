@@ -10,7 +10,7 @@ namespace Communication.ServiceInterfaces;
 
 public interface IMatchService
 {
-    Task<HandlerResult<SuccessData<List<MatchResponse>>, IErrorResult>> GetListOfMatchesFiltered(
+    Task<HandlerResult<SuccessData<PageResponse<MatchResponse>>, IErrorResult>> GetListOfMatchesFiltered(
         MatchFilterRequest matchFilterRequest, PageParameters pageParameters);
 
     Task<HandlerResult<SuccessData<MatchResponse>, IErrorResult>> GetMatchById(long id);

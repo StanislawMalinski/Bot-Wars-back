@@ -2,13 +2,13 @@ using System.Text;
 using BotWars;
 using BotWars.DependencyInjection;
 using Communication.Services.Validation;
+using Communication.Services.Websocket;
+using FluentValidation.AspNetCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using NLog.Web;
 using Shared.DataAccess.Context;
-using FluentValidation;
-using FluentValidation.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -68,11 +68,11 @@ builder.Services.AddAuthentication(options =>
 {
     cfg.RequireHttpsMetadata = false;
     cfg.SaveToken = true;
-    cfg.TokenValidationParameters = new TokenValidationParameters()
+    cfg.TokenValidationParameters = new TokenValidationParameters
     {
         ValidIssuer = authenticationSettings.JwtIssuer,
         ValidAudience = authenticationSettings.JwtIssuer,
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(authenticationSettings.JwtKey)),
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(authenticationSettings.JwtKey))
     };
 });
 
@@ -96,7 +96,7 @@ builder.Services
     .AddAchievements()
     .AddBot()
     .AddMatch();
-
+builder.Services.AddSingleton<WebSocketProxyService>();
 builder.Services.AddControllers().AddFluentValidation();
 builder.Services.AddHttpContextAccessor();
 
@@ -127,7 +127,6 @@ app.UseCors(options =>
 {
     options.AllowAnyMethod();
     options.AllowAnyHeader();
-
     options.AllowAnyOrigin();
 });
 app.UseSwagger();
@@ -140,7 +139,7 @@ app.UseHttpsRedirection();
 app.UseRouting();
 
 app.UseAuthorization();
-
+app.UseWebSockets();
 app.MapControllers();
 
 app.Run();

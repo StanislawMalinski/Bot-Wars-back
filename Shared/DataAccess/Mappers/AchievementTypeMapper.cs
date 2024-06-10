@@ -1,5 +1,5 @@
-﻿using Shared.DataAccess.DTO;
-using Shared.DataAccess.DataBaseEntities;
+﻿using Shared.DataAccess.DataBaseEntities;
+using Shared.DataAccess.DTO;
 
 namespace Shared.DataAccess.Mappers;
 
@@ -24,7 +24,7 @@ public class AchievementTypeMapper : IAchievementTypeMapper
         return new AchievementType
         {
             Id = achievementTypeDto.Id,
-            Description = achievementTypeDto.Description,
+            Description = achievementTypeDto.Description
         };
     }
 }

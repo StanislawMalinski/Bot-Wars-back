@@ -1,5 +1,4 @@
 ﻿using Communication.Services.Administration;
-using Shared.DataAccess.Repositories;
 using Shared.DataAccess.RepositoryInterfaces;
 
 namespace BotWars.DependencyInjection;

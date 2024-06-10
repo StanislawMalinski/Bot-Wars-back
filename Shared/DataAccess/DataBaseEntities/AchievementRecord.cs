@@ -8,5 +8,4 @@ public class AchievementRecord
     public AchievementType AchievementType { get; set; }
     public long PlayerId { get; set; }
     public Player Player { get; set; }
-
 }

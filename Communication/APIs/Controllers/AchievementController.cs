@@ -1,8 +1,6 @@
 ﻿using Communication.APIs.Controllers.Helper;
 using Communication.ServiceInterfaces;
-using Communication.Services.Achievement;
 using Microsoft.AspNetCore.Mvc;
-using Shared.DataAccess.RepositoryInterfaces;
 
 namespace Communication.APIs.Controllers;
 
@@ -22,24 +20,25 @@ public class AchievementController : Controller
     {
         return (await _achievementService.GetAchievementsForPlayer(playerId)).Match(Ok, this.ErrorResult);
     }
-    
+
     [HttpPut("unlockAchievement")]
-    public async Task<IActionResult> UnlockAchievement([FromQuery] long playerId, [FromQuery] long achievementTypeId, [FromQuery] long currentPlayerThreshold)
+    public async Task<IActionResult> UnlockAchievement([FromQuery] long playerId, [FromQuery] long achievementTypeId,
+        [FromQuery] long currentPlayerThreshold)
     {
-        return (await _achievementService.UnlockAchievement(playerId, achievementTypeId, currentPlayerThreshold)).Match(Ok, this.ErrorResult);
+        return (await _achievementService.UnlockAchievement(playerId, achievementTypeId, currentPlayerThreshold)).Match(
+            Ok, this.ErrorResult);
     }
 
-    
+
     [HttpGet("getAchievementTypes")]
     public async Task<IActionResult> GetAchievementTypes()
     {
         return (await _achievementService.GetAchievementTypes()).Match(Ok, this.ErrorResult);
     }
-    
+
     [HttpGet("getAchivmentIcon")]
     public async Task<IActionResult> getAchivmentIcon()
     {
         return null;
     }
-    
 }

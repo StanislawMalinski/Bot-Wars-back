@@ -1,7 +1,6 @@
 ﻿using Communication.APIs.Controllers.Helper;
 using Communication.ServiceInterfaces;
 using Microsoft.AspNetCore.Mvc;
-using Shared.DataAccess.DTO;
 using Shared.DataAccess.DTO.Requests;
 using Shared.DataAccess.Pagination;
 
@@ -19,9 +18,11 @@ public class MatchController : Controller
     }
 
     [HttpPost("getFiltered")]
-    public async Task<IActionResult> GetListOfMatchesFiltered([FromBody] MatchFilterRequest matchFilterRequest, [FromQuery] PageParameters pageParameters)
+    public async Task<IActionResult> GetListOfMatchesFiltered([FromBody] MatchFilterRequest matchFilterRequest,
+        [FromQuery] PageParameters pageParameters)
     {
-        return (await _matchService.GetListOfMatchesFiltered(matchFilterRequest, pageParameters)).Match(Ok, this.ErrorResult);
+        return (await _matchService.GetListOfMatchesFiltered(matchFilterRequest, pageParameters)).Match(Ok,
+            this.ErrorResult);
     }
 
     [HttpGet("getById")]
@@ -37,7 +38,6 @@ public class MatchController : Controller
         return result.Match(
             x => File(x.Data.OpenReadStream(), x.Data.ContentType, x.Data.FileName),
             this.ErrorResult
-        ); 
+        );
     }
-
 }

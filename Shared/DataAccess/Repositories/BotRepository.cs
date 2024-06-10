@@ -1,9 +1,4 @@
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc.RazorPages;
-using System.Diagnostics;
-using System.Diagnostics.CodeAnalysis;
-using System.Net.WebSockets;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Shared.DataAccess.Context;
@@ -14,18 +9,14 @@ using Shared.DataAccess.Enumerations;
 using Shared.DataAccess.Mappers;
 using Shared.DataAccess.Pagination;
 using Shared.DataAccess.RepositoryInterfaces;
-using Shared.Results;
-using Shared.Results.ErrorResults;
-using Shared.Results.IResults;
-using Shared.Results.SuccessResults;
 using TaskStatus = Shared.DataAccess.Enumerations.TaskStatus;
 
 namespace Shared.DataAccess.Repositories;
 
 public class BotRepository : IBotRepository
 {
-    private readonly DataContext _dataContext;
     private readonly IBotMapper _botMapper;
+    private readonly DataContext _dataContext;
     private readonly IFileRepository _fileRepository;
 
     // move to config
@@ -52,7 +43,7 @@ public class BotRepository : IBotRepository
             .Where(b => b.Id == botId)
             .FirstOrDefaultAsync();
     }
-    
+
 
     public async Task<List<BotResponse>> GetPlayerBots(long playerId,
         PageParameters pageParameters)
@@ -64,7 +55,7 @@ public class BotRepository : IBotRepository
             .Take(pageParameters.PageSize)
             .Select(bot => _botMapper.MapBotToResponse(bot))
             .ToListAsync();
-    } 
+    }
 
     public async Task<IFormFile?> GetBotFileForPlayer(long botId)
     {
@@ -74,21 +65,19 @@ public class BotRepository : IBotRepository
 
         if (bot == null) return null;
         var res = await _fileRepository.GetFile(bot.FileId, bot.BotFile);
-        return  res.Match(x=>x.Data, null!);
+        return res.Match(x => x.Data, null!);
     }
 
     public async Task<List<BotResponse>> GetBotsForTournament(
         long tournamentId, PageParameters pageParameters)
     {
-        
-        return  await _dataContext.TournamentReferences
+        return await _dataContext.TournamentReferences
             .Where(tr => tr.Id == tournamentId)
             .Skip(pageParameters.PageNumber * pageParameters.PageSize)
             .Take(pageParameters.PageSize)
             .Include(x => x.Bot)
-            .Select(x=> _botMapper.MapBotToResponse(x.Bot))
+            .Select(x => _botMapper.MapBotToResponse(x.Bot))
             .ToListAsync();
-        
     }
 
     public async Task<bool> AddBot(BotRequest botRequest, long playerId)
@@ -99,13 +88,9 @@ public class BotRepository : IBotRepository
             long botFileId;
             var res = await _fileRepository.UploadFile(botRequest.BotFile);
             if (res.IsSuccess)
-            {
                 botFileId = res.Match(x => x.Data, x => 0);
-            }
             else
-            {
                 return false;
-            }
 
             var game = await _dataContext.Games.FindAsync(botRequest.GameId);
             if (game == null)
@@ -114,6 +99,15 @@ public class BotRepository : IBotRepository
             var bot = _botMapper.MapRequestToBot(botRequest);
             bot.FileId = botFileId;
             bot.PlayerId = playerId;
+            var task = new _Task
+            {
+                OperatingOn = 0,
+                ScheduledOn = DateTime.Now,
+                Status = TaskStatus.ToDo,
+                Type = TaskTypes.ScheduleValidation,
+                EngineId = 1
+            };
+            await _dataContext.Tasks.AddAsync(task);
             await _dataContext.AddAsync(bot);
             await _dataContext.SaveChangesAsync();
             return true;
@@ -132,7 +126,7 @@ public class BotRepository : IBotRepository
         return true;
     }
 
-   
+
     public async Task<Game?> GetGame(long botId)
     {
         return await _dataContext.Bots.Where(x => x.Id == botId)
@@ -145,13 +139,13 @@ public class BotRepository : IBotRepository
         return await _dataContext.Bots.FindAsync(botId);
     }
 
-    public async Task<EntityEntry<Bot>> AddBot(Bot bot)
-    {
-        return (await _dataContext.Bots.AddAsync(bot))!;
-    }
-
     public async Task SaveChangeAsync()
     {
         await _dataContext.SaveChangesAsync();
+    }
+
+    public async Task<EntityEntry<Bot>> AddBot(Bot bot)
+    {
+        return (await _dataContext.Bots.AddAsync(bot))!;
     }
 }

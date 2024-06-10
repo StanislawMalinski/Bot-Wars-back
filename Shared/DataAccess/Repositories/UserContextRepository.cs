@@ -4,7 +4,7 @@ using Shared.DataAccess.RepositoryInterfaces;
 
 namespace Shared.DataAccess.Repositories;
 
-public class UserContextRepository: IUserContextRepository
+public class UserContextRepository : IUserContextRepository
 {
     private readonly IHttpContextAccessor _httpContextAccessor;
 
@@ -22,35 +22,20 @@ public class UserContextRepository: IUserContextRepository
     public long? GetUserId()
     {
         var user = GetUser();
-        if (user == null)
-        {
-            return null;
-        }
-        if (long.TryParse(user.FindFirst(c => c.Type == ClaimTypes.NameIdentifier).Value, out long userId))
-        {
+        if (user == null) return null;
+        if (long.TryParse(user.FindFirst(c => c.Type == ClaimTypes.NameIdentifier).Value, out var userId))
             return userId;
-        }
-        else
-        {
-            return null;
-        }
+        return null;
     }
 
     public string? GetUserRole()
     {
         var user = GetUser();
-        if (user == null)
-        {
-            return null;
-        };
+        if (user == null) return null;
+        ;
         var role = user.FindFirst(c => c.Type == ClaimTypes.Role);
         if (role is not null)
-        {
             return role.Value;
-        }
-        else
-        {
-            return null;
-        }
+        return null;
     }
-}  
+}
