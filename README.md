@@ -1,3 +1,9 @@
+### Uruchamianie kontenerów:
+```
+docker compose pull
+docker compose up --build
+```
+
 ### Uruchamianie projektu: budowanie lokalnie
 Stawianie bazy danych: <br>
 Pobierz ostatni obraz mssql servera oraz uruchom bazę danych na dockerze.

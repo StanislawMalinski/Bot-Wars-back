@@ -1,5 +1,6 @@
 ﻿using Shared.DataAccess.DataBaseEntities;
 using Shared.DataAccess.Enumerations;
+using TaskStatus = Shared.DataAccess.Enumerations.TaskStatus;
 
 namespace Shared.DataAccess.Seeders;
 
@@ -456,7 +457,16 @@ public class Seeder
             new()
             {
                 Id = (int)AchievementsTypes.AccountCreated, Description = "Creating Account"
+            },
+            new()
+            {
+                Id = (int)AchievementsTypes.OrganizeTournament, Description = "Organize Tournaments"
+            },
+            new()
+            {
+                Id = (int)AchievementsTypes.CompeteInTournaments, Description = "Compete In Tournaments"
             }
+
         };
     }
 
@@ -474,6 +484,14 @@ public class Seeder
             new() { Id = 8, AchievementTypeId = (int)AchievementsTypes.TournamentsWon, Threshold = 5 },
             new() { Id = 9, AchievementTypeId = (int)AchievementsTypes.GamePlayed, Threshold = 5 },
             new() { Id = 10, AchievementTypeId = (int)AchievementsTypes.AccountCreated, Threshold = 1 }
+            ,
+            new() { Id = 11, AchievementTypeId = (int)AchievementsTypes.OrganizeTournament, Threshold = 1 },
+            new() { Id = 12, AchievementTypeId = (int)AchievementsTypes.OrganizeTournament, Threshold = 3 },
+            new() { Id = 13, AchievementTypeId = (int)AchievementsTypes.OrganizeTournament, Threshold = 5 },
+            new() { Id = 14, AchievementTypeId = (int)AchievementsTypes.CompeteInTournaments, Threshold = 1 },
+            new() { Id = 15, AchievementTypeId = (int)AchievementsTypes.CompeteInTournaments, Threshold = 5},
+            new() { Id = 16, AchievementTypeId = (int)AchievementsTypes.CompeteInTournaments, Threshold = 10 }
+
         };
     }
 
@@ -495,6 +513,29 @@ public class Seeder
             new() { Id = 12, AchievementTypeId = 5, PlayerId = 8, Value = 1 },
             new() { Id = 13, AchievementTypeId = 5, PlayerId = 9, Value = 1 },
             new() { Id = 14, AchievementTypeId = 5, PlayerId = 10, Value = 1 }
+            ,
+            new() { Id = 15, AchievementTypeId = 3, PlayerId = 1, Value = 28 },
+            new() { Id = 16, AchievementTypeId = 4, PlayerId = 1, Value = 7 },
+            new() { Id = 17, AchievementTypeId = 6, PlayerId = 1, Value = 5 },
+            new() { Id = 18, AchievementTypeId = 7, PlayerId = 1, Value = 8 },
+
+        };
+        
+        
+    }
+    public static IEnumerable<_Task> GenerateTaskRecords()
+    {
+        return new List<_Task>()
+        {
+            new _Task
+            {
+                Id = 1,
+                Type = TaskTypes.PlayTournament,
+                ScheduledOn = DateTime.Now,
+                Status = TaskStatus.ToDo,
+                OperatingOn = 1,
+                EngineId = 1
+            }
         };
     }
 }

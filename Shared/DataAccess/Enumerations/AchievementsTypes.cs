@@ -6,5 +6,7 @@ public enum AchievementsTypes
     BotsUploads = 2,
     WinGames = 3,
     TournamentsWon = 4,
-    AccountCreated = 5
+    AccountCreated = 5,
+    OrganizeTournament =6,
+    CompeteInTournaments = 7
 }

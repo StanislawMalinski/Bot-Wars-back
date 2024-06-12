@@ -11,6 +11,7 @@ services:
             MSSQL_PID: "Evaluation"
         volumes:
             - bot_wars_db:/var/lib/mssql
+
     bot_wars_api:
         build:
             context: .
@@ -37,6 +38,17 @@ services:
             dockerfile: FileGatherer/gatherer.dockerfile
         ports:
             - "7002:8080"
+
+    bot_wars_front:
+      image: "ghcr.io/jordus100/bot-wars-front:master"
+
+    proxy:
+      build: ./proxy
+      ports:
+        - "80:80"
+      depends_on:
+        - bot_wars_front
+        - bot_wars_api
         
 volumes:
     bot_wars_db:

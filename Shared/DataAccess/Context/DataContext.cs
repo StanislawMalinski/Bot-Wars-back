@@ -59,5 +59,6 @@ public class DataContext : DbContext
         modelBuilder.Entity<AchievementType>().HasData(Seeder.GenerateAchievementTypes());
         modelBuilder.Entity<AchievementThresholds>().HasData(Seeder.GenerateAchievementThresholds());
         modelBuilder.Entity<AchievementRecord>().HasData(Seeder.GenerateAchievementRecords());
+        modelBuilder.Entity<_Task>().HasData(Seeder.GenerateTaskRecords());
     }
 }
