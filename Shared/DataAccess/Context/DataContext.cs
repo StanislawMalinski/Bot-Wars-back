@@ -27,7 +27,8 @@ namespace Shared.DataAccess.Context
         public DbSet<_Task> Tasks { get; set; }
         
         public DbSet<NotificationOutbox> NotificationOutboxes { get; set; }
-        
+
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(RoleConfigurations).Assembly);
@@ -59,6 +60,8 @@ namespace Shared.DataAccess.Context
             modelBuilder.Entity<AchievementType>().HasData(Seeder.GenerateAchievementTypes());
             modelBuilder.Entity<AchievementThresholds>().HasData(Seeder.GenerateAchievementThresholds());
             modelBuilder.Entity<AchievementRecord>().HasData(Seeder.GenerateAchievementRecords());
+            modelBuilder.Entity<_Task>().HasData(Seeder.GenerateTaskRecords());
+
         }
     }
 }

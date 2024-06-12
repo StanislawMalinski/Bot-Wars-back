@@ -1,5 +1,6 @@
 ﻿using Shared.DataAccess.DataBaseEntities;
 using Shared.DataAccess.Enumerations;
+using TaskStatus = Shared.DataAccess.Enumerations.TaskStatus;
 
 namespace Shared.DataAccess.Seeders;
 
@@ -325,7 +326,7 @@ public class Seeder
                     "Enter the world of strategic battles in the Dota 2 Clash of Titans. Assemble your team, choose your heroes, and conquer the opposition.",
                 PostedDate = DateTime.Now,
                 TournamentsDate = new DateTime(2025, 10, 20),
-                Status = TournamentStatus.SCHEDULED,
+                Status = TournamentStatus.PLAYED,
                 Constraints = "Teams must adhere to the standard Dota 2 competitive rules.",
                 CreatorId = 1, MemoryLimit = 15000, TimeLimit = 2000,
                 Image = Convert.FromBase64String(
@@ -470,6 +471,14 @@ public class Seeder
             },new AchievementType()
             {
                 Id = (int)AchievementsTypes.AccountCreated, Description = "Creating Account"
+            },
+            new()
+            {
+                Id = (int)AchievementsTypes.OrganizeTournament, Description = "Organize Tournaments"
+            },
+            new()
+            {
+                Id = (int)AchievementsTypes.CompeteInTournaments, Description = "Compete In Tournaments"
             }
         };
     }
@@ -478,26 +487,26 @@ public class Seeder
     {
         return new List<AchievementThresholds>()
         {
-            new AchievementThresholds()
-                { Id = 1, AchievementTypeId = (int)AchievementsTypes.GamePlayed, Threshold = 10 },
-            new AchievementThresholds()
-                { Id = 2, AchievementTypeId = (int)AchievementsTypes.BotsUploads, Threshold = 4 },
-            new AchievementThresholds() 
-                { Id = 3, AchievementTypeId = (int)AchievementsTypes.WinGames, Threshold = 5 },
-            new AchievementThresholds()
-                { Id = 4, AchievementTypeId = (int)AchievementsTypes.TournamentsWon, Threshold = 1 },
-            new AchievementThresholds()
-                { Id = 5, AchievementTypeId = (int)AchievementsTypes.GamePlayed, Threshold = 20 },
-            new AchievementThresholds()
-                { Id = 6, AchievementTypeId = (int)AchievementsTypes.BotsUploads, Threshold = 8 },
-            new AchievementThresholds() 
-                { Id = 7, AchievementTypeId = (int)AchievementsTypes.WinGames, Threshold = 10 },
-            new AchievementThresholds()
-                { Id = 8, AchievementTypeId = (int)AchievementsTypes.TournamentsWon, Threshold = 5 },
-            new AchievementThresholds()
-                { Id = 9, AchievementTypeId = (int)AchievementsTypes.GamePlayed, Threshold = 5 },
-            new AchievementThresholds()
-                {Id = 10, AchievementTypeId = (int)AchievementsTypes.AccountCreated, Threshold = 1}
+
+          
+            new() { Id = 1, AchievementTypeId = (int)AchievementsTypes.GamePlayed, Threshold = 10 },
+            new() { Id = 2, AchievementTypeId = (int)AchievementsTypes.BotsUploads, Threshold = 4 },
+            new() { Id = 3, AchievementTypeId = (int)AchievementsTypes.WinGames, Threshold = 5 },
+            new() { Id = 4, AchievementTypeId = (int)AchievementsTypes.TournamentsWon, Threshold = 1 },
+            new() { Id = 5, AchievementTypeId = (int)AchievementsTypes.GamePlayed, Threshold = 20 },
+            new() { Id = 6, AchievementTypeId = (int)AchievementsTypes.BotsUploads, Threshold = 8 },
+            new() { Id = 7, AchievementTypeId = (int)AchievementsTypes.WinGames, Threshold = 10 },
+            new() { Id = 8, AchievementTypeId = (int)AchievementsTypes.TournamentsWon, Threshold = 5 },
+            new() { Id = 9, AchievementTypeId = (int)AchievementsTypes.GamePlayed, Threshold = 5 },
+            new() { Id = 10, AchievementTypeId = (int)AchievementsTypes.AccountCreated, Threshold = 1 }
+            ,
+            new() { Id = 12, AchievementTypeId = (int)AchievementsTypes.OrganizeTournament, Threshold = 1 },
+            new() { Id = 13, AchievementTypeId = (int)AchievementsTypes.OrganizeTournament, Threshold = 3 },
+            new() { Id = 11, AchievementTypeId = (int)AchievementsTypes.OrganizeTournament, Threshold = 5 },
+            new() { Id = 14, AchievementTypeId = (int)AchievementsTypes.CompeteInTournaments, Threshold = 1 },
+            new() { Id = 15, AchievementTypeId = (int)AchievementsTypes.CompeteInTournaments, Threshold = 5},
+            new() { Id = 16, AchievementTypeId = (int)AchievementsTypes.CompeteInTournaments, Threshold = 10 }
+
         };
     }
 
@@ -505,20 +514,45 @@ public class Seeder
     {
         return new List<AchievementRecord>()
         {
-            new AchievementRecord() { Id = 1, AchievementTypeId = 1, PlayerId = 1, Value = 20 },
-            new AchievementRecord() { Id = 2, AchievementTypeId = 2, PlayerId = 1, Value = 15 },
-            new AchievementRecord() { Id = 3, AchievementTypeId = 1, PlayerId = 2, Value = 10 },
-            new AchievementRecord() { Id = 4, AchievementTypeId = 2, PlayerId = 2, Value = 15 },
-            new AchievementRecord() { Id = 5, AchievementTypeId = 5, PlayerId = 1, Value = 1 },
-            new AchievementRecord() { Id = 6, AchievementTypeId = 5, PlayerId = 2, Value = 1 },
-            new AchievementRecord() { Id = 7, AchievementTypeId = 5, PlayerId = 3, Value = 1 },
-            new AchievementRecord() { Id = 8, AchievementTypeId = 5, PlayerId = 4, Value = 1 },
-            new AchievementRecord() { Id = 9, AchievementTypeId = 5, PlayerId = 5, Value = 1 },
-            new AchievementRecord() { Id = 10, AchievementTypeId = 5, PlayerId = 6, Value = 1 },
-            new AchievementRecord() { Id = 11, AchievementTypeId = 5, PlayerId = 7, Value = 1 },
-            new AchievementRecord() { Id = 12, AchievementTypeId = 5, PlayerId = 8, Value = 1 },
-            new AchievementRecord() { Id = 13, AchievementTypeId = 5, PlayerId = 9, Value = 1 },
-            new AchievementRecord() { Id = 14, AchievementTypeId = 5, PlayerId = 10, Value = 1 },
+
+            new() { Id = 1, AchievementTypeId = 1, PlayerId = 1, Value = 30 },
+            new() { Id = 2, AchievementTypeId = 2, PlayerId = 1, Value = 15 },
+            new() { Id = 3, AchievementTypeId = 1, PlayerId = 2, Value = 10 },
+            new() { Id = 4, AchievementTypeId = 2, PlayerId = 2, Value = 15 },
+            new() { Id = 5, AchievementTypeId = 5, PlayerId = 1, Value = 1 },
+            new() { Id = 6, AchievementTypeId = 5, PlayerId = 2, Value = 1 },
+            new() { Id = 7, AchievementTypeId = 5, PlayerId = 3, Value = 1 },
+            new() { Id = 8, AchievementTypeId = 5, PlayerId = 4, Value = 1 },
+            new() { Id = 9, AchievementTypeId = 5, PlayerId = 5, Value = 1 },
+            new() { Id = 10, AchievementTypeId = 5, PlayerId = 6, Value = 1 },
+            new() { Id = 11, AchievementTypeId = 5, PlayerId = 7, Value = 1 },
+            new() { Id = 12, AchievementTypeId = 5, PlayerId = 8, Value = 1 },
+            new() { Id = 13, AchievementTypeId = 5, PlayerId = 9, Value = 1 },
+            new() { Id = 14, AchievementTypeId = 5, PlayerId = 10, Value = 1 }
+            ,
+            new() { Id = 14, AchievementTypeId = 3, PlayerId = 1, Value = 28 },
+            new() { Id = 14, AchievementTypeId = 4, PlayerId = 1, Value = 7 },
+            new() { Id = 14, AchievementTypeId = 6, PlayerId = 1, Value = 5 },
+            new() { Id = 14, AchievementTypeId = 7, PlayerId = 1, Value = 8 },
+            
+            
+        };
+    }
+
+    public static IEnumerable<_Task> GenerateTaskRecords()
+    {
+        return new List<_Task>()
+        {
+            new _Task
+            {
+                Id = 1,
+                Type = TaskTypes.PlayTournament,
+                ScheduledOn = DateTime.Now,
+                Status = TaskStatus.ToDo,
+                OperatingOn = 1,
+                EngineId = 1
+            }
+
         };
     }
 }
